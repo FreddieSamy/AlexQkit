@@ -13,12 +13,8 @@
       <div class="wires-buttons">
         <button class="add-wire" @click="rows++">Add Wire</button>
         <button class="remove-wire" @click="rows--">Remove Wire</button>
-        <button class="add-wire" @click="showSystem">
-          show system on console
-        </button>
-         <button class="add-wire" @click="systemStates">
-          send
-        </button>
+        <button class="add-wire" @click="showSystem">show system on console</button>
+        <button class="add-wire" @click="systemStates">send</button>
         <button class="add-wire" @click="resetSystem">reset system</button>
       </div>
     </div>
@@ -30,7 +26,7 @@ import toolbox from "./toolbox.vue";
 import wire from "./wire.vue";
 import ibm from "./ibm.vue";
 import trash from "./trash.vue";
-import axios from 'axios'
+import axios from "axios";
 
 export default {
   name: "clone",
@@ -39,7 +35,7 @@ export default {
     toolbox,
     ibm,
     wire,
-    trash,
+    trash
   },
   data() {
     return {
@@ -48,24 +44,24 @@ export default {
       system: {},
       globalId: 0,
       maxWire: 0,
-      statesSystem:[],
-      gatesSystem:{},
-      jobject:[]
+      statesSystem: [],
+      gatesSystem: {},
+      jobject: []
     };
   },
   methods: {
     showSystem: function() {
       //window.console.log("my parent app called me");
       //for (let i in this.system) {
-        //window.console.log(i + ": " + JSON.stringify(this.system[i]) + "\n");
-       //}
+      //window.console.log(i + ": " + JSON.stringify(this.system[i]) + "\n");
+      //}
       //window.console.log(typeof(this.system));
       //window.console.log(this.system);
-      this.$parent.allSystem=this.system;
+      this.$parent.allSystem = this.system;
       //this.$parent.showAllSystem();
       this.$root.info;
-  
- /*
+
+      /*
      this.systemStates();
       //window.console.log(JSON.stringify(this.system));
       axios.post("http://localhost:5000/mario",this.system).then((res)=>{
@@ -73,7 +69,7 @@ export default {
       this.systemStates();
     });
       
- */      
+ */
     },
     updateSystem: function(wireId, wireData) {
       //window.console.log("update ");
@@ -120,7 +116,6 @@ export default {
         this.pruneIdentityRow();
       }
       */
-
     },
     pruneIdentityRow: function() {
       for (let i = 0; i < this.rows; i++) {
@@ -130,32 +125,35 @@ export default {
       this.maxWire--;
     },
     controlWire: function(wireId) {
-      for (let i = wireId+1; i < this.rows; i++) {
+      for (let i = wireId + 1; i < this.rows; i++) {
         //var wireCaller = this.$refs.wire[i];
-      
       }
     },
-    systemStates:function(){
-      this.jobject=[];
-      this.statesSystem=[];
-      this.gatesSystem=[];
+    systemStates: function() {
+      this.jobject = [];
+      this.statesSystem = [];
+      this.gatesSystem = [];
       for (let i = 0; i < this.rows; i++) {
-          var wireCaller = this.$refs.wire[i];
-           this.statesSystem.push(wireCaller.getState());
-           this.gatesSystem.push(wireCaller.getGates());
-        }
-        window.console.log(this.statesSystem);
-        window.console.log(this.gatesSystem);
-        this.send();
+        var wireCaller = this.$refs.wire[i];
+        this.statesSystem.push(wireCaller.getState());
+        this.gatesSystem.push(wireCaller.getGates());
+      }
+      window.console.log(this.statesSystem);
+      window.console.log(this.gatesSystem);
+      this.send();
     },
-    send:function(){
-      (this.jobject).push({'wires':this.rows,'init':this.statesSystem,'rows':this.gatesSystem});
+    send: function() {
+      this.jobject.push({
+        wires: this.rows,
+        init: this.statesSystem,
+        rows: this.gatesSystem
+      });
 
-      axios.post("http://localhost:5000/mario",this.jobject).then((res)=>{
-      window.console.log(res);
-    });
+      axios.post("http://localhost:5000/data", this.jobject).then(res => {
+        window.console.log(res);
+      });
+    }
   }
-  },
 };
 </script>
 <!-- =============================================================  -->

@@ -479,7 +479,7 @@ class Circuit():
                 break
             if search==column[i][:end]:
                 pos[int(column[i][end+1:])]=i
-                column[i]=""
+                column[i]="i"
         return column,pos 
     
 ###############################################################################################################################
@@ -515,7 +515,7 @@ class Circuit():
                 for j in range(i+1,len(column)):
                     if str(column[j])=="swap":
                         p2=circuit.n_qubits-j-1
-                        column[j]=""
+                        column[j]="i"
                         break
                 circuit.swap(p1,p2)
                 continue
@@ -559,16 +559,16 @@ class Circuit():
             
             if str(column[i])=="m":
                 circuit.measure(circuit.n_qubits-i-1,circuit.n_qubits-i-1)
-                column[i]=""
+                column[i]="i"
         
             if str(column[i])=="c":
                 c.append(i)
-                column[i]=""
+                column[i]="i"
                 
             elif str(column[i])=="oc":
                 oc.append(i)
                 c.append(i)  
-                column[i]=""
+                column[i]="i"
         
         numOfControls=len(c)
         for i in oc:                                       #open control 
@@ -597,7 +597,7 @@ class Circuit():
                 for j in range(i+1,len(column)):
                     if str(column[j])=="swap":
                         p2=j
-                        column[j]=""
+                        column[j]="i"
                         break
                 pos=c+[p1]+[p2]
                 self.addCustomGate(circuit,self.controlledGate(self.gateToMatrix("swap"),numOfControls),pos)
@@ -650,7 +650,10 @@ class Circuit():
     #                                         }
     def createCircuit(self,receivedDictionary):
         from qiskit import QuantumCircuit
+        import numpy as np
     
+        print("reached in creatCircuit()")
+        
         shots=1024
         customGates=None
         if "shots" in receivedDictionary:
@@ -664,7 +667,6 @@ class Circuit():
             circuit=circuit.from_qasm_str(receivedDictionary["qasm"])
         
         elif "rows" in receivedDictionary and "wires" in receivedDictionary: #cols and wires are mandatory
-            import numpy as np
             wires=int(receivedDictionary["wires"])
             cols=np.transpose(receivedDictionary["rows"]).tolist()
             circuit=QuantumCircuit(wires,wires)
@@ -689,20 +691,20 @@ class Circuit():
                                 "matrixRepresentation":self.matrixRepresentation(circuit),
                                 "qasm":circuit.qasm(),
                                 "blochSphere":self.blochSphere(circuit),
-                                "link":self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots),
+                                "graph":self.graph(circuit,shots),
                                 "draw":self.draw(circuit),
                                 "circuit":circuit
                                   }
             
         else:
             returnedDictionary={"diracNotation":self.diracNotation(circuit),
-                                "matrixRepresentation":self.matrixRepresentation(circuit)}
-                                #"qasm":circuit.qasm(),
-                                #"blochSphere":self.blochSphere(circuit),
-                                #"graph":self.graph(circuit,shots),
-                                #"draw":self.draw(circuit),
-                                #"circuit":circuit
-                                 # }
+                                "matrixRepresentation":self.matrixRepresentation(circuit),
+                                "qasm":circuit.qasm(),
+                                "blochSphere":self.blochSphere(circuit),
+                                "graph":self.graph(circuit,shots),
+                                "draw":self.draw(circuit),
+                                "circuit":circuit
+                                  }
     
         return returnedDictionary
         
@@ -755,13 +757,13 @@ class Circuit():
                    "not":[[0,1],[1,0]],
                    "I4":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
                    }
-         }
-    '''dic={
+         }"""
+    """dic={
          "wires":2,
-         "cols":[["h"],
+         "cols":[["h",""],
                  ["c","x"]],
          "shots":2048
-         }'''"""
+         }"""
      
     #dic={"qasm":'OPENQASM 2.0;include "qelib1.inc";qreg q1[2];creg c1[2];x q1[0];cx q1[0],q1[1];measure q1[0] -> c1[0];measure q1[1] -> c1[1];'}
 
