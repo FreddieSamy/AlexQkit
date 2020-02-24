@@ -1,4 +1,4 @@
-# 12-qsim
+# Quantum Simulator
 
 ## Project setup
 ```
