@@ -51,25 +51,9 @@ export default {
   },
   methods: {
     showSystem: function() {
-      //window.console.log("my parent app called me");
-      //for (let i in this.system) {
-      //window.console.log(i + ": " + JSON.stringify(this.system[i]) + "\n");
-      //}
-      //window.console.log(typeof(this.system));
-      //window.console.log(this.system);
+  
       this.$parent.allSystem = this.system;
-      //this.$parent.showAllSystem();
       this.$root.info;
-
-      /*
-     this.systemStates();
-      //window.console.log(JSON.stringify(this.system));
-      axios.post("http://localhost:5000/mario",this.system).then((res)=>{
-      window.console.log(res);
-      this.systemStates();
-    });
-      
- */
     },
     updateSystem: function(wireId, wireData) {
       //window.console.log("update ");

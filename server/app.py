@@ -25,15 +25,19 @@ print(c.createCircuit({"wires":2,"rows": [['h'], ['i'], ['i'], ['i']]}))
 """
 
 # sanity check route
+@app.route('/')
+def main():
+    return "Server is on fire"
+
 
 @app.route('/data',methods=['GET','POST'])
 def run():
     if request.method=='POST':
         recievedDic=request.get_json()
-        print("recieved data in python : ",recievedDic[0])
+        #print("recieved data in python : ",recievedDic[0])
         c=Circuit()
         returnedDic=c.createCircuit(recievedDic[0])
-        print("recieved data in python : ",returnedDic)
+        #print("recieved data in python : ",returnedDic)
     else:
         returnedDic=[]
     return str(returnedDic) #jsonify(recievedDic[0])
@@ -91,4 +95,5 @@ def run():
      }'''
 
 #print(startTime)
-print(datetime.now() - startTime)
+#print(datetime.now() - startTime)
+app.run(debug=True)
