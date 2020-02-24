@@ -98,8 +98,8 @@ export default {
         this.statesSystem.push(wireCaller.getState());
         this.gatesSystem.push(wireCaller.getGates());
       }
-      window.console.log(this.statesSystem);
-      window.console.log(this.gatesSystem);
+      //window.console.log(this.statesSystem);
+      //window.console.log(this.gatesSystem);
       this.send();
     },
     send: function() {
@@ -110,10 +110,8 @@ export default {
       });
 
       axios.post("http://localhost:5000/data", this.jobject).then(res => {
-        window.console.log("the data success to returned from the server")
+        window.console.log("the data success to returned be from the server")
         window.console.log(res);
-        //window.console.log(typeof(res.data))
-        //window.console.log(JSON.parse(res.data))
       });
     }
   }
