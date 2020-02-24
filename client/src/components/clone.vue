@@ -51,24 +51,19 @@ export default {
   },
   methods: {
     showSystem: function() {
-  
       this.$parent.allSystem = this.system;
       this.$root.info;
+      for(let i = 0 ; i <= this.rows ; i++){
+          window.console.log(JSON.stringify(this.system[i]))
+      }
+
     },
     updateSystem: function(wireId, wireData) {
-      //window.console.log("update ");
       this.system[wireId] = wireData;
       if (this.maxWire < wireData[1].length) {
         this.maxWire = wireData[1].length;
-        //window.console.log("maximum wire length " + this.maxWire);
       }
     },
-    /*
-    accessWire: function(wireId) {
-      var wireCaller = this.$refs.wire[wireId - 1];
-      window.console.log(wireCaller.showWire());
-    },
-    */
     resetSystem: function() {
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
@@ -85,21 +80,7 @@ export default {
     },
 
     allRowIsIdentiy: function() {
-      //window.console.log("reached from wire");
-      //var count = 0;
-      /*
-      for (let i = 0; i < this.rows; i++) {
-        var wireCaller = this.$refs.wire[i];
-        if (wireCaller.lastIdentity() == "i") {
-          //count++;
-          wireCaller.popLast();
-        }
-      }
-    
-      if (count == this.rows) {
-        this.pruneIdentityRow();
-      }
-      */
+
     },
     pruneIdentityRow: function() {
       for (let i = 0; i < this.rows; i++) {
@@ -107,11 +88,6 @@ export default {
         wireCaller.popLast();
       }
       this.maxWire--;
-    },
-    controlWire: function(wireId) {
-      for (let i = wireId + 1; i < this.rows; i++) {
-        //var wireCaller = this.$refs.wire[i];
-      }
     },
     systemStates: function() {
       this.jobject = [];
@@ -134,7 +110,10 @@ export default {
       });
 
       axios.post("http://localhost:5000/data", this.jobject).then(res => {
+        window.console.log("the data success to returned from the server")
         window.console.log(res);
+        //window.console.log(typeof(res.data))
+        //window.console.log(JSON.parse(res.data))
       });
     }
   }
