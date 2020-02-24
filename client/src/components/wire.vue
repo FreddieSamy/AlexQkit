@@ -44,7 +44,6 @@ export default {
   methods: {
     update: function(/*evt*/) {
       var  wireData  = [ this.state , this.list ];
-      //window.console.log(this.list);
       this.$parent.updateSystem(this.id,wireData);
 
 
@@ -73,7 +72,6 @@ export default {
     },
     lastIdentity:function(){
         if(this.list.length == this.$parent.maxWire){
-          //window.console.log(this.list[this.$parent.maxWire-1]['name']);
           return this.list[this.$parent.maxWire-1]['name'];
         }else{
           return "";
@@ -82,17 +80,9 @@ export default {
     popLast:function(){
         this.list.pop();
     },
-    onAdd(evt) {
-        //window.console.log(evt);
-        //window.console.log(evt.clone);
-        //window.console.log(evt.clone.id);
-        //window.console.log(evt.target); 
-           
-        if(evt.clone.id == 'c'){
-          this.$parent.controlWire(this.id);
-        }
+    onAdd(/*evt*/) {
+
         this.$parent.rowIdentity(this.id);
-        this.$parent.allRowIsIdentiy();
       },
     getState:function(){
       return this.state;
@@ -102,7 +92,6 @@ export default {
       for(let i = 0 ; i < this.list.length ; i++){
         this.gates.push(this.list[i]['name']);
       }
-      //window.console.log(this.gates);
       return this.gates;
     },
     geGateIdenx:function(idx){

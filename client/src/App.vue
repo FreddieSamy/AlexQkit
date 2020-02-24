@@ -13,15 +13,9 @@ export default {
   },
   data(){
     return{
-      directnotation:[],
-      allSystem:{}
     }
   },
-  methods: {
-    showAllSystem: function() {
-      //window.console.log(JSON.stringify(this.allSystem))
-    },
-    
+  methods: {    
   },
 };
 </script>
