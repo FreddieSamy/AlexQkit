@@ -43,7 +43,7 @@ export default {
   props: ["id"],
   methods: {
     update: function(/*evt*/) {
-      var  wireData  = [ this.state , this.list ];
+      var  wireData  = [ this.state,this.objectNames(this.list)];
       this.$parent.updateSystem(this.id,wireData);
     },
     qubitState: function(evt) {
@@ -91,9 +91,17 @@ export default {
       }
       return this.gates;
     },
-    geGateIdenx:function(idx){
+    getGateIdenx:function(idx){
       return this.list[idx]['name']
+    },
+    objectNames:function(listOfObject){
+       var names = [];
+        for(let i = 0 ; i<listOfObject.length ;i++){
+            names.push(listOfObject[i]['name']);
+        }
+        return names;
     }
+    
   },
 };
 </script>
@@ -166,7 +174,6 @@ export default {
   background-size: contain;
   background-image: url("../assets/wire.png");
   /*border: 0.1em dashed black;*/
-  transition: transform 3s;
 }
 #i{
  opacity:0.33;
