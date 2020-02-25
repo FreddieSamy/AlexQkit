@@ -30,19 +30,19 @@ export default {
   data() {
     return {
       list: [
-        { name: "x", id: "x", index: "" },
-        { name: "y", id: "y", index: "" },
-        { name: "z", id: "z", index: "" },
-        { name: "h", id: "h", index: "" },
-        { name: "i", id: "i", index: "" },
-        { name: "c", id: "c", index: "" },
-        { name: "oc", id: "oc", index: "" },
-        { name: "swap", id: "swap", index: "" },
-        { name: "s", id: "s", index: "" },
-        { name: "sdg", id: "sdg", index: "" },
-        { name: "t", id: "t", index: "" },
-        { name: "tdg", id: "tdg", index: "" },
-        { name: "m", id: "m", index: "" }
+        { name: "x"    , id: "x"    },
+        { name: "y"    , id: "y"    },
+        { name: "z"    , id: "z"    },
+        { name: "h"    , id: "h"    },
+        { name: "i"    , id: "i"    },
+        { name: "c"    , id: "c"    },
+        { name: "oc"   , id: "oc"   },
+        { name: "swap" , id: "swap" },
+        { name: "s"    , id: "s"    },
+        { name: "sdg"  , id: "sdg"  },
+        { name: "t"    , id: "t"    },
+        { name: "tdg"  , id: "tdg"  },
+        { name: "m"    , id: "m"    }
       ]
     };
   },

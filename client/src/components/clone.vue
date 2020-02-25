@@ -43,18 +43,21 @@ export default {
   data() {
     return {
       states: ["0", "1", "i", "-i", "+", "-"],
-      rows: 4,
-      system: {},
-      globalId: 0,
-      maxWire: 0,
-      statesSystem: [],
-      gatesSystem: {},
-      jobject: [],
+      rows: 4,   
+      maxWire: 0,                          // number of wires
+      system: {},                          // maximum number of gates in a wire        
+      jsonObject: [
+        {
+          wire: 0 ,
+          init:[] ,
+          rows:[]
+        }
+      ],
     };
   },
   methods: {
     showSystem: function() {
-      for (let i = 0; i <= this.rows; i++) {
+      for (let i = 1; i <= this.rows; i++) {
         window.console.log(JSON.stringify(this.system[i]));
       }
     },
@@ -91,27 +94,36 @@ export default {
     },
     //---------------------------------------------
     systemStates: function() {
-      this.jobject = [];
-      this.statesSystem = [];
-      this.gatesSystem = [];
+      var statesSystem = [];
+      var gatesSystem = [];
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
-        this.statesSystem.push(wireCaller.getState());
-        this.gatesSystem.push(wireCaller.getGates());
-        window.console.log(this.statesSystem[i]);
-        window.console.log(this.gatesSystem[i]);
-        window.console.log("system["+i+"]");
-        window.console.log(this.system[i+1]);
+        statesSystem.push(wireCaller.getState());
+        gatesSystem.push(wireCaller.getGates());
       }
-      //this.send(this.jobject);
+        this.jsonObject[0] = {
+        wires: this.rows,
+        init: statesSystem,
+        rows: gatesSystem,
+      };
+      this.send(this.jsonObject);
     },
     //---------------------------------------------
     send: function(jsonObject) {
+      /*
       jsonObject.push({
         wires: this.rows,
         init: this.statesSystem,
         rows: this.gatesSystem,
       });
+      */
+      //window.console.log("the json object");
+      //window.console.log(jsonObject);
+      //window.console.log(typeof(jsonObject));
+      //window.console.log("the system");
+      //var l = [this.system];
+      //window.console.log(l);
+      //window.console.log(typeof(l));
       this.sendToServer("5000/data", jsonObject);
     },
     //---------------------------------------------
