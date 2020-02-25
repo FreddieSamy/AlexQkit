@@ -13,9 +13,12 @@
       <div class="wires-buttons">
         <button class="add-wire" @click="rows++">Add Wire</button>
         <button class="remove-wire" @click="rows--">Remove Wire</button>
-        <button class="add-wire" @click="showSystem">show system on console</button>
-        <button class="add-wire" @click="systemStates">send</button>
+        <button class="add-wire" @click="showSystem">
+          show system on console
+        </button>
+        <button class="add-wire" @click="systemStates">send</button><br>
         <button class="add-wire" @click="resetSystem">reset system</button>
+         <button class="add-wire" @click="clearConsole">Clear Console</button>
       </div>
     </div>
   </div>
@@ -35,7 +38,7 @@ export default {
     toolbox,
     ibm,
     wire,
-    trash
+    trash,
   },
   data() {
     return {
@@ -46,15 +49,13 @@ export default {
       maxWire: 0,
       statesSystem: [],
       gatesSystem: {},
-      jobject: []
+      jobject: [],
     };
   },
   methods: {
     showSystem: function() {
-      this.$parent.allSystem = this.system;
-      this.$root.info;
-      for(let i = 0 ; i <= this.rows ; i++){
-          window.console.log(JSON.stringify(this.system[i]))
+      for (let i = 0; i <= this.rows; i++) {
+        window.console.log(JSON.stringify(this.system[i]));
       }
     },
     //---------------------------------------------
@@ -97,27 +98,34 @@ export default {
         var wireCaller = this.$refs.wire[i];
         this.statesSystem.push(wireCaller.getState());
         this.gatesSystem.push(wireCaller.getGates());
+        window.console.log(this.statesSystem[i]);
+        window.console.log(this.gatesSystem[i]);
+        window.console.log("system["+i+"]");
+        window.console.log(this.system[i+1]);
       }
-      this.send(this.jobject);
+      //this.send(this.jobject);
     },
     //---------------------------------------------
     send: function(jsonObject) {
       jsonObject.push({
         wires: this.rows,
         init: this.statesSystem,
-        rows: this.gatesSystem
+        rows: this.gatesSystem,
       });
-      this.sendToServer('5000/data',jsonObject);
+      this.sendToServer("5000/data", jsonObject);
     },
     //---------------------------------------------
-    sendToServer:function(route,jsonObject){
-       axios.post("http://localhost:"+route,jsonObject).then(res => {
-        window.console.log("the data success to returned be from the server")
+    sendToServer: function(route, jsonObject) {
+      axios.post("http://localhost:" + route, jsonObject).then(res => {
+        window.console.log("the data success to returned be from the server");
         window.console.log(res);
       });
-    }
+    },
     //---------------------------------------------
-  }
+    clearConsole:function(){
+        window.console.clear();
+    }
+  },
 };
 </script>
 <!-- =============================================================  -->
