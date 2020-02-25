@@ -56,20 +56,22 @@ export default {
       for(let i = 0 ; i <= this.rows ; i++){
           window.console.log(JSON.stringify(this.system[i]))
       }
-
     },
+    //---------------------------------------------
     updateSystem: function(wireId, wireData) {
       this.system[wireId] = wireData;
       if (this.maxWire < wireData[1].length) {
         this.maxWire = wireData[1].length;
       }
     },
+    //---------------------------------------------
     resetSystem: function() {
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
         wireCaller.resetWire();
       }
     },
+    //---------------------------------------------
     rowIdentity: function(wireId) {
       for (let i = 0; i < this.rows; i++) {
         if (i + 1 != wireId) {
@@ -78,10 +80,7 @@ export default {
         }
       }
     },
-
-    allRowIsIdentiy: function() {
-
-    },
+    //---------------------------------------------
     pruneIdentityRow: function() {
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
@@ -89,6 +88,7 @@ export default {
       }
       this.maxWire--;
     },
+    //---------------------------------------------
     systemStates: function() {
       this.jobject = [];
       this.statesSystem = [];
@@ -98,22 +98,25 @@ export default {
         this.statesSystem.push(wireCaller.getState());
         this.gatesSystem.push(wireCaller.getGates());
       }
-      //window.console.log(this.statesSystem);
-      //window.console.log(this.gatesSystem);
-      this.send();
+      this.send(this.jobject);
     },
-    send: function() {
-      this.jobject.push({
+    //---------------------------------------------
+    send: function(jsonObject) {
+      jsonObject.push({
         wires: this.rows,
         init: this.statesSystem,
         rows: this.gatesSystem
       });
-
-      axios.post("http://localhost:5000/data", this.jobject).then(res => {
+      this.sendToServer('5000/data',jsonObject);
+    },
+    //---------------------------------------------
+    sendToServer:function(route,jsonObject){
+       axios.post("http://localhost:"+route,jsonObject).then(res => {
         window.console.log("the data success to returned be from the server")
         window.console.log(res);
       });
     }
+    //---------------------------------------------
   }
 };
 </script>
