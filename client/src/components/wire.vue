@@ -45,8 +45,6 @@ export default {
     update: function(/*evt*/) {
       var  wireData  = [ this.state , this.list ];
       this.$parent.updateSystem(this.id,wireData);
-
-
     },
     qubitState: function(evt) {
       var i = (parseInt(evt.target.id["3"]) + 1) % 6;
@@ -81,7 +79,6 @@ export default {
         this.list.pop();
     },
     onAdd(/*evt*/) {
-
         this.$parent.rowIdentity(this.id);
       },
     getState:function(){
