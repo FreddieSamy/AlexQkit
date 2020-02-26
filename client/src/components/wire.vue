@@ -67,6 +67,7 @@ export default {
 
       }
       */
+     this.$parent.addIdentityToRow(this.id);
     },
     add: function(/*event*/) {
       window.console.log("gate has been added");
