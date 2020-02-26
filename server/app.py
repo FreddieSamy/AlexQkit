@@ -1,16 +1,17 @@
-from flask import Flask, request
+from flask import Flask, request, Response,jsonify
 from datetime import datetime
 from flask_cors import CORS
-
-startTime = datetime.now()
-
+import io
+import random
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from qiskit import *
 from functions import Circuit
-
+import time 
+startTime = datetime.now()
 # configuration
 DEBUG = True
 
-# instantiate the app
+# intiate the app
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -23,26 +24,49 @@ CORS_DEBUG=1
 c=Circuit()
 print(c.createCircuit({"wires":2,"rows": [['h'], ['i'], ['i'], ['i']]}))
 """
-
-# sanity check route
+c=Circuit()
 @app.route('/')
 def main():
-    return "Server is on fire"
-
-
+    return "server is on fire"
+# sanity check route
 @app.route('/data',methods=['GET','POST'])
 def run():
     if request.method=='POST':
         recievedDic=request.get_json()
-        #print("recieved data in python : ",recievedDic[0])
-        c=Circuit()
-        returnedDic=c.createCircuit(recievedDic[0])
-        #print("recieved data in python : ",returnedDic)
+        print("recieved data from Vue : ",recievedDic[0])
+        #c=Circuit()
+        c.createCircuit(recievedDic[0])
+        print("retrived data from qiskit : ",c.returnedDictionary)
+        print(c.returnedDictionary['blochSphere'])
     else:
-        returnedDic=[]
-    return str(returnedDic) #jsonify(recievedDic[0])
+        c.returnedDictionary=[]
+    return  str(c.returnedDictionary) #jsonify(returnedDic) #str(returnedDic)
 
-     
+def graphDrawing(image):
+    fig = image
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
+@app.route('/blochsphere.png',methods=['GET','POST'])
+def blochSphere():
+    return graphDrawing(c.returnedDictionary['blochSphere'])
+@app.route('/chart.png',methods=['GET','POST'])
+def chart():
+    return graphDrawing(c.returnedDictionary['graph'])
+@app.route('/circuit.png')
+def circuitDraw():
+    return  graphDrawing(c.returnedDictionary['draw'])
+@app.route('/reset',methods=['GET','POST'])
+def reset():
+    if request.method=='POST':
+        recievedDic=request.get_json()
+        c.createCircuit(recievedDic[0])
+        print(c.returnedDictionary['diracNotation'])
+    return "success"
+if __name__ == "__main__":
+    app.run(debug=True)
+
+#print(c.returnedDictionary)   
 #dic={"qasm":'OPENQASM 2.0;include "qelib1.inc";qreg q1[2];creg c1[2];x q1[0];cx q1[0],q1[1];measure q1[0] -> c1[0];measure q1[1] -> c1[1];'}
 
 
@@ -94,6 +118,4 @@ def run():
                }
      }'''
 
-#print(startTime)
-#print(datetime.now() - startTime)
-app.run(debug=True)
+print(datetime.now() - startTime)
