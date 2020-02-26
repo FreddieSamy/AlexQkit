@@ -8,7 +8,7 @@
       @change="log"
     >
       <transition-group type="transition" name="flip-list">
-        <div class="toolbox-gates" v-for="element in list" :key="element.id" :id="element.name">
+        <div class="toolbox-gates" v-for="element in list" :key="element.id" :id="element.id">
           <div class="gate-name">{{ element.name }}</div>
         </div>
       </transition-group>
@@ -30,19 +30,19 @@ export default {
   data() {
     return {
       list: [
-        { name: "x"    , id: "x"    },
-        { name: "y"    , id: "y"    },
-        { name: "z"    , id: "z"    },
-        { name: "h"    , id: "h"    },
-        { name: "i"    , id: "i"    },
-        { name: "c"    , id: "c"    },
-        { name: "oc"   , id: "oc"   },
-        { name: "swap" , id: "swap" },
-        { name: "s"    , id: "s"    },
-        { name: "sdg"  , id: "sdg"  },
-        { name: "t"    , id: "t"    },
-        { name: "tdg"  , id: "tdg"  },
-        { name: "m"    , id: "m"    }
+        { name: "x"    , id: "x"  },
+        { name: "y"    , id: "y"  },
+        { name: "z"    , id: "z"  },
+        { name: "h"    , id: "h"  },
+        { name: "i"    , id: "i"  },
+        { name: "c"    , id: "c"  },
+        { name: "oc"   , id: "o"  },
+        { name: "swap" , id: "sw" },
+        { name: "s"    , id: "s"  },
+        { name: "sdg"  , id: "sd" },
+        { name: "t"    , id: "t"  },
+        { name: "tdg"  , id: "td" },
+        { name: "m"    , id: "m"  }
       ]
     };
   },
@@ -50,7 +50,7 @@ export default {
     log: function(/*evt*/) {},
     cloneGate({ name }) {
       return {
-        name: name
+         name
       };
     },
     addGate() {
