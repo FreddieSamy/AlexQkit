@@ -21,6 +21,8 @@
         <button class="add-wire" @click="clearConsole">Clear Console</button>
       </div>
     </div>
+     <blochSphere></blochSphere>
+      <histoGram></histoGram>
   </div>
 </template>
 <!-- =============================================================  -->
@@ -30,6 +32,8 @@ import wire from "./wire.vue";
 import ibm from "./ibm.vue";
 import trash from "./trash.vue";
 import axios from "axios";
+import blochSphere from"./blochSphere.vue";
+import histoGram from"./histoGram.vue";
 
 export default {
   name: "clone",
@@ -38,7 +42,9 @@ export default {
     toolbox,
     ibm,
     wire,
-    trash
+    trash,
+    blochSphere,
+    histoGram
   },
   data() {
     return {
@@ -54,6 +60,7 @@ export default {
           rows: []
         }
       ]
+      
     };
   },
   methods: {
@@ -75,6 +82,7 @@ export default {
         var wireCaller = this.$refs.wire[i];
         wireCaller.resetWire();
       }
+      
     },
     //---------------------------------------------
     addIdentityToRow: function(wireId) {
@@ -114,12 +122,22 @@ export default {
       axios.post(route, jsonObject).then(res => {
         window.console.log("the data success to returned be from the server");
         window.console.log(res);
+        this.draw();
+        
       });
     },
     //---------------------------------------------
     clearConsole: function() {
       window.console.clear();
-    }
+    },
+
+    draw: function(){
+          var imgOfHistoGram = document.getElementById("chart");
+          imgOfHistoGram.src = "http://127.0.0.1:5000/chart.png?time" + new Date();
+          var imgofblochSphere = document.getElementById("bloch");
+          imgofblochSphere.src = "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
+    },
+
   }
 };
 </script>

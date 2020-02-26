@@ -1,4 +1,10 @@
 class Circuit():
+    def __init__(self):
+        self.returnedDictionary = None
+        self.histoGramGraph = None
+        self.blochSphereGraph = None
+        self.wires = None
+
     
     
 ###############################################################################################################################
@@ -213,7 +219,7 @@ class Circuit():
             gate_latex +=  ' \\\\ '
         gate_latex  = gate_latex[0:-4]
         gate_latex += '\end{pmatrix}'
-        return display(Markdown(gate_latex))
+        return display(Markdown(gate_latex))#gate_latex
 
 
     #testing
@@ -301,7 +307,7 @@ class Circuit():
                 state=str(("{0:0"+str(circuit.n_qubits).replace('.0000','')+"b}").format(i))
                 dic[state]=round(abs(statevector[i])**2,4)
 
-            return plot_histogram(dic)
+            return plot_histogram(dic,figsize=(10,6))
         
         simulator=Aer.get_backend('qasm_simulator')
         result=execute(circuit,backend=simulator,shots=numberOfShots).result()
@@ -314,7 +320,7 @@ class Circuit():
             else:
                 dic[state]=0.0
     
-        return plot_histogram(dic)
+        return plot_histogram(dic,figsize=(10,6))
 
     """#testing 
     from qiskit import *
@@ -687,7 +693,7 @@ class Circuit():
     
         if "API_TOKEN" in receivedDictionary:
  
-            returnedDictionary={"diracNotation":self.diracNotation(circuit),
+            self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
                                 "matrixRepresentation":self.matrixRepresentation(circuit),
                                 "qasm":circuit.qasm(),
                                 "blochSphere":self.blochSphere(circuit),
@@ -697,16 +703,16 @@ class Circuit():
                                   }
             
         else:
-            returnedDictionary={"diracNotation":self.diracNotation(circuit),
-                                "matrixRepresentation":self.matrixRepresentation(circuit),
+            self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
+                                "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
                                 "qasm":circuit.qasm(),
                                 "blochSphere":self.blochSphere(circuit),
                                 "graph":self.graph(circuit,shots),
                                 "draw":self.draw(circuit),
                                 "circuit":circuit
                                   }
-    
-        return returnedDictionary
+
+        return self.returnedDictionary
         
         
     
@@ -817,7 +823,7 @@ class Circuit():
     #           [e^(φi)sin(θ/2)    (e^(λi+φi))cos(θ/2)]]
     #https://arxiv.org/pdf/1807.01703.pdf
 
-    def decompose(circuit):
+    def decompose(self,circuit):
         while(circuit!=circuit.decompose()):
             #print(circuit)
             circuit=circuit.decompose()
@@ -833,4 +839,3 @@ class Circuit():
     print("\n\nToffoli gate decomposition:")
     circuit.draw(output='mpl')"""
 ###############################################################################################################################
-'';
