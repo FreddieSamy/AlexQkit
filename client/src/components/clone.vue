@@ -42,6 +42,7 @@ export default {
   },
   data() {
     return {
+      route:"http://localhost:5000/data",
       states: ["0", "1", "i", "-i", "+", "-"],
       rows: 4,   
       maxWire: 0,                          // number of wires
@@ -76,7 +77,7 @@ export default {
       }
     },
     //---------------------------------------------
-    rowIdentity: function(wireId) {
+    addIdentityToRow: function(wireId) {
       for (let i = 0; i < this.rows; i++) {
         if (i + 1 != wireId) {
           var wireCaller = this.$refs.wire[i];
@@ -106,29 +107,11 @@ export default {
         init: statesSystem,
         rows: gatesSystem,
       };
-      this.send(this.jsonObject);
-    },
-    //---------------------------------------------
-    send: function(jsonObject) {
-      /*
-      jsonObject.push({
-        wires: this.rows,
-        init: this.statesSystem,
-        rows: this.gatesSystem,
-      });
-      */
-      //window.console.log("the json object");
-      //window.console.log(jsonObject);
-      //window.console.log(typeof(jsonObject));
-      //window.console.log("the system");
-      //var l = [this.system];
-      //window.console.log(l);
-      //window.console.log(typeof(l));
-      this.sendToServer("5000/data", jsonObject);
+      this.sendToServer(this.route,this.jsonObject);
     },
     //---------------------------------------------
     sendToServer: function(route, jsonObject) {
-      axios.post("http://localhost:" + route, jsonObject).then(res => {
+      axios.post(route, jsonObject).then(res => {
         window.console.log("the data success to returned be from the server");
         window.console.log(res);
       });
