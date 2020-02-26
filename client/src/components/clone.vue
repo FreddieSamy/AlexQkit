@@ -16,9 +16,9 @@
         <button class="add-wire" @click="showSystem">
           show system on console
         </button>
-        <button class="add-wire" @click="systemStates">send</button><br>
+        <button class="add-wire" @click="systemStates">send</button><br />
         <button class="add-wire" @click="resetSystem">reset system</button>
-         <button class="add-wire" @click="clearConsole">Clear Console</button>
+        <button class="add-wire" @click="clearConsole">Clear Console</button>
       </div>
     </div>
   </div>
@@ -38,22 +38,22 @@ export default {
     toolbox,
     ibm,
     wire,
-    trash,
+    trash
   },
   data() {
     return {
       route:"http://localhost:5000/data",
       states: ["0", "1", "i", "-i", "+", "-"],
-      rows: 4,   
-      maxWire: 0,                          // number of wires
-      system: {},                          // maximum number of gates in a wire        
+      rows: 2,
+      maxWire: 0, // number of wires
+      system: {}, // maximum number of gates in a wire
       jsonObject: [
         {
-          wire: 0 ,
-          init:[] ,
-          rows:[]
+          wire: 0,
+          init: [],
+          rows: []
         }
-      ],
+      ]
     };
   },
   methods: {
@@ -102,10 +102,10 @@ export default {
         statesSystem.push(wireCaller.getState());
         gatesSystem.push(wireCaller.getGates());
       }
-        this.jsonObject[0] = {
+      this.jsonObject[0] = {
         wires: this.rows,
         init: statesSystem,
-        rows: gatesSystem,
+        rows: gatesSystem
       };
       this.sendToServer(this.route,this.jsonObject);
     },
@@ -117,10 +117,10 @@ export default {
       });
     },
     //---------------------------------------------
-    clearConsole:function(){
-        window.console.clear();
+    clearConsole: function() {
+      window.console.clear();
     }
-  },
+  }
 };
 </script>
 <!-- =============================================================  -->
