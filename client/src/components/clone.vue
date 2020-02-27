@@ -30,6 +30,7 @@
         <button class="add-wire" @click="clearConsole">Clear Console</button>
       </div>
     </div>
+    <diracNotation></diracNotation>
     <blochSphere></blochSphere>
     <histoGram></histoGram>
   </div>
@@ -43,6 +44,7 @@ import trash from "./trash.vue";
 import axios from "axios";
 import blochSphere from "./blochSphere.vue";
 import histoGram from "./histoGram.vue";
+import diracNotation from "./diracNotation.vue";
 
 export default {
   name: "clone",
@@ -53,7 +55,8 @@ export default {
     wire,
     trash,
     blochSphere,
-    histoGram
+    histoGram,
+    diracNotation
   },
   data() {
     return {
@@ -130,6 +133,7 @@ export default {
       axios.post(route, jsonObject).then(res => {
         window.console.log("the data success to returned be from the server");
         window.console.log(res);
+        
         this.draw();
       });
     },

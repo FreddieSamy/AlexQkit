@@ -4,6 +4,9 @@ class Circuit():
         self.histoGramGraph = None
         self.blochSphereGraph = None
         self.wires = None
+        self.qasmCode = None
+        self.circutDrawing = None
+
 
     
     
@@ -703,14 +706,16 @@ class Circuit():
                                   }
             
         else:
+            self.blochSphereGraph = self.blochSphere(circuit)
+            self.histoGramGraph = self.graph(circuit,shots)
+            self.circutDrawing = self.draw(circuit)
+            self.qasmCode = circuit.qasm()
             self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
                                 "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
-                                "qasm":circuit.qasm(),
-                                "blochSphere":self.blochSphere(circuit),
-                                "graph":self.graph(circuit,shots),
-                                "draw":self.draw(circuit),
-                                "circuit":circuit
+                                "qasm" : self.qasmCode
                                   }
+
+            
 
         return self.returnedDictionary
         
