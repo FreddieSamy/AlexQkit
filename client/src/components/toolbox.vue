@@ -1,17 +1,24 @@
 <template>
   <div class="toolbox">
     <div class="shots">
-      <label>Number<br />Of<br />Shots</label><br />
-      <input
-        type="number"
-        name="shots"
-        placeholder="1024"
-        id=""
-      /><br /><br /><br />
+      <label>
+        Number
+        <br />Of
+        <br />Shots
+      </label>
+      <br />
+      <input type="number" name="shots" placeholder="1024" id />
+      <br />
+      <br />
+      <br />
     </div>
     <div class="box">
-      <div class="lbl1"><label>Toolbox</label></div>
-      <div class="lbl1"><label>Custom Gates</label></div>
+      <div class="lbl1">
+        <label>Toolbox</label>
+      </div>
+      <div class="lbl1">
+        <label>Custom Gates</label>
+      </div>
 
       <br />
 
@@ -70,21 +77,9 @@
               </div>
             </transition-group>
           </draggable>
-          <input class="angle" type="number" name="rx" placeholder="90" id="" />
-          <input
-            class="angle"
-            type="number"
-            name="ry"
-            placeholder="PI/2"
-            id=""
-          />
-          <input
-            class="angle"
-            type="number"
-            name="rz"
-            placeholder="PI/2"
-            id=""
-          />
+          <input class="angle" type="number" name="rx" placeholder="90" id />
+          <input class="angle" type="number" name="ry" placeholder="PI/2" id />
+          <input class="angle" type="number" name="rz" placeholder="PI/2" id />
         </div>
 
         <draggable
@@ -127,10 +122,33 @@
       </draggable>
     </div>
     <div class="user-tools">
-      <button class="qasm" @click="qasm">
-        |qasm⟩
-      </button>
-      <button class="addGate" @click="addGate">Add Custom Gate</button>
+      <button class="qasm" @click="qasm">|qasm⟩</button>
+
+      <div id="myNav" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
+
+        <div class="column1">
+          <h1 class="p" style="color: black ">from matrix</h1>
+          <p style="color: black">nameof gate:</p>
+          <input type="text" id="nameofgate" />
+          <h3 style="color: black">enter gate</h3>
+          <textarea rows="4" id="valueofgate"></textarea>
+          <br />
+          <button
+            @click="create_the_matrix()"
+            style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
+          >create</button>
+        </div>
+
+        <div class="column2">
+          <h1 style="color: black">from rotation</h1>
+        </div>
+        <div class="column3">
+          <h1 style="color: black">from circuit</h1>
+        </div>
+      </div>
+
+      <button class="addGate" @click="openNav()">Add Custom Gate</button>
     </div>
   </div>
 </template>
@@ -180,13 +198,83 @@ export default {
         name: name
       };
     },
-    addGate() {
+    addGate(nameofgate) {
       this.customGates.push({
-        name: "" + (this.customGates.length + 1),
+        name: nameofgate,
         id: this.customGates.length + 1
       });
       this.w = "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
     },
+
+openNav() {
+      document.getElementById("myNav").style.width = "100%";
+    },
+    closeNav() {
+      document.getElementById("myNav").style.width = "0%";
+    },
+    create_the_matrix() {
+      this.closeNav();
+      var nameofgate = document.getElementById("nameofgate").value;
+      var valofgate = document.getElementById("valueofgate");
+      
+      var matrix = this.make_matrix(valofgate);
+      window.console.log(matrix);
+      var { matrix_validate, msg } = this.validate_of_matrix(matrix);
+      window.console.log(matrix_validate);
+      window.console.log(msg);
+      if (matrix_validate) {
+        this.addGate(nameofgate);
+      }
+      document.getElementById("nameofgate").value = null;
+      document.getElementById("valueofgate").value = null;
+    },
+    make_matrix(valofgate) {
+      var row = valofgate.value.split("\n");
+      var count;
+      var matrix = [];
+      for (count in row) {
+        row[count] = row[count].replace(/\s/g, "");
+        var sub = row[count].split(",");
+        if (row[count] !== undefined && row[count] != "") {
+          matrix.push(sub);
+        }
+      }
+      return matrix;
+    },
+    validate_of_matrix(matrix) {
+     var matrix_validate = true;
+      var msg = "please check the dimenons of the matrix";
+      var count1, count2, count3, check;
+      var regex = (/^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/);
+      if (Number.isInteger(Math.log2(matrix.length))) {
+        matrix_validate = true;
+      } else {
+        matrix_validate = false;
+        return { matrix_validate, msg };
+      }
+
+      for (count3 in matrix)
+        if (matrix.length != matrix[count3].length) {
+          matrix_validate = false;
+          msg = "please check if the number of rows equal columns";
+          return { matrix_validate, msg };
+        }
+
+      for (count1 in matrix) {
+        for (count2 in matrix[count1]) {
+          check = regex.test(matrix[count1][count2]);
+          if (!check) {
+            matrix_validate = false;
+            msg = "please check value of every element in matrix ";
+            return { matrix_validate, msg };
+          }
+        }
+      }
+      msg = "";
+      return { matrix_validate, msg };
+    },
+
+
     qasm() {
       this.$parent.qasmFlag = !this.$parent.qasmFlag;
     }
@@ -297,4 +385,111 @@ export default {
   background-color: red;
   */
 }
+.overlay {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+
+  background-color: rgba(11, 12, 16, 0.8);
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.overlay-content {
+  position: relative;
+  top: 25%;
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+  font-family: "Lato", sans-serif;
+}
+
+.overlay a {
+  padding: 8px;
+  text-decoration: none;
+  font-size: 36px;
+  color: rgba(255, 255, 255, 0.7);
+  display: block;
+  transition: 0.3s;
+}
+
+.overlay a:hover,
+.overlay a:focus {
+  color: #f1f1f1;
+}
+
+.overlay .closebtn {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  font-size: 30px;
+}
+.overlay.button {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+@media screen and (max-height: 450px) {
+  .overlay a {
+    font-size: 20px;
+  }
+  .overlay .closebtn {
+    font-size: 40px;
+    top: 15px;
+    right: 35px;
+  }
+}
+
+.column1 {
+  width: 400px;
+  min-height: 300px;
+  background: rgb(47, 68, 85, 0.7);
+  float: left;
+  margin-top: 20px;
+  margin-left: 20px;
+  text-align: center;
+  border-radius: 25px;
+  display: inline-block;
+  margin-right: 30px;
+}
+
+.column2 {
+  width: 400px;
+  min-height: 300px;
+  background: rgb(47, 68, 85, 0.7);
+  position: center;
+  margin-top: 20px;
+  text-align: center;
+  border-radius: 25px;
+  margin-right: 30px;
+  display: inline-block;
+}
+.column3 {
+  width: 400px;
+  min-height: 300px;
+  background: rgb(47, 68, 85, 0.7);
+  margin-top: 20px;
+  text-align: center;
+
+  border-radius: 25px;
+  display: inline-block;
+}
+.create {
+  padding: 10px 25px;
+  margin: 4px 2px;
+  background-color: #1c87c9;
+  border: 3px solid #095484;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+}
+
 </style>
