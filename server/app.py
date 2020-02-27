@@ -24,7 +24,13 @@ CORS_DEBUG=1
 c=Circuit()
 print(c.createCircuit({"wires":2,"rows": [['h'], ['i'], ['i'], ['i']]}))
 """
+intialState = {'wires': 2, 'init': ['0', '0'], 'rows': [[], []]}
 c=Circuit()
+c.createCircuit(intialState)
+def graphDrawing(fig):
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
 @app.route('/')
 def main():
     return "server is on fire"
@@ -34,28 +40,21 @@ def run():
     if request.method=='POST':
         recievedDic=request.get_json()
         print("recieved data from Vue : ",recievedDic[0])
-        #c=Circuit()
         c.createCircuit(recievedDic[0])
         print("retrived data from qiskit : ",c.returnedDictionary)
-        print(c.returnedDictionary['blochSphere'])
     else:
-        c.returnedDictionary=[]
-    return  str(c.returnedDictionary) #jsonify(returnedDic) #str(returnedDic)
-
-def graphDrawing(image):
-    fig = image
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
+        c.returnedDictionary={}
+    return  jsonify(c.returnedDictionary) 
 @app.route('/blochsphere.png',methods=['GET','POST'])
 def blochSphere():
-    return graphDrawing(c.returnedDictionary['blochSphere'])
+    return graphDrawing(c.blochSphereGraph)
 @app.route('/chart.png',methods=['GET','POST'])
 def chart():
-    return graphDrawing(c.returnedDictionary['graph'])
+    return graphDrawing(c.histoGramGraph)
+
 @app.route('/circuit.png')
 def circuitDraw():
-    return  graphDrawing(c.returnedDictionary['draw'])
+    return  graphDrawing(c.circutDrawing)
 @app.route('/reset',methods=['GET','POST'])
 def reset():
     if request.method=='POST':
