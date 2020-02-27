@@ -2,11 +2,20 @@
   <div class="circuit">
     <div class="upper-circuit">
       <toolbox></toolbox>
-      <ibm></ibm>
+      <!--ibm></ibm-->
     </div>
     <!-- <trash></trash> -->
-    <div class="wires">
-      <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
+    <br />
+    <div class="qasmAndWires">
+      <div class="qasm" v-if="qasmFlag">
+        <textarea>OPENQASM 2.0; include "qelib1.inc";</textarea>
+        <button class="qasmBtn">Run</button>
+      </div>
+      <div class="wiresBlock">
+        <div class="wires">
+          <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
+        </div>
+      </div>
     </div>
     <div class="toolbox-2">
       <trash></trash>
@@ -21,26 +30,26 @@
         <button class="add-wire" @click="clearConsole">Clear Console</button>
       </div>
     </div>
-     <blochSphere></blochSphere>
-      <histoGram></histoGram>
+    <blochSphere></blochSphere>
+    <histoGram></histoGram>
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import toolbox from "./toolbox.vue";
 import wire from "./wire.vue";
-import ibm from "./ibm.vue";
+/*import ibm from "./ibm.vue";*/
 import trash from "./trash.vue";
 import axios from "axios";
-import blochSphere from"./blochSphere.vue";
-import histoGram from"./histoGram.vue";
+import blochSphere from "./blochSphere.vue";
+import histoGram from "./histoGram.vue";
 
 export default {
   name: "clone",
   display: "clone",
   components: {
     toolbox,
-    ibm,
+    /*ibm,*/
     wire,
     trash,
     blochSphere,
@@ -48,8 +57,8 @@ export default {
   },
   data() {
     return {
-      route:"http://localhost:5000/data",
-      states: ["0", "1", "i", "-i", "+", "-"],
+      route: "http://localhost:5000/data",
+      states: ["0", "1", "+", "-", "i", "-i"],
       rows: 2,
       maxWire: 0, // number of wires
       system: {}, // maximum number of gates in a wire
@@ -59,8 +68,8 @@ export default {
           init: [],
           rows: []
         }
-      ]
-      
+      ],
+      qasmFlag: false
     };
   },
   methods: {
@@ -82,7 +91,6 @@ export default {
         var wireCaller = this.$refs.wire[i];
         wireCaller.resetWire();
       }
-      
     },
     //---------------------------------------------
     addIdentityToRow: function(wireId) {
@@ -115,7 +123,7 @@ export default {
         init: statesSystem,
         rows: gatesSystem
       };
-      this.sendToServer(this.route,this.jsonObject);
+      this.sendToServer(this.route, this.jsonObject);
     },
     //---------------------------------------------
     sendToServer: function(route, jsonObject) {
@@ -123,7 +131,6 @@ export default {
         window.console.log("the data success to returned be from the server");
         window.console.log(res);
         this.draw();
-        
       });
     },
     //---------------------------------------------
@@ -131,13 +138,13 @@ export default {
       window.console.clear();
     },
 
-    draw: function(){
-          var imgOfHistoGram = document.getElementById("chart");
-          imgOfHistoGram.src = "http://127.0.0.1:5000/chart.png?time" + new Date();
-          var imgofblochSphere = document.getElementById("bloch");
-          imgofblochSphere.src = "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
-    },
-
+    draw: function() {
+      var imgOfHistoGram = document.getElementById("chart");
+      imgOfHistoGram.src = "http://127.0.0.1:5000/chart.png?time" + new Date();
+      var imgofblochSphere = document.getElementById("bloch");
+      imgofblochSphere.src =
+        "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
+    }
   }
 };
 </script>
@@ -152,7 +159,8 @@ export default {
 }
 .wires {
   /*border: 0.1em dashed blue;*/
-  margin: 1em 0.1em 0em 0.1em;
+  margin: 0em 0.1em 0em 0.1em;
+  /*display: table-cell;*/
 }
 .flip-list-move {
   transition: transform 10.9s;
@@ -185,5 +193,43 @@ export default {
   padding: 0.1em 0.5em 0.1em 0.5em;
   width: 97%;
   text-align: center;
+}
+.qasm {
+  display: block;
+  width: 30%;
+  margin: 0em 0.2em 0em 0em;
+  /*border: 1px solid black;*/
+  border-radius: 0.5em;
+}
+.qasmBtn {
+  display: block;
+  height: 2em;
+  width: 5em;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+  right: 0;
+  top: 0;
+}
+.wiresBlock {
+  /*display: table-cell;*/
+  width: 99%;
+  height: 99%;
+  margin: 0em 0.2em 0em 0.2em;
+}
+.qasmAndWires {
+  /*border: dashed firebrick;*/
+  display: inline-flex;
+  width: 99%;
+  height: 99%;
+  margin: 0.2em 0.2em 3em 0.2em;
+}
+textarea {
+  width: 90%;
+  height: 99%;
+  bottom: 0;
+  /*border: 1px solid black;*/
+  border-radius: 0.5em;
+  margin: auto;
 }
 </style>
