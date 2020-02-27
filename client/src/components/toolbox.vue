@@ -127,6 +127,9 @@
       </draggable>
     </div>
     <div class="user-tools">
+      <button class="qasm" @click="qasm">
+        |qasm⟩
+      </button>
       <button class="addGate" @click="addGate">Add Custom Gate</button>
     </div>
   </div>
@@ -183,6 +186,9 @@ export default {
         id: this.customGates.length + 1
       });
       this.w = "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
+    },
+    qasm() {
+      this.$parent.qasmFlag = !this.$parent.qasmFlag;
     }
   }
 };
@@ -190,6 +196,11 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .addGate {
+  margin: 0em 0em 0em 0.2em;
+  background-color: white;
+  border-radius: 0.5em;
+}
+.qasm {
   margin: 0em 0em 0em 0.2em;
   background-color: white;
   border-radius: 0.5em;
