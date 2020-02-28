@@ -822,7 +822,7 @@ class Circuit():
             shots=receivedDictionary["shots"]
         if "API_TOKEN" in receivedDictionary:
             if "API_TOKEN" !="":
-                self.returnedDictionary={"wires"=len(cols[0]),
+                self.returnedDictionary={"wires":len(cols[0]),
                                          "diracNotation":self.diracNotation(circuit),
                                          "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
                                          "cols":cols,
@@ -833,7 +833,7 @@ class Circuit():
             self.blochSphereGraph = self.blochSphere(circuit)
             self.histoGramGraph = self.graph(circuit,shots)
             self.circutDrawing = self.draw(circuit)
-            self.returnedDictionary={"wires"=len(cols[0]),
+            self.returnedDictionary={"wires":len(cols[0]),
                                      "diracNotation":self.diracNotation(circuit),
                                      "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
                                      "cols" : cols
