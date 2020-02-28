@@ -139,7 +139,6 @@
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
           >create</button>
         </div>
-
         <div class="column2">
           <h1 style="color: black">from rotation</h1>
         </div>

@@ -2,9 +2,7 @@
   <div class="circuit">
     <div class="upper-circuit">
       <toolbox></toolbox>
-      <!--ibm></ibm-->
     </div>
-    <!-- <trash></trash> -->
     <br />
     <div class="qasmAndWires">
       <div class="qasm" v-if="qasmFlag">
@@ -22,10 +20,7 @@
       <div class="wires-buttons">
         <button class="add-wire" @click="rows++">Add Wire</button>
         <button class="remove-wire" @click="rows--">Remove Wire</button>
-        <button class="add-wire" @click="showSystem">
-          show system on console
-        </button>
-        <button class="add-wire" @click="systemStates">send</button><br />
+        <button class="add-wire" @click="sendSystem">send</button><br>
         <button class="add-wire" @click="resetSystem">reset system</button>
         <button class="add-wire" @click="clearConsole">Clear Console</button>
       </div>
@@ -77,11 +72,6 @@ export default {
     };
   },
   methods: {
-    showSystem: function() {
-      for (let i = 1; i <= this.rows; i++) {
-        window.console.log(JSON.stringify(this.system[i]));
-      }
-    },
     //---------------------------------------------
     updateSystem: function(wireId, wireData) {
       this.system[wireId] = wireData;
@@ -114,7 +104,7 @@ export default {
       this.maxWire--;
     },
     //---------------------------------------------
-    systemStates: function() {
+    sendSystem: function() {
       var statesSystem = [];
       var gatesSystem = [];
       for (let i = 0; i < this.rows; i++) {
