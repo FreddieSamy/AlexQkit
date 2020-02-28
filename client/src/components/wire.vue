@@ -6,7 +6,7 @@
     </div>
     <div class="qubit">
       <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">
-        {{ state }}
+        {{ "|" + state + "⟩" }}
       </button>
     </div>
     <draggable
@@ -14,7 +14,6 @@
       :list="list"
       group="gates"
       @change="change"
-
     >
       <!-- @change="update"-->
       <div
@@ -36,25 +35,27 @@ export default {
   name: "wire",
   display: "wire",
   components: {
-    draggable,
+    draggable
   },
   data() {
     return {
       list: [],
       state: "0",
-      gates: [],
+      gates: []
     };
   },
   props: ["id"],
   methods: {
-    change:function(event){
+    change: function(event) {
       window.console.log(event);
       var eventName = Object.keys(event)[0];
-      window.console.log('event name : '+eventName);
+      window.console.log("event name : " + eventName);
       window.console.log(event[eventName]);
-      window.console.log(event[eventName]['element']);
-      window.console.log("gate name      : "+event[eventName]['element']['name']);
-      window.console.log("gate new index : "+event[eventName]['newIndex']);
+      window.console.log(event[eventName]["element"]);
+      window.console.log(
+        "gate name      : " + event[eventName]["element"]["name"]
+      );
+      window.console.log("gate new index : " + event[eventName]["newIndex"]);
       window.console.log(JSON.stringify(this.list));
       /*
       if(eventName == 'added'){
@@ -67,7 +68,7 @@ export default {
 
       }
       */
-     this.$parent.addIdentityToRow(this.id);
+      this.$parent.addIdentityToRow(this.id);
     },
     add: function(/*event*/) {
       window.console.log("gate has been added");
@@ -99,7 +100,7 @@ export default {
       var i = (parseInt(evt.target.id["3"]) + 1) % 6;
       var id = evt.target.id.substring(0, 3);
       evt.target.id = id + i;
-      evt.target.innerHTML = this.$parent.states[i];
+      evt.target.innerHTML = "|" + this.$parent.states[i] + "⟩";
       this.state = this.$parent.states[i];
       this.update();
     },
@@ -148,13 +149,11 @@ export default {
       }
       return this.gates;
     },
-    setState:function(state){
-        this.state = state;
+    setState: function(state) {
+      this.state = state;
     },
-     //-----------------------------------------------------------
-    setGates:function(){
-        
-    },
+    //-----------------------------------------------------------
+    setGates: function() {},
     //-----------------------------------------------------------
     objectNames: function(listOfObject) {
       var names = [];
@@ -162,9 +161,9 @@ export default {
         names.push(listOfObject[i]["name"]);
       }
       return names;
-    },
+    }
     //-----------------------------------------------------------
-  },
+  }
 };
 </script>
 <!-- =============================================================  -->

@@ -2,11 +2,9 @@ from flask import Flask, request, Response,jsonify
 from datetime import datetime
 from flask_cors import CORS
 import io
-import random
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from qiskit import *
 from functions import Circuit
-import time 
 startTime = datetime.now()
 # configuration
 DEBUG = True
@@ -39,9 +37,9 @@ def main():
 def run():
     if request.method=='POST':
         recievedDic=request.get_json()
-        print("recieved data from Vue : ",recievedDic[0])
+        #print("recieved data from Vue : ",recievedDic[0])
         c.createCircuit(recievedDic[0])
-        print("retrived data from qiskit : ",c.returnedDictionary)
+        #print("retrived data from qiskit : ",c.returnedDictionary)
     else:
         c.returnedDictionary={}
     return  jsonify(c.returnedDictionary) 
@@ -60,7 +58,7 @@ def reset():
     if request.method=='POST':
         recievedDic=request.get_json()
         c.createCircuit(recievedDic[0])
-        print(c.returnedDictionary['diracNotation'])
+        #print(c.returnedDictionary['diracNotation'])
     return "success"
 if __name__ == "__main__":
     app.run(debug=True)
