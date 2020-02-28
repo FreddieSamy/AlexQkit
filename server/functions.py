@@ -1,14 +1,9 @@
 class Circuit():
     def __init__(self):
-        self.returnedDictionary = None
         self.histoGramGraph = None
         self.blochSphereGraph = None
-        self.wires = None
-        self.qasmCode = None
         self.circutDrawing = None
-
-
-    
+        self.returnedDictionary=None
     
 ###############################################################################################################################
     
@@ -73,7 +68,6 @@ class Circuit():
     circuit.draw(output='mpl')"""
 
 ###############################################################################################################################
-
 
     #this function returns dirac notation of the circuit
     #neglects terms with zero probability
@@ -153,13 +147,11 @@ class Circuit():
 
 ###############################################################################################################################
 
-
     #this function returns readable matrix representation of the whole system
     #four digits after floating point
 
     #circuit mustn't be measured
     #we use "remove_final_measurements()" function to remove measurments
-
 
     def matrixRepresentation(self,circuit):
         from qiskit import Aer
@@ -222,8 +214,7 @@ class Circuit():
             gate_latex +=  ' \\\\ '
         gate_latex  = gate_latex[0:-4]
         gate_latex += '\end{pmatrix}'
-        return display(Markdown(gate_latex))#gate_latex
-
+        return gate_latex  #display(Markdown(gate_latex))
 
     #testing
     """from qiskit import *
@@ -373,7 +364,6 @@ class Circuit():
         statevector=result.get_statevector()
         return plot_bloch_multivector(statevector)
 
-
     #testing
     """from qiskit import *
     qr=QuantumRegister(2)
@@ -384,12 +374,10 @@ class Circuit():
     circuit.cx(0,1)
 
     circuit.measure(qr,cr)
-    blochSphere(circuit)"""
-    
+    blochSphere(circuit)"""    
     
 ###############################################################################################################################
-    
-    
+        
     #we have to check this with multiple users 
     #it saves API_TOKEN locally 
     def runOnIBMQ(self,API_TOKEN,circuit,shots):
@@ -556,7 +544,6 @@ class Circuit():
     circuit.draw()
     #matrixLatex(matrixRepresentation(circuit))"""
     
-    
 ###############################################################################################################################
     
     def controlledColumns(self,circuit,column,customGates):
@@ -644,11 +631,10 @@ class Circuit():
     
 ###############################################################################################################################
 
-    #the main function
     #takes json object that represent a circuit
     #returns json object with all results
     
-    #("cols" and "wires") or "qasm" in received json object is mandatory to get results
+    #("cols" and "wires") are mandatory to get results
     #default number of shots is 1024
     #to run a circuit on IBMQ , "API_TOKEN" must be sent 
     #to initialize the circuit , "init" must be sent as a vector ( i.e. [0,1,"+","-","i","-i"] )
@@ -669,13 +655,8 @@ class Circuit():
             shots=receivedDictionary["shots"]
         if "custom" in receivedDictionary:
             customGates=receivedDictionary["custom"]
-    
-    
-        if "qasm" in receivedDictionary:
-            circuit=QuantumCircuit(1)
-            circuit=circuit.from_qasm_str(receivedDictionary["qasm"])
         
-        elif "rows" in receivedDictionary and "wires" in receivedDictionary: #cols and wires are mandatory
+        if "rows" in receivedDictionary and "wires" in receivedDictionary: #cols and wires are mandatory
             wires=int(receivedDictionary["wires"])
             cols=np.transpose(receivedDictionary["rows"]).tolist()
             circuit=QuantumCircuit(wires,wires)
@@ -691,36 +672,29 @@ class Circuit():
                 else:
                     self.nonControlledColumns(circuit,cols[i],customGates)
                     
-        else:
-            return {}
     
         if "API_TOKEN" in receivedDictionary:
+            if receivedDictionary["API_TOKEN"] !="":
  
-            self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
-                                "matrixRepresentation":self.matrixRepresentation(circuit),
-                                "qasm":circuit.qasm(),
-                                "blochSphere":self.blochSphere(circuit),
-                                "graph":self.graph(circuit,shots),
-                                "draw":self.draw(circuit),
-                                "circuit":circuit
-                                  }
+                self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
+                                    "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
+                                    "qasm":circuit.qasm(),
+                                    "link":self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
+                                    }
             
         else:
             self.blochSphereGraph = self.blochSphere(circuit)
             self.histoGramGraph = self.graph(circuit,shots)
             self.circutDrawing = self.draw(circuit)
-            self.qasmCode = circuit.qasm()
             self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
                                 "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
-                                "qasm" : self.qasmCode
-                                  }
+                                "qasm" : circuit.qasm()
+                                }
 
             
 
-        return self.returnedDictionary
+        #return self.returnedDictionary
         
-        
-    
         
     #testing 
     #from qiskit import circuit
@@ -776,7 +750,6 @@ class Circuit():
          "shots":2048
          }"""
      
-    #dic={"qasm":'OPENQASM 2.0;include "qelib1.inc";qreg q1[2];creg c1[2];x q1[0];cx q1[0],q1[1];measure q1[0] -> c1[0];measure q1[1] -> c1[1];'}
 
     #run on IBMQ
     """dic={
@@ -819,6 +792,61 @@ class Circuit():
     createCircuit(dic)
     c=createCircuit(dic)["circuit"]
     draw(c)"""
+
+###############################################################################################################################
+
+    def qasm(self,receivedDictionary):
+        from qiskit import QuantumCircuit
+        circuit=QuantumCircuit(1)
+        circuit=circuit.from_qasm_str(receivedDictionary["qasm"])
+        cols=[]
+        #print(circuit.data[0][1][0].register.size)
+        for i in range(len(circuit.data)):
+            name=circuit.data[i][0].name
+            #print(name)
+            column=['i']*circuit.data[0][1][0].register.size
+            for j in range(len(circuit.data[i][1])):
+                pos=circuit.data[i][1][j].index
+                #print(pos)
+                if 'c' == name[0]:
+                    column[pos]='c'
+                    name=name[1:]
+                else:
+                    column[pos]=name
+                #print(column)
+            cols.append(column)
+        #print(cols)    
+        
+        shots=1024
+        if "shots" in receivedDictionary:
+            shots=receivedDictionary["shots"]
+        if "API_TOKEN" in receivedDictionary:
+            if "API_TOKEN" !="":
+                self.returnedDictionary={"wires"=len(cols[0]),
+                                         "diracNotation":self.diracNotation(circuit),
+                                         "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
+                                         "cols":cols,
+                                         "link":self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
+                                         }
+            
+        else:
+            self.blochSphereGraph = self.blochSphere(circuit)
+            self.histoGramGraph = self.graph(circuit,shots)
+            self.circutDrawing = self.draw(circuit)
+            self.returnedDictionary={"wires"=len(cols[0]),
+                                     "diracNotation":self.diracNotation(circuit),
+                                     "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
+                                     "cols" : cols
+                                     }
+        #return self.returnedDictionary
+            
+
+    #testing
+    #from qiskit import *
+    """text='OPENQASM 2.0;include "qelib1.inc";qreg q[4];creg c[3];x q[0];h q[1];ccx q[0],q[2],q[3];swap q[0],q[1];'
+    #circuit.draw(output='mpl')
+    cols=qasm(text)
+    print(cols)"""
 
 ###############################################################################################################################
     #{U1, U2, U3, CNOT}

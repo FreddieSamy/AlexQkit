@@ -60,6 +60,7 @@ export default {
   },
   data() {
     return {
+      diracNotationData: "|00⟩",
       route: "http://localhost:5000/data",
       states: ["0", "1", "+", "-", "i", "-i"],
       rows: 2,
@@ -133,8 +134,9 @@ export default {
       axios.post(route, jsonObject).then(res => {
         window.console.log("the data success to returned be from the server");
         window.console.log(res);
-        
+
         this.draw();
+        this.diracNotationData = res.data.diracNotation;
       });
     },
     //---------------------------------------------
