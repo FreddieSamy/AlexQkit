@@ -15,7 +15,6 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .ibmBody {
-  /*border: 2px dashed grey;*/
   flex: 1;
   padding: 0.2em 0.2em 0.2em 0.2em;
   margin: 0.2em 0.2em 0.2em 0.2em;
