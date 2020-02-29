@@ -1,16 +1,15 @@
 <template>
   <div class="toolbox">
     <div class="box">
-      <div class="lbl1">
-        <label>Toolbox</label>
+      <div class="box-labels">
+        <div class="tool-box-label">
+          <label>Toolbox</label>
+        </div>
+        <div class="custom-gate-label">
+          <label>Custom Gates</label>
+        </div>
       </div>
-      <div class="lbl1">
-        <label>Custom Gates</label>
-      </div>
-
-      <br />
-
-      <div class="dragArea">
+      <div class="toolbox-of-gates">
         <draggable
           class="Area1"
           :list="gates1"
@@ -113,8 +112,9 @@
       <button class="qasm" @click="qasm">|qasm⟩</button>
 
       <div id="myNav" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
-
+        <a href="javascript:void(0)" class="closebtn" @click="closeNav()"
+          >&#10006;</a
+        >
         <div class="column1">
           <h1 class="p" style="color: black ">from matrix</h1>
           <p style="color: black">nameof gate:</p>
@@ -125,7 +125,9 @@
           <button
             @click="create_the_matrix()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
-          >create</button>
+          >
+            create
+          </button>
         </div>
         <div class="column2">
           <h1 style="color: black">from rotation</h1>
@@ -134,7 +136,6 @@
           <h1 style="color: black">from circuit</h1>
         </div>
       </div>
-
       <button class="addGate" @click="openNav()">Add Custom Gate</button>
     </div>
   </div>
@@ -146,7 +147,7 @@ export default {
   name: "toolbox",
   display: "toolbox",
   components: {
-    draggable
+    draggable,
   },
   data() {
     return {
@@ -154,46 +155,46 @@ export default {
         { name: "c", id: "c", index: "" },
         { name: "m", id: "m", index: "" },
         { name: "oc", id: "oc", index: "" },
-        { name: "reset", id: "reset", index: "" }
+        { name: "reset", id: "reset", index: "" },
       ],
       gates2: [
         { name: "x", id: "x", index: "" },
         { name: "y", id: "y", index: "" },
         { name: "z", id: "z", index: "" },
         { name: "h", id: "h", index: "" },
-        { name: "swap", id: "swap", index: "" }
+        { name: "swap", id: "swap", index: "" },
       ],
       gates3: [
         { name: "rx", id: "rx", index: "" },
         { name: "ry", id: "ry", index: "" },
-        { name: "rz", id: "rz", index: "" }
+        { name: "rz", id: "rz", index: "" },
       ],
       gates4: [
         { name: "s", id: "s", index: "" },
         { name: "t", id: "t", index: "" },
         { name: "sdg", id: "sdg", index: "" },
-        { name: "tdg", id: "tdg", index: "" }
+        { name: "tdg", id: "tdg", index: "" },
       ],
       customGates: [],
-      w: "width:7.7em"
+      w: "width:7.7em",
     };
   },
   methods: {
     log: function(/*evt*/) {},
     cloneGate({ name }) {
       return {
-        name: name
+        name: name,
       };
     },
     addGate(nameofgate) {
       this.customGates.push({
         name: nameofgate,
-        id: this.customGates.length + 1
+        id: this.customGates.length + 1,
       });
       this.w = "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
     },
 
-openNav() {
+    openNav() {
       document.getElementById("myNav").style.width = "100%";
     },
     closeNav() {
@@ -203,7 +204,7 @@ openNav() {
       this.closeNav();
       var nameofgate = document.getElementById("nameofgate").value;
       var valofgate = document.getElementById("valueofgate");
-      
+
       var matrix = this.make_matrix(valofgate);
       window.console.log(matrix);
       var { matrix_validate, msg } = this.validate_of_matrix(matrix);
@@ -229,10 +230,10 @@ openNav() {
       return matrix;
     },
     validate_of_matrix(matrix) {
-     var matrix_validate = true;
+      var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
       var count1, count2, count3, check;
-      var regex = (/^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/);
+      var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
       if (Number.isInteger(Math.log2(matrix.length))) {
         matrix_validate = true;
       } else {
@@ -261,33 +262,17 @@ openNav() {
       return { matrix_validate, msg };
     },
 
-
     qasm() {
       this.$parent.qasmFlag = !this.$parent.qasmFlag;
-    }
-  }
+    },
+  },
 };
 </script>
 <!-- =============================================================  -->
 <style scoped>
-.toolbox{
-  display: inline-block;
-}
-.addGate {
-  margin: 0em 0em 0em 0.2em;
-  background-color: white;
-  border-radius: 0.5em;
-}
-.qasm {
-  margin: 0em 0em 0em 0.2em;
-  background-color: white;
-  border-radius: 0.5em;
-}
 .toolbox {
-  /*border: 1px dashed black;*/
-  /*background-color: red;*/
-  display: table;
-  width: 100%;
+  display: flex;
+  float: left;
 }
 .toolbox-gates {
   border: 1px dashed black;
@@ -303,12 +288,10 @@ openNav() {
   margin: 0.7em 0.5em 0.5em 0.5em;
   color: black;
 }
-.dragArea {
-  border: 1px solid black;
+.toolbox-of-gates {
+  border: 0.11em solid red;
   display: inline-block;
   margin-right: 0.4em;
-  width: 40em;
-  white-space: pre-wrap;
   height: 7.4em;
   overflow: auto;
   border-radius: 0.3em;
@@ -316,10 +299,6 @@ openNav() {
 .dragArea2 {
   border: 1px solid black;
   display: inline-block;
-  /*position: fixed;*/
-  /*margin: 0.2em 0.2em 0.2em 0.2em;*/
-  max-width: 39.4em;
-  min-width: 7.7em;
   white-space: pre-wrap;
   height: 7.4em;
   overflow: auto;
@@ -352,10 +331,13 @@ openNav() {
   margin: 0em 0em 0em 0em;
   height: 2em;
 }
-.lbl1 {
+.tool-box-label {
   display: inline-block;
-  min-width: 40em;
   margin-right: 0.4em;
+}
+.custom-gate-label {
+  display: inline-block;
+  margin: 0em 0em 0em 37em;
 }
 .shots {
   display: inline-block;
@@ -375,6 +357,16 @@ openNav() {
   background-color: red;
   */
 }
+.addGate {
+  margin: 0em 0em 0em 0.2em;
+  background-color: white;
+  border-radius: 0.5em;
+}
+.qasm {
+  margin: 0em 0em 0em 0.2em;
+  background-color: white;
+  border-radius: 0.5em;
+}
 .overlay {
   height: 100%;
   width: 0;
@@ -382,7 +374,6 @@ openNav() {
   z-index: 1;
   top: 0;
   left: 0;
-
   background-color: rgba(11, 12, 16, 0.8);
   overflow-x: hidden;
   transition: 0.5s;
@@ -481,5 +472,4 @@ openNav() {
   color: #fff;
   cursor: pointer;
 }
-
 </style>
