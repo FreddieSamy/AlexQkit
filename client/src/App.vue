@@ -36,7 +36,7 @@ body {
   color: #2c3e50;
   margin-top: 0px;
   overflow: auto;
-  white-space: nowrap;
-  border: 2px dashed white;
+ 
+  border: 2px dashed black;
 }
 </style>

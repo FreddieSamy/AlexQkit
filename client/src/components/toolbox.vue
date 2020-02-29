@@ -1,17 +1,5 @@
 <template>
   <div class="toolbox">
-    <div class="shots">
-      <label>
-        Number
-        <br />Of
-        <br />Shots
-      </label>
-      <br />
-      <input type="number" name="shots" placeholder="1024" id />
-      <br />
-      <br />
-      <br />
-    </div>
     <div class="box">
       <div class="lbl1">
         <label>Toolbox</label>
@@ -282,6 +270,9 @@ openNav() {
 </script>
 <!-- =============================================================  -->
 <style scoped>
+.toolbox{
+  display: inline-block;
+}
 .addGate {
   margin: 0em 0em 0em 0.2em;
   background-color: white;
