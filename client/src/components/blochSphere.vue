@@ -5,7 +5,7 @@
         src="http://127.0.0.1:5000/blochsphere.png"
         alt="blochSphere"
         id="bloch"
-        class="blochsphere-image"
+        class="blochsphere-image responsive"
       />
     </center>
   </div>

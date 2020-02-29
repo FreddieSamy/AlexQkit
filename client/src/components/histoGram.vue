@@ -4,7 +4,7 @@
       src="http://127.0.0.1:5000/chart.png" 
       alt="histogram" 
       id="chart" 
-      class="histogram-image"
+      class="histogram-image responsive"
       />
   </div>
 </template>
