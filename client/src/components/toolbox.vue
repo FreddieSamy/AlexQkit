@@ -1,6 +1,6 @@
 <template>
   <div class="toolbox">
-    <div class="tools-container" style="  border: 1px dashed black;">
+    <div class="tools-container">
       <div class="box-labels">
         <div class="tool-box-label">
           <label>Toolbox</label>
@@ -180,11 +180,13 @@ export default {
   },
   methods: {
     log: function(/*evt*/) {},
+    // ----------------------------------------------------
     cloneGate({ name }) {
       return {
         name: name,
       };
     },
+     // ----------------------------------------------------
     addGate(nameofgate) {
       this.customGates.push({
         name: nameofgate,
@@ -192,18 +194,19 @@ export default {
       });
       this.w = "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
     },
-
+     // ----------------------------------------------------
     openNav() {
       document.getElementById("myNav").style.width = "100%";
     },
+     // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav").style.width = "0%";
     },
+     // ----------------------------------------------------
     create_the_matrix() {
       this.closeNav();
       var nameofgate = document.getElementById("nameofgate").value;
       var valofgate = document.getElementById("valueofgate");
-
       var matrix = this.make_matrix(valofgate);
       window.console.log(matrix);
       var { matrix_validate, msg } = this.validate_of_matrix(matrix);
@@ -215,6 +218,7 @@ export default {
       document.getElementById("nameofgate").value = null;
       document.getElementById("valueofgate").value = null;
     },
+     // ----------------------------------------------------
     make_matrix(valofgate) {
       var row = valofgate.value.split("\n");
       var count;
@@ -228,6 +232,7 @@ export default {
       }
       return matrix;
     },
+     // ----------------------------------------------------
     validate_of_matrix(matrix) {
       var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
@@ -239,14 +244,12 @@ export default {
         matrix_validate = false;
         return { matrix_validate, msg };
       }
-
       for (count3 in matrix)
         if (matrix.length != matrix[count3].length) {
           matrix_validate = false;
           msg = "please check if the number of rows equal columns";
           return { matrix_validate, msg };
         }
-
       for (count1 in matrix) {
         for (count2 in matrix[count1]) {
           check = regex.test(matrix[count1][count2]);
@@ -260,10 +263,11 @@ export default {
       msg = "";
       return { matrix_validate, msg };
     },
-
+     // ----------------------------------------------------
     qasm() {
       this.$parent.qasmFlag = !this.$parent.qasmFlag;
     },
+     // ----------------------------------------------------
   },
 };
 </script>
@@ -273,7 +277,7 @@ export default {
   display: block;
 }
 .tools-container {
-  display: inline-block;
+  display: inline-block;  
 }
 .tool-box-label {
   display: inline-block;
@@ -301,30 +305,24 @@ export default {
   margin-right: 0.4em;
   height: 7.4em;
   overflow: auto;
-  border-radius: 0.3em;
+
 }
 .Area1 {
   margin: 0.1em 0.1em 0.1em 0.1em;
   display: inline-block;
-  border: 1px dashed black;
-  white-space: pre-wrap;
   height: 6.6em;
-  border-radius: 0.3em;
   width: 7.7em;
 }
 .Area2 {
   margin: 0.1em 0.1em 0.1em 0.1em;
   display: inline-block;
-  border: 1px dashed black;
   white-space: pre-wrap;
   height: 6.6em;
-  border-radius: 0.3em;
   width: 11.6em;
 }
 .custom-gates {
   border: 1px solid black;
   display: inline-block;
-  white-space: pre-wrap;
   height: 7.4em;
   overflow: auto;
   border-radius: 0.3em;
@@ -345,7 +343,6 @@ export default {
   margin: 0.3em 0.7em 0.3em 0.5em;
   width: 3em;
   height: 3em;
-  border-radius: 0.3em;
 }
 /*
 #c {
@@ -356,6 +353,7 @@ export default {
   margin: 0em 0em 0em 0.2em;
   background-color: white;
   border-radius: 0.5em;
+
 }
 .qasm {
   margin: 0em 0em 0em 0.2em;
