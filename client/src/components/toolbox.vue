@@ -1,6 +1,6 @@
 <template>
   <div class="toolbox">
-    <div class="box">
+    <div class="tools-container" style="  border: 1px dashed black;">
       <div class="box-labels">
         <div class="tool-box-label">
           <label>Toolbox</label>
@@ -89,7 +89,7 @@
         </draggable>
       </div>
       <draggable
-        class="dragArea2"
+        class="custom-gates"
         :list="customGates"
         :group="{ name: 'gates', pull: 'clone', put: false }"
         :clone="cloneGate"
@@ -107,10 +107,9 @@
           </div>
         </transition-group>
       </draggable>
-    </div>
+    </div><br>
     <div class="user-tools">
       <button class="qasm" @click="qasm">|qasm⟩</button>
-
       <div id="myNav" class="overlay">
         <a href="javascript:void(0)" class="closebtn" @click="closeNav()"
           >&#10006;</a
@@ -271,65 +270,10 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .toolbox {
-  display: flex;
-  float: left;
+  display: block;
 }
-.toolbox-gates {
-  border: 1px dashed black;
+.tools-container {
   display: inline-block;
-  margin: 0.3em 0.7em 0.3em 0.5em;
-  width: 2.5em;
-  height: 2.5em;
-  border-radius: 0.3em;
-  background-color: #d5d8dc;
-}
-.gate-name {
-  text-align: center;
-  margin: 0.7em 0.5em 0.5em 0.5em;
-  color: black;
-}
-.toolbox-of-gates {
-  border: 0.11em solid red;
-  display: inline-block;
-  margin-right: 0.4em;
-  height: 7.4em;
-  overflow: auto;
-  border-radius: 0.3em;
-}
-.dragArea2 {
-  border: 1px solid black;
-  display: inline-block;
-  white-space: pre-wrap;
-  height: 7.4em;
-  overflow: auto;
-  border-radius: 0.3em;
-}
-.Area1 {
-  margin: 0.1em 0.1em 0.1em 0.1em;
-  display: inline-block;
-  /*overflow: auto;*/
-  border: 1px dashed black;
-  white-space: pre-wrap;
-  height: 6.6em;
-  border-radius: 0.3em;
-  width: 7.7em;
-}
-.Area2 {
-  margin: 0.1em 0.1em 0.1em 0.1em;
-  display: inline-block;
-  /*overflow: auto;*/
-  border: 1px dashed black;
-  white-space: pre-wrap;
-  height: 6.6em;
-  border-radius: 0.3em;
-  width: 11.6em;
-}
-.flip-list-move {
-  transition: transform 0.3s;
-}
-.user-tools {
-  margin: 0em 0em 0em 0em;
-  height: 2em;
 }
 .tool-box-label {
   display: inline-block;
@@ -339,6 +283,60 @@ export default {
   display: inline-block;
   margin: 0em 0em 0em 37em;
 }
+.toolbox-gates {
+  display: inline-block;
+  margin: 0.3em 0.7em 0.3em 0.5em;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 0.3em;
+  background-color:#979A9A;
+}
+.gate-name {
+  text-align: center;
+  margin: 0.7em 0.5em 0.5em 0.5em;
+  color: black;
+}
+.toolbox-of-gates {
+  display: inline-block;
+  margin-right: 0.4em;
+  height: 7.4em;
+  overflow: auto;
+  border-radius: 0.3em;
+}
+.Area1 {
+  margin: 0.1em 0.1em 0.1em 0.1em;
+  display: inline-block;
+  border: 1px dashed black;
+  white-space: pre-wrap;
+  height: 6.6em;
+  border-radius: 0.3em;
+  width: 7.7em;
+}
+.Area2 {
+  margin: 0.1em 0.1em 0.1em 0.1em;
+  display: inline-block;
+  border: 1px dashed black;
+  white-space: pre-wrap;
+  height: 6.6em;
+  border-radius: 0.3em;
+  width: 11.6em;
+}
+.custom-gates {
+  border: 1px solid black;
+  display: inline-block;
+  white-space: pre-wrap;
+  height: 7.4em;
+  overflow: auto;
+  border-radius: 0.3em;
+}
+
+.flip-list-move {
+  transition: transform 0.3s;
+}
+.user-tools {
+  display: block;
+}
+
 .shots {
   display: inline-block;
   margin: 0em 1em 0em 1em;
@@ -349,14 +347,11 @@ export default {
   height: 3em;
   border-radius: 0.3em;
 }
-.box {
-  display: inline-block;
-}
+/*
 #c {
-  /*
   background-color: red;
-  */
 }
+*/
 .addGate {
   margin: 0em 0em 0em 0.2em;
   background-color: white;
