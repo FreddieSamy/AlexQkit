@@ -15,15 +15,13 @@
       group="gates"
       @change="change"
     >
-      <!-- @change="update"-->
       <div
-        class="circuit-gates"
+        class="circuit-gate"
         v-for="element in list"
         :key="element.id"
-        :id="element.name"
-      >
-        <div class="gate-name">{{ element.name }}</div>
-      </div>
+        v-text="element.name"
+        :idx="id"
+      ></div>
     </draggable>
   </div>
 </template>
@@ -35,28 +33,30 @@ export default {
   name: "wire",
   display: "wire",
   components: {
-    draggable
+    draggable,
   },
   data() {
     return {
       list: [],
       state: "0",
-      gates: []
+      gates: [],
     };
   },
   props: ["id"],
   methods: {
     change: function(event) {
-      window.console.log(event);
+      //window.console.log(event);
       var eventName = Object.keys(event)[0];
-      window.console.log("event name : " + eventName);
-      window.console.log(event[eventName]);
-      window.console.log(event[eventName]["element"]);
+      window.console.log("event name     : " + eventName);
+      //window.console.log(event[eventName]);
+      //window.console.log(event[eventName]["element"]);
       window.console.log(
-        "gate name      : " + event[eventName]["element"]["name"]
+        "gate name      : " + event[eventName]["element"]["name"],
       );
       window.console.log("gate new index : " + event[eventName]["newIndex"]);
-      window.console.log(JSON.stringify(this.list));
+      window.console.log(event);
+
+
       /*
       if(eventName == 'added'){
 
@@ -69,6 +69,8 @@ export default {
       }
       */
       this.$parent.addIdentityToRow(this.id);
+      this.currentid = this.id + "-" + event[eventName]["newIndex"];
+      return this.id + "-" + event[eventName]["newIndex"];
     },
     add: function(/*event*/) {
       window.console.log("gate has been added");
@@ -161,9 +163,9 @@ export default {
         names.push(listOfObject[i]["name"]);
       }
       return names;
-    }
+    },
     //-----------------------------------------------------------
-  }
+  },
 };
 </script>
 <!-- =============================================================  -->
@@ -171,21 +173,20 @@ export default {
 .wire {
   margin: 0.7em 0em 0em 0em;
 }
-.gate-name {
-  text-align: center;
-  margin: 0.8em 0.5em 0.5em 0.5em;
-}
-.circuit-gates {
+.circuit-gate {
   color: white;
+  text-align: center;
+  line-height: 2.5em;
   border: 0.15em solid black;
   border-radius: 0.7em;
   display: inline-block;
-  margin: 0.7em 0.5em 0.5em 0.5em;
+  margin: 0.8em 0.5em 0.5em 0.5em;
   padding: 0em 0em 0em 0em;
   width: 2.5em;
   height: 2.5em;
   background-color: #5d6d7e;
 }
+
 .lbl-wire {
   margin: 0.8em 0.5em 0.5em 0.5em;
 }

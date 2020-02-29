@@ -2,6 +2,7 @@
   <div class="circuit">
     <div class="upper-circuit">
       <toolbox></toolbox>
+     <!-- <ibm></ibm> --> 
     </div>
     <br />
     <div class="qasmAndWires">
@@ -20,21 +21,23 @@
       <div class="wires-buttons">
         <button class="add-wire" @click="rows++">Add Wire</button>
         <button class="remove-wire" @click="rows--">Remove Wire</button>
-        <button class="add-wire" @click="sendSystem">send</button><br>
+        <button class="add-wire" @click="sendSystem">send</button>
         <button class="add-wire" @click="resetSystem">reset system</button>
         <button class="add-wire" @click="clearConsole">Clear Console</button>
       </div>
     </div>
     <diracNotation></diracNotation>
-    <blochSphere></blochSphere>
-    <histoGram></histoGram>
+    <div class="visual-row">
+        <histoGram></histoGram>
+        <blochSphere></blochSphere>
+    </div>
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import toolbox from "./toolbox.vue";
 import wire from "./wire.vue";
-/*import ibm from "./ibm.vue";*/
+//import ibm from "./ibm.vue";
 import trash from "./trash.vue";
 import axios from "axios";
 import blochSphere from "./blochSphere.vue";
@@ -46,7 +49,7 @@ export default {
   display: "clone",
   components: {
     toolbox,
-    /*ibm,*/
+   //ibm,
     wire,
     trash,
     blochSphere,
@@ -133,14 +136,15 @@ export default {
     clearConsole: function() {
       window.console.clear();
     },
-
+    //---------------------------------------------
     draw: function() {
       var imgOfHistoGram = document.getElementById("chart");
       imgOfHistoGram.src = "http://127.0.0.1:5000/chart.png?time" + new Date();
       var imgofblochSphere = document.getElementById("bloch");
       imgofblochSphere.src =
         "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
-    }
+    },
+    //---------------------------------------------
   }
 };
 </script>
@@ -148,7 +152,7 @@ export default {
 <style scoped>
 .upper-circuit {
   /*border: 3px solid black;*/
-  display: inline-block;
+  display: flex;
   margin: 0.2em 0.2em 0.2em 0.2em;
   padding: 0em 0em 0em 0em;
   width: 99%;
@@ -219,6 +223,9 @@ export default {
   width: 99%;
   height: 99%;
   margin: 0.2em 0.2em 3em 0.2em;
+}
+.visual-row{
+  display: flex;
 }
 textarea {
   width: 90%;
