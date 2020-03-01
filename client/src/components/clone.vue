@@ -61,27 +61,38 @@ export default {
       diracNotationData: "|00⟩",
       route: "http://localhost:5000/data",
       states: ["0", "1", "+", "-", "i", "-i"],
-      rows: 2,
-      maxWire: 0, // number of wires
-      system: {}, // maximum number of gates in a wire
+      rows: 2,          // number of wires
+      maxWire: 0,       // maximum number of gates in a wire   
+      system: {}, 
+      qasmFlag: false,
       jsonObject: [
-        {
-          wire: 0,
-          init: [],
-          rows: []
-        }
+                  {
+                    wire: 0,
+                    init: [],
+                    rows: []
+                  }
       ],
-      qasmFlag: false
     };
   },
   methods: {
     //---------------------------------------------
-    updateSystem: function(wireId, wireData) {
-      this.system[wireId] = wireData;
-      if (this.maxWire < wireData[1].length) {
-        this.maxWire = wireData[1].length;
+    showSystem:function(){
+       for (let i = 0; i < this.rows; i++) {
+        var wireCaller = this.$refs.wire[i];
+        window.console.log(JSON.stringify(wireCaller.list));
       }
     },
+    updateMaxWire: function() {
+      let firstWire = this.$refs.wire[0];
+      this.maxWire = firstWire.list.length;
+      for (let i = 1 ; i < this.rows ; i++){
+          let wireCaller = this.$refs.wire[i];
+          if(wireCaller.list.length > this.maxWire){
+              this.maxWire = wireCaller.list.length
+          }
+      }
+      /* window.console.log("max wire = "+this.maxWire); */
+    }, 
     //---------------------------------------------
     resetSystem: function() {
       for (let i = 0; i < this.rows; i++) {
@@ -92,19 +103,26 @@ export default {
     //---------------------------------------------
     addIdentityToRow: function(wireId) {
       for (let i = 0; i < this.rows; i++) {
-        if (i + 1 != wireId) {
-          var wireCaller = this.$refs.wire[i];
-          wireCaller.addIdentity();
-        }
+         if(i + 1 != wireId ){
+           var wireCaller = this.$refs.wire[i];
+           wireCaller.addIdentity();
+         }
+
       }
     },
     //---------------------------------------------
     pruneIdentityRow: function() {
-      for (let i = 0; i < this.rows; i++) {
-        var wireCaller = this.$refs.wire[i];
-        wireCaller.popLast();
+       for(let i = this.maxWire-1 ; i >= 0 ;i--){
+         window.console.log("in column : "+i);
+        for (let j = 0; j < this.rows; j++) {
+          var wireCaller = this.$refs.wire[i];
+          if(wireCaller.list.length == i){
+              if(wireCaller.list[i]=='i'){
+                wireCaller.popLast();
+              }
+          }
       }
-      this.maxWire--;
+       }
     },
     //---------------------------------------------
     sendSystem: function() {

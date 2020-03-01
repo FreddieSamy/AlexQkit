@@ -308,12 +308,16 @@ export default {
 
 }
 .Area1 {
+  border: 1px solid black;
+  border-radius: 0.5em;
   margin: 0.1em 0.1em 0.1em 0.1em;
   display: inline-block;
   height: 6.6em;
   width: 7.7em;
 }
 .Area2 {
+  border: 1px solid black;
+  border-radius: 0.5em;
   margin: 0.1em 0.1em 0.1em 0.1em;
   display: inline-block;
   white-space: pre-wrap;

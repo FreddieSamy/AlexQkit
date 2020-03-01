@@ -45,45 +45,16 @@ export default {
   props: ["id"],
   methods: {
     change: function(event) {
-      //window.console.log(event);
+
+      this.$parent.updateMaxWire();                    // update wire that has maximum gates
       var eventName = Object.keys(event)[0];
-      window.console.log("event name     : " + eventName);
-      //window.console.log(event[eventName]);
-      //window.console.log(event[eventName]["element"]);
-      window.console.log(
-        "gate name      : " + event[eventName]["element"]["name"],
-      );
-      window.console.log("gate new index : " + event[eventName]["newIndex"]);
-      window.console.log(event);
-
-
-      /*
+      /*var gateName = event[eventName]["element"]["name"]; */
+      //var gateIndex = event[eventName]['newIndex']; 
       if(eventName == 'added'){
-
+          this.$parent.addIdentityToRow(this.id);
       }
-      else if (eventName == 'moved'){
-
-      }
-      else if (event == 'removed'){
-
-      }
-      */
-      this.$parent.addIdentityToRow(this.id);
-      this.currentid = this.id + "-" + event[eventName]["newIndex"];
-      return this.id + "-" + event[eventName]["newIndex"];
-    },
-    add: function(/*event*/) {
-      window.console.log("gate has been added");
-      this.$parent.addIdentityToRow(this.id);
-    },
-    //-----------------------------------------------------------
-    move: function() {
-      window.console.log("gate has been  moved");
-    },
-    //-----------------------------------------------------------
-    removed: function(evt) {
-      window.console.log("removed from wire " + this.id);
-      window.console.log("gate " + evt.target.id + " is remove");
+      this.$parent.pruneIdentityRow();
+          /* this.$parent.showSystem(); */
     },
     //-----------------------------------------------------------
     update: function(/*evt*/) {
@@ -115,6 +86,13 @@ export default {
     addIdentity: function() {
       this.list.push({ name: "i" });
       this.update();
+    },
+    removeGateByIndex:function(gateIndex){
+      window.console.log("remove gate by index");
+      if(this.list[gateIndex]!=null){
+        window.console.log("remove gate index "+gateIndex+" on wire "+this.id);
+         this.list.splice(gateIndex,1);
+      }
     },
     //-----------------------------------------------------------
     showWire: function() {

@@ -10,18 +10,25 @@
     </center>
   </div>
 </template>
+<!-- ========================================================== -->
+<script>
+export default {
+}
+</script>
+<!-- ========================================================== -->
 <style scoped>
 .blochSphereGraph {
   flex:1;
-  border: 0.2em solid black;
-  padding: 0em 0em 0em 0em;
-  margin:0em 1em 0em 1em;
+  border: 0.05em solid black;
+  padding: 0em 0em 0em 0.1em;
+  margin:  0em 0em 0em 0em;
   border-radius: 0.5em;
-  width:45%;
 }
 .blochsphere-image{
   margin: 4em 0em 0em 0em;
   padding: 0em 0em 0em 0em;
-  width:35em; 
+  height:auto;
+  width: auto;
+  max-width:35em;
 }
 </style>
