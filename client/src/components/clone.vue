@@ -2,15 +2,17 @@
   <div class="circuit">
     <div class="upper-circuit">
       <toolbox></toolbox>
-     <!-- <ibm></ibm> --> 
+      <!-- <ibm></ibm> -->
     </div>
     <br />
     <div class="qasmAndWires">
       <div class="qasm" v-if="qasmFlag">
-        <textarea>OPENQASM 2.0; include "qelib1.inc";</textarea>
-        <button class="qasmBtn">Run</button>
+        <textarea id="qasmText">OPENQASM 2.0; include "qelib1.inc";</textarea>
+        <button class="qasmBtn" @click="sendQasm">Run</button>
       </div>
-      <div class="wiresBlock">
+      <h3>{{ qasmError }}</h3>
+      <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
+      <div v-if="!qasmFlag" class="wiresBlock">
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
@@ -28,12 +30,9 @@
     </div>
     <diracNotation></diracNotation>
     <div class="visual-row">
-        <histoGram></histoGram>
-        <blochSphere></blochSphere>
-        <circuitDrawing></circuitDrawing>
-        
+      <histoGram></histoGram>
+      <blochSphere></blochSphere>
     </div>
-    
   </div>
 </template>
 <!-- =============================================================  -->
@@ -53,7 +52,7 @@ export default {
   display: "clone",
   components: {
     toolbox,
-   //ibm,
+    //ibm,
     wire,
     trash,
     blochSphere,
@@ -63,26 +62,27 @@ export default {
   },
   data() {
     return {
+      qasmError: "",
       diracNotationData: "|00⟩",
       route: "http://localhost:5000/data",
       states: ["0", "1", "+", "-", "i", "-i"],
-      rows: 2,          // number of wires
-      maxWire: 0,       // maximum number of gates in a wire   
-      system: {}, 
+      rows: 2, // number of wires
+      maxWire: 0, // maximum number of gates in a wire
+      system: {},
       qasmFlag: false,
       jsonObject: [
-                  {
-                    wire: 0,
-                    init: [],
-                    rows: []
-                  }
-      ],
+        {
+          wire: 0,
+          init: [],
+          rows: []
+        }
+      ]
     };
   },
   methods: {
     //---------------------------------------------
-    showSystem:function(){
-       for (let i = 0; i < this.rows; i++) {
+    showSystem: function() {
+      for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
         window.console.log(JSON.stringify(wireCaller.list));
       }
@@ -90,14 +90,14 @@ export default {
     updateMaxWire: function() {
       let firstWire = this.$refs.wire[0];
       this.maxWire = firstWire.list.length;
-      for (let i = 1 ; i < this.rows ; i++){
-          let wireCaller = this.$refs.wire[i];
-          if(wireCaller.list.length > this.maxWire){
-              this.maxWire = wireCaller.list.length
-          }
+      for (let i = 1; i < this.rows; i++) {
+        let wireCaller = this.$refs.wire[i];
+        if (wireCaller.list.length > this.maxWire) {
+          this.maxWire = wireCaller.list.length;
+        }
       }
-      // window.console.log("max wire = "+this.maxWire); 
-    }, 
+      // window.console.log("max wire = "+this.maxWire);
+    },
     //---------------------------------------------
     resetSystem: function() {
       for (let i = 0; i < this.rows; i++) {
@@ -108,51 +108,48 @@ export default {
     //---------------------------------------------
     addIdentityToColumn: function(wireId) {
       for (let i = 0; i < this.rows; i++) {
-         if(i + 1 != wireId ){
-           var wireCaller = this.$refs.wire[i];
-           wireCaller.addIdentity();
-         }
+        if (i + 1 != wireId) {
+          var wireCaller = this.$refs.wire[i];
+          wireCaller.addIdentity();
+        }
       }
     },
     //---------------------------------------------
     removeIdentityColumn: function(columnIndex) {
-        for(let row = 0 ; row < this.rows ; row++){
-            var wireCaller = this.$refs.wire[row];
-            wireCaller.removeGateByIndex(columnIndex);
-        }
+      for (let row = 0; row < this.rows; row++) {
+        var wireCaller = this.$refs.wire[row];
+        wireCaller.removeGateByIndex(columnIndex);
+      }
     },
     //---------------------------------------------
-    isAllColumnIdentity:function(columnIndex){
-     // var identiyCounter = 0
-      for(let i = 0 ; i < this.rows ; i++){
-          var wireList = this.$refs.wire[i].list;
-          var gateName = wireList[columnIndex]['name'];
-        
-          if(gateName.localeCompare('i')!==0){
-           //window.console.log("found a gate on column "+columnIndex+" is not identiy gate:"+ gateName);
-           return false;
-          }
-      }
-     //window.console.log("all coulmn is "+columnIndex+" identity");
-      return true;
-  
-    },
-       //---------------------------------------------
-    removeIdentitySystem:function(){
-      for(let colIdx = this.maxWire-1 ; colIdx >=0 ; colIdx-- ){
-          if(this.isAllColumnIdentity(colIdx)){
-            this.removeIdentityColumn(colIdx)
-          }
-      }
+    isAllColumnIdentity: function(columnIndex) {
+      // var identiyCounter = 0
+      for (let i = 0; i < this.rows; i++) {
+        var wireList = this.$refs.wire[i].list;
+        var gateName = wireList[columnIndex]["name"];
 
+        if (gateName.localeCompare("i") !== 0) {
+          //window.console.log("found a gate on column "+columnIndex+" is not identiy gate:"+ gateName);
+          return false;
+        }
+      }
+      //window.console.log("all coulmn is "+columnIndex+" identity");
+      return true;
     },
     //---------------------------------------------
-    addWire:function(){
+    removeIdentitySystem: function() {
+      for (let colIdx = this.maxWire - 1; colIdx >= 0; colIdx--) {
+        if (this.isAllColumnIdentity(colIdx)) {
+          this.removeIdentityColumn(colIdx);
+        }
+      }
+    },
+    //---------------------------------------------
+    addWire: function() {
       this.rows++;
       // let row = this.rows;
       //var wireCaller = this.$refs.wire[this.rows];
       //wireCaller.addIdentity();
-    
     },
     //---------------------------------------------
     sendSystem: function() {
@@ -177,6 +174,8 @@ export default {
         window.console.log(res);
         this.draw();
         this.diracNotationData = res.data.diracNotation;
+        this.qasmError = res.data.qasmError;
+        window.console.log(res.data.qasmError);
       });
     },
     //---------------------------------------------
@@ -187,23 +186,29 @@ export default {
     draw: function() {
       var imgOfHistoGram = document.getElementById("chart");
       imgOfHistoGram.src = "http://127.0.0.1:5000/chart.png?time" + new Date();
-      
+
       var imgofblochSphere = document.getElementById("bloch");
       imgofblochSphere.src =
         "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
 
-        var imgOfCircuit = document.getElementById("circuitDrawing");
-      imgOfCircuit.src =
-        "http://127.0.0.1:5000//circuit.png?time=" + new Date();
-
+      var imgOfCircuit = document.getElementById("circuitDrawing");
+      imgOfCircuit.src = "http://127.0.0.1:5000/circuit.png?time=" + new Date();
     },
+    //---------------------------------------------
+    sendQasm: function() {
+      this.qasmError = "";
+      this.jsonObject[0] = {
+        qasm: document.getElementById("qasmText").value
+      };
+      this.sendToServer(this.route, this.jsonObject);
+    }
     //---------------------------------------------
   }
 };
 </script>
 <!-- =============================================================  -->
 <style scoped>
-.circuit{
+.circuit {
   white-space: nowrap;
 }
 .upper-circuit {
@@ -212,7 +217,7 @@ export default {
   margin: 0.2em 0.2em 0.2em 0.2em;
   padding: 0em 0em 0em 0em;
   width: 99%;
-  white-space:normal;
+  white-space: normal;
 }
 .wires {
   /*border: 0.1em dashed blue;*/
@@ -281,7 +286,7 @@ export default {
   height: 99%;
   margin: 0.2em 0.2em 3em 0.2em;
 }
-.visual-row{
+.visual-row {
   display: flex;
 }
 textarea {

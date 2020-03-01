@@ -38,10 +38,18 @@ def run():
     if request.method=='POST':
         recievedDic=request.get_json()
         #print("recieved data from Vue : ",recievedDic[0])
-        c.createCircuit(recievedDic[0])
+        print(recievedDic[0])
+        if "qasm" in recievedDic[0]:
+            try:
+                c.qasm(recievedDic[0])
+            except Exception as e:
+                return jsonify({"qasmError":str(e)});
+        else:
+            c.createCircuit(recievedDic[0])
         #print("retrived data from qiskit : ",c.returnedDictionary)
     else:
         c.returnedDictionary={}
+    c.returnedDictionary["qasmError"]="";
     return  jsonify(c.returnedDictionary) 
 @app.route('/blochsphere.png',methods=['GET','POST'])
 def blochSphere():
