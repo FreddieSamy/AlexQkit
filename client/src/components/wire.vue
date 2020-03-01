@@ -80,7 +80,7 @@ export default {
         return this.list[gateIndex];
     },
     removeGateByIndex:function(gateIndex){
-      if(this.list[gateIndex]!=undefined){
+      if(this.list[gateIndex]['name']=='i'){
          window.console.log("remove "+gateIndex+" th gate at wire"+this.id);
          this.list.splice(gateIndex,1);
       }

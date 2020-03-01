@@ -19,7 +19,7 @@
     <div class="toolbox-2">
       <trash></trash>
       <div class="wires-buttons">
-        <button class="add-wire" @click="rows++">Add Wire</button>
+        <button class="add-wire" @click="addWire">Add Wire</button>
         <button class="remove-wire" @click="rows--">Remove Wire</button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="add-wire" @click="resetSystem">reset system</button>
@@ -110,8 +110,11 @@ export default {
       }
     },
     //---------------------------------------------
-    removeIdentityColumn: function() {
-
+    removeIdentityColumn: function(columnIndex) {
+        for(let row = 0 ; row < this.rows ; row++){
+            var wireCaller = this.$refs.wire[row];
+            wireCaller.removeGateByIndex(columnIndex);
+        }
     },
     //---------------------------------------------
     isAllColumnIdentity:function(columnIndex){
@@ -119,23 +122,32 @@ export default {
       for(let i = 0 ; i < this.rows ; i++){
           var wireList = this.$refs.wire[i].list;
           var gateName = wireList[columnIndex]['name'];
+        
           if(gateName.localeCompare('i')!==0){
-           //window.console.log("found a gate on column "+columnIndex+" is not identiy '+gateName");
+           //window.console.log("found a gate on column "+columnIndex+" is not identiy gate:"+ gateName);
            return false;
           }
       }
-     // window.console.log("all coulmn is "+columnIndex+" identity");
+     //window.console.log("all coulmn is "+columnIndex+" identity");
       return true;
   
     },
        //---------------------------------------------
     removeIdentitySystem:function(){
-      for(let i = this.maxWire-1 ; i >=0 ; i-- ){
-          this.isAllColumnIdentity(i);
-
-          
+      for(let colIdx = this.maxWire-1 ; colIdx >=0 ; colIdx-- ){
+          if(this.isAllColumnIdentity(colIdx)){
+            this.removeIdentityColumn(colIdx)
+          }
       }
 
+    },
+    //---------------------------------------------
+    addWire:function(){
+      this.rows++;
+      // let row = this.rows;
+      //var wireCaller = this.$refs.wire[this.rows];
+      //wireCaller.addIdentity();
+    
     },
     //---------------------------------------------
     sendSystem: function() {
