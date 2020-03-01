@@ -50,22 +50,10 @@ export default {
       /*var gateName = event[eventName]["element"]["name"]; */
       //var gateIndex = event[eventName]['newIndex']; 
       if(eventName == 'added'){
-          this.$parent.addIdentityToRow(this.id);
+          this.$parent.addIdentityToColumn(this.id);
       }
-      this.$parent.pruneIdentityRow();
+      this.$parent.removeIdentitySystem();
           /* this.$parent.showSystem(); */
-    },
-    //-----------------------------------------------------------
-    update: function(/*evt*/) {
-      //var eventObject = evt;
-      //window.console.log('change happened');
-      //window.console.log(evt);
-      //window.console.log(typeof(evt));
-      //window.console.log(eventObject["added"]);
-      //window.console.log(JSON.stringify(eventObject));
-      // window.console.log(evt.target.id);
-      //var wireData = [this.state, this.objectNames(this.list)];
-      //this.$parent.updateSystem(this.id, wireData);
     },
     //-----------------------------------------------------------
     qubitState: function(evt) {
@@ -87,18 +75,15 @@ export default {
            this.list.push({ name: "i" });
       }
     },
+    getGateByIndex:function(gateIndex){
+      window.console.log(this.list[gateIndex]);
+        return this.list[gateIndex];
+    },
     removeGateByIndex:function(gateIndex){
-      window.console.log("remove gate by index");
-      if(this.list[gateIndex]!=null){
-        window.console.log("remove gate index "+gateIndex+" on wire "+this.id);
+      if(this.list[gateIndex]!=undefined){
+         window.console.log("remove "+gateIndex+" th gate at wire"+this.id);
          this.list.splice(gateIndex,1);
       }
-    },
-    //-----------------------------------------------------------
-    showWire: function() {
-      return (
-        "wire " + this.id + " called by Clone " + JSON.stringify(this.list)
-      );
     },
     //-----------------------------------------------------------
     resetWire: function() {
@@ -114,9 +99,7 @@ export default {
     },
     //-----------------------------------------------------------
     popLast: function() {
-      if (this.list[this.list.length-1] == 'i'){
             this.list.pop();
-          }
     },
     //-----------------------------------------------------------
     getState: function() {
