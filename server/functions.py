@@ -672,6 +672,10 @@ class Circuit():
                 else:
                     self.nonControlledColumns(circuit,cols[i],customGates)
                     
+                    
+        self.blochSphereGraph = self.blochSphere(circuit)
+        self.histoGramGraph = self.graph(circuit,shots)
+        self.circutDrawing = self.draw(circuit)
     
         if "API_TOKEN" in receivedDictionary:
             if receivedDictionary["API_TOKEN"] !="":
@@ -683,9 +687,6 @@ class Circuit():
                                     }
             
         else:
-            self.blochSphereGraph = self.blochSphere(circuit)
-            self.histoGramGraph = self.graph(circuit,shots)
-            self.circutDrawing = self.draw(circuit)
             self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
                                 "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
                                 "qasm" : circuit.qasm()
@@ -820,21 +821,21 @@ class Circuit():
         shots=1024
         if "shots" in receivedDictionary:
             shots=receivedDictionary["shots"]
+            
+        self.blochSphereGraph = self.blochSphere(circuit)
+        self.histoGramGraph = self.graph(circuit,shots)
+        self.circutDrawing = self.draw(circuit)    
+        
         if "API_TOKEN" in receivedDictionary:
             if "API_TOKEN" !="":
-                self.returnedDictionary={"wires":len(cols[0]),
-                                         "diracNotation":self.diracNotation(circuit),
+                self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
                                          "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
                                          "cols":cols,
                                          "link":self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
                                          }
             
         else:
-            self.blochSphereGraph = self.blochSphere(circuit)
-            self.histoGramGraph = self.graph(circuit,shots)
-            self.circutDrawing = self.draw(circuit)
-            self.returnedDictionary={"wires":len(cols[0]),
-                                     "diracNotation":self.diracNotation(circuit),
+            self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
                                      "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
                                      "cols" : cols
                                      }
