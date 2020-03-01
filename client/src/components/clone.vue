@@ -119,27 +119,21 @@ export default {
       for(let i = 0 ; i < this.rows ; i++){
           var wireList = this.$refs.wire[i].list;
           var gateName = wireList[columnIndex]['name'];
-          var getName = toString(gateName);
-          window.console.log(typeof(getName));
-          if(gateName != 'i');{
-            //identiyCounter++;
-           window.console.log('counter '+gateName);
+          if(gateName.localeCompare('i')!==0){
+           //window.console.log("found a gate on column "+columnIndex+" is not identiy '+gateName");
+           return false;
           }
-       
       }
-      /*
-      if(identiyCounter==this.rows){
-        window.console.log("column "+columnIndex+" is all identity");
-        return true;
-      }
-      window.console.log('column '+columnIndex+ ' is not all identity')
-      return false
-      */
+     // window.console.log("all coulmn is "+columnIndex+" identity");
+      return true;
+  
     },
        //---------------------------------------------
     removeIdentitySystem:function(){
-      for(let i = this.maxWire ; i > 0 ; i-- ){
-          this.isAllColumnIdentity(i-1);
+      for(let i = this.maxWire-1 ; i >=0 ; i-- ){
+          this.isAllColumnIdentity(i);
+
+          
       }
 
     },
