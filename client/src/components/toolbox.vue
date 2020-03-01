@@ -238,6 +238,11 @@ export default {
       var msg = "please check the dimenons of the matrix";
       var count1, count2, count3, check;
       var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
+      if (nameofgate==""){
+        msg="you have to enter name for gate";
+        matrix_validate=false;
+        return{matrix_validate,msg};
+      }
       if (Number.isInteger(Math.log2(matrix.length))) {
         matrix_validate = true;
       } else {
