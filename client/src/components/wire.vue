@@ -18,8 +18,8 @@
         class="circuit-gate"
         v-for="element in list"
         :key="element.id"
+        :id="element.name"
         v-text="element.name"
-        :idx="id"
       ></div>
     </draggable>
   </div>
@@ -81,7 +81,7 @@ export default {
     },
     removeGateByIndex:function(gateIndex){
       if(this.list[gateIndex]['name']=='i'){
-         window.console.log("remove "+gateIndex+" th gate at wire"+this.id);
+         //window.console.log("remove "+gateIndex+" th gate at wire"+this.id);
          this.list.splice(gateIndex,1);
       }
     },
@@ -202,7 +202,7 @@ export default {
   /*border: 0.1em dashed black;*/
 }
 #i {
-  opacity: 0.33;
+  opacity: 0.03;
 }
 /*
 #c{
