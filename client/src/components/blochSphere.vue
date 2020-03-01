@@ -23,6 +23,7 @@ export default {
   padding: 0em 0em 0em 0.1em;
   margin:  0em 0em 0em 0em;
   border-radius: 0.5em;
+   max-width:32em;
 }
 .blochsphere-image{
   margin: 4em 0em 0em 0em;

@@ -21,13 +21,13 @@ export default {
   padding: 0em 0em 0em 0em;
   margin: 0em 0em 0em 1em;
   border-radius: 0.5em;
-
+  max-width:35em;
 }
 .histogram-image{ 
   margin: 4em 0em 0em 0em;
   padding: 0em 0em 0em 0em;
   height:auto;
   width: auto;
-  max-width:35em;
+  max-width: 100%;
 }
 </style>
