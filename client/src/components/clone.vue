@@ -30,7 +30,10 @@
     <div class="visual-row">
         <histoGram></histoGram>
         <blochSphere></blochSphere>
+        <circuitDrawing></circuitDrawing>
+        
     </div>
+    
   </div>
 </template>
 <!-- =============================================================  -->
@@ -43,6 +46,7 @@ import axios from "axios";
 import blochSphere from "./blochSphere.vue";
 import histoGram from "./histoGram.vue";
 import diracNotation from "./diracNotation.vue";
+import circuitDrawing from "./circuitDrawing.vue";
 
 export default {
   name: "clone",
@@ -54,7 +58,8 @@ export default {
     trash,
     blochSphere,
     histoGram,
-    diracNotation
+    diracNotation,
+    circuitDrawing
   },
   data() {
     return {
@@ -182,9 +187,15 @@ export default {
     draw: function() {
       var imgOfHistoGram = document.getElementById("chart");
       imgOfHistoGram.src = "http://127.0.0.1:5000/chart.png?time" + new Date();
+      
       var imgofblochSphere = document.getElementById("bloch");
       imgofblochSphere.src =
         "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
+
+        var imgOfCircuit = document.getElementById("circuitDrawing");
+      imgOfCircuit.src =
+        "http://127.0.0.1:5000//circuit.png?time=" + new Date();
+
     },
     //---------------------------------------------
   }

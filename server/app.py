@@ -50,7 +50,7 @@ def blochSphere():
 def chart():
     return graphDrawing(c.histoGramGraph)
 
-@app.route('/circuit.png')
+@app.route('/circuit.png',methods=['GET','POST'])
 def circuitDraw():
     return  graphDrawing(c.circutDrawing)
 @app.route('/reset',methods=['GET','POST'])
