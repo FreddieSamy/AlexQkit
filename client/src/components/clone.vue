@@ -91,7 +91,7 @@ export default {
               this.maxWire = wireCaller.list.length
           }
       }
-      /* window.console.log("max wire = "+this.maxWire); */
+      // window.console.log("max wire = "+this.maxWire); 
     }, 
     //---------------------------------------------
     resetSystem: function() {
@@ -101,17 +101,46 @@ export default {
       }
     },
     //---------------------------------------------
-    addIdentityToRow: function(wireId) {
+    addIdentityToColumn: function(wireId) {
       for (let i = 0; i < this.rows; i++) {
          if(i + 1 != wireId ){
            var wireCaller = this.$refs.wire[i];
            wireCaller.addIdentity();
          }
-
       }
     },
     //---------------------------------------------
-    pruneIdentityRow: function() {
+    removeIdentityColumn: function() {
+
+    },
+    //---------------------------------------------
+    isAllColumnIdentity:function(columnIndex){
+     // var identiyCounter = 0
+      for(let i = 0 ; i < this.rows ; i++){
+          var wireList = this.$refs.wire[i].list;
+          var gateName = wireList[columnIndex]['name'];
+          var getName = toString(gateName);
+          window.console.log(typeof(getName));
+          if(gateName != 'i');{
+            //identiyCounter++;
+           window.console.log('counter '+gateName);
+          }
+       
+      }
+      /*
+      if(identiyCounter==this.rows){
+        window.console.log("column "+columnIndex+" is all identity");
+        return true;
+      }
+      window.console.log('column '+columnIndex+ ' is not all identity')
+      return false
+      */
+    },
+       //---------------------------------------------
+    removeIdentitySystem:function(){
+      for(let i = this.maxWire ; i > 0 ; i-- ){
+          this.isAllColumnIdentity(i-1);
+      }
 
     },
     //---------------------------------------------
@@ -135,7 +164,6 @@ export default {
       axios.post(route, jsonObject).then(res => {
         window.console.log("the data success to returned be from the server");
         window.console.log(res);
-
         this.draw();
         this.diracNotationData = res.data.diracNotation;
       });
