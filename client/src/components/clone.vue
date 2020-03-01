@@ -27,6 +27,7 @@
         <button class="add-wire" @click="resetSystem">reset system</button>
         <button class="add-wire" @click="clearConsole">Clear Console</button>
       </div>
+      <ibm :ref="'ibm'"></ibm>
     </div>
     <diracNotation></diracNotation>
     <div class="visual-row">
@@ -39,7 +40,7 @@
 <script>
 import toolbox from "./toolbox.vue";
 import wire from "./wire.vue";
-//import ibm from "./ibm.vue";
+import ibm from "./ibm.vue";
 import trash from "./trash.vue";
 import axios from "axios";
 import blochSphere from "./blochSphere.vue";
@@ -52,7 +53,7 @@ export default {
   display: "clone",
   components: {
     toolbox,
-    //ibm,
+    ibm,
     wire,
     trash,
     blochSphere,
@@ -72,6 +73,7 @@ export default {
       qasmFlag: false,
       jsonObject: [
         {
+          API_TOKEN:"",
           wire: 0,
           init: [],
           rows: []
@@ -155,12 +157,14 @@ export default {
     sendSystem: function() {
       var statesSystem = [];
       var gatesSystem = [];
+      var ibmconnect=this.$refs.ibm;
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
         statesSystem.push(wireCaller.getState());
         gatesSystem.push(wireCaller.getGates());
       }
       this.jsonObject[0] = {
+        API_TOKEN:ibmconnect.get_ibm_token(),
         wires: this.rows,
         init: statesSystem,
         rows: gatesSystem
