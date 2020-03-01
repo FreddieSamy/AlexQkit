@@ -2,11 +2,10 @@
   <div class="wire" :id="'wire-' + id">
     <div class="delete-wire" :id="'d-' + id">
       <button class="delete" @click="deleteWire">x</button>
-      <label class="lbl-wire">{{ id }}</label>
     </div>
     <div class="qubit">
       <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">
-        {{ "|" + state + "⟩" }}
+        |{{state}}⟩
       </button>
     </div>
     <draggable
@@ -84,8 +83,9 @@ export default {
     },
     //-----------------------------------------------------------
     addIdentity: function() {
-      this.list.push({ name: "i" });
-      this.update();
+      for(let i=this.list.length; i<this.$parent.maxWire;i++){
+           this.list.push({ name: "i" });
+      }
     },
     removeGateByIndex:function(gateIndex){
       window.console.log("remove gate by index");
@@ -114,9 +114,10 @@ export default {
     },
     //-----------------------------------------------------------
     popLast: function() {
-      this.list.pop();
+      if (this.list[this.list.length-1] == 'i'){
+            this.list.pop();
+          }
     },
-
     //-----------------------------------------------------------
     getState: function() {
       return this.state;
@@ -133,7 +134,9 @@ export default {
       this.state = state;
     },
     //-----------------------------------------------------------
-    setGates: function() {},
+    setGates: function(gatesList) {
+      this.list = gatesList;
+    },
     //-----------------------------------------------------------
     objectNames: function(listOfObject) {
       var names = [];

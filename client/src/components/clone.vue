@@ -112,17 +112,7 @@ export default {
     },
     //---------------------------------------------
     pruneIdentityRow: function() {
-       for(let i = this.maxWire-1 ; i >= 0 ;i--){
-         window.console.log("in column : "+i);
-        for (let j = 0; j < this.rows; j++) {
-          var wireCaller = this.$refs.wire[i];
-          if(wireCaller.list.length == i){
-              if(wireCaller.list[i]=='i'){
-                wireCaller.popLast();
-              }
-          }
-      }
-       }
+
     },
     //---------------------------------------------
     sendSystem: function() {
@@ -168,12 +158,16 @@ export default {
 </script>
 <!-- =============================================================  -->
 <style scoped>
+.circuit{
+  white-space: nowrap;
+}
 .upper-circuit {
   /*border: 3px solid black;*/
   display: flex;
   margin: 0.2em 0.2em 0.2em 0.2em;
   padding: 0em 0em 0em 0em;
   width: 99%;
+  white-space:normal;
 }
 .wires {
   /*border: 0.1em dashed blue;*/
