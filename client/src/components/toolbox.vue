@@ -233,7 +233,7 @@ export default {
       return matrix;
     },
      // ----------------------------------------------------
-    validate_of_matrix(matrix) {
+    validate_of_matrix(matrix,nameofgate) {
       var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
       var count1, count2, count3, check;
