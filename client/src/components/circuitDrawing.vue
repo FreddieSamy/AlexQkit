@@ -23,12 +23,13 @@ export default {
   padding: 0em 0em 0em 0.1em;
   margin:  0em 0em 0em 0em;
   border-radius: 0.5em;
+  max-width:30em;
 }
 .circuitDrawing-image{
   margin: 4em 0em 0em 0em;
   padding: 0em 0em 0em 0em;
   height:auto;
   width: auto;
-  max-width:35em;
+  max-width: 100%;
 }
 </style>
