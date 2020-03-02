@@ -43,6 +43,7 @@ export default {
   },
   props: ["id"],
   methods: {
+    //-----------------------------------------------------------------------
     change: function(event) {
       this.$parent.updateMaxWire(); // update wire that has maximum gates
       var eventName = Object.keys(event)[0];
@@ -50,50 +51,49 @@ export default {
       //var gateIndex = event[eventName]['newIndex'];
       if (eventName == "added") {
         this.$parent.addIdentityToColumn(this.id);
-        this.$parent.removeIdentitySystem();
       }
       if(eventName == 'removed'){
           this.addIdentity();
-          this.$parent.removeIdentitySystem();
       }
-      
+      this.$parent.removeIdentitySystem();
       /* this.$parent.showSystem(); */
     },
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
     qubitState: function(evt) {
       var i = (parseInt(evt.target.id["3"]) + 1) % 6;
       var id = evt.target.id.substring(0, 3);
       evt.target.id = id + i;
       evt.target.innerHTML = "|" + this.$parent.states[i] + "⟩";
       this.state = this.$parent.states[i];
-      
     },
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
     deleteWire: function(evt) {
       var el = evt.target.parentNode.parentNode;
       el.parentNode.removeChild(el);
     },
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
     addIdentity: function() {
       for (let i = this.list.length; i < this.$parent.maxWire; i++) {
         this.list.push({ name: "i" });
       }
     },
+    //-----------------------------------------------------------------------
     getGateByIndex: function(gateIndex) {
       window.console.log(this.list[gateIndex]);
       return this.list[gateIndex];
     },
+    //-----------------------------------------------------------------------
     removeGateByIndex: function(gateIndex) {
       if (this.list[gateIndex]["name"] == "i") {
         //window.console.log("remove "+gateIndex+" th gate at wire"+this.id);
         this.list.splice(gateIndex, 1);
       }
     },
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
     resetWire: function() {
       this.list = [];
     },
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
     lastIdentity: function() {
       if (this.list.length == this.$parent.maxWire) {
         return this.list[this.$parent.maxWire - 1]["name"];
@@ -101,15 +101,15 @@ export default {
         return "";
       }
     },
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
     popLast: function() {
       this.list.pop();
     },
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
     getState: function() {
       return this.state;
     },
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
     getGates: function() {
       this.gates = [];
       for (let colIdx = 0; colIdx < this.list.length; colIdx++) {
@@ -117,17 +117,18 @@ export default {
       }
       return this.gates;
     },
+    //-----------------------------------------------------------------------
     setState: function(state) {
       this.state = state;
     },
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
     setGates: function(gatesList) {
       this.list= [];
         for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
         this.list.push({ name:  gatesList[colIdx] });
       }
     },
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
     objectNames: function(listOfObject) {   // unused till now
       var names = [];
       for (let i = 0; i < listOfObject.length; i++) {
@@ -135,7 +136,7 @@ export default {
       }
       return names;
     }
-    //-----------------------------------------------------------
+    //-----------------------------------------------------------------------
   }
 };
 </script>
