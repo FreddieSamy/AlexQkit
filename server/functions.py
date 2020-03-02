@@ -831,13 +831,15 @@ class Circuit():
                 self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
                                          "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
                                          "cols":cols,
+                                         "qasm":"",
                                          "link":self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
                                          }
             
         else:
             self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
                                      "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
-                                     "cols" : cols
+                                     "cols" : cols,
+                                     "qasm":""
                                      }
         #return self.returnedDictionary
             

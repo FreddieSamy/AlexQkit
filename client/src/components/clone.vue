@@ -1,16 +1,18 @@
 <template>
   <div class="circuit">
-    <div class="upper-circuit">
+    <div v-if="!qasmFlag" class="upper-circuit">
       <toolbox></toolbox>
       <!-- <ibm></ibm> -->
     </div>
     <br />
     <div class="qasmAndWires">
+      <pre class="qasmText" v-if="qasmTextFlag">{{ this.qasmText }}</pre>
       <div class="qasm" v-if="qasmFlag">
-        <textarea id="qasmText">OPENQASM 2.0; include "qelib1.inc";</textarea>
+        <button class="qasmBtn" @click="qasm">Draggable Circuit</button>
+        <textarea id="textarea">OPENQASM 2.0; include "qelib1.inc";</textarea>
         <button class="qasmBtn" @click="sendQasm">Run</button>
       </div>
-      <h3>{{ qasmError }}</h3>
+      <h3 v-if="qasmFlag">{{ qasmError }}</h3>
       <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
       <div v-if="!qasmFlag" class="wiresBlock">
         <div class="wires">
@@ -19,15 +21,14 @@
       </div>
     </div>
     <div class="toolbox-2">
-      <trash></trash>
-      <div class="wires-buttons">
+      <trash v-if="!qasmFlag"></trash>
+      <div v-if="!qasmFlag" class="wires-buttons">
         <button class="add-wire" @click="addWire">Add Wire</button>
         <button class="remove-wire" @click="rows--">Remove Wire</button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="add-wire" @click="resetSystem">reset system</button>
         <button class="add-wire" @click="clearConsole">Clear Console</button>
       </div>
-      <ibm :ref="'ibm'"></ibm>
     </div>
     <diracNotation></diracNotation>
     <div class="visual-row">
@@ -40,7 +41,7 @@
 <script>
 import toolbox from "./toolbox.vue";
 import wire from "./wire.vue";
-import ibm from "./ibm.vue";
+//import ibm from "./ibm.vue";
 import trash from "./trash.vue";
 import axios from "axios";
 import blochSphere from "./blochSphere.vue";
@@ -53,7 +54,7 @@ export default {
   display: "clone",
   components: {
     toolbox,
-    ibm,
+    //ibm,
     wire,
     trash,
     blochSphere,
@@ -64,6 +65,7 @@ export default {
   data() {
     return {
       qasmError: "",
+      qasmText: "There is no circuit",
       diracNotationData: "|00⟩",
       route: "http://localhost:5000/data",
       states: ["0", "1", "+", "-", "i", "-i"],
@@ -71,9 +73,9 @@ export default {
       maxWire: 0, // maximum number of gates in a wire
       system: {},
       qasmFlag: false,
+      qasmTextFlag: false,
       jsonObject: [
         {
-          API_TOKEN:"",
           wire: 0,
           init: [],
           rows: []
@@ -157,14 +159,12 @@ export default {
     sendSystem: function() {
       var statesSystem = [];
       var gatesSystem = [];
-      var ibmconnect=this.$refs.ibm;
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
         statesSystem.push(wireCaller.getState());
         gatesSystem.push(wireCaller.getGates());
       }
       this.jsonObject[0] = {
-        API_TOKEN:ibmconnect.get_ibm_token(),
         wires: this.rows,
         init: statesSystem,
         rows: gatesSystem
@@ -179,6 +179,7 @@ export default {
         this.draw();
         this.diracNotationData = res.data.diracNotation;
         this.qasmError = res.data.qasmError;
+        this.qasmText = res.data.qasm;
         window.console.log(res.data.qasmError);
       });
     },
@@ -195,18 +196,30 @@ export default {
       imgofblochSphere.src =
         "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
 
-      var imgOfCircuit = document.getElementById("circuitDrawing");
-      imgOfCircuit.src = "http://127.0.0.1:5000/circuit.png?time=" + new Date();
+      if (this.qasmFlag) {
+        var imgOfCircuit = document.getElementById("circuitDrawing");
+        imgOfCircuit.src =
+          "http://127.0.0.1:5000/circuit.png?time=" + new Date();
+      }
     },
     //---------------------------------------------
     sendQasm: function() {
       this.qasmError = "";
       this.jsonObject[0] = {
-        qasm: document.getElementById("qasmText").value
+        qasm: document.getElementById("textarea").value
       };
       this.sendToServer(this.route, this.jsonObject);
-    }
+    },
     //---------------------------------------------
+    qasmTextFun: function() {
+      this.qasmTextFlag = !this.qasmTextFlag;
+    },
+    //---------------------------------------------
+    qasm: function() {
+      this.qasmFlag = !this.qasmFlag;
+      this.qasmTextFlag = false;
+    }
+    // ----------------------------------------------------
   }
 };
 </script>
@@ -269,8 +282,7 @@ export default {
 }
 .qasmBtn {
   display: block;
-  height: 2em;
-  width: 5em;
+
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
   border-radius: 0.5em;
@@ -287,7 +299,7 @@ export default {
   /*border: dashed firebrick;*/
   display: inline-flex;
   width: 99%;
-  height: 99%;
+  height: 50%;
   margin: 0.2em 0.2em 3em 0.2em;
 }
 .visual-row {
@@ -300,5 +312,12 @@ textarea {
   /*border: 1px solid black;*/
   border-radius: 0.5em;
   margin: auto;
+}
+.qasmText {
+  border: 1px solid black;
+  border-radius: 0.5em;
+  margin: 0.2em 0.2em 3em 0.2em;
+  padding: 0.2em 0.2em 3em 0.2em;
+  min-width: 20%;
 }
 </style>
