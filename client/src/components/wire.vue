@@ -5,7 +5,7 @@
     </div>
     <div class="qubit">
       <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">
-        |{{state}}⟩
+        |{{ state }}⟩
       </button>
     </div>
     <draggable
@@ -32,28 +32,27 @@ export default {
   name: "wire",
   display: "wire",
   components: {
-    draggable,
+    draggable
   },
   data() {
     return {
       list: [],
       state: "0",
-      gates: [],
+      gates: []
     };
   },
   props: ["id"],
   methods: {
     change: function(event) {
-
-      this.$parent.updateMaxWire();                    // update wire that has maximum gates
+      this.$parent.updateMaxWire(); // update wire that has maximum gates
       var eventName = Object.keys(event)[0];
       /*var gateName = event[eventName]["element"]["name"]; */
-      //var gateIndex = event[eventName]['newIndex']; 
-      if(eventName == 'added'){
-          this.$parent.addIdentityToColumn(this.id);
+      //var gateIndex = event[eventName]['newIndex'];
+      if (eventName == "added") {
+        this.$parent.addIdentityToColumn(this.id);
       }
       this.$parent.removeIdentitySystem();
-          /* this.$parent.showSystem(); */
+      /* this.$parent.showSystem(); */
     },
     //-----------------------------------------------------------
     qubitState: function(evt) {
@@ -71,18 +70,18 @@ export default {
     },
     //-----------------------------------------------------------
     addIdentity: function() {
-      for(let i=this.list.length; i<this.$parent.maxWire;i++){
-           this.list.push({ name: "i" });
+      for (let i = this.list.length; i < this.$parent.maxWire; i++) {
+        this.list.push({ name: "i" });
       }
     },
-    getGateByIndex:function(gateIndex){
+    getGateByIndex: function(gateIndex) {
       window.console.log(this.list[gateIndex]);
-        return this.list[gateIndex];
+      return this.list[gateIndex];
     },
-    removeGateByIndex:function(gateIndex){
-      if(this.list[gateIndex]['name']=='i'){
-         //window.console.log("remove "+gateIndex+" th gate at wire"+this.id);
-         this.list.splice(gateIndex,1);
+    removeGateByIndex: function(gateIndex) {
+      if (this.list[gateIndex]["name"] == "i") {
+        //window.console.log("remove "+gateIndex+" th gate at wire"+this.id);
+        this.list.splice(gateIndex, 1);
       }
     },
     //-----------------------------------------------------------
@@ -99,7 +98,7 @@ export default {
     },
     //-----------------------------------------------------------
     popLast: function() {
-            this.list.pop();
+      this.list.pop();
     },
     //-----------------------------------------------------------
     getState: function() {
@@ -127,9 +126,9 @@ export default {
         names.push(listOfObject[i]["name"]);
       }
       return names;
-    },
+    }
     //-----------------------------------------------------------
-  },
+  }
 };
 </script>
 <!-- =============================================================  -->

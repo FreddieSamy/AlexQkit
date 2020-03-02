@@ -6,7 +6,7 @@
           <label>Toolbox</label>
         </div>
         <div class="custom-gate-label">
-          <label>Custom Gates</label>
+          <label v-if="customGates.length">Custom Gates</label>
         </div>
       </div>
       <div class="toolbox-of-gates">
@@ -89,6 +89,7 @@
         </draggable>
       </div>
       <draggable
+        v-if="customGates.length"
         class="custom-gates"
         :list="customGates"
         :group="{ name: 'gates', pull: 'clone', put: false }"
@@ -107,9 +108,13 @@
           </div>
         </transition-group>
       </draggable>
-    </div><br>
+    </div>
+    <br />
     <div class="user-tools">
-      <button class="qasm" @click="qasm">|qasm⟩</button>
+      <button class="qasm" @click="this.$parent.qasm">
+        OPENQASM Simulator
+      </button>
+      <button class="qasm" @click="this.$parent.qasmTextFun">|qasm⟩</button>
       <div id="myNav" class="overlay">
         <a href="javascript:void(0)" class="closebtn" @click="closeNav()"
           >&#10006;</a
@@ -146,7 +151,7 @@ export default {
   name: "toolbox",
   display: "toolbox",
   components: {
-    draggable,
+    draggable
   },
   data() {
     return {
@@ -154,28 +159,28 @@ export default {
         { name: "c", id: "c", index: "" },
         { name: "m", id: "m", index: "" },
         { name: "oc", id: "oc", index: "" },
-        { name: "reset", id: "reset", index: "" },
+        { name: "reset", id: "reset", index: "" }
       ],
       gates2: [
         { name: "x", id: "x", index: "" },
         { name: "y", id: "y", index: "" },
         { name: "z", id: "z", index: "" },
         { name: "h", id: "h", index: "" },
-        { name: "swap", id: "swap", index: "" },
+        { name: "swap", id: "swap", index: "" }
       ],
       gates3: [
         { name: "rx", id: "rx", index: "" },
         { name: "ry", id: "ry", index: "" },
-        { name: "rz", id: "rz", index: "" },
+        { name: "rz", id: "rz", index: "" }
       ],
       gates4: [
         { name: "s", id: "s", index: "" },
         { name: "t", id: "t", index: "" },
         { name: "sdg", id: "sdg", index: "" },
-        { name: "tdg", id: "tdg", index: "" },
+        { name: "tdg", id: "tdg", index: "" }
       ],
       customGates: [],
-      w: "width:7.7em",
+      w: "width:7.7em"
     };
   },
   methods: {
@@ -183,26 +188,26 @@ export default {
     // ----------------------------------------------------
     cloneGate({ name }) {
       return {
-        name: name,
+        name: name
       };
     },
-     // ----------------------------------------------------
+    // ----------------------------------------------------
     addGate(nameofgate) {
       this.customGates.push({
         name: nameofgate,
-        id: this.customGates.length + 1,
+        id: this.customGates.length + 1
       });
       this.w = "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
     },
-     // ----------------------------------------------------
+    // ----------------------------------------------------
     openNav() {
       document.getElementById("myNav").style.width = "100%";
     },
-     // ----------------------------------------------------
+    // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav").style.width = "0%";
     },
-     // ----------------------------------------------------
+    // ----------------------------------------------------
     create_the_matrix() {
       this.closeNav();
       var nameofgate = document.getElementById("nameofgate").value;
@@ -218,7 +223,7 @@ export default {
       document.getElementById("nameofgate").value = null;
       document.getElementById("valueofgate").value = null;
     },
-     // ----------------------------------------------------
+    // ----------------------------------------------------
     make_matrix(valofgate) {
       var row = valofgate.value.split("\n");
       var count;
@@ -232,17 +237,12 @@ export default {
       }
       return matrix;
     },
-     // ----------------------------------------------------
-    validate_of_matrix(matrix,nameofgate) {
+    // ----------------------------------------------------
+    validate_of_matrix(matrix) {
       var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
       var count1, count2, count3, check;
       var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
-      if (nameofgate==""){
-        msg="you have to enter name for gate";
-        matrix_validate=false;
-        return{matrix_validate,msg};
-      }
       if (Number.isInteger(Math.log2(matrix.length))) {
         matrix_validate = true;
       } else {
@@ -267,13 +267,9 @@ export default {
       }
       msg = "";
       return { matrix_validate, msg };
-    },
-     // ----------------------------------------------------
-    qasm() {
-      this.$parent.qasmFlag = !this.$parent.qasmFlag;
-    },
-     // ----------------------------------------------------
-  },
+    }
+    // ----------------------------------------------------
+  }
 };
 </script>
 <!-- =============================================================  -->
@@ -282,7 +278,7 @@ export default {
   display: block;
 }
 .tools-container {
-  display: inline-block;  
+  display: inline-block;
 }
 .tool-box-label {
   display: inline-block;
@@ -298,7 +294,7 @@ export default {
   width: 2.5em;
   height: 2.5em;
   border-radius: 0.3em;
-  background-color:#979A9A;
+  background-color: #979a9a;
 }
 .gate-name {
   text-align: center;
@@ -310,7 +306,6 @@ export default {
   margin-right: 0.4em;
   height: 7.4em;
   overflow: auto;
-
 }
 .Area1 {
   border: 1px solid black;
@@ -335,6 +330,7 @@ export default {
   height: 7.4em;
   overflow: auto;
   border-radius: 0.3em;
+  min-width: 7.7em;
 }
 
 .flip-list-move {
@@ -362,7 +358,6 @@ export default {
   margin: 0em 0em 0em 0.2em;
   background-color: white;
   border-radius: 0.5em;
-
 }
 .qasm {
   margin: 0em 0em 0em 0.2em;

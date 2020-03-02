@@ -1,35 +1,31 @@
 <template>
   <div class="circuitDrawing">
-    <center>
-      <img
-        src="http://127.0.0.1:5000/circuit.png"
-        alt="circuitDrawing"
-        id="circuitDrawing"
-        class="circutDrawing-image responsive"
-      />
-    </center>
+    <img
+      src="http://127.0.0.1:5000/circuit.png"
+      alt="circuitDrawing"
+      id="circuitDrawing"
+      class="circutDrawing-image responsive"
+    />
   </div>
 </template>
 <!-- ========================================================== -->
 <script>
-export default {
-}
+export default {};
 </script>
 <!-- ========================================================== -->
 <style scoped>
 .circuitDrawing {
-  flex:1;
+  flex: 1;
   border: 0.05em solid black;
-  padding: 0em 0em 0em 0.1em;
-  margin:  0em 0em 0em 0em;
+  padding: 0.2em 0.2em 0.2em 0.2em;
+  margin: 1.5em 0em 0em 0em;
   border-radius: 0.5em;
-  max-width:30em;
 }
-.circuitDrawing-image{
-  margin: 4em 0em 0em 0em;
-  padding: 0em 0em 0em 0em;
-  height:auto;
+.circuitDrawing-image {
+  /*margin: 4em 0em 0em 0em;
+  padding: 0em 0em 0em 0em;*/
+  height: auto;
   width: auto;
-  max-width: 100%;
+  /*max-width: 35em;*/
 }
 </style>

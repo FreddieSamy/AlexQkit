@@ -1,57 +1,30 @@
 <template>
   <div class="ibmBody">
     <label class="lbl1">IBM Token</label>
-    <input class="ibmtoken"  type="text" id="ibmtextfield"/>
-    <!-- <div>
-    <label class="lbl1">number of shots</label>
-    <input class="ibmToken" type="text" />
-    </div> -->
-    <div>
-      <button @click="get_ibm_token()">save</button>
-    </div>
-    <!-- <div>
-    <label class="lbl1">simulator</label>
-    <input class="ibmToken" type="text"/>
-    </div> -->
+    <input class="ibmToken" type="text" name="" placeholder="ibmToken (not working yet)" id="" />
   </div>
-  
-
 </template>
 <!-- =============================================================  -->
 <script>
 export default {
   name: "ibm",
   display: "ibm",
-  order: 3,
-  methods:{
-    get_ibm_token(){
-    var ibmtext = document.getElementById("ibmtextfield").value;
-    //window.console.log(ibmtext);
-    return ibmtext;
-    
-    }
-
-  
-}
-
+  order: 3
 };
-
 </script>
 <!-- =============================================================  -->
 <style scoped>
 .ibmBody {
-  /*border: 2px dashed grey;*/
+  flex: 1;
   padding: 0.2em 0.2em 0.2em 0.2em;
   margin: 0.2em 0.2em 0.2em 0.2em;
   width: 29%;
-  float: right;
-  
 }
 .lbl1{
-  display:inline-block;
+  display:block;
 }
 .ibmToken{
-  display:inline-block;
+  display:block;
   margin: 0.5em 0.2em 0.2em 0.2em;
 }
 </style>
