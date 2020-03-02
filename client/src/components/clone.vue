@@ -28,9 +28,11 @@
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
         <button class="add-wire" @click="clearConsole">Clear Console</button>
+       <!--
         <button class="add-wire" @click="teleAlgorithm">
           set teleportation algorithm as a test algorithm
         </button>
+        -->
       </div>
     </div>
     <diracNotation></diracNotation>
