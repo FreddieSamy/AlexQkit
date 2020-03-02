@@ -21,3 +21,12 @@ oredered gate
 
 
 row swap
+
+
+
+Tasks on Mario
+--------------------
+control gate 
+set system at specific algorithm 
+when remove make identiy okay 
+forward column step by step

@@ -127,15 +127,13 @@ export default {
     },
     //---------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
-      // var identiyCounter = 0
       for (let i = 0; i < this.rows; i++) {
         var wireList = this.$refs.wire[i].list;
-        var gateName = wireList[columnIndex]["name"];
-
-        if (gateName.localeCompare("i") !== 0) {
-          //window.console.log("found a gate on column "+columnIndex+" is not identiy gate:"+ gateName);
-          return false;
-        }
+         var gateName = wireList[columnIndex]["name"];
+         if (gateName.localeCompare("i") !== 0) {
+            //window.console.log("found a gate on column "+columnIndex+" is not identiy gate:"+ gateName);
+            return false;
+          }
       }
       //window.console.log("all coulmn is "+columnIndex+" identity");
       return true;
@@ -151,9 +149,6 @@ export default {
     //---------------------------------------------
     addWire: function() {
       this.rows++;
-      // let row = this.rows;
-      //var wireCaller = this.$refs.wire[this.rows];
-      //wireCaller.addIdentity();
     },
     //---------------------------------------------
     sendSystem: function() {

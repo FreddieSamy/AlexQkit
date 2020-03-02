@@ -50,8 +50,13 @@ export default {
       //var gateIndex = event[eventName]['newIndex'];
       if (eventName == "added") {
         this.$parent.addIdentityToColumn(this.id);
+        this.$parent.removeIdentitySystem();
       }
-      this.$parent.removeIdentitySystem();
+      if(eventName == 'removed'){
+          this.addIdentity();
+          this.$parent.removeIdentitySystem();
+      }
+      
       /* this.$parent.showSystem(); */
     },
     //-----------------------------------------------------------
@@ -61,7 +66,7 @@ export default {
       evt.target.id = id + i;
       evt.target.innerHTML = "|" + this.$parent.states[i] + "⟩";
       this.state = this.$parent.states[i];
-      this.update();
+      
     },
     //-----------------------------------------------------------
     deleteWire: function(evt) {
@@ -107,8 +112,8 @@ export default {
     //-----------------------------------------------------------
     getGates: function() {
       this.gates = [];
-      for (let i = 0; i < this.list.length; i++) {
-        this.gates.push(this.list[i]["name"]);
+      for (let colIdx = 0; colIdx < this.list.length; colIdx++) {
+        this.gates.push(this.list[colIdx]["name"]);
       }
       return this.gates;
     },
@@ -117,10 +122,13 @@ export default {
     },
     //-----------------------------------------------------------
     setGates: function(gatesList) {
-      this.list = gatesList;
+      this.list= [];
+        for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
+        this.list.push({ name:  gatesList[colIdx] });
+      }
     },
     //-----------------------------------------------------------
-    objectNames: function(listOfObject) {
+    objectNames: function(listOfObject) {   // unused till now
       var names = [];
       for (let i = 0; i < listOfObject.length; i++) {
         names.push(listOfObject[i]["name"]);
@@ -201,7 +209,7 @@ export default {
   /*border: 0.1em dashed black;*/
 }
 #i {
-  opacity: 0.03;
+  opacity: 0.93;
 }
 /*
 #c{
