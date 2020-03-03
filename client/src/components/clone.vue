@@ -29,8 +29,12 @@
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
         <button class="add-wire" @click="clearConsole">Clear Console</button>
-        <button class="exe" @click="preExe">⟨exe|</button>
-        <button class="exe" @click="nextExe">|exe⟩</button>
+        <div class="exe">
+          <button class="exeBtn" @click="exeStart">start</button>
+          <button class="exeBtn" @click="preExe">⟨exe|</button>
+          <button class="exeBtn" @click="nextExe">|exe⟩</button>
+          <button class="exeBtn" @click="exeEnd">end</button>
+        </div>
         <!--
         <button class="add-wire" @click="teleAlgorithm">
           set teleportation algorithm as a test algorithm
@@ -111,6 +115,10 @@ export default {
         }
       }
       // window.console.log("max wire = "+this.maxWire);
+      //set tracing line at the end to run the whole circuit
+      this.exeCount = this.maxWire;
+      document.getElementById("executionLine").style.marginLeft =
+        3.8 * this.exeCount + "em";
     },
     //-----------------------------------------------------------------------
     resetSystem: function() {
@@ -271,6 +279,21 @@ export default {
           3.8 * this.exeCount + "em";
         this.sendSystem();
       }
+    },
+    //-----------------------------------------------------------------------
+    exeStart: function() {
+      this.exeCount = 0;
+      window.console.log(3.8 * (this.exeCount - 1));
+      document.getElementById("executionLine").style.marginLeft =
+        3.8 * this.exeCount + "em";
+      this.sendSystem();
+    },
+    //-----------------------------------------------------------------------
+    exeEnd: function() {
+      this.exeCount = this.maxWire;
+      document.getElementById("executionLine").style.marginLeft =
+        3.8 * this.exeCount + "em";
+      this.sendSystem();
     }
     //-----------------------------------------------------------------------
   }
@@ -309,6 +332,13 @@ export default {
   border-radius: 0.5em;
 }
 .remove-wire {
+  display: inline-block;
+  margin: 0.2em 0.2em 0em 0.2em;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+}
+.exeBtn {
   display: inline-block;
   margin: 0.2em 0.2em 0em 0.2em;
   padding: 0.1em 0.5em 0.1em 0.5em;
