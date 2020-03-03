@@ -74,6 +74,7 @@ export default {
     return {
       qasmError: "",
       qasmText: "There is no circuit",
+      reversedWires: true,
       diracNotationData: "|00⟩",
       exeCount: 0,
       route: "http://localhost:5000/data",
@@ -165,6 +166,7 @@ export default {
         gatesSystem.push(wireCaller.getGates());
       }
       this.jsonObject[0] = {
+        reversedWires: this.reversedWires,
         exeCount: this.exeCount,
         wires: this.rows,
         init: statesSystem,
