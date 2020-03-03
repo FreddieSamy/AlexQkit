@@ -651,6 +651,9 @@ class Circuit():
         
         shots=1024
         customGates=None
+        exeCount=0
+        if "exeCount" in receivedDictionary:
+            exeCount=receivedDictionary["exeCount"]
         if "shots" in receivedDictionary:
             shots=receivedDictionary["shots"]
         if "custom" in receivedDictionary:
@@ -664,7 +667,7 @@ class Circuit():
             if "init" in receivedDictionary:
                 self.initState(circuit,receivedDictionary["init"])
         
-            for i in range(len(cols)):
+            for i in range(exeCount):
                 if cols[i]==["barrier"]:
                     circuit.barrier()
                 elif "c" in cols[i] or "oc" in cols[i]:
