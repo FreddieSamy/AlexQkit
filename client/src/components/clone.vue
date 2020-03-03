@@ -14,6 +14,7 @@
       </div>
       <h3 v-if="qasmFlag">{{ qasmError }}</h3>
       <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
+      <img id="executionLine" src="..\assets\executionLine.png" />
       <div v-if="!qasmFlag" class="wiresBlock">
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
@@ -28,7 +29,10 @@
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
         <button class="add-wire" @click="clearConsole">Clear Console</button>
-       <!--
+        <button class="exe" @click="preExe">⟨exe|</button>
+        <button class="exe" @click="nextExe">|exe⟩</button>
+
+        <!--
         <button class="add-wire" @click="teleAlgorithm">
           set teleportation algorithm as a test algorithm
         </button>
@@ -65,13 +69,14 @@ export default {
     blochSphere,
     histoGram,
     diracNotation,
-    circuitDrawing,
+    circuitDrawing
   },
   data() {
     return {
       qasmError: "",
       qasmText: "There is no circuit",
       diracNotationData: "|00⟩",
+      exeCount: 0,
       route: "http://localhost:5000/data",
       states: ["0", "1", "+", "-", "i", "-i"],
       rows: 3, // number of wires
@@ -82,9 +87,9 @@ export default {
         {
           wire: 0,
           init: [],
-          rows: [],
-        },
-      ],
+          rows: []
+        }
+      ]
     };
   },
   methods: {
@@ -161,9 +166,10 @@ export default {
         gatesSystem.push(wireCaller.getGates());
       }
       this.jsonObject[0] = {
+        exeCount: this.exeCount,
         wires: this.rows,
         init: statesSystem,
-        rows: gatesSystem,
+        rows: gatesSystem
       };
       window.console.log(this.jsonObject);
       this.sendToServer(this.route, this.jsonObject);
@@ -188,24 +194,24 @@ export default {
         rows: [
           ["x", "i", "c", "h", "i", "h"],
           ["i", "h", "c", "x", "c", "i"],
-          ["i", "i", "x", "i", "h", "c"],
-        ],
+          ["i", "i", "x", "i", "h", "c"]
+        ]
       };
       window.console.log(test_json_object);
-      this.rows = test_json_object['wires'];
+      this.rows = test_json_object["wires"];
       this.setAlgorithm(test_json_object);
     },
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
-        for (let row = 0; row < this.rows; row++) {
-          var wireCaller = this.$refs.wire[row];
-          wireCaller.setState(systemObject["init"][row]);
-          wireCaller.setGates(systemObject["rows"][row]);
-        }
+      for (let row = 0; row < this.rows; row++) {
+        var wireCaller = this.$refs.wire[row];
+        wireCaller.setState(systemObject["init"][row]);
+        wireCaller.setGates(systemObject["rows"][row]);
+      }
     },
     //-----------------------------------------------------------------------
-    setRows:function(rows){
-      if(this.rows === rows ){
+    setRows: function(rows) {
+      if (this.rows === rows) {
         return true;
       }
       return false;
@@ -233,7 +239,7 @@ export default {
     sendQasm: function() {
       this.qasmError = "";
       this.jsonObject[0] = {
-        qasm: document.getElementById("textarea").value,
+        qasm: document.getElementById("textarea").value
       };
       this.sendToServer(this.route, this.jsonObject);
     },
@@ -247,7 +253,26 @@ export default {
       this.qasmTextFlag = false;
     },
     //-----------------------------------------------------------------------
-  },
+    nextExe: function() {
+      if (this.exeCount < this.maxWire) {
+        this.exeCount++;
+        window.console.log(3.8 * (this.exeCount - 1));
+        document.getElementById("executionLine").style.marginLeft =
+          3.8 * this.exeCount + "em";
+        this.sendSystem();
+      }
+    },
+    //-----------------------------------------------------------------------
+    preExe: function() {
+      if (this.exeCount > 0) {
+        this.exeCount--;
+        document.getElementById("executionLine").style.marginLeft =
+          3.8 * this.exeCount + "em";
+        this.sendSystem();
+      }
+    }
+    //-----------------------------------------------------------------------
+  }
 };
 </script>
 <!-- =============================================================  -->
@@ -350,5 +375,13 @@ textarea {
   margin: 0.2em 0.2em 3em 0.2em;
   padding: 0.2em 0.2em 3em 0.2em;
   min-width: 20%;
+}
+#executionLine {
+  width: 10em;
+  z-index: -1;
+  position: fixed;
+  height: 15em;
+  margin-top: 0.9em;
+  margin-left: 0em;
 }
 </style>
