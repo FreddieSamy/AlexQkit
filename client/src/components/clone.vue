@@ -14,7 +14,7 @@
       </div>
       <h3 v-if="qasmFlag">{{ qasmError }}</h3>
       <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
-      <img id="executionLine" src="..\assets\executionLine.png" />
+      <img id="executionLine" src="../assets/executionLine.png" />
       <div v-if="!qasmFlag" class="wiresBlock">
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
@@ -31,7 +31,6 @@
         <button class="add-wire" @click="clearConsole">Clear Console</button>
         <button class="exe" @click="preExe">⟨exe|</button>
         <button class="exe" @click="nextExe">|exe⟩</button>
-
         <!--
         <button class="add-wire" @click="teleAlgorithm">
           set teleportation algorithm as a test algorithm
