@@ -14,7 +14,11 @@
       </div>
       <h3 v-if="qasmFlag">{{ qasmError }}</h3>
       <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
-      <img id="executionLine" src="../assets/executionLine.png" />
+      <img
+        :style="'height:' + tracingLineHeight + 'em'"
+        id="executionLine"
+        src="../assets/executionLine.png"
+      />
       <div v-if="!qasmFlag" class="wiresBlock">
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
@@ -24,8 +28,12 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click="rows++">add Wire</button>
-        <button class="remove-wire" @click="rows--">Remove Wire</button>
+        <button class="add-wire" @click="rows++, (tracingLineHeight += 5)">
+          add Wire
+        </button>
+        <button class="remove-wire" @click="rows--, (tracingLineHeight += 5)">
+          Remove Wire
+        </button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
         <button class="add-wire" @click="clearConsole">Clear Console</button>
@@ -77,6 +85,7 @@ export default {
   data() {
     return {
       qasmError: "",
+      tracingLineHeight: 15,
       qasmText: "There is no circuit",
       reversedWires: true,
       diracNotationData: "|00⟩",
@@ -411,7 +420,7 @@ textarea {
   width: 10em;
   z-index: -1;
   position: fixed;
-  height: 15em;
+  /*height: 15em;*/
   margin-top: 0.9em;
   margin-left: 0em;
 }
