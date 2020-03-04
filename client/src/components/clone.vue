@@ -1,7 +1,7 @@
 <template>
   <div class="circuit">
     <div v-if="!qasmFlag" class="upper-circuit">
-      <toolbox></toolbox>
+      <toolbox ref="toolbox"></toolbox>
       <!-- <ibm></ibm> -->
     </div>
     <br />
@@ -28,10 +28,10 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.5)">
+        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">
           add Wire
         </button>
-        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.5)">
+        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">
           Remove Wire
         </button>
         <button class="add-wire" @click="sendSystem">send</button>
@@ -124,10 +124,6 @@ export default {
         }
       }
       // window.console.log("max wire = "+this.maxWire);
-      //set tracing line at the end to run the whole circuit
-      this.exeCount = this.maxWire;
-      document.getElementById("executionLine").style.marginLeft =
-        3.8 * this.exeCount + "em";
     },
     //-----------------------------------------------------------------------
     resetSystem: function() {
@@ -135,6 +131,9 @@ export default {
         var wireCaller = this.$refs.wire[i];
         wireCaller.resetWire();
       }
+      this.maxWire = 0;
+      this.exeCount = 0;
+      this.updateTracingLine();
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -151,6 +150,7 @@ export default {
         var wireCaller = this.$refs.wire[row];
         wireCaller.removeGateByIndex(columnIndex);
       }
+      this.maxWire--;
     },
     //-----------------------------------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
@@ -275,8 +275,7 @@ export default {
       if (this.exeCount < this.maxWire) {
         this.exeCount++;
         window.console.log(3.8 * (this.exeCount - 1));
-        document.getElementById("executionLine").style.marginLeft =
-          3.8 * this.exeCount + "em";
+        this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -284,8 +283,7 @@ export default {
     preExe: function() {
       if (this.exeCount > 0) {
         this.exeCount--;
-        document.getElementById("executionLine").style.marginLeft =
-          3.8 * this.exeCount + "em";
+        this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -293,18 +291,20 @@ export default {
     exeStart: function() {
       this.exeCount = 0;
       window.console.log(3.8 * (this.exeCount - 1));
-      document.getElementById("executionLine").style.marginLeft =
-        3.8 * this.exeCount + "em";
+      this.updateTracingLine();
       this.sendSystem();
     },
     //-----------------------------------------------------------------------
     exeEnd: function() {
       this.exeCount = this.maxWire;
+      this.updateTracingLine();
+      this.sendSystem();
+    },
+    //-----------------------------------------------------------------------
+    updateTracingLine: function() {
       document.getElementById("executionLine").style.marginLeft =
         3.8 * this.exeCount + "em";
-      this.sendSystem();
     }
-    //-----------------------------------------------------------------------
   }
 };
 </script>
