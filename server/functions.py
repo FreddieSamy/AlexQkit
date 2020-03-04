@@ -437,7 +437,11 @@ class Circuit():
             result = execute(circuit, backend=simulator).result()
             return result.get_unitary()
         circuit=QuantumCircuit(1)
-        exec("circuit."+gate+"(0)")
+        if "(" in gate:
+            pythonLine="circuit."+gate[:-1]+",0)"
+            exec(pythonLine)
+        else:
+            exec("circuit."+gate+"(0)")
         simulator = Aer.get_backend('unitary_simulator')
         result = execute(circuit, backend=simulator).result()
         return result.get_unitary()
@@ -535,6 +539,13 @@ class Circuit():
                         column[j]="i"
                         break
                 circuit.swap(p1,p2)
+                continue
+            if "(" in str(column[i]):
+                pythonLine="circuit."+column[i][:-1]+","
+                pythonLine+=str(circuit.n_qubits-i-1)
+                pythonLine+=")"
+                #print(pythonLine)
+                exec(pythonLine)
                 continue
             pythonLine="circuit."+column[i]+"("
             pythonLine+=str(n-i-1)
