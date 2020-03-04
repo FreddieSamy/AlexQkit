@@ -1,7 +1,7 @@
 <template>
   <div class="circuit">
     <div v-if="!qasmFlag" class="upper-circuit">
-      <toolbox></toolbox>
+      <toolbox ref="toolbox"></toolbox>
       <!-- <ibm></ibm> -->
     </div>
     <br />
@@ -14,7 +14,12 @@
       </div>
       <h3 v-if="qasmFlag">{{ qasmError }}</h3>
       <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
-      <img id="executionLine" src="../assets/executionLine.png" />
+      <img
+        v-if="!qasmFlag"
+        :style="'height:' + tracingLineHeight + 'em'"
+        id="executionLine"
+        src="../assets/executionLine.png"
+      />
       <div v-if="!qasmFlag" class="wiresBlock">
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
@@ -74,7 +79,9 @@ export default {
     return {
       globalID: 0,
       qasmError: "",
+      tracingLineHeight: 15,
       qasmText: "There is no circuit",
+      reversedWires: true,
       diracNotationData: "|00⟩",
       exeCount: 0,
       route: "http://localhost:5000/data",
@@ -119,6 +126,10 @@ export default {
         var wireCaller = this.$refs.wire[i];
         wireCaller.resetWire();
       }
+      this.maxWire = 0;
+      this.exeCount = 0;
+      this.updateTracingLine();
+      this.qasmText = "There is no circuit";
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -135,6 +146,7 @@ export default {
         var wireCaller = this.$refs.wire[row];
         wireCaller.removeGateByIndex(columnIndex);
       }
+      this.maxWire--;
     },
     //-----------------------------------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
@@ -167,6 +179,7 @@ export default {
         gatesSystem.push(wireCaller.getGates());
       }
       this.jsonObject[0] = {
+        reversedWires: this.reversedWires,
         exeCount: this.exeCount,
         wires: this.rows,
         init: statesSystem,
@@ -263,8 +276,7 @@ export default {
       if (this.exeCount < this.maxWire) {
         this.exeCount++;
         window.console.log(3.8 * (this.exeCount - 1));
-        document.getElementById("executionLine").style.marginLeft =
-          3.8 * this.exeCount + "em";
+        this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -272,8 +284,7 @@ export default {
     preExe: function() {
       if (this.exeCount > 0) {
         this.exeCount--;
-        document.getElementById("executionLine").style.marginLeft =
-          3.8 * this.exeCount + "em";
+        this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -363,7 +374,7 @@ textarea {
   width: 10em;
   z-index: -1;
   position: fixed;
-  height: 15em;
+  /*height: 15em;*/
   margin-top: 0.9em;
   margin-left: 0em;
 }

@@ -55,11 +55,14 @@ export default {
          }
         this.$parent.addIdentityToColumn(this.id);
       }
-      if(eventName == 'removed'){
-          this.addIdentity();
+      if (eventName == "removed") {
+        this.addIdentity();
       }
       this.$parent.removeIdentitySystem();
       /* this.$parent.showSystem(); */
+      //set tracing line at the end to run the whole circuit
+      this.$parent.exeCount = this.$parent.maxWire;
+      this.$parent.updateTracingLine();
     },
     //-----------------------------------------------------------------------
     qubitState: function(evt) {
@@ -126,13 +129,14 @@ export default {
     },
     //-----------------------------------------------------------------------
     setGates: function(gatesList) {
-      this.list= [];
-        for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
-        this.list.push({ name:  gatesList[colIdx] });
+      this.list = [];
+      for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
+        this.list.push({ name: gatesList[colIdx] });
       }
     },
     //-----------------------------------------------------------------------
-    objectNames: function(listOfObject) {   // unused till now
+    objectNames: function(listOfObject) {
+      // unused till now
       var names = [];
       for (let i = 0; i < listOfObject.length; i++) {
         names.push(listOfObject[i]["name"]);
@@ -213,7 +217,7 @@ export default {
   /*border: 0.1em dashed black;*/
 }
 #i {
-  opacity: 0.93;
+  opacity: 0.003;
 }
 /*
 #c{
