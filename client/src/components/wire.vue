@@ -12,10 +12,10 @@
       class="wire-drop-area"
       :list="list"
       group="gates"
-      @change="change"
       @add="add"
       @remove="remove"
       @update="update"
+      @onEnd="change"
     >
       <div
         class="circuit-gate"
@@ -48,27 +48,51 @@ export default {
   methods: {
     //-----------------------------------------------------------------------
     add:function(evt){
-      window.console.log("enter on end")
-      window.console.log("item id : "+evt.item.id);
-      window.console.log("to      : "+evt.to.classList.value);
+      var gate = evt.to.childNodes[evt.newIndex];
+      gate.setAttribute('row',this.id);
+      gate.setAttribute('col',evt.newIndex+1);
+      window.console.log(gate);
+      //window.console.log(gate);
+      //window.console.log(evt.item.innerHTML);
+      //window.console.log("happen add");
+      //window.console.log("enter on end")
+      //window.console.log("item id : "+evt.item.id);
+      //window.console.log("to      : "+evt.to.classList.value);
       //window.console.log(evt.from.childNodes);
-      window.console.log("old i   : "+evt.oldIndex);
-      window.console.log("new i   : "+evt.newIndex);
+      //window.console.log("old i   : "+evt.oldIndex);
+      //window.console.log("new i   : "+evt.newIndex);
+      //window.console.log(evt.clone);
+      //window.console.log(evt.pullMode);
       this.$parent.updateMaxWire(); 
       this.$parent.addIdentityToColumn(this.id);
-      //this.$parent.removeIdentitySystem();
+      this.$parent.removeIdentitySystem();
+      this.$parent.exeCount = this.$parent.maxWire;
+     
+      //this.$parent.updateTracingLine();
+      //var x = document.querySelectorAll(".circuit-gate")
+      //x=x.hasAttribute("col");
+      //window.console.log(x);
     },
     update:function(evt){
-     window.console.log("enter on end")
+      var gate = evt.to.childNodes[evt.newIndex];
+      gate.setAttribute('row',this.id);
+      gate.setAttribute('col',evt.newIndex+1);
+      window.console.log(gate);
+      /*
+      window.console.log("enter on update")
       window.console.log("item id : "+evt.item.id);
       window.console.log("to      : "+evt.to.classList.value);
       window.console.log("event   : "+evt.from.classList.value);
       window.console.log("old i   : "+evt.oldIndex);
       window.console.log("new i   : "+evt.newIndex);
+      */
       this.$parent.updateMaxWire();
       this.$parent.removeIdentitySystem();
+      this.$parent.exeCount = this.$parent.maxWire;
+      //this.$parent.updateTracingLine();
     },
-    remove:function(evt){
+    remove:function(/*evt*/){
+      /*
       window.console.log("enter on remove");
       window.console.log("item");
       window.console.log(evt.item);
@@ -79,10 +103,14 @@ export default {
       window.console.log("old i: "+evt.oldIndex);
       window.console.log("new i: "+evt.newIndex);
       this.$parent.updateMaxWire();
+      */
       this.addIdentity();
       this.$parent.removeIdentitySystem();
+      this.$parent.exeCount = this.$parent.maxWire;
+      //this.$parent.updateTracingLine();
     },
     change: function(/*event,evt*/) {
+       window.console.log("happen change");
       /*
       window.console.log("enter on change")
       this.$parent.updateMaxWire(); // update wire that has maximum gates
