@@ -4,9 +4,7 @@
       <button class="delete" @click="deleteWire">x</button>
     </div>
     <div class="qubit">
-      <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">
-        |{{ state }}⟩
-      </button>
+      <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
     </div>
     <draggable
       class="wire-drop-area"
@@ -51,7 +49,7 @@ export default {
       var gate = evt.to.childNodes[evt.newIndex];
       gate.setAttribute('row',this.id);
       gate.setAttribute('col',evt.newIndex+1);
-      window.console.log(gate);
+      //window.console.log(gate);
       //window.console.log(gate);
       //window.console.log(evt.item.innerHTML);
       //window.console.log("happen add");
@@ -187,10 +185,14 @@ export default {
       return this.state;
     },
     //-----------------------------------------------------------------------
-    getGates: function() {
+    getGates: function(rowId) {
       this.gates = [];
       for (let colIdx = 0; colIdx < this.list.length; colIdx++) {
-        this.gates.push(this.list[colIdx]["name"]);
+          if(this.list[colIdx]["name"].startsWith("custom_")){
+            this.gates.push(this.list[colIdx]["name"]+"."+rowId);
+          }
+          else{
+        this.gates.push(this.list[colIdx]["name"]);}
       }
       return this.gates;
     },
