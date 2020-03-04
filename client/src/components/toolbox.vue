@@ -64,9 +64,27 @@
               </div>
             </transition-group>
           </draggable>
-          <input class="angle" type="number" name="rx" placeholder="90" id />
-          <input class="angle" type="number" name="ry" placeholder="PI/2" id />
-          <input class="angle" type="number" name="rz" placeholder="PI/2" id />
+          <input
+            class="angle"
+            id="rxAngle"
+            type="number"
+            name="rx"
+            value="90"
+          />
+          <input
+            class="angle"
+            id="ryAngle"
+            type="number"
+            name="ry"
+            value="90"
+          />
+          <input
+            class="angle"
+            id="rzAngle"
+            type="number"
+            name="rz"
+            value="90"
+          />
         </div>
 
         <draggable
@@ -187,6 +205,13 @@ export default {
     log: function(/*evt*/) {},
     // ----------------------------------------------------
     cloneGate({ name }) {
+      if (name == "rx") {
+        name = name + "(" + document.getElementById("rxAngle").value + ")";
+      } else if (name == "ry") {
+        name = name + "(" + document.getElementById("ryAngle").value + ")";
+      } else if (name == "rz") {
+        name = name + "(" + document.getElementById("rzAngle").value + ")";
+      }
       return {
         name: name
       };

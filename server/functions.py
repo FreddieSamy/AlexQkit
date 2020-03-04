@@ -28,8 +28,11 @@ class Circuit():
 
     #dirac notation doc - https://docs.microsoft.com/en-us/quantum/concepts/dirac-notation
 
-    def initState(self,circuit,stateList):
-        n=circuit.n_qubits
+    def initState(self,circuit,stateList,reversedWires=True):
+        if reversedWires:
+            n=circuit.n_qubits
+        else:
+            n=1
         for i in range(len(stateList)):
             if str(stateList[i])=="0":
                 continue
@@ -47,7 +50,7 @@ class Circuit():
                 circuit.x(n-i-1)
                 circuit.h(n-i-1)
                 circuit.s(n-i-1)
-        circuit.barrier()
+        #circuit.barrier()
         
     #testing
     """from qiskit import *
@@ -245,11 +248,12 @@ class Circuit():
     #you can check that here - https://qiskit-staging.mybluemix.net/documentation/terra/summary_of_quantum_operations.html
 
 
-    def addCustomGate(self,circuit,gateMatrix,positions):
-        circuit.n_qubits-len(positions)
-        for i in range(len(positions)):
-            positions[i]=circuit.n_qubits-positions[i]-1
-        positions.reverse()
+    def addCustomGate(self,circuit,gateMatrix,positions,reversedWires):
+        if reversedWires:
+            circuit.n_qubits-len(positions)
+            for i in range(len(positions)):
+                positions[i]=circuit.n_qubits-positions[i]-1
+            positions.reverse()
         from qiskit.quantum_info.operators import Operator
         customGate=Operator(gateMatrix)
         circuit.unitary(customGate,positions)
@@ -355,14 +359,26 @@ class Circuit():
 ###############################################################################################################################
 
     #function to draw bloch spheres of the circuit
-    def blochSphere(self,circuit):
+    def blochSphere(self,circuit,reversedWires=1):
         from qiskit import Aer
         from qiskit import execute
         from qiskit.visualization import plot_bloch_multivector
         simulator=Aer.get_backend('statevector_simulator')
         result=execute(circuit,backend=simulator).result()
         statevector=result.get_statevector()
+        if reversedWires:
+            temp=[]
+            statevector=statevector.tolist()
+            #print(statevector)
+            for i in range(len(statevector)):
+                
+                pos=int(''.join(reversed(str(("{0:0"+str(circuit.n_qubits).replace('.0000','')+"b}").format(i)))),2)
+                #print(i,pos)
+                #print(statevector[pos])
+                temp.append(statevector[pos])
+            statevector=temp
         return plot_bloch_multivector(statevector)
+    
 
     #testing
     """from qiskit import *
@@ -421,7 +437,11 @@ class Circuit():
             result = execute(circuit, backend=simulator).result()
             return result.get_unitary()
         circuit=QuantumCircuit(1)
-        exec("circuit."+gate+"(0)")
+        if "(" in gate:
+            pythonLine="circuit."+gate[:-1]+",0)"
+            exec(pythonLine)
+        else:
+            exec("circuit."+gate+"(0)")
         simulator = Aer.get_backend('unitary_simulator')
         result = execute(circuit, backend=simulator).result()
         return result.get_unitary()
@@ -482,15 +502,19 @@ class Circuit():
 ###############################################################################################################################
     
     #this function applies noncontrolled gates on the circuit
-    def nonControlledColumns(self,circuit,column,customGates):
+    def nonControlledColumns(self,circuit,column,customGates,reversedWires):
         #naming a custom gate
         #don't accept "custom_" in the begining of the name
         #don't accept "." in any position
+        
+        n=1
+        if reversedWires:
+            n = circuit.n_qubits
         for i in range(len(column)):
             if str(column[i])=="i":
                 continue
             if str(column[i])=="m":
-                circuit.measure(circuit.n_qubits-i-1,circuit.n_qubits-i-1)
+                circuit.measure(n-i-1,n-i-1)
                 continue
             if str(column[i])[:7]=="custom_":
                 if customGates==None:
@@ -508,16 +532,23 @@ class Circuit():
                         self.addCustomGate(circuit,customGates[gateName],pos)
                         continue
             if str(column[i])=="swap":
-                p1=circuit.n_qubits-i-1
+                p1=n-i-1
                 for j in range(i+1,len(column)):
                     if str(column[j])=="swap":
-                        p2=circuit.n_qubits-j-1
+                        p2=n-j-1
                         column[j]="i"
                         break
                 circuit.swap(p1,p2)
                 continue
+            if "(" in str(column[i]):
+                pythonLine="circuit."+column[i][:-1]+","
+                pythonLine+=str(circuit.n_qubits-i-1)
+                pythonLine+=")"
+                #print(pythonLine)
+                exec(pythonLine)
+                continue
             pythonLine="circuit."+column[i]+"("
-            pythonLine+=str(circuit.n_qubits-i-1)
+            pythonLine+=str(n-i-1)
             pythonLine+=")"
             #print(pythonLine)
             exec(pythonLine)
@@ -546,15 +577,18 @@ class Circuit():
     
 ###############################################################################################################################
     
-    def controlledColumns(self,circuit,column,customGates):
+    def controlledColumns(self,circuit,column,customGates,reversedWires):
         c=[]
         oc=[]
+        n=1
+        if reversedWires:
+            n = circuit.n_qubits
         for i in range(len(column)):
             if str(column[i])=="i":
                 continue
             
             if str(column[i])=="m":
-                circuit.measure(circuit.n_qubits-i-1,circuit.n_qubits-i-1)
+                circuit.measure(n-i-1,n-i-1)
                 column[i]="i"
         
             if str(column[i])=="c":
@@ -568,7 +602,7 @@ class Circuit():
         
         numOfControls=len(c)
         for i in oc:                                       #open control 
-            circuit.x(circuit.n_qubits-1-i)
+            circuit.x(n-1-i)
             
         for i in range(len(column)):
             if str(column[i])=="i":
@@ -603,7 +637,7 @@ class Circuit():
         
                 
         for i in oc:                                        #open control 
-            circuit.x(circuit.n_qubits-1-i)
+            circuit.x(n-1-i)
 
         
     #testing
@@ -649,9 +683,12 @@ class Circuit():
     
         print("reached in creatCircuit()")
         
+        reversedWires=True 
         shots=1024
         customGates=None
         exeCount=0
+        if "reversedWires" in receivedDictionary:
+            reversedWires=receivedDictionary["reversedWires"]
         if "exeCount" in receivedDictionary:
             exeCount=receivedDictionary["exeCount"]
         if "shots" in receivedDictionary:
@@ -665,18 +702,18 @@ class Circuit():
             circuit=QuantumCircuit(wires,wires)
         
             if "init" in receivedDictionary:
-                self.initState(circuit,receivedDictionary["init"])
+                self.initState(circuit,receivedDictionary["init"],reversedWires)
         
             for i in range(exeCount):
                 if cols[i]==["barrier"]:
                     circuit.barrier()
                 elif "c" in cols[i] or "oc" in cols[i]:
-                    self.controlledColumns(circuit,cols[i],customGates)
+                    self.controlledColumns(circuit,cols[i],customGates,reversedWires)
                 else:
-                    self.nonControlledColumns(circuit,cols[i],customGates)
+                    self.nonControlledColumns(circuit,cols[i],customGates,reversedWires)
                     
                     
-        self.blochSphereGraph = self.blochSphere(circuit)
+        self.blochSphereGraph = self.blochSphere(circuit,reversedWires)
         self.histoGramGraph = self.graph(circuit,shots)
         self.circutDrawing = self.draw(circuit)
     
@@ -825,7 +862,7 @@ class Circuit():
         if "shots" in receivedDictionary:
             shots=receivedDictionary["shots"]
             
-        self.blochSphereGraph = self.blochSphere(circuit)
+        self.blochSphereGraph = self.blochSphere(circuit,reversedWires=False)
         self.histoGramGraph = self.graph(circuit,shots)
         self.circutDrawing = self.draw(circuit)    
         
