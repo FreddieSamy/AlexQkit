@@ -47,9 +47,12 @@ export default {
     change: function(event) {
       this.$parent.updateMaxWire(); // update wire that has maximum gates
       var eventName = Object.keys(event)[0];
-      /*var gateName = event[eventName]["element"]["name"]; */
+      var gateName = event[eventName]["element"]["name"];
       //var gateIndex = event[eventName]['newIndex'];
       if (eventName == "added") {
+         if(gateName == 'c'){
+            window.console.log('yarab ba2a');
+         }
         this.$parent.addIdentityToColumn(this.id);
       }
       if(eventName == 'removed'){
