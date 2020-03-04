@@ -133,6 +133,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
+      window.console.log("enter add Identity to column");
       for (let i = 0; i < this.rows; i++) {
         if (i + 1 != wireId) {
           var wireCaller = this.$refs.wire[i];

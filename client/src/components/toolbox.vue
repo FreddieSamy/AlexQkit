@@ -202,7 +202,8 @@ export default {
     };
   },
   methods: {
-    log: function(/*evt*/) {},
+    log: function() {
+    },
     // ----------------------------------------------------
     cloneGate({ name }) {
       if (name == "rx") {
