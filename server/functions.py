@@ -3,7 +3,7 @@ class Circuit():
         self.histoGramGraph = None
         self.blochSphereGraph = None
         self.circutDrawing = None
-        self.returnedDictionary=None
+        self.returnedDictionary={}
     
 ###############################################################################################################################
     
@@ -248,7 +248,7 @@ class Circuit():
     #you can check that here - https://qiskit-staging.mybluemix.net/documentation/terra/summary_of_quantum_operations.html
 
 
-    def addCustomGate(self,circuit,gateMatrix,positions,reversedWires):
+    def addCustomGate(self,circuit,gateMatrix,positions,reversedWires=True):
         if reversedWires:
             circuit.n_qubits-len(positions)
             for i in range(len(positions)):
@@ -359,7 +359,7 @@ class Circuit():
 ###############################################################################################################################
 
     #function to draw bloch spheres of the circuit
-    def blochSphere(self,circuit,reversedWires=1):
+    def blochSphere(self,circuit,reversedWires=True):
         from qiskit import Aer
         from qiskit import execute
         from qiskit.visualization import plot_bloch_multivector
@@ -502,7 +502,7 @@ class Circuit():
 ###############################################################################################################################
     
     #this function applies noncontrolled gates on the circuit
-    def nonControlledColumns(self,circuit,column,customGates,reversedWires):
+    def nonControlledColumns(self,circuit,column,customGates,reversedWires=True):
         #naming a custom gate
         #don't accept "custom_" in the begining of the name
         #don't accept "." in any position
@@ -577,7 +577,7 @@ class Circuit():
     
 ###############################################################################################################################
     
-    def controlledColumns(self,circuit,column,customGates,reversedWires):
+    def controlledColumns(self,circuit,column,customGates,reversedWires=True):
         c=[]
         oc=[]
         n=1
@@ -683,6 +683,7 @@ class Circuit():
     
         print("reached in creatCircuit()")
         
+        resetExist=False
         reversedWires=True 
         shots=1024
         customGates=None
@@ -705,6 +706,8 @@ class Circuit():
                 self.initState(circuit,receivedDictionary["init"],reversedWires)
         
             for i in range(exeCount):
+                if "reset" in cols[i]:
+                    resetExist=True
                 if cols[i]==["barrier"]:
                     circuit.barrier()
                 elif "c" in cols[i] or "oc" in cols[i]:
@@ -719,19 +722,21 @@ class Circuit():
     
         if "API_TOKEN" in receivedDictionary:
             if receivedDictionary["API_TOKEN"] !="":
- 
-                self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
-                                    "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
-                                    "qasm":circuit.qasm(),
-                                    "link":self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
-                                    }
-            
+                self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
+                self.returnedDictionary["qasm"]=circuit.qasm()
+                self.returnedDictionary["link"]=self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
+                if not resetExist:
+                    self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+                else:
+                    self.returnedDictionary["matrixRepresentation"]="you can't get matrixRepresentation while using reset gate"
         else:
-            self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
-                                "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
-                                "qasm" : circuit.qasm()
-                                }
-
+            self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
+            self.returnedDictionary["qasm"]=circuit.qasm()
+            self.returnedDictionary["link"]=""
+            if not resetExist:
+                self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+            else:
+                    self.returnedDictionary["matrixRepresentation"]="you can't get matrixRepresentation while using reset gate"
             
 
         #return self.returnedDictionary
@@ -865,22 +870,22 @@ class Circuit():
         self.blochSphereGraph = self.blochSphere(circuit,reversedWires=False)
         self.histoGramGraph = self.graph(circuit,shots)
         self.circutDrawing = self.draw(circuit)    
-        
         if "API_TOKEN" in receivedDictionary:
-            if "API_TOKEN" !="":
-                self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
-                                         "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
-                                         "cols":cols,
-                                         "qasm":"",
-                                         "link":self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
-                                         }
-            
+            if receivedDictionary["API_TOKEN"] !="":
+                self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
+                self.returnedDictionary["qasm"]=""
+                self.returnedDictionary["link"]=self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
+                self.returnedDictionary["cols"]=cols
+                self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
         else:
-            self.returnedDictionary={"diracNotation":self.diracNotation(circuit),
-                                     "matrixRepresentation":self.matrixRepresentation(circuit), #self.matrixLatex(self.matrixRepresentation(circuit)),
-                                     "cols" : cols,
-                                     "qasm":""
-                                     }
+            self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
+            self.returnedDictionary["qasm"]=""
+            self.returnedDictionary["link"]=""
+            self.returnedDictionary["cols"]=cols
+            self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+
+
+        
         #return self.returnedDictionary
             
 
