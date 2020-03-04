@@ -64,27 +64,9 @@
               </div>
             </transition-group>
           </draggable>
-          <input
-            class="angle"
-            id="rxAngle"
-            type="number"
-            name="rx"
-            value="90"
-          />
-          <input
-            class="angle"
-            id="ryAngle"
-            type="number"
-            name="ry"
-            value="90"
-          />
-          <input
-            class="angle"
-            id="rzAngle"
-            type="number"
-            name="rz"
-            value="90"
-          />
+          <input class="angle" id="rxAngle" type="number" name="rx" value="90" />
+          <input class="angle" id="ryAngle" type="number" name="ry" value="90" />
+          <input class="angle" id="rzAngle" type="number" name="rz" value="90" />
         </div>
 
         <draggable
@@ -129,14 +111,10 @@
     </div>
     <br />
     <div class="user-tools">
-      <button class="qasm" @click="this.$parent.qasm">
-        OPENQASM Simulator
-      </button>
+      <button class="qasm" @click="this.$parent.qasm">OPENQASM Simulator</button>
       <button class="qasm" @click="this.$parent.qasmTextFun">|qasm⟩</button>
       <div id="myNav" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav()"
-          >&#10006;</a
-        >
+        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
         <div class="column1">
           <h1 class="p" style="color: black ">from matrix</h1>
           <p style="color: black">nameof gate:</p>
@@ -147,9 +125,7 @@
           <button
             @click="create_the_matrix()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
-          >
-            create
-          </button>
+          >create</button>
         </div>
         <div class="column2">
           <h1 style="color: black">from rotation</h1>
@@ -198,12 +174,15 @@ export default {
         { name: "tdg", id: "tdg", index: "" }
       ],
       customGates: [],
-      w: "width:7.7em"
+      w: "width:7.7em",
+       customsrever: {}
+      // jsonobjectall: {
+      //   [this.nameofgate]: this.matrix
+      // }
     };
   },
   methods: {
-    log: function() {
-    },
+    log: function() {},
     // ----------------------------------------------------
     cloneGate({ name }) {
       if (name == "rx") {
@@ -220,8 +199,8 @@ export default {
     // ----------------------------------------------------
     addGate(nameofgate) {
       this.customGates.push({
-        name: nameofgate,
-        id: this.customGates.length + 1
+        name: "custom_" + nameofgate,
+        id: nameofgate
       });
       this.w = "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
     },
@@ -244,7 +223,12 @@ export default {
       window.console.log(matrix_validate);
       window.console.log(msg);
       if (matrix_validate) {
+        // this.jsonobjectall = {
+        //   [nameofgate]: matrix
+        // };
         this.addGate(nameofgate);
+        this.customsrever[nameofgate] = matrix;
+        // window.console.log(this.customsrever);
       }
       document.getElementById("nameofgate").value = null;
       document.getElementById("valueofgate").value = null;
@@ -256,7 +240,7 @@ export default {
       var matrix = [];
       for (count in row) {
         row[count] = row[count].replace(/\s/g, "");
-        var sub = row[count].split(",");
+        var sub = row[count].split(",").map(Number);
         if (row[count] !== undefined && row[count] != "") {
           matrix.push(sub);
         }
@@ -293,7 +277,15 @@ export default {
       }
       msg = "";
       return { matrix_validate, msg };
+    },
+
+    // ----------------------------------------------------
+    sendtoclone() {
+      return this.customsrever;
     }
+    // ----------------------------------------------------
+    // ----------------------------------------------------
+
     // ----------------------------------------------------
   }
 };

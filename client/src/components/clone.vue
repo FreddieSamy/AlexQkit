@@ -2,7 +2,7 @@
   <div class="circuit">
     <div v-if="!qasmFlag" class="upper-circuit">
       <toolbox ref="toolbox"></toolbox>
-      <!-- <ibm></ibm> -->
+      <ibm ref="ibm"></ibm>
     </div>
     <br />
     <div class="qasmAndWires">
@@ -29,12 +29,8 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">
-          add Wire
-        </button>
-        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">
-          Remove Wire
-        </button>
+        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">add Wire</button>
+        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">Remove Wire</button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
         <button class="add-wire" @click="clearConsole">Clear Console</button>
@@ -62,7 +58,7 @@
 <script>
 import toolbox from "./toolbox.vue";
 import wire from "./wire.vue";
-//import ibm from "./ibm.vue";
+import ibm from "./ibm.vue";
 import trash from "./trash.vue";
 import axios from "axios";
 import blochSphere from "./blochSphere.vue";
@@ -75,7 +71,7 @@ export default {
   display: "clone",
   components: {
     toolbox,
-    //ibm,
+    ibm,
     wire,
     trash,
     blochSphere,
@@ -85,11 +81,12 @@ export default {
   },
   data() {
     return {
+      API_TOKEN:"",
       qasmError: "",
       tracingLineHeight: 15,
       qasmText: "There is no circuit",
       reversedWires: true,
-      diracNotationData: "|00⟩",
+      diracNotationData: "|000⟩",
       exeCount: 0,
       route: "http://localhost:5000/data",
       states: ["0", "1", "+", "-", "i", "-i"],
@@ -99,9 +96,13 @@ export default {
       qasmTextFlag: false,
       jsonObject: [
         {
+          API_TOKEN:"",
           wire: 0,
           init: [],
-          rows: []
+          rows: [],
+          reversedWires: true,
+          exeCount: 0,
+          custom:{}
         }
       ]
     };
@@ -179,17 +180,20 @@ export default {
     sendSystem: function() {
       var statesSystem = [];
       var gatesSystem = [];
+      var toolboxconnect=this.$refs.toolbox;
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
         statesSystem.push(wireCaller.getState());
-        gatesSystem.push(wireCaller.getGates());
+        gatesSystem.push(wireCaller.getGates(i));
       }
       this.jsonObject[0] = {
+        API_TOKEN:this.API_TOKEN ,
         reversedWires: this.reversedWires,
         exeCount: this.exeCount,
         wires: this.rows,
         init: statesSystem,
-        rows: gatesSystem
+        rows: gatesSystem,
+        custom:toolboxconnect.sendtoclone()
       };
       window.console.log(this.jsonObject);
       this.sendToServer(this.route, this.jsonObject);
