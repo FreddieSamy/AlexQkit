@@ -15,6 +15,7 @@
       <h3 v-if="qasmFlag">{{ qasmError }}</h3>
       <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
       <img
+        v-if="!qasmFlag"
         :style="'height:' + tracingLineHeight + 'em'"
         id="executionLine"
         src="../assets/executionLine.png"
@@ -134,6 +135,7 @@ export default {
       this.maxWire = 0;
       this.exeCount = 0;
       this.updateTracingLine();
+      this.qasmText = "There is no circuit";
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -264,6 +266,7 @@ export default {
     //-----------------------------------------------------------------------
     qasmTextFun: function() {
       this.qasmTextFlag = !this.qasmTextFlag;
+      this.sendSystem();
     },
     //-----------------------------------------------------------------------
     qasm: function() {
