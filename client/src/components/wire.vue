@@ -13,6 +13,9 @@
       :list="list"
       group="gates"
       @change="change"
+      @add="add"
+      @remove="remove"
+      @update="update"
     >
       <div
         class="circuit-gate"
@@ -44,8 +47,47 @@ export default {
   props: ["id"],
   methods: {
     //-----------------------------------------------------------------------
-    change: function(event) {
+    add:function(evt){
+      window.console.log("enter on end")
+      window.console.log("item id : "+evt.item.id);
+      window.console.log("to      : "+evt.to.classList.value);
+      //window.console.log(evt.from.childNodes);
+      window.console.log("old i   : "+evt.oldIndex);
+      window.console.log("new i   : "+evt.newIndex);
+      this.$parent.updateMaxWire(); 
+      this.$parent.addIdentityToColumn(this.id);
+      //this.$parent.removeIdentitySystem();
+    },
+    update:function(evt){
+     window.console.log("enter on end")
+      window.console.log("item id : "+evt.item.id);
+      window.console.log("to      : "+evt.to.classList.value);
+      window.console.log("event   : "+evt.from.classList.value);
+      window.console.log("old i   : "+evt.oldIndex);
+      window.console.log("new i   : "+evt.newIndex);
+      this.$parent.updateMaxWire();
+      this.$parent.removeIdentitySystem();
+    },
+    remove:function(evt){
+      window.console.log("enter on remove");
+      window.console.log("item");
+      window.console.log(evt.item);
+      window.console.log("to");
+      window.console.log(evt.to);
+      window.console.log("from");
+      window.console.log(evt.from);
+      window.console.log("old i: "+evt.oldIndex);
+      window.console.log("new i: "+evt.newIndex);
+      this.$parent.updateMaxWire();
+      this.addIdentity();
+      this.$parent.removeIdentitySystem();
+    },
+    change: function(/*event,evt*/) {
+      /*
+      window.console.log("enter on change")
       this.$parent.updateMaxWire(); // update wire that has maximum gates
+      var element = evt.item;
+      window.console.log("element = "+element);
       var eventName = Object.keys(event)[0];
       var gateName = event[eventName]["element"]["name"];
       //var gateIndex = event[eventName]['newIndex'];
@@ -59,10 +101,11 @@ export default {
         this.addIdentity();
       }
       this.$parent.removeIdentitySystem();
-      /* this.$parent.showSystem(); */
+      this.$parent.showSystem(); 
       //set tracing line at the end to run the whole circuit
       this.$parent.exeCount = this.$parent.maxWire;
-      this.$parent.updateTracingLine();
+      //this.$parent.updateTracingLine();
+      */
     },
     //-----------------------------------------------------------------------
     qubitState: function(evt) {
@@ -217,7 +260,7 @@ export default {
   /*border: 0.1em dashed black;*/
 }
 #i {
-  opacity: 0.003;
+  opacity: 0.5;
 }
 /*
 #c{
