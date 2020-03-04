@@ -29,13 +29,21 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="toolbox2-btn" @click="rows++">add Wire</button>
-        <button class="toolbox2-btn" @click="rows--">Remove Wire</button>
-        <button class="toolbox2-btn" @click="sendSystem">send</button>
-        <button class="toolbox2-btn" @click="resetSystem">reset system</button>
-        <button class="toolbox2-btn" @click="preExe">⟨exe|</button>
-        <button class="toolbox2-btn" @click="nextExe">|exe⟩</button>
-        <button @click="clearConsole">Clear Console</button>
+        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">
+          add Wire
+        </button>
+        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">
+          Remove Wire
+        </button>
+        <button class="add-wire" @click="sendSystem">send</button>
+        <button class="reset-system" @click="resetSystem">reset system</button>
+        <button class="add-wire" @click="clearConsole">Clear Console</button>
+        <div class="exe">
+          <button class="exeBtn" @click="exeStart">start</button>
+          <button class="exeBtn" @click="preExe">⟨exe|</button>
+          <button class="exeBtn" @click="nextExe">|exe⟩</button>
+          <button class="exeBtn" @click="exeEnd">end</button>
+        </div>
         <!--
         <button class="add-wire" @click="teleAlgorithm">
           set teleportation algorithm as a test algorithm
@@ -73,11 +81,10 @@ export default {
     blochSphere,
     histoGram,
     diracNotation,
-    circuitDrawing,
+    circuitDrawing
   },
   data() {
     return {
-      globalID: 0,
       qasmError: "",
       tracingLineHeight: 15,
       qasmText: "There is no circuit",
@@ -88,16 +95,15 @@ export default {
       states: ["0", "1", "+", "-", "i", "-i"],
       rows: 3, // number of wires
       maxWire: 0, // maximum number of gates in a wire
-      qFlag: false, // qFlag is a flag if the qasm side window is open or not
       qasmFlag: false,
       qasmTextFlag: false,
       jsonObject: [
         {
           wire: 0,
           init: [],
-          rows: [],
-        },
-      ],
+          rows: []
+        }
+      ]
     };
   },
   methods: {
@@ -133,7 +139,6 @@ export default {
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
-      window.console.log("enter add Identity to column");
       for (let i = 0; i < this.rows; i++) {
         if (i + 1 != wireId) {
           var wireCaller = this.$refs.wire[i];
@@ -184,7 +189,7 @@ export default {
         exeCount: this.exeCount,
         wires: this.rows,
         init: statesSystem,
-        rows: gatesSystem,
+        rows: gatesSystem
       };
       window.console.log(this.jsonObject);
       this.sendToServer(this.route, this.jsonObject);
@@ -209,8 +214,8 @@ export default {
         rows: [
           ["x", "i", "c", "h", "i", "h"],
           ["i", "h", "c", "x", "c", "i"],
-          ["i", "i", "x", "i", "h", "c"],
-        ],
+          ["i", "i", "x", "i", "h", "c"]
+        ]
       };
       window.console.log(test_json_object);
       this.rows = test_json_object["wires"];
@@ -251,21 +256,17 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    q() {
-      window.console.log("qasm  hellos");
-    },
     sendQasm: function() {
-      //this.qFlag = !this.qFlag;
       this.qasmError = "";
       this.jsonObject[0] = {
-        qasm: document.getElementById("textarea").value,
+        qasm: document.getElementById("textarea").value
       };
       this.sendToServer(this.route, this.jsonObject);
     },
     //-----------------------------------------------------------------------
     qasmTextFun: function() {
       this.qasmTextFlag = !this.qasmTextFlag;
-      //window.console.log('qasm');
+      this.sendSystem();
     },
     //-----------------------------------------------------------------------
     qasm: function() {
@@ -276,7 +277,6 @@ export default {
     nextExe: function() {
       if (this.exeCount < this.maxWire) {
         this.exeCount++;
-        window.console.log(3.8 * (this.exeCount - 1));
         this.updateTracingLine();
         this.sendSystem();
       }
@@ -290,7 +290,27 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-  },
+    exeStart: function() {
+      if (this.exeCount != 0) {
+        this.exeCount = 0;
+        this.updateTracingLine();
+        this.sendSystem();
+      }
+    },
+    //-----------------------------------------------------------------------
+    exeEnd: function() {
+      if (this.exeCount != this.maxWire) {
+        this.exeCount = this.maxWire;
+        this.updateTracingLine();
+        this.sendSystem();
+      }
+    },
+    //-----------------------------------------------------------------------
+    updateTracingLine: function() {
+      document.getElementById("executionLine").style.marginLeft =
+        3.8 * this.exeCount + "em";
+    }
+  }
 };
 </script>
 <!-- =============================================================  -->
@@ -318,7 +338,28 @@ export default {
   margin: 0.9em 0.2em 0.2em 0.2em;
   padding: 0em 0em 0em 0em;
 }
-.toolbox2-btn {
+.add-wire {
+  display: inline-block;
+  margin: 0.2em 0.2em 0em 0.2em;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+}
+.remove-wire {
+  display: inline-block;
+  margin: 0.2em 0.2em 0em 0.2em;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+}
+.exeBtn {
+  display: inline-block;
+  margin: 0.2em 0.2em 0em 0.2em;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+}
+.reset-system {
   display: inline-block;
   margin: 0.2em 0.2em 0em 0.2em;
   padding: 0.1em 0.5em 0.1em 0.5em;
@@ -341,6 +382,15 @@ export default {
   margin: 0em 0.2em 0em 0em;
   /*border: 1px solid black;*/
   border-radius: 0.5em;
+}
+.qasmBtn {
+  display: block;
+
+  padding: 0.1em 0.5em 0.1em 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+  right: 0;
+  top: 0;
 }
 .wiresBlock {
   width: 99%;
