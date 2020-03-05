@@ -24,7 +24,11 @@
               :key="element.id"
               :id="element.name"
             >
-              <div class="gate-name">{{ element.name }}</div>
+              <div class="gate-name" id="hover-div">{{ element.name }}
+                            <span id="hover-element">
+                                      {{element.info}}
+                            </span>
+              </div>
             </div>
           </transition-group>
         </draggable>
@@ -42,7 +46,11 @@
               :key="element.id"
               :id="element.name"
             >
-              <div class="gate-name">{{ element.name }}</div>
+              <div class="gate-name" id="hover-div">{{ element.name }}
+                <span id="hover-element">
+                                      {{element.info}}
+                </span>
+              </div>
             </div>
           </transition-group>
         </draggable>
@@ -60,7 +68,11 @@
                 :key="element.id"
                 :id="element.name"
               >
-                <div class="gate-name">{{ element.name }}</div>
+                <div class="gate-name" id="hover-div">{{ element.name }}
+                <span id="hover-element">
+                                      {{element.info}}
+                </span>
+              </div>
               </div>
             </transition-group>
           </draggable>
@@ -83,7 +95,11 @@
               :key="element.id"
               :id="element.name"
             >
-              <div class="gate-name">{{ element.name }}</div>
+              <div class="gate-name" id="hover-div">{{ element.name }}
+                <span id="hover-element">
+                                      {{element.info}}
+                </span>
+              </div>
             </div>
           </transition-group>
         </draggable>
@@ -150,28 +166,28 @@ export default {
   data() {
     return {
       gates1: [
-        { name: "c", id: "c", index: "" },
-        { name: "m", id: "m", index: "" },
-        { name: "oc", id: "oc", index: "" },
-        { name: "reset", id: "reset", index: "" }
+        { name: "c", id: "c", index: "" ,info:"closed control"},
+        { name: "m", id: "m", index: "" ,info:"measurment gate"},
+        { name: "oc", id: "oc", index: "",info:"open control" },
+        { name: "reset", id: "reset", index: "",info:"reset gate" }
       ],
       gates2: [
-        { name: "x", id: "x", index: "" },
-        { name: "y", id: "y", index: "" },
-        { name: "z", id: "z", index: "" },
-        { name: "h", id: "h", index: "" },
-        { name: "swap", id: "swap", index: "" }
+        { name: "x", id: "x", index: "" ,info:"not gate"},
+        { name: "y", id: "y", index: "",info:"" },
+        { name: "z", id: "z", index: "" ,info:""},
+        { name: "h", id: "h", index: "",info:"simple super postition" },
+        { name: "swap", id: "swap", index: "",info:"" }
       ],
       gates3: [
-        { name: "rx", id: "rx", index: "" },
-        { name: "ry", id: "ry", index: "" },
-        { name: "rz", id: "rz", index: "" }
+        { name: "rx", id: "rx", index: "" ,info:""},
+        { name: "ry", id: "ry", index: "",info:"" },
+        { name: "rz", id: "rz", index: "" ,info:""}
       ],
       gates4: [
-        { name: "s", id: "s", index: "" },
-        { name: "t", id: "t", index: "" },
-        { name: "sdg", id: "sdg", index: "" },
-        { name: "tdg", id: "tdg", index: "" }
+        { name: "s", id: "s", index: "" ,info:""},
+        { name: "t", id: "t", index: "",info:"" },
+        { name: "sdg", id: "sdg", index: "" ,info:""},
+        { name: "tdg", id: "tdg", index: "" ,info:""}
       ],
       customGates: [],
       w: "width:7.7em",
@@ -487,4 +503,16 @@ export default {
   color: #fff;
   cursor: pointer;
 }
+#hover-element {
+        display: none;
+        position: absolute;
+        background-color: lightgray;
+        padding: 10px;
+        border: solid;
+        border-radius: 5px;
+    }
+    
+    #hover-div:hover #hover-element {
+        display: block;
+    }
 </style>

@@ -4,7 +4,9 @@
       <button class="delete" @click="deleteWire">x</button>
     </div>
     <div class="qubit">
-      <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
+      <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">
+        |{{ state }}⟩
+      </button>
     </div>
     <draggable
       class="wire-drop-area"
@@ -45,7 +47,7 @@ export default {
   props: ["id"],
   methods: {
     //-----------------------------------------------------------------------
-    add:function(evt){
+    add: function(evt) {
       var gate = evt.to.childNodes[evt.newIndex];
       var gateName = gate.id;
       var col = "_"+this.id;
@@ -58,14 +60,12 @@ export default {
       this.$parent.updateMaxWire(); 
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
-      this.$parent.exeCount = this.$parent.maxWire;
-     
-      //this.$parent.updateTracingLine();
+
       //var x = document.querySelectorAll(".circuit-gate")
       //x=x.hasAttribute("col");
       //window.console.log(x);
     },
-    update:function(evt){
+    update: function(evt) {
       var gate = evt.to.childNodes[evt.newIndex];
       window.console.log(gate);
       window.console.log(gate.innerText);
@@ -80,10 +80,8 @@ export default {
       */
       this.$parent.updateMaxWire();
       this.$parent.removeIdentitySystem();
-      this.$parent.exeCount = this.$parent.maxWire;
-      //this.$parent.updateTracingLine();
     },
-    remove:function(/*evt*/){
+    remove: function(/*evt*/) {
       /*
       window.console.log("enter on remove");
       window.console.log("item");
@@ -98,8 +96,6 @@ export default {
       */
       this.addIdentity();
       this.$parent.removeIdentitySystem();
-      this.$parent.exeCount = this.$parent.maxWire;
-      //this.$parent.updateTracingLine();
     },
     change: function(/*evt*/) {
        //window.console.log('change '+evt.newIndex);
@@ -182,11 +178,11 @@ export default {
     getGates: function(rowId) {
       this.gates = [];
       for (let colIdx = 0; colIdx < this.list.length; colIdx++) {
-          if(this.list[colIdx]["name"].startsWith("custom_")){
-            this.gates.push(this.list[colIdx]["name"]+"."+rowId);
-          }
-          else{
-        this.gates.push(this.list[colIdx]["name"]);}
+        if (this.list[colIdx]["name"].startsWith("custom_")) {
+          this.gates.push(this.list[colIdx]["name"] + "." + rowId);
+        } else {
+          this.gates.push(this.list[colIdx]["name"]);
+        }
       }
       return this.gates;
     },

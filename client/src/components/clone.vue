@@ -29,8 +29,12 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">add Wire</button>
-        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">Remove Wire</button>
+        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">
+          add Wire
+        </button>
+        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">
+          Remove Wire
+        </button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
 
@@ -87,7 +91,7 @@ export default {
   },
   data() {
     return {
-      API_TOKEN:"",
+      API_TOKEN: "",
       qasmError: "",
       tracingLineHeight: 15,
       qasmText: "There is no circuit",
@@ -95,6 +99,7 @@ export default {
       diracNotationData: "|000⟩",
       exeCount: 0,
       route: "http://localhost:5000/data",
+      resetRoute: "http://localhost:5000/reset",
       states: ["0", "1", "+", "-", "i", "-i"],
       rows: 3, // number of wires
       maxWire: 0, // maximum number of gates in a wire
@@ -102,13 +107,13 @@ export default {
       qasmTextFlag: false,
       jsonObject: [
         {
-          API_TOKEN:"",
+          API_TOKEN: "",
           wire: 0,
           init: [],
           rows: [],
           reversedWires: true,
           exeCount: 0,
-          custom:{}
+          custom: {}
         }
       ]
     };
@@ -131,6 +136,9 @@ export default {
           this.maxWire = wireCaller.list.length;
         }
       }
+      //update the trasing line
+      this.exeCount = this.maxWire;
+      this.updateTracingLine();
       // window.console.log("max wire = "+this.maxWire);
     },
     //-----------------------------------------------------------------------
@@ -143,6 +151,7 @@ export default {
       this.exeCount = 0;
       this.updateTracingLine();
       this.qasmText = "There is no circuit";
+      this.sendSystem();
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -160,6 +169,8 @@ export default {
         wireCaller.removeGateByIndex(columnIndex);
       }
       this.maxWire--;
+      this.exeCount = this.maxWire;
+      this.updateTracingLine();
     },
     //-----------------------------------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
@@ -186,21 +197,24 @@ export default {
     sendSystem: function() {
       var statesSystem = [];
       var gatesSystem = [];
-      var toolboxconnect=this.$refs.toolbox;
+      var toolboxconnect = this.$refs.toolbox;
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
         statesSystem.push(wireCaller.getState());
         gatesSystem.push(wireCaller.getGates(i));
       }
       this.jsonObject[0] = {
-        API_TOKEN:this.API_TOKEN ,
         reversedWires: this.reversedWires,
         exeCount: this.exeCount,
         wires: this.rows,
         init: statesSystem,
         rows: gatesSystem,
-        custom:toolboxconnect.sendtoclone()
+        custom: toolboxconnect.sendtoclone()
       };
+      window.console.log(document.getElementById("checkbox").checked);
+      if (document.getElementById("checkbox").checked) {
+        this.jsonObject[0]["API_TOKEN"] = this.API_TOKEN;
+      }
       window.console.log(this.jsonObject);
       this.sendToServer(this.route, this.jsonObject);
     },
