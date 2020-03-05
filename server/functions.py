@@ -729,6 +729,16 @@ class Circuit():
                     self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
                 else:
                     self.returnedDictionary["matrixRepresentation"]="you can't get matrixRepresentation while using reset gate"
+            else:
+                self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
+                self.returnedDictionary["qasm"]=circuit.qasm()
+                self.returnedDictionary["link"]=""
+                if not resetExist:
+                     self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+                else:
+                    self.returnedDictionary["matrixRepresentation"]="you can't get matrixRepresentation while using reset gate"
+            
+        
         else:
             self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
             self.returnedDictionary["qasm"]=circuit.qasm()
@@ -876,6 +886,11 @@ class Circuit():
                 self.returnedDictionary["qasm"]=""
                 self.returnedDictionary["link"]=self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
                 self.returnedDictionary["cols"]=cols
+                self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+            else:
+                self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
+                self.returnedDictionary["qasm"]=circuit.qasm()
+                self.returnedDictionary["link"]=""
                 self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
         else:
             self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
