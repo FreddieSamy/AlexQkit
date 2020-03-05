@@ -195,7 +195,7 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    sendSystem: function() {
+    updateSystem:function(){
       var statesSystem = [];
       var gatesSystem = [];
       var toolboxconnect = this.$refs.toolbox;
@@ -216,9 +216,14 @@ export default {
       if (document.getElementById("checkbox").checked) {
         this.jsonObject[0]["API_TOKEN"] = this.API_TOKEN;
       }
+      //window.console.log(JSON.stringify(this.jsonObject));
+    },
+    sendSystem: function() {
+      this.updateSystem();
       window.console.log(this.jsonObject);
       this.sendToServer(this.route, this.jsonObject);
       document.getElementById("checkbox").checked = false;
+
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
