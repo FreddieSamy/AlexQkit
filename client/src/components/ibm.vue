@@ -3,7 +3,14 @@
     <div id="hover-div">
       <label class="lbl1">IBM Token</label>
       <span id="hover-element">
-        Go to ibm and copy the token then place it in the box.
+        Get your API_TOKEN from
+        <a
+          id="link"
+          target="_blank"
+          href="https://quantum-computing.ibm.com/account"
+          >https://quantum-computing.ibm.com/account</a
+        >
+        <br />To run your circuit on IBM Q
       </span>
     </div>
     <input class="ibmtoken" type="text" id="ibmtextfield" />
@@ -19,7 +26,7 @@
     <div>
       <button @click="save_ibm_token()">Send</button>
     </div>
-    <a id="link" :href="link">{{ link }}</a>
+    <a id="link" target="_blank" :href="link">{{ link }}</a>
     <!-- <div>
     <label class="lbl1">simulator</label>
     <input class="ibmToken" type="text"/>

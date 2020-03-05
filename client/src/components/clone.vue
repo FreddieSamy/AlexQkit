@@ -91,6 +91,7 @@ export default {
   },
   data() {
     return {
+      isUnitary: false,
       API_TOKEN: "",
       qasmError: "",
       tracingLineHeight: 15,
@@ -217,6 +218,7 @@ export default {
       }
       window.console.log(this.jsonObject);
       this.sendToServer(this.route, this.jsonObject);
+      document.getElementById("checkbox").checked = false;
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
@@ -224,10 +226,11 @@ export default {
         window.console.log("the data success to returned be from the server");
         window.console.log(res);
         this.draw();
+        this.$refs.ibm.link = res.data.link;
         this.diracNotationData = res.data.diracNotation;
         this.qasmError = res.data.qasmError;
         this.qasmText = res.data.qasm;
-        window.console.log(res.data.qasmError);
+        this.isUnitary = res.data.isUnitary;
       });
     },
     //-----------------------------------------------------------------------

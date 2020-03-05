@@ -24,11 +24,7 @@
               :key="element.id"
               :id="element.name"
             >
-              <div class="gate-name" id="hover-div">{{ element.name }}
-                            <span id="hover-element">
-                                      {{element.info}}
-                            </span>
-              </div>
+              <div class="gate-name">{{ element.name }}</div>
             </div>
           </transition-group>
         </draggable>
@@ -46,11 +42,7 @@
               :key="element.id"
               :id="element.name"
             >
-              <div class="gate-name" id="hover-div">{{ element.name }}
-                <span id="hover-element">
-                                      {{element.info}}
-                </span>
-              </div>
+              <div class="gate-name">{{ element.name }}</div>
             </div>
           </transition-group>
         </draggable>
@@ -68,17 +60,31 @@
                 :key="element.id"
                 :id="element.name"
               >
-                <div class="gate-name" id="hover-div">{{ element.name }}
-                <span id="hover-element">
-                                      {{element.info}}
-                </span>
-              </div>
+                <div class="gate-name">{{ element.name }}</div>
               </div>
             </transition-group>
           </draggable>
-          <input class="angle" id="rxAngle" type="number" name="rx" value="90" />
-          <input class="angle" id="ryAngle" type="number" name="ry" value="90" />
-          <input class="angle" id="rzAngle" type="number" name="rz" value="90" />
+          <input
+            class="angle"
+            id="rxAngle"
+            type="number"
+            name="rx"
+            value="90"
+          />
+          <input
+            class="angle"
+            id="ryAngle"
+            type="number"
+            name="ry"
+            value="90"
+          />
+          <input
+            class="angle"
+            id="rzAngle"
+            type="number"
+            name="rz"
+            value="90"
+          />
         </div>
 
         <draggable
@@ -95,11 +101,7 @@
               :key="element.id"
               :id="element.name"
             >
-              <div class="gate-name" id="hover-div">{{ element.name }}
-                <span id="hover-element">
-                                      {{element.info}}
-                </span>
-              </div>
+              <div class="gate-name">{{ element.name }}</div>
             </div>
           </transition-group>
         </draggable>
@@ -127,10 +129,14 @@
     </div>
     <br />
     <div class="user-tools">
-      <button class="qasm" @click="this.$parent.qasm">OPENQASM Simulator</button>
+      <button class="qasm" @click="this.$parent.qasm">
+        OPENQASM Simulator
+      </button>
       <button class="qasm" @click="this.$parent.qasmTextFun">|qasm⟩</button>
       <div id="myNav" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
+        <a href="javascript:void(0)" class="closebtn" @click="closeNav()"
+          >&#10006;</a
+        >
         <div class="column1">
           <h1 class="p" style="color: black ">from matrix</h1>
           <p style="color: black">nameof gate:</p>
@@ -141,7 +147,9 @@
           <button
             @click="create_the_matrix()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
-          >create</button>
+          >
+            create
+          </button>
         </div>
         <div class="column2">
           <h1 style="color: black">from rotation</h1>
@@ -166,32 +174,32 @@ export default {
   data() {
     return {
       gates1: [
-        { name: "c", id: "c", index: "" ,info:"closed control"},
-        { name: "m", id: "m", index: "" ,info:"measurment gate"},
-        { name: "oc", id: "oc", index: "",info:"open control" },
-        { name: "reset", id: "reset", index: "",info:"reset gate" }
+        { name: "c", id: "c", index: "" },
+        { name: "m", id: "m", index: "" },
+        { name: "oc", id: "oc", index: "" },
+        { name: "reset", id: "reset", index: "" }
       ],
       gates2: [
-        { name: "x", id: "x", index: "" ,info:"not gate"},
-        { name: "y", id: "y", index: "",info:"" },
-        { name: "z", id: "z", index: "" ,info:""},
-        { name: "h", id: "h", index: "",info:"simple super postition" },
-        { name: "swap", id: "swap", index: "",info:"" }
+        { name: "x", id: "x", index: "" },
+        { name: "y", id: "y", index: "" },
+        { name: "z", id: "z", index: "" },
+        { name: "h", id: "h", index: "" },
+        { name: "swap", id: "swap", index: "" }
       ],
       gates3: [
-        { name: "rx", id: "rx", index: "" ,info:""},
-        { name: "ry", id: "ry", index: "",info:"" },
-        { name: "rz", id: "rz", index: "" ,info:""}
+        { name: "rx", id: "rx", index: "" },
+        { name: "ry", id: "ry", index: "" },
+        { name: "rz", id: "rz", index: "" }
       ],
       gates4: [
-        { name: "s", id: "s", index: "" ,info:""},
-        { name: "t", id: "t", index: "",info:"" },
-        { name: "sdg", id: "sdg", index: "" ,info:""},
-        { name: "tdg", id: "tdg", index: "" ,info:""}
+        { name: "s", id: "s", index: "" },
+        { name: "t", id: "t", index: "" },
+        { name: "sdg", id: "sdg", index: "" },
+        { name: "tdg", id: "tdg", index: "" }
       ],
       customGates: [],
       w: "width:7.7em",
-       customsrever: {}
+      customsrever: {}
       // jsonobjectall: {
       //   [this.nameofgate]: this.matrix
       // }
@@ -234,6 +242,11 @@ export default {
       var nameofgate = document.getElementById("nameofgate").value;
       var valofgate = document.getElementById("valueofgate");
       var matrix = this.make_matrix(valofgate);
+      var jsonObj = {};
+      jsonObj["matrix"] = matrix;
+      this.$parent.sendToServer("http://localhost:5000/isUnitary", jsonObj);
+      this.$parent.isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
+      // window.console.log("unitary:" + this.$parent.isUnitary);
       window.console.log(matrix);
       var { matrix_validate, msg } = this.validate_of_matrix(matrix);
       window.console.log(matrix_validate);
@@ -503,16 +516,4 @@ export default {
   color: #fff;
   cursor: pointer;
 }
-#hover-element {
-        display: none;
-        position: absolute;
-        background-color: lightgray;
-        padding: 10px;
-        border: solid;
-        border-radius: 5px;
-    }
-    
-    #hover-div:hover #hover-element {
-        display: block;
-    }
 </style>
