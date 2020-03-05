@@ -37,13 +37,19 @@
         </button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
-        <button class="add-wire" @click="clearConsole">Clear Console</button>
+
+        
         <div class="exe">
           <button class="exeBtn" @click="exeStart">start</button>
           <button class="exeBtn" @click="preExe">⟨exe|</button>
           <button class="exeBtn" @click="nextExe">|exe⟩</button>
           <button class="exeBtn" @click="exeEnd">end</button>
         </div>
+      
+         <button @click="getCols">get coulmns in console</button>
+          <button @click="clearConsole">Clear Console</button>
+      
+
         <!--
         <button class="add-wire" @click="teleAlgorithm">
           set teleportation algorithm as a test algorithm
@@ -239,6 +245,15 @@ export default {
     //-----------------------------------------------------------------------
     clearConsole: function() {
       window.console.clear();
+    },
+    getCols:function(){
+        
+       // for(let i = 1 ; i <= this.maxWire ; i++ ){
+          var col = document.querySelectorAll('.circuit-gate');
+          
+          window.console.log(col);
+       // }
+        
     },
     //-----------------------------------------------------------------------
     draw: function() {
