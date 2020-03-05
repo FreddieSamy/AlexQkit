@@ -93,7 +93,7 @@ export default {
       diracNotationData: "|000⟩",
       exeCount: 0,
       route: "http://localhost:5000/data",
-      resetRoute:"http://localhost:5000/reset",
+      resetRoute: "http://localhost:5000/reset",
       states: ["0", "1", "+", "-", "i", "-i"],
       rows: 3, // number of wires
       maxWire: 0, // maximum number of gates in a wire
@@ -198,7 +198,6 @@ export default {
         gatesSystem.push(wireCaller.getGates(i));
       }
       this.jsonObject[0] = {
-        API_TOKEN: this.API_TOKEN,
         reversedWires: this.reversedWires,
         exeCount: this.exeCount,
         wires: this.rows,
@@ -206,6 +205,10 @@ export default {
         rows: gatesSystem,
         custom: toolboxconnect.sendtoclone()
       };
+      window.console.log(document.getElementById("checkbox").checked);
+      if (document.getElementById("checkbox").checked) {
+        this.jsonObject[0]["API_TOKEN"] = this.API_TOKEN;
+      }
       window.console.log(this.jsonObject);
       this.sendToServer(this.route, this.jsonObject);
     },
