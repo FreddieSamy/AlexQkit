@@ -49,14 +49,16 @@ export default {
     //-----------------------------------------------------------------------
     add: function(evt) {
       var gate = evt.to.childNodes[evt.newIndex];
-      var gateName = gate.id;
+      //var gateName = gate.id;
       var col = "_"+this.id;
       var row = "_"+(evt.newIndex+1);
       gate.setAttribute('row',row);
       gate.setAttribute('col',col);
+      /*
       if(gateName=="c"){
           this.$parent.applyControl(col);
       }
+      */
       this.$parent.updateMaxWire(); 
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
@@ -122,6 +124,7 @@ export default {
       this.$parent.exeCount = this.$parent.maxWire;
       //this.$parent.updateTracingLine();
       */
+     this.$parent.updateSystem();
     },
     //-----------------------------------------------------------------------
     qubitState: function(evt) {
