@@ -85,6 +85,7 @@ export default {
   },
   data() {
     return {
+      isUnitary: false,
       API_TOKEN: "",
       qasmError: "",
       tracingLineHeight: 15,
@@ -223,7 +224,7 @@ export default {
         this.diracNotationData = res.data.diracNotation;
         this.qasmError = res.data.qasmError;
         this.qasmText = res.data.qasm;
-        window.console.log(res.data.qasmError);
+        this.isUnitary = res.data.isUnitary;
       });
     },
     //-----------------------------------------------------------------------
