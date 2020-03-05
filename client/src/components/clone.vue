@@ -251,12 +251,12 @@ export default {
       window.console.clear();
     },
     getCols:function(){
-        
-       // for(let i = 1 ; i <= this.maxWire ; i++ ){
-          var col = document.querySelectorAll('.circuit-gate');
-          
+
+       for(let i = 1 ; i <= this.maxWire ; i++ ){
+          var col = document.querySelectorAll('[col=_'+i+']');
+          window.console.log("col "+i);
           window.console.log(col);
-       // }
+       }
         
     },
     //-----------------------------------------------------------------------
