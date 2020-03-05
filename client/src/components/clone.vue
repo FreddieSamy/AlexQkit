@@ -93,6 +93,7 @@ export default {
       diracNotationData: "|000⟩",
       exeCount: 0,
       route: "http://localhost:5000/data",
+      resetRoute:"http://localhost:5000/reset",
       states: ["0", "1", "+", "-", "i", "-i"],
       rows: 3, // number of wires
       maxWire: 0, // maximum number of gates in a wire
@@ -144,6 +145,7 @@ export default {
       this.exeCount = 0;
       this.updateTracingLine();
       this.qasmText = "There is no circuit";
+      this.sendSystem();
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
