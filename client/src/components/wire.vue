@@ -4,7 +4,9 @@
       <button class="delete" @click="deleteWire">x</button>
     </div>
     <div class="qubit">
-      <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
+      <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">
+        |{{ state }}⟩
+      </button>
     </div>
     <draggable
       class="wire-drop-area"
@@ -45,10 +47,10 @@ export default {
   props: ["id"],
   methods: {
     //-----------------------------------------------------------------------
-    add:function(evt){
+    add: function(evt) {
       var gate = evt.to.childNodes[evt.newIndex];
-      gate.setAttribute('row',this.id);
-      gate.setAttribute('col',evt.newIndex+1);
+      gate.setAttribute("row", this.id);
+      gate.setAttribute("col", evt.newIndex + 1);
       //window.console.log(gate);
       //window.console.log(gate);
       //window.console.log(evt.item.innerHTML);
@@ -61,20 +63,19 @@ export default {
       //window.console.log("new i   : "+evt.newIndex);
       //window.console.log(evt.clone);
       //window.console.log(evt.pullMode);
-      this.$parent.updateMaxWire(); 
+
+      this.$parent.updateMaxWire();
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
-      this.$parent.exeCount = this.$parent.maxWire;
-     
-      //this.$parent.updateTracingLine();
+
       //var x = document.querySelectorAll(".circuit-gate")
       //x=x.hasAttribute("col");
       //window.console.log(x);
     },
-    update:function(evt){
+    update: function(evt) {
       var gate = evt.to.childNodes[evt.newIndex];
-      gate.setAttribute('row',this.id);
-      gate.setAttribute('col',evt.newIndex+1);
+      gate.setAttribute("row", this.id);
+      gate.setAttribute("col", evt.newIndex + 1);
       window.console.log(gate);
       /*
       window.console.log("enter on update")
@@ -86,10 +87,8 @@ export default {
       */
       this.$parent.updateMaxWire();
       this.$parent.removeIdentitySystem();
-      this.$parent.exeCount = this.$parent.maxWire;
-      //this.$parent.updateTracingLine();
     },
-    remove:function(/*evt*/){
+    remove: function(/*evt*/) {
       /*
       window.console.log("enter on remove");
       window.console.log("item");
@@ -104,11 +103,9 @@ export default {
       */
       this.addIdentity();
       this.$parent.removeIdentitySystem();
-      this.$parent.exeCount = this.$parent.maxWire;
-      //this.$parent.updateTracingLine();
     },
     change: function(/*event,evt*/) {
-       window.console.log("happen change");
+      window.console.log("happen change");
       /*
       window.console.log("enter on change")
       this.$parent.updateMaxWire(); // update wire that has maximum gates
@@ -188,11 +185,11 @@ export default {
     getGates: function(rowId) {
       this.gates = [];
       for (let colIdx = 0; colIdx < this.list.length; colIdx++) {
-          if(this.list[colIdx]["name"].startsWith("custom_")){
-            this.gates.push(this.list[colIdx]["name"]+"."+rowId);
-          }
-          else{
-        this.gates.push(this.list[colIdx]["name"]);}
+        if (this.list[colIdx]["name"].startsWith("custom_")) {
+          this.gates.push(this.list[colIdx]["name"] + "." + rowId);
+        } else {
+          this.gates.push(this.list[colIdx]["name"]);
+        }
       }
       return this.gates;
     },
