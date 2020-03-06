@@ -15,7 +15,7 @@
       @add="add"
       @remove="remove"
       @update="update"
-      @change="change"
+      @onEnd="change"
     >
       <div
         class="circuit-gate"
@@ -49,17 +49,22 @@ export default {
     //-----------------------------------------------------------------------
     add: function(evt) {
       var gate = evt.to.childNodes[evt.newIndex];
-      //var gateName = gate.id;
-      var col = "_"+this.id;
-      var row = "_"+(evt.newIndex+1);
-      gate.setAttribute('row',row);
-      gate.setAttribute('col',col);
-      /*
-      if(gateName=="c"){
-          this.$parent.applyControl(col);
-      }
-      */
-      this.$parent.updateMaxWire(); 
+      gate.setAttribute("row", this.id);
+      gate.setAttribute("col", evt.newIndex + 1);
+      //window.console.log(gate);
+      //window.console.log(gate);
+      //window.console.log(evt.item.innerHTML);
+      //window.console.log("happen add");
+      //window.console.log("enter on end")
+      //window.console.log("item id : "+evt.item.id);
+      //window.console.log("to      : "+evt.to.classList.value);
+      //window.console.log(evt.from.childNodes);
+      //window.console.log("old i   : "+evt.oldIndex);
+      //window.console.log("new i   : "+evt.newIndex);
+      //window.console.log(evt.clone);
+      //window.console.log(evt.pullMode);
+
+      this.$parent.updateMaxWire();
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
 
@@ -69,8 +74,8 @@ export default {
     },
     update: function(evt) {
       var gate = evt.to.childNodes[evt.newIndex];
-      window.console.log(gate);
-      window.console.log(gate.innerText);
+      gate.setAttribute("row", this.id);
+      gate.setAttribute("col", evt.newIndex + 1);
       window.console.log(gate);
       /*
       window.console.log("enter on update")
@@ -99,8 +104,8 @@ export default {
       this.addIdentity();
       this.$parent.removeIdentitySystem();
     },
-    change: function(/*evt*/) {
-       //window.console.log('change '+evt.newIndex);
+    change: function(/*event,evt*/) {
+      window.console.log("happen change");
       /*
       window.console.log("enter on change")
       this.$parent.updateMaxWire(); // update wire that has maximum gates
@@ -124,7 +129,6 @@ export default {
       this.$parent.exeCount = this.$parent.maxWire;
       //this.$parent.updateTracingLine();
       */
-     this.$parent.updateSystem();
     },
     //-----------------------------------------------------------------------
     qubitState: function(evt) {
@@ -200,6 +204,15 @@ export default {
         this.list.push({ name: gatesList[colIdx] });
       }
     },
+    //-----------------------------------------------------------------------
+    objectNames: function(listOfObject) {
+      // unused till now
+      var names = [];
+      for (let i = 0; i < listOfObject.length; i++) {
+        names.push(listOfObject[i]["name"]);
+      }
+      return names;
+    }
     //-----------------------------------------------------------------------
   }
 };
