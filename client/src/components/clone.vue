@@ -37,19 +37,13 @@
         </button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
-
-        
+        <button class="add-wire" @click="clearConsole">Clear Console</button>
         <div class="exe">
           <button class="exeBtn" @click="exeStart">start</button>
           <button class="exeBtn" @click="preExe">⟨exe|</button>
           <button class="exeBtn" @click="nextExe">|exe⟩</button>
           <button class="exeBtn" @click="exeEnd">end</button>
         </div>
-      
-         <button @click="getCols">get coulmns in console</button>
-          <button @click="clearConsole">Clear Console</button>
-      
-
         <!--
         <button class="add-wire" @click="teleAlgorithm">
           set teleportation algorithm as a test algorithm
@@ -91,7 +85,6 @@ export default {
   },
   data() {
     return {
-      isUnitary: false,
       API_TOKEN: "",
       qasmError: "",
       tracingLineHeight: 15,
@@ -100,7 +93,7 @@ export default {
       diracNotationData: "|000⟩",
       exeCount: 0,
       route: "http://localhost:5000/data",
-      resetRoute: "http://localhost:5000/reset",
+      resetRoute:"http://localhost:5000/reset",
       states: ["0", "1", "+", "-", "i", "-i"],
       rows: 3, // number of wires
       maxWire: 0, // maximum number of gates in a wire
@@ -195,7 +188,7 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    updateSystem:function(){
+    sendSystem: function() {
       var statesSystem = [];
       var gatesSystem = [];
       var toolboxconnect = this.$refs.toolbox;
@@ -205,6 +198,7 @@ export default {
         gatesSystem.push(wireCaller.getGates(i));
       }
       this.jsonObject[0] = {
+        API_TOKEN: this.API_TOKEN,
         reversedWires: this.reversedWires,
         exeCount: this.exeCount,
         wires: this.rows,
@@ -212,18 +206,8 @@ export default {
         rows: gatesSystem,
         custom: toolboxconnect.sendtoclone()
       };
-      window.console.log(document.getElementById("checkbox").checked);
-      if (document.getElementById("checkbox").checked) {
-        this.jsonObject[0]["API_TOKEN"] = this.API_TOKEN;
-      }
-      //window.console.log(JSON.stringify(this.jsonObject));
-    },
-    sendSystem: function() {
-      this.updateSystem();
       window.console.log(this.jsonObject);
       this.sendToServer(this.route, this.jsonObject);
-      document.getElementById("checkbox").checked = false;
-
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
@@ -231,11 +215,10 @@ export default {
         window.console.log("the data success to returned be from the server");
         window.console.log(res);
         this.draw();
-        this.$refs.ibm.link = res.data.link;
         this.diracNotationData = res.data.diracNotation;
         this.qasmError = res.data.qasmError;
         this.qasmText = res.data.qasm;
-        this.isUnitary = res.data.isUnitary;
+        window.console.log(res.data.qasmError);
       });
     },
     //-----------------------------------------------------------------------
@@ -271,15 +254,6 @@ export default {
     //-----------------------------------------------------------------------
     clearConsole: function() {
       window.console.clear();
-    },
-    getCols:function(){
-
-       for(let i = 1 ; i <= this.maxWire ; i++ ){
-          var col = document.querySelectorAll('[col=_'+i+']');
-          window.console.log("col "+i);
-          window.console.log(col);
-       }
-        
     },
     //-----------------------------------------------------------------------
     draw: function() {
