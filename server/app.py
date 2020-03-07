@@ -32,20 +32,28 @@ def graphDrawing(fig):
 @app.route('/')
 def main():
     return "server is on fire"
+@app.route('/isUnitary',methods=['GET','POST'])
+def isUnitary():
+    if request.method=='POST':
+        jsonObj=request.get_json()
+        matrix=jsonObj["matrix"]
+        from qiskit.quantum_info.operators.predicates import is_unitary_matrix
+        #print(matrix,is_unitary_matrix(matrix),jsonify({"isUnitary":is_unitary_matrix(matrix)}))
+        return jsonify({"isUnitary":is_unitary_matrix(matrix)})
 # sanity check route
 @app.route('/data',methods=['GET','POST'])
 def run():
     if request.method=='POST':
         recievedDic=request.get_json()
         #print("recieved data from Vue : ",recievedDic[0])
-        print(recievedDic[0])
-        if "qasm" in recievedDic[0]:
+        #print(recievedDic)
+        if "qasm" in recievedDic:
             try:
-                c.qasm(recievedDic[0])
+                c.qasm(recievedDic)
             except Exception as e:
                 return jsonify({"qasmError":str(e)});
         else:
-            c.createCircuit(recievedDic[0])
+            c.createCircuit(recievedDic)
         #print("retrived data from qiskit : ",c.returnedDictionary)
     else:
         c.returnedDictionary={}
