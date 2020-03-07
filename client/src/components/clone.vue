@@ -29,12 +29,8 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">
-          add Wire
-        </button>
-        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">
-          Remove Wire
-        </button>
+        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">add Wire</button>
+        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">Remove Wire</button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
         <button class="add-wire" @click="clearConsole">Clear Console</button>

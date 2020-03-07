@@ -3,13 +3,13 @@
     <div id="hover-div">
       <label class="lbl1">IBM Token</label>
       <span id="hover-element">
-        Get your API_TOKEN from
+        Get your API_TOKEN from:
+        <br />
         <a
           id="link"
           target="_blank"
           href="https://quantum-computing.ibm.com/account"
-          >https://quantum-computing.ibm.com/account</a
-        >
+        >https://quantum-computing.ibm.com/account</a>
         <br />To run your circuit on IBM Q
       </span>
     </div>
@@ -19,9 +19,8 @@
     <input class="ibmToken" type="text" />
     </div>-->
     <div class="checkbox">
-      <input type="checkbox" id="checkbox" /><label for="checkbox"
-        >Run on IBMQ</label
-      >
+      <input type="checkbox" id="checkbox" />
+      <label for="checkbox">Run on IBMQ</label>
     </div>
     <div>
       <button @click="save_ibm_token()">Send</button>
