@@ -1,4 +1,4 @@
-k<template>
+<template>
   <div class="toolbox">
     <div class="tools-container">
       <div class="box-labels">
@@ -26,9 +26,7 @@ k<template>
             >
               <div class="gate-name" id="hover-div">
                 {{ element.name }}
-                <span id="hover-element">
-                  {{ element.info }}
-                </span>
+                <span id="hover-element">{{ element.info }}</span>
               </div>
             </div>
           </transition-group>
@@ -49,9 +47,7 @@ k<template>
             >
               <div class="gate-name" id="hover-div">
                 {{ element.name }}
-                <span id="hover-element">
-                  {{ element.info }}
-                </span>
+                <span id="hover-element">{{ element.info }}</span>
               </div>
             </div>
           </transition-group>
@@ -72,34 +68,14 @@ k<template>
               >
                 <div class="gate-name" id="hover-div">
                   {{ element.name }}
-                  <span id="hover-element">
-                    {{ element.info }}
-                  </span>
+                  <span id="hover-element">{{ element.info }}</span>
                 </div>
               </div>
             </transition-group>
           </draggable>
-          <input
-            class="angle"
-            id="rxAngle"
-            type="number"
-            name="rx"
-            value="90"
-          />
-          <input
-            class="angle"
-            id="ryAngle"
-            type="number"
-            name="ry"
-            value="90"
-          />
-          <input
-            class="angle"
-            id="rzAngle"
-            type="number"
-            name="rz"
-            value="90"
-          />
+          <input class="angle" id="rxAngle" type="number" name="rx" value="90" />
+          <input class="angle" id="ryAngle" type="number" name="ry" value="90" />
+          <input class="angle" id="rzAngle" type="number" name="rz" value="90" />
         </div>
 
         <draggable
@@ -118,9 +94,7 @@ k<template>
             >
               <div class="gate-name" id="hover-div">
                 {{ element.name }}
-                <span id="hover-element">
-                  {{ element.info }}
-                </span>
+                <span id="hover-element">{{ element.info }}</span>
               </div>
             </div>
           </transition-group>
@@ -142,21 +116,17 @@ k<template>
             :key="element.id"
             :id="element.name"
           >
-            <div class="gate-name">{{ element.name }}</div>
+            <div class="gate-name">{{ element.id }}</div>
           </div>
         </transition-group>
       </draggable>
     </div>
     <br />
     <div class="user-tools">
-      <button class="qasm" @click="this.$parent.qasm">
-        OPENQASM Simulator
-      </button>
+      <button class="qasm" @click="this.$parent.qasm">OPENQASM Simulator</button>
       <button class="qasm" @click="this.$parent.qasmTextFun">|qasm⟩</button>
       <div id="myNav" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav()"
-          >&#10006;</a
-        >
+        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
         <div class="column1">
           <h1 class="p" style="color: black ">from matrix</h1>
           <p style="color: black">nameof gate:</p>
@@ -167,9 +137,7 @@ k<template>
           <button
             @click="create_the_matrix()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
-          >
-            create
-          </button>
+          >create</button>
         </div>
         <div class="column2">
           <h1 style="color: black">from rotation</h1>
@@ -247,7 +215,12 @@ export default {
         name: "custom_" + nameofgate,
         id: nameofgate
       });
-      this.w = "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
+      if (this.customGates.length < 9) {
+        this.w =
+          "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
+      } else {
+        this.w = "width:15.9em";
+      }
     },
     // ----------------------------------------------------
     openNav() {
@@ -259,6 +232,7 @@ export default {
     },
     // ----------------------------------------------------
     create_the_matrix() {
+      this.closeNav();
       var nameofgate = document.getElementById("nameofgate").value;
       var valofgate = document.getElementById("valueofgate");
       var matrix = this.make_matrix(valofgate);
@@ -281,8 +255,6 @@ export default {
           this.addGate(nameofgate);
           this.customsrever[nameofgate] = matrix;
           // window.console.log(this.customsrever);
-
-          this.closeNav();
         }
         document.getElementById("nameofgate").value = null;
         document.getElementById("valueofgate").value = null;
@@ -394,7 +366,7 @@ export default {
   border-radius: 0.5em;
   margin: 0.1em 0.1em 0.1em 0.1em;
   display: inline-block;
-  white-space: pre-wrap;
+  /* white-space: pre-wrap; */
   height: 6.6em;
   width: 11.6em;
 }
