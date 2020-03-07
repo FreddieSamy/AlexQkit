@@ -1,4 +1,4 @@
-<template>
+k<template>
   <div class="toolbox">
     <div class="tools-container">
       <div class="box-labels">
@@ -24,10 +24,11 @@
               :key="element.id"
               :id="element.name"
             >
-              <div class="gate-name" id="hover-div">{{ element.name }}
-                            <span id="hover-element">
-                                      {{element.info}}
-                            </span>
+              <div class="gate-name" id="hover-div">
+                {{ element.name }}
+                <span id="hover-element">
+                  {{ element.info }}
+                </span>
               </div>
             </div>
           </transition-group>
@@ -46,9 +47,10 @@
               :key="element.id"
               :id="element.name"
             >
-              <div class="gate-name" id="hover-div">{{ element.name }}
+              <div class="gate-name" id="hover-div">
+                {{ element.name }}
                 <span id="hover-element">
-                                      {{element.info}}
+                  {{ element.info }}
                 </span>
               </div>
             </div>
@@ -68,17 +70,36 @@
                 :key="element.id"
                 :id="element.name"
               >
-                <div class="gate-name" id="hover-div">{{ element.name }}
-                <span id="hover-element">
-                                      {{element.info}}
-                </span>
-              </div>
+                <div class="gate-name" id="hover-div">
+                  {{ element.name }}
+                  <span id="hover-element">
+                    {{ element.info }}
+                  </span>
+                </div>
               </div>
             </transition-group>
           </draggable>
-          <input class="angle" id="rxAngle" type="number" name="rx" value="90" />
-          <input class="angle" id="ryAngle" type="number" name="ry" value="90" />
-          <input class="angle" id="rzAngle" type="number" name="rz" value="90" />
+          <input
+            class="angle"
+            id="rxAngle"
+            type="number"
+            name="rx"
+            value="90"
+          />
+          <input
+            class="angle"
+            id="ryAngle"
+            type="number"
+            name="ry"
+            value="90"
+          />
+          <input
+            class="angle"
+            id="rzAngle"
+            type="number"
+            name="rz"
+            value="90"
+          />
         </div>
 
         <draggable
@@ -95,9 +116,10 @@
               :key="element.id"
               :id="element.name"
             >
-              <div class="gate-name" id="hover-div">{{ element.name }}
+              <div class="gate-name" id="hover-div">
+                {{ element.name }}
                 <span id="hover-element">
-                                      {{element.info}}
+                  {{ element.info }}
                 </span>
               </div>
             </div>
@@ -127,10 +149,14 @@
     </div>
     <br />
     <div class="user-tools">
-      <button class="qasm" @click="this.$parent.qasm">OPENQASM Simulator</button>
+      <button class="qasm" @click="this.$parent.qasm">
+        OPENQASM Simulator
+      </button>
       <button class="qasm" @click="this.$parent.qasmTextFun">|qasm⟩</button>
       <div id="myNav" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
+        <a href="javascript:void(0)" class="closebtn" @click="closeNav()"
+          >&#10006;</a
+        >
         <div class="column1">
           <h1 class="p" style="color: black ">from matrix</h1>
           <p style="color: black">nameof gate:</p>
@@ -141,7 +167,9 @@
           <button
             @click="create_the_matrix()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
-          >create</button>
+          >
+            create
+          </button>
         </div>
         <div class="column2">
           <h1 style="color: black">from rotation</h1>
@@ -157,6 +185,7 @@
 <!-- =============================================================  -->
 <script>
 import draggable from "vuedraggable";
+import axios from "axios";
 export default {
   name: "toolbox",
   display: "toolbox",
@@ -166,32 +195,32 @@ export default {
   data() {
     return {
       gates1: [
-        { name: "c", id: "c", index: "" ,info:"closed control"},
-        { name: "m", id: "m", index: "" ,info:"measurment gate"},
-        { name: "oc", id: "oc", index: "",info:"open control" },
-        { name: "reset", id: "reset", index: "",info:"reset gate" }
+        { name: "c", id: "c", index: "", info: "closed control" },
+        { name: "m", id: "m", index: "", info: "measurment gate" },
+        { name: "oc", id: "oc", index: "", info: "open control" },
+        { name: "reset", id: "reset", index: "", info: "reset gate" }
       ],
       gates2: [
-        { name: "x", id: "x", index: "" ,info:"not gate"},
-        { name: "y", id: "y", index: "",info:"" },
-        { name: "z", id: "z", index: "" ,info:""},
-        { name: "h", id: "h", index: "",info:"simple super postition" },
-        { name: "swap", id: "swap", index: "",info:"" }
+        { name: "x", id: "x", index: "", info: "not gate" },
+        { name: "y", id: "y", index: "", info: "" },
+        { name: "z", id: "z", index: "", info: "" },
+        { name: "h", id: "h", index: "", info: "simple super postition" },
+        { name: "swap", id: "swap", index: "", info: "" }
       ],
       gates3: [
-        { name: "rx", id: "rx", index: "" ,info:""},
-        { name: "ry", id: "ry", index: "",info:"" },
-        { name: "rz", id: "rz", index: "" ,info:""}
+        { name: "rx", id: "rx", index: "", info: "" },
+        { name: "ry", id: "ry", index: "", info: "" },
+        { name: "rz", id: "rz", index: "", info: "" }
       ],
       gates4: [
-        { name: "s", id: "s", index: "" ,info:""},
-        { name: "t", id: "t", index: "",info:"" },
-        { name: "sdg", id: "sdg", index: "" ,info:""},
-        { name: "tdg", id: "tdg", index: "" ,info:""}
+        { name: "s", id: "s", index: "", info: "" },
+        { name: "t", id: "t", index: "", info: "" },
+        { name: "sdg", id: "sdg", index: "", info: "" },
+        { name: "tdg", id: "tdg", index: "", info: "" }
       ],
       customGates: [],
       w: "width:7.7em",
-       customsrever: {}
+      customsrever: {}
       // jsonobjectall: {
       //   [this.nameofgate]: this.matrix
       // }
@@ -230,24 +259,35 @@ export default {
     },
     // ----------------------------------------------------
     create_the_matrix() {
-      this.closeNav();
       var nameofgate = document.getElementById("nameofgate").value;
       var valofgate = document.getElementById("valueofgate");
       var matrix = this.make_matrix(valofgate);
-      window.console.log(matrix);
-      var { matrix_validate, msg } = this.validate_of_matrix(matrix);
-      window.console.log(matrix_validate);
-      window.console.log(msg);
-      if (matrix_validate) {
-        // this.jsonobjectall = {
-        //   [nameofgate]: matrix
-        // };
-        this.addGate(nameofgate);
-        this.customsrever[nameofgate] = matrix;
-        // window.console.log(this.customsrever);
-      }
-      document.getElementById("nameofgate").value = null;
-      document.getElementById("valueofgate").value = null;
+      var isUnitary;
+      var jsonObject = {};
+      jsonObject["matrix"] = matrix;
+      axios.post("http://localhost:5000/isUnitary", jsonObject).then(res => {
+        window.console.log("the data success to returned be from the server");
+        isUnitary = res.data.isUnitary;
+        //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
+        window.console.log("new unitary:" + isUnitary);
+        window.console.log(matrix);
+        var { matrix_validate, msg } = this.validate_of_matrix(matrix);
+        window.console.log(matrix_validate);
+        window.console.log(msg);
+        if (matrix_validate) {
+          // this.jsonobjectall = {
+          //   [nameofgate]: matrix
+          // };
+          this.addGate(nameofgate);
+          this.customsrever[nameofgate] = matrix;
+          // window.console.log(this.customsrever);
+
+          this.closeNav();
+        }
+        document.getElementById("nameofgate").value = null;
+        document.getElementById("valueofgate").value = null;
+        //window.console.log("unitary:" + this.$parent.isUnitary);
+      });
     },
     // ----------------------------------------------------
     make_matrix(valofgate) {
@@ -504,15 +544,15 @@ export default {
   cursor: pointer;
 }
 #hover-element {
-        display: none;
-        position: absolute;
-        background-color: lightgray;
-        padding: 10px;
-        border: solid;
-        border-radius: 5px;
-    }
-    
-    #hover-div:hover #hover-element {
-        display: block;
-    }
+  display: none;
+  position: absolute;
+  background-color: lightgray;
+  padding: 10px;
+  border: solid;
+  border-radius: 5px;
+}
+
+#hover-div:hover #hover-element {
+  display: block;
+}
 </style>
