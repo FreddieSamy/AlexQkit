@@ -1,4 +1,4 @@
-k<template>
+<template>
   <div class="toolbox">
     <div class="tools-container">
       <div class="box-labels">
@@ -204,7 +204,7 @@ export default {
         { name: "x", id: "x", index: "", info: "not gate" },
         { name: "y", id: "y", index: "", info: "" },
         { name: "z", id: "z", index: "", info: "" },
-        { name: "h", id: "h", index: "", info: "simple super postition" },
+        { name: "h", id: "h", index: "", info: "simple super position" },
         { name: "swap", id: "swap", index: "", info: "" }
       ],
       gates3: [
@@ -551,7 +551,6 @@ export default {
   border: solid;
   border-radius: 5px;
 }
-
 #hover-div:hover #hover-element {
   display: block;
 }

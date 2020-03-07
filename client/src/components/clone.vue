@@ -83,6 +83,9 @@ export default {
     diracNotation,
     circuitDrawing
   },
+  mounted(){
+    this.sendSystem();
+  },
   data() {
     return {
       API_TOKEN: "",
