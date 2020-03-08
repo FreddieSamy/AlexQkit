@@ -17,7 +17,7 @@
       @add="add"
       @remove="remove"
       @update="update"
-      @change="change"
+      @onEnd="change"
     >
       <div
         class="circuit-gate"
@@ -155,7 +155,6 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-
   }
 };
 </script>
