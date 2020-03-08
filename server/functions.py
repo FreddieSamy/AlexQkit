@@ -51,24 +51,6 @@ class Circuit():
                 circuit.h(n-i-1)
                 circuit.s(n-i-1)
         #circuit.barrier()
-        
-    #testing
-    """from qiskit import *
-
-    qr=QuantumRegister(6)
-    cr=ClassicalRegister(6)
-    circuit=QuantumCircuit(qr,cr)
-
-    initState(circuit,["0","1","+","-","i","-i"])
-
-    circuit.h(0)
-    circuit.x(0)
-
-    circuit.measure(qr,cr)
-    simulator=Aer.get_backend('qasm_simulator')
-    result=execute(circuit,backend=simulator).result()
-
-    circuit.draw(output='mpl')"""
 
 ###############################################################################################################################
 
@@ -134,20 +116,6 @@ class Circuit():
             diracNotation+=" |"+str(("{0:0"+str(circuit.n_qubits).replace('.0000','')+"b}").format(i))+"⟩ "
         return diracNotation
 
-    #testing
-    """from qiskit import *
-    qr=QuantumRegister(2)
-    cr=ClassicalRegister(2)
-    circuit=QuantumCircuit(qr,cr)
-
-
-    circuit.h(0)
-    circuit.cx(0,1)
-
-    #circuit.measure(qr,cr)
-
-    print(diracNotation(circuit))"""
-
 ###############################################################################################################################
 
     #this function returns readable matrix representation of the whole system
@@ -183,25 +151,6 @@ class Circuit():
             
         return matrix
 
-    #testing
-    """from qiskit import *
-    qr=QuantumRegister(2)
-    cr=ClassicalRegister(2)
-    circuit=QuantumCircuit(qr,cr)
-
-
-    circuit.x(0)
-    circuit.cx(0,1)
-
-    circuit.measure(qr,cr)
-    circuit.measure(qr,cr)
-    circuit.measure(qr,cr)
-
-    print(circuit)
-
-    print("Matrix Representation before measurement")
-    print(matrixRepresentation(circuit))"""
-    
 ###############################################################################################################################
 
     #displays matrix with mathimatical format
@@ -219,21 +168,6 @@ class Circuit():
         gate_latex += '\end{pmatrix}'
         return gate_latex  #display(Markdown(gate_latex))
 
-    #testing
-    """from qiskit import *
-    qr=QuantumRegister(2)
-    cr=ClassicalRegister(2)
-    circuit=QuantumCircuit(qr,cr)
-
-
-    circuit.x(0)
-    circuit.cx(0,1)
-
-    circuit.measure(qr,cr)
-
-    print("Matrix Representation before measurement")
-    matrixLatex(matrixRepresentation(circuit))"""
-
 ###############################################################################################################################
     
     #this function applies a matrix (custom gate) to a circuit in reverse order of positions
@@ -248,34 +182,16 @@ class Circuit():
     #you can check that here - https://qiskit-staging.mybluemix.net/documentation/terra/summary_of_quantum_operations.html
 
 
-    def addCustomGate(self,circuit,gateMatrix,positions,reversedWires=True):
-        if reversedWires:
-            circuit.n_qubits-len(positions)
-            for i in range(len(positions)):
-                positions[i]=circuit.n_qubits-positions[i]-1
-            positions.reverse()
+    def addCustomGate(self,normalCircuit,reversedCircuit,gateMatrix,positions):
+        n=normalCircuit.n_qubits-len(positions)
+        reversedPositions=[]
+        for i in range(len(positions)):
+            reversedPositions.append(n-positions[i]-1)
+        reversedPositions.reverse()
         from qiskit.quantum_info.operators import Operator
         customGate=Operator(gateMatrix)
-        circuit.unitary(customGate,positions)
-        
-    
-    #testing
-    """from qiskit import *
-
-    qr=QuantumRegister(4)
-    cr=ClassicalRegister(4)
-    circuit=QuantumCircuit(qr,cr)
-    Matrix=[[1,0,0,0],[0,1,0,0],[0,0,0,1],[0,0,1,0]]
-    
-    addCustomGate(circuit,Matrix,[0,1])
-    
-    circuit.measure(qr,cr)
-    simulator=Aer.get_backend('qasm_simulator')
-    result=execute(circuit,backend=simulator).result()
-    
-    matrixLatex(matrixRepresentation(circuit))
-
-    circuit.draw(output='mpl')"""
+        normalCircuit.unitary(customGate,positions)
+        reversedCircuit.unitary(customGate,reversedPositions)
     
 ###############################################################################################################################
 
@@ -319,19 +235,7 @@ class Circuit():
                 dic[state]=0.0
     
         return plot_histogram(dic,figsize=(10,6))
-
-    """#testing 
-    from qiskit import *
-    qr=QuantumRegister(2)
-    cr=ClassicalRegister(2)
-    circuit=QuantumCircuit(qr,cr)
-
-    circuit.h(0)
-    circuit.cx(0,1)
     
-    #circuit.measure(qr,cr)
-    graph(circuit,1024*2)"""
-
 ###############################################################################################################################
 
     #drawing of the circuit
@@ -344,29 +248,18 @@ class Circuit():
         #%matplotlib inline
         return circuit.draw(output='mpl')
 
-    #testing
-    """from qiskit import *
-    qr=QuantumRegister(2)
-    cr=ClassicalRegister(2)
-    circuit=QuantumCircuit(qr,cr)
-
-    circuit.x(0)
-    circuit.cx(0,1)
-
-    circuit.measure(qr,cr)
-    draw(circuit)"""
-
 ###############################################################################################################################
 
     #function to draw bloch spheres of the circuit
-    def blochSphere(self,circuit,reversedWires=True):
+    def blochSphere(self,circuit):
         from qiskit import Aer
         from qiskit import execute
         from qiskit.visualization import plot_bloch_multivector
         simulator=Aer.get_backend('statevector_simulator')
         result=execute(circuit,backend=simulator).result()
         statevector=result.get_statevector()
-        if reversedWires:
+        ##reversed stateVector
+        '''if reversedWires:
             temp=[]
             statevector=statevector.tolist()
             #print(statevector)
@@ -376,51 +269,22 @@ class Circuit():
                 #print(i,pos)
                 #print(statevector[pos])
                 temp.append(statevector[pos])
-            statevector=temp
+            statevector=temp'''
         return plot_bloch_multivector(statevector)
-    
 
-    #testing
-    """from qiskit import *
-    qr=QuantumRegister(2)
-    cr=ClassicalRegister(2)
-    circuit=QuantumCircuit(qr,cr)
-
-    circuit.x(0)
-    circuit.cx(0,1)
-
-    circuit.measure(qr,cr)
-    blochSphere(circuit)"""    
-    
 ###############################################################################################################################
         
     #we have to check this with multiple users 
     #it saves API_TOKEN locally 
-    def runOnIBMQ(self,API_TOKEN,circuit,shots):
+    def runOnIBMQ(self,API_TOKEN,circuit,shots,device):
         from qiskit import IBMQ
         from qiskit import execute
         IBMQ.save_account(API_TOKEN)
         IBMQ.load_account()
         provider=IBMQ.get_provider('ibm-q')
-        qcomp=provider.get_backend('ibmq_16_melbourne')
+        qcomp=provider.get_backend(device)
         job=execute(circuit,backend=qcomp,shots=shots)
         return "https://quantum-computing.ibm.com/results/"+job.job_id()
-
-    #testing
-    """API_TOKEN=""
-    
-    qr=QuantumRegister(2)
-    cr=ClassicalRegister(2)
-    circuit=QuantumCircuit(qr,cr)
-    circuit.h(0)
-    circuit.cx(0,1)
-
-    job=runOnIBMQ(API_TOKEN,circuit)
-
-    #print("https://quantum-computing.ibm.com/results/"+job.job_id())
-
-    #from qiskit.tools.monitor import job_monitor
-    #job_monitor(job)"""
 
 ###############################################################################################################################
     
@@ -446,10 +310,6 @@ class Circuit():
         result = execute(circuit, backend=simulator).result()
         return result.get_unitary()
 
-    """#testing
-    matrixLatex(gateToMatrix("x"))"""
-
-
 ###############################################################################################################################
 
     #this function applies number of controls on a gate
@@ -473,19 +333,10 @@ class Circuit():
 
         return controlledGate
     
-    """#testing
-    circuit=QuantumCircuit(3)
-    ccx=controlledGate(gateToMatrix("x"),2)
-    matrixLatex(ccx)
-    addCustomGate(circuit,ccx,[0,1,2])
-    matrixLatex(matrixRepresentation(circuit))
-    circuit.draw()"""
-            
-        
 ###############################################################################################################################
 
     #this function returns the positions of the multi-Qubit custom gates
-    def multiQubitCustomGate(self,circuit,column,start,customGates,gateName,end):
+    def multiQubitCustomGate(self,column,start,customGates,gateName,end):
         from math import log2
         size=log2(len(customGates[gateName]))
         pos=[None]*int(size)
@@ -502,19 +353,18 @@ class Circuit():
 ###############################################################################################################################
     
     #this function applies noncontrolled gates on the circuit
-    def nonControlledColumns(self,circuit,column,customGates,reversedWires=True):
+    def nonControlledColumns(self,normalCircuit,reversedCircuit,column,customGates):
         #naming a custom gate
         #don't accept "custom_" in the begining of the name
         #don't accept "." in any position
         
-        n=1
-        if reversedWires:
-            n = circuit.n_qubits
+        n = normalCircuit.n_qubits
         for i in range(len(column)):
             if str(column[i])=="i":
                 continue
             if str(column[i])=="m":
-                circuit.measure(n-i-1,n-i-1)
+                reversedCircuit.measure(n-i-1,n-i-1)
+                normalCircuit.measure(i,i)
                 continue
             if str(column[i])[:7]=="custom_":
                 if customGates==None:
@@ -525,70 +375,55 @@ class Circuit():
                         end=len(column[i])
                     gateName=str(column[i])[7:end]
                     if len(customGates[gateName])==2:
-                        self.addCustomGate(circuit,customGates[gateName],[i])
+                        self.addCustomGate(normalCircuit,reversedCircuit,customGates[gateName],[i])
                         continue
                     else:
-                        column,pos=self.multiQubitCustomGate(circuit,column,i,customGates,gateName,end)
-                        self.addCustomGate(circuit,customGates[gateName],pos)
+                        column,pos=self.multiQubitCustomGate(column,i,customGates,gateName,end)
+                        self.addCustomGate(normalCircuit,reversedCircuit,customGates[gateName],pos)
                         continue
             if str(column[i])=="swap":
                 p1=n-i-1
+                p11=i
                 for j in range(i+1,len(column)):
                     if str(column[j])=="swap":
                         p2=n-j-1
+                        p22=j
                         column[j]="i"
                         break
-                circuit.swap(p1,p2)
+                reversedCircuit.swap(p1,p2)
+                normalCircuit.swap(p11,p22)
                 continue
             if "(" in str(column[i]):
-                pythonLine="circuit."+column[i][:-1]+","
-                pythonLine+=str(circuit.n_qubits-i-1)
-                pythonLine+=")"
+                pythonLine="reversedCircuit."+column[i][:-1]+","+str(n-i-1)+")"
+                #print(pythonLine)
+                exec(pythonLine)
+                
+                pythonLine="normalCircuit."+column[i][:-1]+","+str(i)+")"
                 #print(pythonLine)
                 exec(pythonLine)
                 continue
-            pythonLine="circuit."+column[i]+"("
-            pythonLine+=str(n-i-1)
-            pythonLine+=")"
+            
+            pythonLine="reversedCircuit."+column[i]+"("+str(n-i-1)+")"
             #print(pythonLine)
             exec(pythonLine)
-        
-    #testing
-    """from qiskit import QuantumCircuit
-    customGates = {
-                   "not":[[0,1],[1,0]],
-                   "I4":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
-                   }
-    column=["h","custom_not","swap","custom_I4.0","swap","custom_I4.1"]
-    '''["h"],
-    ["x"],
-    ["y"],
-    ["z"],
-    ["s"],
-    ["sdg"],
-    ["t"],
-    ["tdg"],
-    ["","","","","","custom_not"],
-    ["","","","custom_I4.1","","custom_I4.0"]  '''
-    circuit=QuantumCircuit(6)
-    nonControlledColumns(circuit,column,customGates)
-    circuit.draw()
-    #matrixLatex(matrixRepresentation(circuit))"""
+            
+            pythonLine="normalCircuit."+column[i]+"("+str(i)+")"
+            #print(pythonLine)
+            exec(pythonLine)
     
 ###############################################################################################################################
     
-    def controlledColumns(self,circuit,column,customGates,reversedWires=True):
+    def controlledColumns(self,normalCircuit,reversedCircuit,column,customGates):
         c=[]
         oc=[]
-        n=1
-        if reversedWires:
-            n = circuit.n_qubits
+        n = normalCircuit.n_qubits
         for i in range(len(column)):
             if str(column[i])=="i":
                 continue
             
             if str(column[i])=="m":
-                circuit.measure(n-i-1,n-i-1)
+                normalCircuit.measure(i,i)
+                reversedCircuit.measure(n-i-1,n-i-1)
                 column[i]="i"
         
             if str(column[i])=="c":
@@ -602,7 +437,8 @@ class Circuit():
         
         numOfControls=len(c)
         for i in oc:                                       #open control 
-            circuit.x(n-1-i)
+            normalCircuit.x(i)
+            reversedCircuit.x(n-1-i)
             
         for i in range(len(column)):
             if str(column[i])=="i":
@@ -618,9 +454,9 @@ class Circuit():
                     if len(customGates[gateName])==2:
                         pos=c+[i]
                     else:
-                        column,pos=self.multiQubitCustomGate(circuit,column,i,customGates,gateName,end)
+                        column,pos=self.multiQubitCustomGate(column,i,customGates,gateName,end)
                         pos=c+pos
-                    self.addCustomGate(circuit,self.controlledGate(customGates[gateName],numOfControls),pos)
+                    self.addCustomGate(normalCircuit,reversedCircuit,self.controlledGate(customGates[gateName],numOfControls),pos)
                     continue
             if str(column[i])=="swap":
                 p1=i
@@ -630,38 +466,15 @@ class Circuit():
                         column[j]="i"
                         break
                 pos=c+[p1]+[p2]
-                self.addCustomGate(circuit,self.controlledGate(self.gateToMatrix("swap"),numOfControls),pos)
+                self.addCustomGate(normalCircuit,reversedCircuit,self.controlledGate(self.gateToMatrix("swap"),numOfControls),pos)
                 continue
             pos=c+[i]
-            self.addCustomGate(circuit,self.controlledGate(self.gateToMatrix(column[i]),numOfControls),pos)
+            self.addCustomGate(normalCircuit,reversedCircuit,self.controlledGate(self.gateToMatrix(column[i]),numOfControls),pos)
         
                 
         for i in oc:                                        #open control 
-            circuit.x(n-1-i)
-
-        
-    #testing
-    """from qiskit import QuantumCircuit
-    customGates = {
-                   "not":[[0,1],[1,0]],
-                   "I4":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
-                   }
-    column=["x","custom_not","oc","","c","x","swap","swap"]
-    '''["h"],
-    ["x"],
-    ["y"],
-    ["z"],
-    ["s"],
-    ["sdg"],
-    ["t"],
-    ["tdg"],
-    ["","","","","","custom_not"],
-    ["","","","custom_I4.1","","custom_I4.0"]  '''
-    circuit=QuantumCircuit(9)
-    controlledColumns(circuit,column,customGates)
-    circuit.draw()
-    #matrixLatex(matrixRepresentation(circuit))"""
-    
+            reversedCircuit.x(n-1-i)
+            normalCircuit.x(i)
     
 ###############################################################################################################################
 
@@ -683,13 +496,13 @@ class Circuit():
     
         print("reached in creatCircuit()")
         
+        device='ibmq_16_melbourne'
         resetExist=False
-        reversedWires=True 
         shots=1024
         customGates=None
         exeCount=0
-        if "reversedWires" in receivedDictionary:
-            reversedWires=receivedDictionary["reversedWires"]
+        if "device" in receivedDictionary:
+            device=receivedDictionary["device"]
         if "exeCount" in receivedDictionary:
             exeCount=receivedDictionary["exeCount"]
         if "shots" in receivedDictionary:
@@ -700,161 +513,63 @@ class Circuit():
         if "rows" in receivedDictionary and "wires" in receivedDictionary: #cols and wires are mandatory
             wires=int(receivedDictionary["wires"])
             cols=np.transpose(receivedDictionary["rows"]).tolist()
-            circuit=QuantumCircuit(wires,wires)
+            normalCircuit=QuantumCircuit(wires,wires)
+            reversedCircuit=QuantumCircuit(wires,wires)
         
             if "init" in receivedDictionary:
-                self.initState(circuit,receivedDictionary["init"],reversedWires)
+                self.initState(normalCircuit,receivedDictionary["init"],reversedWires=False)
+                self.initState(reversedCircuit,receivedDictionary["init"],reversedWires=True)
         
             for i in range(exeCount):
                 if "reset" in cols[i]:
                     resetExist=True
                 if cols[i]==["barrier"]:
-                    circuit.barrier()
+                    normalCircuit.barrier()
+                    reversedCircuit.barrier()
                 elif "c" in cols[i] or "oc" in cols[i]:
-                    self.controlledColumns(circuit,cols[i],customGates,reversedWires)
+                    self.controlledColumns(normalCircuit,reversedCircuit,cols[i],customGates)
                 else:
-                    self.nonControlledColumns(circuit,cols[i],customGates,reversedWires)
                     
+                    self.nonControlledColumns(normalCircuit,reversedCircuit,cols[i],customGates)
                     
-        self.blochSphereGraph = self.blochSphere(circuit,reversedWires)
-        self.histoGramGraph = self.graph(circuit,shots)
-        self.circutDrawing = self.draw(circuit)
+                   
+        self.blochSphereGraph = self.blochSphere(normalCircuit)
+        self.histoGramGraph = self.graph(reversedCircuit,shots)
+        self.circutDrawing = self.draw(normalCircuit)
     
         if "API_TOKEN" in receivedDictionary:
             if receivedDictionary["API_TOKEN"] !="":
-                self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
-                self.returnedDictionary["qasm"]=circuit.qasm()
-                self.returnedDictionary["link"]=self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
+                self.returnedDictionary["diracNotation"]=self.diracNotation(reversedCircuit)
+                self.returnedDictionary["qasm"]=normalCircuit.qasm()
+                self.returnedDictionary["link"]=self.runOnIBMQ(receivedDictionary["API_TOKEN"],normalCircuit,shots,device)
                 if not resetExist:
-                    self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+                    self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(reversedCircuit) #self.matrixLatex(self.matrixRepresentation(circuit))
                 else:
                     self.returnedDictionary["matrixRepresentation"]="you can't get matrixRepresentation while using reset gate"
             else:
-                self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
-                self.returnedDictionary["qasm"]=circuit.qasm()
+                self.returnedDictionary["diracNotation"]=self.diracNotation(reversedCircuit)
+                self.returnedDictionary["qasm"]=normalCircuit.qasm()
                 self.returnedDictionary["link"]=""
                 if not resetExist:
-                     self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+                     self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(reversedCircuit) #self.matrixLatex(self.matrixRepresentation(circuit))
                 else:
                     self.returnedDictionary["matrixRepresentation"]="you can't get matrixRepresentation while using reset gate"
             
         
         else:
-            self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
-            self.returnedDictionary["qasm"]=circuit.qasm()
+            self.returnedDictionary["diracNotation"]=self.diracNotation(reversedCircuit)
+            self.returnedDictionary["qasm"]=normalCircuit.qasm()
             self.returnedDictionary["link"]=""
             if not resetExist:
-                self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+                self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(reversedCircuit) #self.matrixLatex(self.matrixRepresentation(circuit))
             else:
                     self.returnedDictionary["matrixRepresentation"]="you can't get matrixRepresentation while using reset gate"
             
 
         #return self.returnedDictionary
-        
-        
-    #testing 
-    #from qiskit import circuit
-
-    #run on simulator
-    """dic={
-         "wires":6,
-         "cols":[["h"],
-                 ["x"],
-                 ["y"],
-                 ["z"],
-                 ["s"],
-                 ["sdg"],
-                 ["t"],
-                 ["tdg"],
-                 ["barrier"],
-                 ["","swap","swap"],
-                 ["","c","x"],
-                 ["","oc","x"],
-                 ["barrier"],
-                 ["","","","c","swap","swap"],
-                 ["","","","oc","swap","swap"],
-                 ["","","","c","c","x"],
-                 ["","","","oc","oc","x"],
-                 ["barrier"],
-                 ["","","c","c","swap","swap"],
-                 ["","","oc","oc","swap","swap"],
-                 ["","","c","c","c","x"],
-                 ["","","oc","oc","oc","x"],
-                 ["barrier"],
-                 ["","","","","","custom_not"],
-                 ["","","","custom_I4.0","","custom_I4.1"],
-                 ["barrier"],
-                 ["","","","","c","custom_not"],
-                 ["","","c","custom_I4.0","c","custom_I4.1"],
-                 ["barrier"],
-                 ["","","","","oc","custom_not"],
-                 ["","","oc","custom_I4.0","oc","custom_I4.1"],
-                 ["barrier"],
-                 ["m","m","m","m","m","m"]
-                 ],
-         "init":[0,1,"+","-","i","-i"],
-         "shots":2048,
-         "custom":{
-                   "not":[[0,1],[1,0]],
-                   "I4":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
-                   }
-         }"""
-    """dic={
-         "wires":2,
-         "cols":[["h",""],
-                 ["c","x"]],
-         "shots":2048
-         }"""
-     
-
-    #run on IBMQ
-    """dic={
-     "API_TOKEN":""
-     "wires":6,
-     "cols":[["h"],
-             ["x"],
-             ["y"],
-             ["z"],
-             ["s"],
-             ["sdg"],
-             ["t"],
-             ["tdg"],
-             ["barrier"],
-             ["","c","h"],
-             ["","c","x"],
-             ["","c","y"],
-             ["","c","z"],
-             ["","oc","h"],
-             ["","oc","x"],
-             ["","oc","y"],
-             ["","oc","z"],
-             ["","swap","swap"],
-             ["barrier"],
-             ["","","","c","c","x"],
-             ["","","","c","swap","swap"],
-             ["","","","oc","oc","x"],
-             ["","","","oc","swap","swap"],
-             ["barrier"],
-             ["","","","","","custom_not"],
-             ["","","","custom_I4","","custom_I4"]],
-     "init":[0,1,"+","-","i","-i"],
-     "shots":2048,
-     "custom":{
-               "not":[[0,1],[1,0]],
-               "I4":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
-               }
-     }
-    
-    createCircuit(dic)
-    c=createCircuit(dic)["circuit"]
-    draw(c)"""
-
 ###############################################################################################################################
-
-    def qasm(self,receivedDictionary):
-        from qiskit import QuantumCircuit
-        circuit=QuantumCircuit(1)
-        circuit=circuit.from_qasm_str(receivedDictionary["qasm"])
+    
+    def getGates(self,circuit):
         cols=[]
         #print(circuit.data[0][1][0].register.size)
         for i in range(len(circuit.data)):
@@ -871,46 +586,47 @@ class Circuit():
                     column[pos]=name
                 #print(column)
             cols.append(column)
-        #print(cols)    
+        #print(cols) 
+        return cols
+    
+###############################################################################################################################
+
+    def qasm(self,receivedDictionary):
+        from qiskit import QuantumCircuit
+        circuit=QuantumCircuit(1)
+        circuit=circuit.from_qasm_str(receivedDictionary["qasm"])
+        cols=self.getGates(circuit)
         
+        device='ibmq_16_melbourne'
+        if "device" in receivedDictionary:
+            device=receivedDictionary["device"]
         shots=1024
         if "shots" in receivedDictionary:
             shots=receivedDictionary["shots"]
             
-        self.blochSphereGraph = self.blochSphere(circuit,reversedWires=False)
+        self.blochSphereGraph = self.blochSphere(circuit)
         self.histoGramGraph = self.graph(circuit,shots)
         self.circutDrawing = self.draw(circuit)    
         if "API_TOKEN" in receivedDictionary:
             if receivedDictionary["API_TOKEN"] !="":
                 self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
-                self.returnedDictionary["qasm"]=""
-                self.returnedDictionary["link"]=self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots)
+                self.returnedDictionary["qasm"]=receivedDictionary["qasm"]
+                self.returnedDictionary["link"]=self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots,device)
                 self.returnedDictionary["cols"]=cols
                 self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
             else:
                 self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
-                self.returnedDictionary["qasm"]=circuit.qasm()
+                self.returnedDictionary["qasm"]=receivedDictionary["qasm"]
                 self.returnedDictionary["link"]=""
                 self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
         else:
             self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
-            self.returnedDictionary["qasm"]=""
+            self.returnedDictionary["qasm"]=receivedDictionary["qasm"]
             self.returnedDictionary["link"]=""
             self.returnedDictionary["cols"]=cols
             self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
 
-
-        
         #return self.returnedDictionary
-            
-
-    #testing
-    #from qiskit import *
-    """text='OPENQASM 2.0;include "qelib1.inc";qreg q[4];creg c[3];x q[0];h q[1];ccx q[0],q[2],q[3];swap q[0],q[1];'
-    #circuit.draw(output='mpl')
-    cols=qasm(text)
-    print(cols)"""
-
 ###############################################################################################################################
     #{U1, U2, U3, CNOT}
 
@@ -925,13 +641,4 @@ class Circuit():
             circuit=circuit.decompose()
         return circuit
 
-    #testing
-    """from qiskit import *
-
-    circuit=QuantumCircuit(3,3)
-
-    circuit.ccx(0,1,2)
-    circuit=decompose(circuit)
-    print("\n\nToffoli gate decomposition:")
-    circuit.draw(output='mpl')"""
 ###############################################################################################################################

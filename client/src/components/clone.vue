@@ -38,7 +38,6 @@
         <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">Remove Wire</button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
-
         <div class="exe">
           <button class="exeBtn" @click="exeStart">start</button>
           <button class="exeBtn" @click="preExe">⟨exe|</button>
@@ -90,7 +89,6 @@ export default {
   },
   data() {
     return {
-      isUnitary: false,
       API_TOKEN: "",
       qasmError: "",
       tracingLineHeight: 15,
@@ -105,17 +103,15 @@ export default {
       maxWire: 0, // maximum number of gates in a wire
       qasmFlag: false,
       qasmTextFlag: false,
-      jsonObject: [
-        {
-          API_TOKEN: "",
-          wire: 0,
-          init: [],
-          rows: [],
-          reversedWires: true,
-          exeCount: 0,
-          custom: {}
-        }
-      ]
+      jsonObject: {
+        API_TOKEN: "",
+        wire: 0,
+        init: [],
+        rows: [],
+        reversedWires: true,
+        exeCount: 0,
+        custom: {}
+      }
     };
   },
   methods: {
@@ -195,6 +191,7 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
+    
     updateSystem: function() {
       var statesSystem = [];
       var gatesSystem = [];
@@ -204,7 +201,7 @@ export default {
         statesSystem.push(wireCaller.getState());
         gatesSystem.push(wireCaller.getGates(i));
       }
-      this.jsonObject[0] = {
+      this.jsonObject = {
         reversedWires: this.reversedWires,
         exeCount: this.exeCount,
         wires: this.rows,
@@ -214,15 +211,11 @@ export default {
       };
       //window.console.log(document.getElementById("checkbox").checked);
       if (document.getElementById("checkbox").checked) {
-        this.jsonObject[0]["API_TOKEN"] = this.API_TOKEN;
+        this.jsonObject["API_TOKEN"] = this.API_TOKEN;
       }
-      //window.console.log(JSON.stringify(this.jsonObject));
-    },
-    sendSystem: function() {
-      this.updateSystem();
-      window.console.log(this.jsonObject);
-      this.sendToServer(this.route, this.jsonObject);
-      document.getElementById("checkbox").checked = false;
+      //window.console.log(this.jsonObject);
+      //this.sendToServer(this.route, this.jsonObject);
+      //document.getElementById("checkbox").checked = false;
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
@@ -230,12 +223,15 @@ export default {
         window.console.log("the data success to returned be from the server");
         window.console.log(res);
         this.draw();
-        this.$refs.ibm.link = res.data.link;
         this.diracNotationData = res.data.diracNotation;
         this.qasmError = res.data.qasmError;
         this.qasmText = res.data.qasm;
-        this.isUnitary = res.data.isUnitary;
+        window.console.log(res.data.qasmError);
       });
+    },
+    sendSystem:function(){
+        this.updateSystem();
+        this.sendToServer(this.route, this.jsonObject);
     },
     //-----------------------------------------------------------------------
     teleAlgorithm: function() {
@@ -297,7 +293,7 @@ export default {
     //-----------------------------------------------------------------------
     sendQasm: function() {
       this.qasmError = "";
-      this.jsonObject[0] = {
+      this.jsonObject = {
         qasm: document.getElementById("textarea").value
       };
       this.sendToServer(this.route, this.jsonObject);
@@ -351,7 +347,7 @@ export default {
       let y2 = el2.offsetTop;
       let size = Math.abs(y2 - y1);
 
-      window.console.log(x + " " + y1 + " " + y2 + " " + size);
+      //window.console.log(x + " " + y1 + " " + y2 + " " + size);
 
       var hr = document.createElement("hr");
       hr.setAttribute("class", "cline");
@@ -401,7 +397,7 @@ export default {
            var wireGate = wireList[col]['name'];
            if(wireGate != 'i' && wireGate != 'c' && wireGate != undefined ){
                 var targetGate = document.querySelector('[row=_'+(i+1)+'][col=_'+(col+1)+']');
-                window.console.log(targetGate)
+                //window.console.log(targetGate)
                 this.applyControl(cGate,targetGate);
                 return true ;
            }
