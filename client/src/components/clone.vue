@@ -14,13 +14,18 @@
       </div>
       <h3 v-if="qasmFlag">{{ qasmError }}</h3>
       <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
+      <!-- 
       <img
         v-if="!qasmFlag"
         :style="'height:' + tracingLineHeight + 'em'"
         id="executionLine"
         src="../assets/executionLine.png"
       />
+      -->
       <div v-if="!qasmFlag" class="wiresBlock">
+        <!-- <svg width="500" height="500"><line x1="0" y1="0" x2="100" y2="100" stroke="black"/></svg>
+        -->
+
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
@@ -29,26 +34,20 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">
-          add Wire
-        </button>
-        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">
-          Remove Wire
-        </button>
+        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">add Wire</button>
+        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">Remove Wire</button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
 
-        
         <div class="exe">
           <button class="exeBtn" @click="exeStart">start</button>
           <button class="exeBtn" @click="preExe">⟨exe|</button>
           <button class="exeBtn" @click="nextExe">|exe⟩</button>
           <button class="exeBtn" @click="exeEnd">end</button>
         </div>
-      
-         <button @click="getCols">get coulmns in console</button>
-          <button @click="clearConsole">Clear Console</button>
-      
+
+        <button @click="getCols">get coulmns in console</button>
+        <button @click="clearConsole">Clear Console</button>
 
         <!--
         <button class="add-wire" @click="teleAlgorithm">
@@ -139,7 +138,7 @@ export default {
       }
       //update the trasing line
       this.exeCount = this.maxWire;
-      this.updateTracingLine();
+      // this.updateTracingLine();
       // window.console.log("max wire = "+this.maxWire);
     },
     //-----------------------------------------------------------------------
@@ -150,7 +149,8 @@ export default {
       }
       this.maxWire = 0;
       this.exeCount = 0;
-      this.updateTracingLine();
+      //this.updateTracingLine();
+      this.removeControlSystem();
       this.qasmText = "There is no circuit";
       this.sendSystem();
     },
@@ -171,7 +171,7 @@ export default {
       }
       this.maxWire--;
       this.exeCount = this.maxWire;
-      this.updateTracingLine();
+      //this.updateTracingLine();
     },
     //-----------------------------------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
@@ -195,7 +195,7 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    updateSystem:function(){
+    updateSystem: function() {
       var statesSystem = [];
       var gatesSystem = [];
       var toolboxconnect = this.$refs.toolbox;
@@ -212,7 +212,7 @@ export default {
         rows: gatesSystem,
         custom: toolboxconnect.sendtoclone()
       };
-      window.console.log(document.getElementById("checkbox").checked);
+      //window.console.log(document.getElementById("checkbox").checked);
       if (document.getElementById("checkbox").checked) {
         this.jsonObject[0]["API_TOKEN"] = this.API_TOKEN;
       }
@@ -223,7 +223,6 @@ export default {
       window.console.log(this.jsonObject);
       this.sendToServer(this.route, this.jsonObject);
       document.getElementById("checkbox").checked = false;
-
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
@@ -272,14 +271,13 @@ export default {
     clearConsole: function() {
       window.console.clear();
     },
-    getCols:function(){
-
-       for(let i = 1 ; i <= this.maxWire ; i++ ){
-          var col = document.querySelectorAll('[col=_'+i+']');
-          window.console.log("col "+i);
-          window.console.log(col);
-       }
-        
+    //-----------------------------------------------------------------------
+    getCols: function() {
+      for (let i = 1; i <= this.maxWire; i++) {
+        var col = document.querySelectorAll("[col=_" + i + "]");
+        window.console.log("col " + i);
+        window.console.log(col);
+      }
     },
     //-----------------------------------------------------------------------
     draw: function() {
@@ -318,7 +316,7 @@ export default {
     nextExe: function() {
       if (this.exeCount < this.maxWire) {
         this.exeCount++;
-        this.updateTracingLine();
+        //this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -326,7 +324,7 @@ export default {
     preExe: function() {
       if (this.exeCount > 0) {
         this.exeCount--;
-        this.updateTracingLine();
+        //this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -334,7 +332,7 @@ export default {
     exeStart: function() {
       if (this.exeCount != 0) {
         this.exeCount = 0;
-        this.updateTracingLine();
+        //this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -342,15 +340,82 @@ export default {
     exeEnd: function() {
       if (this.exeCount != this.maxWire) {
         this.exeCount = this.maxWire;
-        this.updateTracingLine();
+        //this.updateTracingLine();
         this.sendSystem();
       }
     },
     //-----------------------------------------------------------------------
+    applyControl: function(el1,el2) {  
+      let x = el1.offsetLeft + el1.offsetWidth / 2;
+      let y1 = el1.offsetTop + el1.offsetHeight;
+      let y2 = el2.offsetTop;
+      let size = Math.abs(y2 - y1);
+
+      window.console.log(x + " " + y1 + " " + y2 + " " + size);
+
+      var hr = document.createElement("hr");
+      hr.setAttribute("class", "cline");
+      //hr.setAttribute("id", col);
+      hr.setAttribute("width", "2");
+      hr.setAttribute("size", size);
+      hr.style.left = 0;
+      hr.style.top = 0;
+      hr.style.margin = "" + y1 + "px 0px 0px " + (x-2) + "px";
+      var parent = this.$el;
+      parent.appendChild(hr);
+    },
+    removeControl:function(){
+        var cline = document.querySelector('.cline');
+        if(cline != null){
+           var parent = this.$el;
+           parent.removeChild(cline);
+           return true;
+        }
+        return false;
+    },
+    removeControlSystem:function(){
+      var flag = true;
+      while(flag){
+          flag = this.removeControl();
+      } 
+      return true
+    },
+    controlSystem:function(){
+      this.removeControlSystem();
+       for(let row = 0 ; row < this.rows ; row++ ){
+          var wireList = this.$refs.wire[row].list;
+          for (let col = 0 ; col < this.maxWire ; col++){
+                //window.console.log(wireList[col]['name']);
+                if(wireList[col]['name'] == 'c'){
+                  //window.console.log("found c at " +(row+1)+","+(col+1));
+                  var cGate = document.querySelector('[row=_'+(row+1)+'][col=_'+(col+1)+']');
+                  this.controlColumn(cGate,row,col);  
+                }
+                
+          }
+       }
+    },
+    controlColumn:function(cGate,row,col){  
+        for(let i = this.rows-1  ; i > row ; i-- ){  
+           var wireList = this.$refs.wire[i].list;
+           var wireGate = wireList[col]['name'];
+           if(wireGate != 'i' && wireGate != 'c' && wireGate != undefined ){
+                var targetGate = document.querySelector('[row=_'+(i+1)+'][col=_'+(col+1)+']');
+                window.console.log(targetGate)
+                this.applyControl(cGate,targetGate);
+                return true ;
+           }
+        }
+        return false;
+
+    },
+    //-----------------------------------------------------------------------
+    /*
     updateTracingLine: function() {
       document.getElementById("executionLine").style.marginLeft =
         3.8 * this.exeCount + "em";
     }
+    */
   }
 };
 </script>

@@ -1,6 +1,12 @@
 <template>
   <div class="trashArea">
-    <draggable class="trash-drop-area" group="gates">Trash Drop Area</draggable>
+    <draggable 
+    class="trash-drop-area" 
+     group="gates"
+
+     >
+      Trash Drop Area
+    </draggable>
   </div>
 </template>
 <!-- =============================================================  -->
@@ -12,6 +18,8 @@ export default {
   components: {
     draggable,
   },
+  methods:{
+  }
 };
 </script>
 <!-- =============================================================  -->
