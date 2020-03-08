@@ -1,8 +1,10 @@
 <template>
   <div class="wire" :id="'wire-' + id">
+    <!--
     <div class="delete-wire" :id="'d-' + id">
       <button class="delete" @click="deleteWire">x</button>
     </div>
+    -->
     <div class="qubit">
       <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">
         |{{ state }}⟩
@@ -22,8 +24,9 @@
         v-for="element in list"
         :key="element.id"
         :id="element.name"
-        v-text="element.name"
-      ></div>
+      >
+      {{element.name}}
+      </div>
     </draggable>
   </div>
 </template>
@@ -48,83 +51,34 @@ export default {
   methods: {
     //-----------------------------------------------------------------------
     add: function(evt) {
-      var gate = evt.to.childNodes[evt.newIndex];
-      //var gateName = gate.id;
-      var col = "_"+this.id;
-      var row = "_"+(evt.newIndex+1);
-      gate.setAttribute('row',row);
-      gate.setAttribute('col',col);
-      /*
-      if(gateName=="c"){
-          this.$parent.applyControl(col);
-      }
-      */
+      this.updateGate(evt);
       this.$parent.updateMaxWire(); 
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
-
-      //var x = document.querySelectorAll(".circuit-gate")
-      //x=x.hasAttribute("col");
-      //window.console.log(x);
+      this.$parent.controlSystem();
     },
     update: function(evt) {
-      var gate = evt.to.childNodes[evt.newIndex];
-      window.console.log(gate);
-      window.console.log(gate.innerText);
-      window.console.log(gate);
-      /*
-      window.console.log("enter on update")
-      window.console.log("item id : "+evt.item.id);
-      window.console.log("to      : "+evt.to.classList.value);
-      window.console.log("event   : "+evt.from.classList.value);
-      window.console.log("old i   : "+evt.oldIndex);
-      window.console.log("new i   : "+evt.newIndex);
-      */
-      this.$parent.updateMaxWire();
+      this.updateGate(evt);
+      this.$parent.updateMaxWire(); 
       this.$parent.removeIdentitySystem();
+      this.$parent.controlSystem();
     },
-    remove: function(/*evt*/) {
-      /*
-      window.console.log("enter on remove");
-      window.console.log("item");
-      window.console.log(evt.item);
-      window.console.log("to");
-      window.console.log(evt.to);
-      window.console.log("from");
-      window.console.log(evt.from);
-      window.console.log("old i: "+evt.oldIndex);
-      window.console.log("new i: "+evt.newIndex);
-      this.$parent.updateMaxWire();
-      */
+    remove: function() {
       this.addIdentity();
-      this.$parent.removeIdentitySystem();
+      this.$parent.removeIdentitySystem();   
+      this.$parent.updateMaxWire();
+      this.$parent.controlSystem();
     },
     change: function(/*evt*/) {
-       //window.console.log('change '+evt.newIndex);
-      /*
-      window.console.log("enter on change")
-      this.$parent.updateMaxWire(); // update wire that has maximum gates
-      var element = evt.item;
-      window.console.log("element = "+element);
-      var eventName = Object.keys(event)[0];
-      var gateName = event[eventName]["element"]["name"];
-      //var gateIndex = event[eventName]['newIndex'];
-      if (eventName == "added") {
-         if(gateName == 'c'){
-            window.console.log('yarab ba2a');
-         }
-        this.$parent.addIdentityToColumn(this.id);
-      }
-      if (eventName == "removed") {
-        this.addIdentity();
-      }
-      this.$parent.removeIdentitySystem();
-      this.$parent.showSystem(); 
-      //set tracing line at the end to run the whole circuit
-      this.$parent.exeCount = this.$parent.maxWire;
-      //this.$parent.updateTracingLine();
-      */
      this.$parent.updateSystem();
+    },
+    updateGate:function(evt){
+      var gate = evt.to.childNodes[evt.newIndex];
+      var row = this.id;
+      var col = (evt.newIndex+1);
+      gate.setAttribute('row',"_"+row);
+      gate.setAttribute('col',"_"+col);
+      this.$parent.updateMaxWire();
     },
     //-----------------------------------------------------------------------
     qubitState: function(evt) {
@@ -201,6 +155,7 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
+
   }
 };
 </script>
@@ -208,6 +163,7 @@ export default {
 <style scoped>
 .wire {
   margin: 0.7em 0em 0em 0em;
+  z-index:-1;
 }
 .circuit-gate {
   color: white;
@@ -221,6 +177,7 @@ export default {
   width: 2.5em;
   height: 2.5em;
   background-color: #5d6d7e;
+  z-index:2;
 }
 
 .lbl-wire {
@@ -287,4 +244,6 @@ export default {
   
 }
 */
+
+
 </style>
