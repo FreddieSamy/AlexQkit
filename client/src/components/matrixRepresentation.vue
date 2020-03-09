@@ -2,10 +2,7 @@
    <div id="matrixRepresentation" class="matrixRepresentation">
     <h4>MatrixRepresentation</h4>
     <span id="elementRepresntation">
-        <li v-for= "row in this.$parent.matrixRepresentation" :key= "row">
-             {{row}}
-        </li>
-      
+        <li v-for="(i , row ) in this.$parent.matrixRepresentation" :key=row :v-text="row"></li>
     </span>
   </div>
 </template>
