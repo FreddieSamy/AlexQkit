@@ -228,6 +228,9 @@ export default {
         this.jsonObject["API_TOKEN"] = this.API_TOKEN;
         this.jsonObject["device"]=this.device;
       }
+      if (document.getElementById("degree").checked) {
+        this.jsonObject["radian"] = false;
+      }
       window.console.log(this.jsonObject);
       //this.sendToServer(this.route, this.jsonObject);
       //document.getElementById("checkbox").checked = false;

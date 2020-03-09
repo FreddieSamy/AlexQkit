@@ -186,7 +186,7 @@ class Circuit():
         n=normalCircuit.n_qubits-len(positions)
         reversedPositions=[]
         for i in range(len(positions)):
-            reversedPositions.append(n-positions[i]-1)
+            reversedPositions.append(n+positions[i])
         reversedPositions.reverse()
         from qiskit.quantum_info.operators import Operator
         customGate=Operator(gateMatrix)
@@ -290,7 +290,7 @@ class Circuit():
     
     #this function takes name of a gate (str)
     #and returns the matrix of the gate 
-    def gateToMatrix(self,gate):
+    def gateToMatrix(self,gate,radian):
         from qiskit import QuantumCircuit
         from qiskit import Aer
         from qiskit import execute
@@ -302,7 +302,10 @@ class Circuit():
             return result.get_unitary()
         circuit=QuantumCircuit(1)
         if "(" in gate:
-            pythonLine="circuit."+gate[:-1]+",0)"
+            angle=gate[:-1]
+            if not radian:
+                angle=gate[0:3]+str((float(gate[3:-1])*22)/(7*180))
+            pythonLine="circuit."+angle+",0)"
             exec(pythonLine)
         else:
             exec("circuit."+gate+"(0)")
@@ -353,7 +356,7 @@ class Circuit():
 ###############################################################################################################################
     
     #this function applies noncontrolled gates on the circuit
-    def nonControlledColumns(self,normalCircuit,reversedCircuit,column,customGates):
+    def nonControlledColumns(self,normalCircuit,reversedCircuit,column,customGates,radian):
         #naming a custom gate
         #don't accept "custom_" in the begining of the name
         #don't accept "." in any position
@@ -394,11 +397,14 @@ class Circuit():
                 normalCircuit.swap(p11,p22)
                 continue
             if "(" in str(column[i]):
-                pythonLine="reversedCircuit."+column[i][:-1]+","+str(n-i-1)+")"
-                #print(pythonLine)
+                angle=column[i][:-1]
+                if not radian:
+                    angle=column[i][0:3]+str((float(column[i][3:-1])*22)/(7*180))
+                pythonLine="reversedCircuit."+angle+","+str(n-i-1)+")"
+                print(pythonLine)
                 exec(pythonLine)
                 
-                pythonLine="normalCircuit."+column[i][:-1]+","+str(i)+")"
+                pythonLine="normalCircuit."+angle+","+str(i)+")"
                 #print(pythonLine)
                 exec(pythonLine)
                 continue
@@ -413,7 +419,7 @@ class Circuit():
     
 ###############################################################################################################################
     
-    def controlledColumns(self,normalCircuit,reversedCircuit,column,customGates):
+    def controlledColumns(self,normalCircuit,reversedCircuit,column,customGates,radian):
         c=[]
         oc=[]
         n = normalCircuit.n_qubits
@@ -466,10 +472,10 @@ class Circuit():
                         column[j]="i"
                         break
                 pos=c+[p1]+[p2]
-                self.addCustomGate(normalCircuit,reversedCircuit,self.controlledGate(self.gateToMatrix("swap"),numOfControls),pos)
+                self.addCustomGate(normalCircuit,reversedCircuit,self.controlledGate(self.gateToMatrix("swap",radian),numOfControls),pos)
                 continue
             pos=c+[i]
-            self.addCustomGate(normalCircuit,reversedCircuit,self.controlledGate(self.gateToMatrix(column[i]),numOfControls),pos)
+            self.addCustomGate(normalCircuit,reversedCircuit,self.controlledGate(self.gateToMatrix(column[i],radian),numOfControls),pos)
         
                 
         for i in oc:                                        #open control 
@@ -496,11 +502,14 @@ class Circuit():
     
         print("reached in creatCircuit()")
         
+        radian=True
         device='ibmq_16_melbourne'
         resetExist=False
         shots=1024
         customGates=None
         exeCount=0
+        if "radian" in receivedDictionary:
+            radian=receivedDictionary["radian"]
         if "device" in receivedDictionary:
             device=receivedDictionary["device"]
         if "exeCount" in receivedDictionary:
@@ -527,10 +536,10 @@ class Circuit():
                     normalCircuit.barrier()
                     reversedCircuit.barrier()
                 elif "c" in cols[i] or "oc" in cols[i]:
-                    self.controlledColumns(normalCircuit,reversedCircuit,cols[i],customGates)
+                    self.controlledColumns(normalCircuit,reversedCircuit,cols[i],customGates,radian)
                 else:
                     
-                    self.nonControlledColumns(normalCircuit,reversedCircuit,cols[i],customGates)
+                    self.nonControlledColumns(normalCircuit,reversedCircuit,cols[i],customGates,radian)
                     
                    
         self.blochSphereGraph = self.blochSphere(normalCircuit)

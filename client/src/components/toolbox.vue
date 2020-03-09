@@ -76,6 +76,11 @@
           <input class="angle" id="rxAngle" type="number" name="rx" value="90" />
           <input class="angle" id="ryAngle" type="number" name="ry" value="90" />
           <input class="angle" id="rzAngle" type="number" name="rz" value="90" />
+          
+          <input type="radio" id="degree" name="angleType" value="degree" checked />
+          <label for="degree" style="font-size: 15px;">degree</label>
+          <input type="radio" id="radian" name="angleType" value="radian" />
+          <label for="radian" style="font-size: 15px;">radian</label>
         </div>
 
         <draggable
@@ -426,9 +431,9 @@ export default {
   margin: 0em 1em 0em 1em;
 }
 .angle {
-  margin: 0.3em 0.7em 0.3em 0.5em;
+  margin: 0em 0.7em 0.1em 0.5em;
   width: 3em;
-  height: 3em;
+  height: 1em;
 }
 /*
 #c {
