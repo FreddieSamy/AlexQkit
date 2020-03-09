@@ -14,6 +14,8 @@
       </div>
       <h3 v-if="qasmFlag">{{ qasmError }}</h3>
       <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
+      
+      <hr id="executionLine" width="2" :size=tracingLineHeight >
       <!-- 
       <img
         v-if="!qasmFlag"
@@ -32,8 +34,8 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click=" addWire(),(tracingLineHeight += 5.6)">add Wire</button>
-        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">Remove Wire</button>
+        <button class="add-wire" @click=" addWire(),(tracingLineHeight += 80)">add Wire</button>
+        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 80)">Remove Wire</button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
         <div class="exe">
@@ -95,9 +97,10 @@ export default {
   },
   data() {
     return {
+    
       API_TOKEN: "",
       qasmError: "",
-      tracingLineHeight: 15,
+      tracingLineHeight: 150,
       qasmText: "There is no circuit",
       reversedWires: true,
       diracNotationData: "|000⟩",
@@ -144,7 +147,7 @@ export default {
       }
       //update the trasing line
       this.exeCount = this.maxWire;
-      // this.updateTracingLine();
+      this.updateTracingLine();
       // window.console.log("max wire = "+this.maxWire);
     },
     //-----------------------------------------------------------------------
@@ -275,7 +278,10 @@ export default {
         var wireCaller = this.$refs.wire[row];
         wireCaller.setState(systemObject["init"][row]);
         wireCaller.setGates(systemObject["rows"][row]);
-      }})
+      }
+      this.updateMaxWire(); 
+      //this.controlSystem();
+      })
       
     },
     //-----------------------------------------------------------------------
@@ -342,7 +348,7 @@ export default {
     preExe: function() {
       if (this.exeCount > 0) {
         this.exeCount--;
-        //this.updateTracingLine();
+        this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -350,7 +356,7 @@ export default {
     exeStart: function() {
       if (this.exeCount != 0) {
         this.exeCount = 0;
-        //this.updateTracingLine();
+        this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -358,7 +364,7 @@ export default {
     exeEnd: function() {
       if (this.exeCount != this.maxWire) {
         this.exeCount = this.maxWire;
-        //this.updateTracingLine();
+        this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -428,12 +434,11 @@ export default {
 
     },
     //-----------------------------------------------------------------------
-    /*
     updateTracingLine: function() {
       document.getElementById("executionLine").style.marginLeft =
-        3.8 * this.exeCount + "em";
+        (3.8 * this.exeCount) + "em";
     }
-    */
+
   }
 };
 </script>
@@ -546,11 +551,11 @@ textarea {
   min-width: 20%;
 }
 #executionLine {
-  width: 10em;
+  position: absolute; 
+  width: 10;
+  margin-top: 1em;
+  margin-left: 3.2em;
   z-index: -1;
-  position: fixed;
-  /*height: 15em;*/
-  margin-top: 0.9em;
-  margin-left: 0em;
+  background-color: #5B758B;  
 }
 </style>
