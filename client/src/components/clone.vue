@@ -23,8 +23,6 @@
       />
       -->
       <div v-if="!qasmFlag" class="wiresBlock">
-        <!-- <svg width="500" height="500"><line x1="0" y1="0" x2="100" y2="100" stroke="black"/></svg>
-        -->
 
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
@@ -34,7 +32,7 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click="rows++, (tracingLineHeight += 5.6)">add Wire</button>
+        <button class="add-wire" @click=" addWire(),(tracingLineHeight += 5.6)">add Wire</button>
         <button class="remove-wire" @click="rows--, (tracingLineHeight -= 5.6)">Remove Wire</button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
@@ -115,6 +113,7 @@ export default {
       maxWire: 0, // maximum number of gates in a wire
       qasmFlag: false,
       qasmTextFlag: false,
+      matrixRepresentation : [],
       jsonObject: {
         API_TOKEN: "",
         wire: 0,
@@ -124,7 +123,7 @@ export default {
         exeCount: 0,
         custom: {}
       },
-      matrixRepresentation : []
+  
     };
   },
   methods: {
@@ -204,7 +203,6 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    
     updateSystem: function() {
       var statesSystem = [];
       var gatesSystem = [];
@@ -233,15 +231,15 @@ export default {
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
       axios.post(route, jsonObject).then(res => {
-        window.console.log("the data success to returned be from the server");
-        window.console.log(res);
+        window.console.log("data sent and recived from the server successfully");
+        //window.console.log(res);
         this.draw();
         this.diracNotationData = res.data.diracNotation;
         this.qasmError = res.data.qasmError;
         this.qasmText = res.data.qasm;
         this.matrixRepresentation = res.data.matrixRepresentation;
-        window.console.log(res.data.qasmError);
-        window.console.log(res.data.matrixRepresentation);
+        //window.console.log(res.data.qasmError);
+        //window.console.log(res.data.matrixRepresentation);
       });
     },
     sendSystem:function(){
@@ -304,6 +302,22 @@ export default {
         imgOfCircuit.src =
           "http://127.0.0.1:5000/circuit.png?time=" + new Date();
       }
+    },
+    //-----------------------------------------------------------------------
+    addWire:function(){
+        window.console.log('add wire');
+        this.rows++
+        let flag = true;
+        while (flag) {
+          var wireCaller = this.$refs.wire[this.rows-1]
+          window.console.log("searching");
+            if(wireCaller != undefined){
+              flag = false;
+              window.console.log(wireCaller);
+              window.console.log("rendered");
+              
+            }
+        }
     },
     //-----------------------------------------------------------------------
     sendQasm: function() {
