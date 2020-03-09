@@ -43,14 +43,10 @@
           <button class="exeBtn" @click="exeEnd">end</button>
         </div>
 
-        <button @click="getCols">get coulmns in console</button>
         <button @click="clearConsole">Clear Console</button>
-
-        <!--
         <button class="add-wire" @click="teleAlgorithm">
           set teleportation algorithm as a test algorithm
         </button>
-        -->
       </div>
     </div>
     <div class="visual-row">
@@ -109,8 +105,8 @@ export default {
       route: "http://localhost:5000/data",
       resetRoute: "http://localhost:5000/reset",
       states: ["0", "1", "+", "-", "i", "-i"],
-      rows: 3, // number of wires
-      maxWire: 0, // maximum number of gates in a wire
+      rows: 2,                                      // number of wires
+      maxWire: 0,                                   // maximum number of gates in a wire
       qasmFlag: false,
       qasmTextFlag: false,
       matrixRepresentation : [],
@@ -228,7 +224,7 @@ export default {
         this.jsonObject["API_TOKEN"] = this.API_TOKEN;
         this.jsonObject["device"]=this.device;
       }
-      window.console.log(this.jsonObject);
+      //window.console.log(this.jsonObject);
       //this.sendToServer(this.route, this.jsonObject);
       //document.getElementById("checkbox").checked = false;
     },
@@ -261,17 +257,25 @@ export default {
           ["i", "i", "x", "i", "h", "c"]
         ]
       };
-      window.console.log(test_json_object);
-      this.rows = test_json_object["wires"];
+      //window.console.log(test_json_object);
       this.setAlgorithm(test_json_object);
     },
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
+      let rows = this.rows;
+      let algRow = systemObject['wires'];
+      for(let i = rows  ; i < algRow  ; i++ ){
+          this.addWire();
+      }
+      
+      this.$nextTick( () => {
       for (let row = 0; row < this.rows; row++) {
         var wireCaller = this.$refs.wire[row];
+        window.console.log(wireCaller);
         wireCaller.setState(systemObject["init"][row]);
         wireCaller.setGates(systemObject["rows"][row]);
-      }
+      }})
+      
     },
     //-----------------------------------------------------------------------
     setRows: function(rows) {
@@ -283,14 +287,6 @@ export default {
     //-----------------------------------------------------------------------
     clearConsole: function() {
       window.console.clear();
-    },
-    //-----------------------------------------------------------------------
-    getCols: function() {
-      for (let i = 1; i <= this.maxWire; i++) {
-        var col = document.querySelectorAll("[col=_" + i + "]");
-        window.console.log("col " + i);
-        window.console.log(col);
-      }
     },
     //-----------------------------------------------------------------------
     draw: function() {
