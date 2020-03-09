@@ -55,11 +55,17 @@
         -->
       </div>
     </div>
-    <diracNotation></diracNotation>
+    <div class="visual-row">
+      <diracNotation></diracNotation>
+      
+  </div>
+  <matrixRepresentation></matrixRepresentation>
+    
     <div class="visual-row">
       <histoGram></histoGram>
       <blochSphere></blochSphere>
     </div>
+  
   </div>
 </template>
 <!-- =============================================================  -->
@@ -73,6 +79,7 @@ import blochSphere from "./blochSphere.vue";
 import histoGram from "./histoGram.vue";
 import diracNotation from "./diracNotation.vue";
 import circuitDrawing from "./circuitDrawing.vue";
+import matrixRepresentation from "./matrixRepresentation.vue";
 
 export default {
   name: "clone",
@@ -85,7 +92,12 @@ export default {
     blochSphere,
     histoGram,
     diracNotation,
-    circuitDrawing
+    circuitDrawing,
+    matrixRepresentation
+    
+  },
+  mounted(){
+          this.sendSystem();
   },
   data() {
     return {
@@ -111,7 +123,8 @@ export default {
         reversedWires: true,
         exeCount: 0,
         custom: {}
-      }
+      },
+      matrixRepresentation : []
     };
   },
   methods: {
@@ -226,7 +239,9 @@ export default {
         this.diracNotationData = res.data.diracNotation;
         this.qasmError = res.data.qasmError;
         this.qasmText = res.data.qasm;
+        this.matrixRepresentation = res.data.matrixRepresentation;
         window.console.log(res.data.qasmError);
+        window.console.log(res.data.matrixRepresentation);
       });
     },
     sendSystem:function(){

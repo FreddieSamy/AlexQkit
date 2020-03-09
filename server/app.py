@@ -22,7 +22,7 @@ CORS_DEBUG=1
 c=Circuit()
 print(c.createCircuit({"wires":2,"rows": [['h'], ['i'], ['i'], ['i']]}))
 """
-intialState = {'wires': 2, 'init': ['0', '0'], 'rows': [[], []]}
+intialState = {'wires': 3, 'init': ['0', '0','0'], 'rows': [[], [],[]]}
 c=Circuit()
 c.createCircuit(intialState)
 def graphDrawing(fig):
