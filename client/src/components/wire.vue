@@ -154,6 +154,12 @@ export default {
         this.list.push({ name: gatesList[colIdx] });
       }
     },
+    setGatesIdentity:function(){
+        var maxWire = this.$parent.maxWire;
+        for( let colIdx = 0 ; colIdx <  maxWire ; colIdx++ ){
+            this.list.push({name:'i'});
+        }
+    }
     //-----------------------------------------------------------------------
   }
 };
