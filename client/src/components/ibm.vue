@@ -14,23 +14,49 @@
       </span>
     </div>
     <input class="ibmtoken" type="text" id="ibmtextfield" />
-    <!-- <div>
-    <label class="lbl1">number of shots</label>
-    <input class="ibmToken" type="text" />
-    </div>-->
+
+<div>
+      <label class="lbl1">simulator</label>
+    </div>
+    <div>
+      <select id="simulater" style="width:37%;">
+        <optgroup label="1 qubit">
+          <option value="ibmq_armonk">ibmq_armonk</option>
+        </optgroup>
+        <optgroup label=" 5 qubits">
+          <option value="ibmq_london">ibmq_london</option>
+          <option value="ibmq_burlington">ibmq_burlington</option>
+          <option value="ibmq_essex">ibmq_essex</option>
+          <option value="ibmq_ourense">ibmq_ourense</option>
+          <option value="ibmq_vigo">ibmq_vigo</option>
+          <option value="ibmq_5_yorktown">ibmq_5_yorktown</option>
+        </optgroup>
+        <optgroup label="15 qubits">
+          <option value="ibmq_16_melbourne">ibmq_16_melbourne</option>
+        </optgroup>
+
+        <optgroup label="up to 32 qubits">
+          <option value="ibmq_qasm_simulator">ibmq_qasm_simulator</option>
+        </optgroup>
+      </select>
+    </div>
+    <div>
+      <label class="lbl1">number of shots</label>
+      <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
+    </div>
+
+
+    
     <div class="checkbox">
       <input type="checkbox" id="checkbox" />
       <label for="checkbox">Run on IBMQ</label>
     </div>
     <div>
-      <button @click="save_ibm_token()">Send</button>
+      <button @click="snedto()">Send</button>
     </div>
     <a id="link" :href="link">{{ link }}</a>
     <a id="link" target="_blank" :href="link">{{ link }}</a>
-    <!-- <div>
-    <label class="lbl1">simulator</label>
-    <input class="ibmToken" type="text"/>
-    </div>-->
+    
   </div>
 </template>
 <!-- =============================================================  -->
@@ -43,11 +69,14 @@ export default {
     return { link: "" };
   },
   methods: {
-    save_ibm_token() {
-      this.$parent.API_TOKEN = document.getElementById("ibmtextfield").value;
+    snedto() {
+      this.$parent.API_TOKEN = document.getElementById("ibmtextfield").value; 
+      this.$parent.shots = document.getElementById("numberofshots").value;
+      var sim = document.getElementById("simulater");
+      window.console.log(sim.options[sim.selectedIndex].value);
+      this.$parent.device = sim.options[sim.selectedIndex].value;
       this.$parent.sendSystem();
-      //   //   //window.console.log(ibmtext);
-      // return ibmtext;
+      
     }
   }
 };

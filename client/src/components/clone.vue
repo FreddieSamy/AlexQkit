@@ -121,7 +121,9 @@ export default {
         rows: [],
         reversedWires: true,
         exeCount: 0,
-        custom: {}
+        custom: {},
+        shots:1024,
+        device:""
       },
   
     };
@@ -218,13 +220,15 @@ export default {
         wires: this.rows,
         init: statesSystem,
         rows: gatesSystem,
-        custom: toolboxconnect.sendtoclone()
+        custom: toolboxconnect.sendtoclone(),
+        shots:parseInt(this.shots)
       };
       //window.console.log(document.getElementById("checkbox").checked);
       if (document.getElementById("checkbox").checked) {
         this.jsonObject["API_TOKEN"] = this.API_TOKEN;
+        this.jsonObject["device"]=this.device;
       }
-      //window.console.log(this.jsonObject);
+      window.console.log(this.jsonObject);
       //this.sendToServer(this.route, this.jsonObject);
       //document.getElementById("checkbox").checked = false;
     },
