@@ -224,7 +224,10 @@ export default {
         this.jsonObject["API_TOKEN"] = this.API_TOKEN;
         this.jsonObject["device"]=this.device;
       }
-      //window.console.log(this.jsonObject);
+      if (document.getElementById("degree").checked) {
+        this.jsonObject["radian"] = false;
+      }
+      window.console.log(this.jsonObject);
       //this.sendToServer(this.route, this.jsonObject);
       //document.getElementById("checkbox").checked = false;
     },
@@ -271,7 +274,7 @@ export default {
       this.$nextTick( () => {
       for (let row = 0; row < this.rows; row++) {
         var wireCaller = this.$refs.wire[row];
-        window.console.log(wireCaller);
+        //window.console.log(wireCaller);
         wireCaller.setState(systemObject["init"][row]);
         wireCaller.setGates(systemObject["rows"][row]);
       }})
