@@ -305,19 +305,11 @@ export default {
     },
     //-----------------------------------------------------------------------
     addWire:function(){
-        window.console.log('add wire');
         this.rows++
-        let flag = true;
-        while (flag) {
-          var wireCaller = this.$refs.wire[this.rows-1]
-          window.console.log("searching");
-            if(wireCaller != undefined){
-              flag = false;
-              window.console.log(wireCaller);
-              window.console.log("rendered");
-              
-            }
-        }
+        this.$nextTick( () => {
+              var wireCaller = this.$refs.wire[this.rows-1];
+              wireCaller.setGatesIdentity();
+          })  
     },
     //-----------------------------------------------------------------------
     sendQasm: function() {
