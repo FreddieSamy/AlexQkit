@@ -25,7 +25,7 @@
         :key="element.id"
         :id="element.name"
       >
-      {{element.name}}
+{{displayName(element.name)}}
       </div>
     </draggable>
   </div>
@@ -159,6 +159,14 @@ export default {
         for( let colIdx = 0 ; colIdx <  maxWire ; colIdx++ ){
             this.list.push({name:'i'});
         }
+    },
+    //-----------------------------------------------------------------------
+    displayName: function(name) {
+      if (name.startsWith("custom_")) {
+        return name.slice(7);
+      } else {
+        return name;
+      }
     }
     //-----------------------------------------------------------------------
   }
