@@ -270,11 +270,9 @@ export default {
       for(let i = rows  ; i < algRow  ; i++ ){
           this.addWire();
       }
-      
       this.$nextTick( () => {
       for (let row = 0; row < this.rows; row++) {
         var wireCaller = this.$refs.wire[row];
-        //window.console.log(wireCaller);
         wireCaller.setState(systemObject["init"][row]);
         wireCaller.setGates(systemObject["rows"][row]);
       }})
