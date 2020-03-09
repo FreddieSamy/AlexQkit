@@ -20,6 +20,7 @@
     </div>
     <div>
       <select id="simulater" style="width:37%;">
+        <option value=''>Please choose device</option>
         <optgroup label="1 qubit">
           <option value="ibmq_armonk">ibmq_armonk</option>
         </optgroup>
@@ -70,7 +71,10 @@ export default {
   },
   methods: {
     snedto() {
-      this.$parent.API_TOKEN = document.getElementById("ibmtextfield").value; 
+      this.$parent.API_TOKEN = document.getElementById("ibmtextfield").value;
+      if(document.getElementById("numberofshots").value==""){
+        document.getElementById("numberofshots").value=1024;
+      }
       this.$parent.shots = document.getElementById("numberofshots").value;
       var sim = document.getElementById("simulater");
       window.console.log(sim.options[sim.selectedIndex].value);
