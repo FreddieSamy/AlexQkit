@@ -205,6 +205,7 @@ export default {
       var statesSystem = [];
       var gatesSystem = [];
       var toolboxconnect = this.$refs.toolbox;
+var ibmcon =this.$refs.ibm;
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
         statesSystem.push(wireCaller.getState());
@@ -217,7 +218,7 @@ export default {
         init: statesSystem,
         rows: gatesSystem,
         custom: toolboxconnect.sendtoclone(),
-        shots:parseInt(this.shots)
+        shots:parseInt(ibmcon.returnshots()),
       };
       //window.console.log(document.getElementById("checkbox").checked);
       if (document.getElementById("checkbox").checked) {
