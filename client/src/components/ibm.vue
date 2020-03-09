@@ -1,5 +1,9 @@
 <template>
   <div class="ibmBody">
+     <div style="float:right">
+      <label class="lbl1">number of shots</label>
+      <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
+    </div>
     <div id="hover-div">
       <label class="lbl1">IBM Token</label>
       <span id="hover-element">
@@ -41,10 +45,7 @@
         </optgroup>
       </select>
     </div>
-    <div>
-      <label class="lbl1">number of shots</label>
-      <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
-    </div>
+    
 
 
     
@@ -72,15 +73,18 @@ export default {
   methods: {
     snedto() {
       this.$parent.API_TOKEN = document.getElementById("ibmtextfield").value;
-      if(document.getElementById("numberofshots").value==""){
-        document.getElementById("numberofshots").value=1024;
-      }
-      this.$parent.shots = document.getElementById("numberofshots").value;
+      
       var sim = document.getElementById("simulater");
       window.console.log(sim.options[sim.selectedIndex].value);
       this.$parent.device = sim.options[sim.selectedIndex].value;
       this.$parent.sendSystem();
       
+    },
+     returnshots(){
+      if(document.getElementById("numberofshots").value==""){
+        document.getElementById("numberofshots").value=1024;
+      }
+    return (document.getElementById("numberofshots").value);
     }
   }
 };
