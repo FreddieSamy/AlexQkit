@@ -145,6 +145,9 @@
         <div class="column3">
           <h1 style="color: black">from circuit</h1>
         </div>
+        <div style="color:red; padding-top:30px; text-align: center; font-size: 35px;">
+          <label id="errormsg"></label>
+        </div>
       </div>
       <button class="addGate" @click="openNav()">Add Custom Gate</button>
     </div>
@@ -229,10 +232,10 @@ export default {
     // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav").style.width = "0%";
+      document.getElementById("errormsg").innerHTML = null;
     },
     // ----------------------------------------------------
     create_the_matrix() {
-      this.closeNav();
       var nameofgate = document.getElementById("nameofgate").value;
       var valofgate = document.getElementById("valueofgate");
       var matrix = this.make_matrix(valofgate);
@@ -244,17 +247,27 @@ export default {
         isUnitary = res.data.isUnitary;
         //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
         window.console.log("new unitary:" + isUnitary);
-        window.console.log(matrix);
-        var { matrix_validate, msg } = this.validate_of_matrix(matrix);
+        //window.console.log(matrix);
+        var { matrix_validate, msg } = this.validate_of_matrix(
+          matrix,
+          nameofgate
+        );
         window.console.log(matrix_validate);
         window.console.log(msg);
-        if (matrix_validate) {
+        if (matrix_validate && isUnitary == false) {
+          msg = "the matrix isn't unitary";
+        }
+        if (matrix_validate && isUnitary) {
           // this.jsonobjectall = {
           //   [nameofgate]: matrix
           // };
           this.addGate(nameofgate);
           this.customsrever[nameofgate] = matrix;
           // window.console.log(this.customsrever);
+          document.getElementById("errormsg").innerHTML = null;
+          this.closeNav();
+        } else {
+          document.getElementById("errormsg").innerHTML = "*" + msg + "*";
         }
         document.getElementById("nameofgate").value = null;
         document.getElementById("valueofgate").value = null;
@@ -276,11 +289,33 @@ export default {
       return matrix;
     },
     // ----------------------------------------------------
-    validate_of_matrix(matrix) {
+    validate_of_matrix(matrix, nameofgate) {
       var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
       var count1, count2, count3, check;
       var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
+
+      for (let i in this.customGates) {
+        for (let k in this.customGates[i]) {
+          if (this.customGates[i][k] === nameofgate) {
+            matrix_validate = false;
+            msg = "this name is already exist,please choose different name";
+            return { matrix_validate, msg };
+          }
+        }
+      }
+
+      if (nameofgate == "" || nameofgate.length == 0) {
+        matrix_validate = false;
+        msg = "you have to write name for the gate";
+        return { matrix_validate, msg };
+      }
+
+      if (Math.log2(matrix.length) == 0) {
+        matrix_validate = false;
+        return { matrix_validate, msg };
+      }
+
       if (Number.isInteger(Math.log2(matrix.length))) {
         matrix_validate = true;
       } else {
