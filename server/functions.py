@@ -28,12 +28,12 @@ class Circuit():
 
     #dirac notation doc - https://docs.microsoft.com/en-us/quantum/concepts/dirac-notation
 
-    def initState(self,circuit,stateList,reversedWires=True):
-        if reversedWires:
-            n=circuit.n_qubits
-        else:
-            n=1
+    def initState(self,circuit,stateList,reversedWires):
         for i in range(len(stateList)):
+            if reversedWires:
+                n=circuit.n_qubits
+            else:
+                n=i+i+1
             if str(stateList[i])=="0":
                 continue
             elif str(stateList[i])=="1":
@@ -183,10 +183,9 @@ class Circuit():
 
 
     def addCustomGate(self,normalCircuit,reversedCircuit,gateMatrix,positions):
-        n=normalCircuit.n_qubits-len(positions)
         reversedPositions=[]
         for i in range(len(positions)):
-            reversedPositions.append(n+positions[i])
+            reversedPositions.append(normalCircuit.n_qubits-positions[i]-1)
         reversedPositions.reverse()
         from qiskit.quantum_info.operators import Operator
         customGate=Operator(gateMatrix)
