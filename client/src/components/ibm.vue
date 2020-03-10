@@ -1,7 +1,11 @@
 <template>
   <div class="ibmBody">
-     <div style="float:right">
-      <label class="lbl1">number of shots</label>
+    <div style="float:right">
+      <label class="lbl1">
+        Number
+        <br />Of
+        <br />Shots
+      </label>
       <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
     </div>
     <div id="hover-div">
@@ -19,12 +23,11 @@
     </div>
     <input class="ibmtoken" type="text" id="ibmtextfield" />
 
-<div>
-      <label class="lbl1">simulator</label>
+    <div>
+      <label class="lbl1">Device</label>
     </div>
     <div>
-      <select id="simulater" style="width:37%;">
-        <option value=''>Please choose device</option>
+      <select id="simulater" style="width:40%;">
         <optgroup label="1 qubit">
           <option value="ibmq_armonk">ibmq_armonk</option>
         </optgroup>
@@ -37,7 +40,7 @@
           <option value="ibmq_5_yorktown">ibmq_5_yorktown</option>
         </optgroup>
         <optgroup label="15 qubits">
-          <option value="ibmq_16_melbourne">ibmq_16_melbourne</option>
+          <option value="ibmq_16_melbourne" selected>ibmq_16_melbourne</option>
         </optgroup>
 
         <optgroup label="up to 32 qubits">
@@ -45,20 +48,15 @@
         </optgroup>
       </select>
     </div>
-    
 
-
-    
     <div class="checkbox">
       <input type="checkbox" id="checkbox" />
       <label for="checkbox">Run on IBMQ</label>
     </div>
     <div>
-      <button @click="snedto()">Send</button>
+      <button @click="sendto()">Send</button>
     </div>
-    <a id="link" :href="link">{{ link }}</a>
     <a id="link" target="_blank" :href="link">{{ link }}</a>
-    
   </div>
 </template>
 <!-- =============================================================  -->
@@ -71,20 +69,19 @@ export default {
     return { link: "" };
   },
   methods: {
-    snedto() {
+    sendto() {
       this.$parent.API_TOKEN = document.getElementById("ibmtextfield").value;
-      
+
       var sim = document.getElementById("simulater");
       window.console.log(sim.options[sim.selectedIndex].value);
       this.$parent.device = sim.options[sim.selectedIndex].value;
       this.$parent.sendSystem();
-      
     },
-     returnshots(){
-      if(document.getElementById("numberofshots").value==""){
-        document.getElementById("numberofshots").value=1024;
+    returnshots() {
+      if (document.getElementById("numberofshots").value == "") {
+        document.getElementById("numberofshots").value = 1024;
       }
-    return (document.getElementById("numberofshots").value);
+      return document.getElementById("numberofshots").value;
     }
   }
 };

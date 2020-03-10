@@ -281,6 +281,7 @@ class Circuit():
         from qiskit import execute
         IBMQ.save_account(API_TOKEN)
         IBMQ.load_account()
+        print(device)
         provider=IBMQ.get_provider('ibm-q')
         qcomp=provider.get_backend(device)
         job=execute(circuit,backend=qcomp,shots=shots)
@@ -650,4 +651,68 @@ class Circuit():
             circuit=circuit.decompose()
         return circuit
 
+###############################################################################################################################
+        
+    def elementaryGates(self,rows):
+        import numpy as np
+        columns=np.transpose(rows).tolist()
+        i=0
+        while i <len(columns):
+            c=[]
+            for j in range(len(columns[i])):
+                if columns[i][j]=="i":
+                    continue
+                if columns[i][j]=="c" or columns[i][j]=="oc":
+                    c.append(j)
+                else:
+                    gatePos=j
+            if len(c)>1:
+                name="sqrt("+columns[i][gatePos]+")"
+                name2=name+"t"
+            
+                col=["i"]*len(columns[i])
+                col[c[0]]=columns[i][c[0]]
+                col[gatePos]=name
+                for k in range(len(c)-2):
+                    col[c[k+2]]=columns[i][c[k+2]]
+                columns.insert(i+1,col)
+            
+                col=["i"]*len(columns[i])
+                col[c[0]]=columns[i][c[0]]
+                col[c[1]]="x"
+                for k in range(len(c)-2):
+                    col[c[k+2]]=columns[i][c[k+2]]
+                columns.insert(i+1,col)
+            
+                col=["i"]*len(columns[i])
+                col[c[1]]=columns[i][c[1]]
+                col[gatePos]=name2
+                for k in range(len(c)-2):
+                    col[c[k+2]]=columns[i][c[k+2]]
+                columns.insert(i+1,col)
+            
+                col=["i"]*len(columns[i])
+                col[c[0]]=columns[i][c[0]]
+                col[c[1]]="x"
+                for k in range(len(c)-2):
+                    col[c[k+2]]=columns[i][c[k+2]]
+                columns.insert(i+1,col)
+            
+                col=["i"]*len(columns[i])
+                col[c[1]]=columns[i][c[1]]
+                col[gatePos]=name
+                for k in range(len(c)-2):
+                    col[c[k+2]]=columns[i][c[k+2]]
+                columns.insert(i+1,col)
+            
+                del columns[i]
+            
+            if len(c)==2:
+                i=i+4
+            elif len(c)>2:
+                i=i-1
+            i=i+1
+     
+        return {"rows":np.transpose(columns).tolist()}
+    
 ###############################################################################################################################

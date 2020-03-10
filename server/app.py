@@ -32,6 +32,16 @@ def graphDrawing(fig):
 @app.route('/')
 def main():
     return "server is on fire"
+
+@app.route('/elementaryGates',methods=['GET','POST'])
+def elementaryGates():
+    if request.method=='POST':
+        recievedDic=request.get_json()
+        returnedDictionary=c.elementaryGates(recievedDic["rows"])
+        #print("retrived data from qiskit : ",c.returnedDictionary)
+    else:
+        returnedDictionary={}
+    return  jsonify(returnedDictionary) 
 @app.route('/isUnitary',methods=['GET','POST'])
 def isUnitary():
     if request.method=='POST':

@@ -14,8 +14,8 @@
       </div>
       <h3 v-if="qasmFlag">{{ qasmError }}</h3>
       <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
-      
-      <hr id="executionLine" width="2" :size=tracingLineHeight >
+
+      <hr id="executionLine" width="2" size="160" />
       <!-- 
       <img
         v-if="!qasmFlag"
@@ -25,7 +25,6 @@
       />
       -->
       <div v-if="!qasmFlag" class="wiresBlock">
-
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
@@ -34,8 +33,8 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click=" addWire(),(tracingLineHeight += 80)">add Wire</button>
-        <button class="remove-wire" @click="rows--, (tracingLineHeight -= 80)">Remove Wire</button>
+        <button class="add-wire" @click=" addWire(),updateTracingLine()">add Wire</button>
+        <button class="remove-wire" @click="rows--, updateTracingLine()">Remove Wire</button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
         <div class="exe">
@@ -44,24 +43,24 @@
           <button class="exeBtn" @click="nextExe">|exe⟩</button>
           <button class="exeBtn" @click="exeEnd">end</button>
         </div>
-
+        <button class="exeBtn" @click="elementaryGates">Elementary Gates</button>
+        <br />
         <button @click="clearConsole">Clear Console</button>
-        <button class="add-wire" @click="teleAlgorithm">
-          set teleportation algorithm as a test algorithm
-        </button>
+        <button
+          class="add-wire"
+          @click="teleAlgorithm"
+        >set teleportation algorithm as a test algorithm</button>
       </div>
     </div>
     <div class="visual-row">
       <diracNotation></diracNotation>
-      
-  </div>
-  <matrixRepresentation></matrixRepresentation>
-    
+    </div>
+    <matrixRepresentation></matrixRepresentation>
+
     <div class="visual-row">
       <histoGram></histoGram>
       <blochSphere></blochSphere>
     </div>
-  
   </div>
 </template>
 <!-- =============================================================  -->
@@ -90,17 +89,14 @@ export default {
     diracNotation,
     circuitDrawing,
     matrixRepresentation
-    
   },
-  mounted(){
-          this.sendSystem();
+  mounted() {
+    this.sendSystem();
   },
   data() {
     return {
-    
       API_TOKEN: "",
       qasmError: "",
-      tracingLineHeight: 150,
       qasmText: "There is no circuit",
       reversedWires: true,
       diracNotationData: "|000⟩",
@@ -108,11 +104,11 @@ export default {
       route: "http://localhost:5000/data",
       resetRoute: "http://localhost:5000/reset",
       states: ["0", "1", "+", "-", "i", "-i"],
-      rows: 2,                                      // number of wires
-      maxWire: 0,                                   // maximum number of gates in a wire
+      rows: 2, // number of wires
+      maxWire: 0, // maximum number of gates in a wire
       qasmFlag: false,
       qasmTextFlag: false,
-      matrixRepresentation : [],
+      matrixRepresentation: [],
       jsonObject: {
         API_TOKEN: "",
         wire: 0,
@@ -121,10 +117,9 @@ export default {
         reversedWires: true,
         exeCount: 0,
         custom: {},
-        shots:1024,
-        device:""
-      },
-  
+        shots: 1024,
+        device: ""
+      }
     };
   },
   methods: {
@@ -158,7 +153,7 @@ export default {
       }
       this.maxWire = 0;
       this.exeCount = 0;
-      //this.updateTracingLine();
+      this.updateTracingLine();
       this.removeControlSystem();
       this.qasmText = "There is no circuit";
       this.sendSystem();
@@ -180,7 +175,7 @@ export default {
       }
       this.maxWire--;
       this.exeCount = this.maxWire;
-      //this.updateTracingLine();
+      this.updateTracingLine();
     },
     //-----------------------------------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
@@ -208,7 +203,7 @@ export default {
       var statesSystem = [];
       var gatesSystem = [];
       var toolboxconnect = this.$refs.toolbox;
-var ibmcon =this.$refs.ibm;
+      var ibmcon = this.$refs.ibm;
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
         statesSystem.push(wireCaller.getState());
@@ -221,37 +216,40 @@ var ibmcon =this.$refs.ibm;
         init: statesSystem,
         rows: gatesSystem,
         custom: toolboxconnect.sendtoclone(),
-        shots:parseInt(ibmcon.returnshots()),
+        shots: parseInt(ibmcon.returnshots())
       };
       //window.console.log(document.getElementById("checkbox").checked);
       if (document.getElementById("checkbox").checked) {
         this.jsonObject["API_TOKEN"] = this.API_TOKEN;
-        this.jsonObject["device"]=this.device;
+        this.jsonObject["device"] = this.device;
       }
       if (document.getElementById("degree").checked) {
         this.jsonObject["radian"] = false;
       }
       window.console.log(this.jsonObject);
       //this.sendToServer(this.route, this.jsonObject);
-      //document.getElementById("checkbox").checked = false;
+      document.getElementById("checkbox").checked = false;
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
       axios.post(route, jsonObject).then(res => {
-        window.console.log("data sent and recived from the server successfully");
+        window.console.log(
+          "data sent and recived from the server successfully"
+        );
         //window.console.log(res);
         this.draw();
         this.diracNotationData = res.data.diracNotation;
         this.qasmError = res.data.qasmError;
         this.qasmText = res.data.qasm;
         this.matrixRepresentation = res.data.matrixRepresentation;
+        this.$refs.ibm.link = res.data.link;
         //window.console.log(res.data.qasmError);
         //window.console.log(res.data.matrixRepresentation);
       });
     },
-    sendSystem:function(){
-        this.updateSystem();
-        this.sendToServer(this.route, this.jsonObject);
+    sendSystem: function() {
+      this.updateSystem();
+      this.sendToServer(this.route, this.jsonObject);
     },
     //-----------------------------------------------------------------------
     teleAlgorithm: function() {
@@ -270,20 +268,19 @@ var ibmcon =this.$refs.ibm;
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
       let rows = this.rows;
-      let algRow = systemObject['wires'];
-      for(let i = rows  ; i < algRow  ; i++ ){
-          this.addWire();
+      let algRow = systemObject["wires"];
+      for (let i = rows; i < algRow; i++) {
+        this.addWire();
       }
-      this.$nextTick( () => {
-      for (let row = 0; row < this.rows; row++) {
-        var wireCaller = this.$refs.wire[row];
-        wireCaller.setState(systemObject["init"][row]);
-        wireCaller.setGates(systemObject["rows"][row]);
-      }
-      this.updateMaxWire(); 
-      //this.controlSystem();
-      })
-      
+      this.$nextTick(() => {
+        for (let row = 0; row < this.rows; row++) {
+          var wireCaller = this.$refs.wire[row];
+          wireCaller.setState(systemObject["init"][row]);
+          wireCaller.setGates(systemObject["rows"][row]);
+        }
+        this.updateMaxWire();
+        //this.controlSystem();
+      });
     },
     //-----------------------------------------------------------------------
     setRows: function(rows) {
@@ -312,12 +309,12 @@ var ibmcon =this.$refs.ibm;
       }
     },
     //-----------------------------------------------------------------------
-    addWire:function(){
-        this.rows++
-        this.$nextTick( () => {
-              var wireCaller = this.$refs.wire[this.rows-1];
-              wireCaller.setGatesIdentity();
-          })  
+    addWire: function() {
+      this.rows++;
+      this.$nextTick(() => {
+        var wireCaller = this.$refs.wire[this.rows - 1];
+        wireCaller.setGatesIdentity();
+      });
     },
     //-----------------------------------------------------------------------
     sendQasm: function() {
@@ -330,6 +327,7 @@ var ibmcon =this.$refs.ibm;
     //-----------------------------------------------------------------------
     qasmTextFun: function() {
       this.qasmTextFlag = !this.qasmTextFlag;
+      this.updateTracingLine();
       this.sendSystem();
     },
     //-----------------------------------------------------------------------
@@ -341,7 +339,7 @@ var ibmcon =this.$refs.ibm;
     nextExe: function() {
       if (this.exeCount < this.maxWire) {
         this.exeCount++;
-        //this.updateTracingLine();
+        this.updateTracingLine();
         this.sendSystem();
       }
     },
@@ -370,7 +368,7 @@ var ibmcon =this.$refs.ibm;
       }
     },
     //-----------------------------------------------------------------------
-    applyControl: function(el1,el2) {  
+    applyControl: function(el1, el2) {
       let x = el1.offsetLeft + el1.offsetWidth / 2;
       let y1 = el1.offsetTop + el1.offsetHeight;
       let y2 = el2.offsetTop;
@@ -385,61 +383,96 @@ var ibmcon =this.$refs.ibm;
       hr.setAttribute("size", size);
       hr.style.left = 0;
       hr.style.top = 0;
-      hr.style.margin = "" + y1 + "px 0px 0px " + (x-2) + "px";
+      hr.style.margin = "" + y1 + "px 0px 0px " + (x - 2) + "px";
       var parent = this.$el;
       parent.appendChild(hr);
     },
-    removeControl:function(){
-        var cline = document.querySelector('.cline');
-        if(cline != null){
-           var parent = this.$el;
-           parent.removeChild(cline);
-           return true;
-        }
-        return false;
+    removeControl: function() {
+      var cline = document.querySelector(".cline");
+      if (cline != null) {
+        var parent = this.$el;
+        parent.removeChild(cline);
+        return true;
+      }
+      return false;
     },
-    removeControlSystem:function(){
+    removeControlSystem: function() {
       var flag = true;
-      while(flag){
-          flag = this.removeControl();
-      } 
-      return true
+      while (flag) {
+        flag = this.removeControl();
+      }
+      return true;
     },
-    controlSystem:function(){
+    controlSystem: function() {
       this.removeControlSystem();
-       for(let row = 0 ; row < this.rows ; row++ ){
-          var wireList = this.$refs.wire[row].list;
-          for (let col = 0 ; col < this.maxWire ; col++){
-                //window.console.log(wireList[col]['name']);
-                if(wireList[col]['name'] == 'c'){
-                  //window.console.log("found c at " +(row+1)+","+(col+1));
-                  var cGate = document.querySelector('[row=_'+(row+1)+'][col=_'+(col+1)+']');
-                  this.controlColumn(cGate,row,col);  
-                }
-                
+      for (let row = 0; row < this.rows; row++) {
+        var wireList = this.$refs.wire[row].list;
+        for (let col = 0; col < this.maxWire; col++) {
+          //window.console.log(wireList[col]['name']);
+          if (wireList[col]["name"] == "c") {
+            //window.console.log("found c at " +(row+1)+","+(col+1));
+            var cGate = document.querySelector(
+              "[row=_" + (row + 1) + "][col=_" + (col + 1) + "]"
+            );
+            this.controlColumn(cGate, row, col);
           }
-       }
-    },
-    controlColumn:function(cGate,row,col){  
-        for(let i = this.rows-1  ; i > row ; i-- ){  
-           var wireList = this.$refs.wire[i].list;
-           var wireGate = wireList[col]['name'];
-           if(wireGate != 'i' && wireGate != 'c' && wireGate != undefined ){
-                var targetGate = document.querySelector('[row=_'+(i+1)+'][col=_'+(col+1)+']');
-                //window.console.log(targetGate)
-                this.applyControl(cGate,targetGate);
-                return true ;
-           }
         }
-        return false;
-
+      }
+    },
+    controlColumn: function(cGate, row, col) {
+      for (let i = this.rows - 1; i > row; i--) {
+        var wireList = this.$refs.wire[i].list;
+        var wireGate = wireList[col]["name"];
+        if (wireGate != "i" && wireGate != "c" && wireGate != undefined) {
+          var targetGate = document.querySelector(
+            "[row=_" + (i + 1) + "][col=_" + (col + 1) + "]"
+          );
+          //window.console.log(targetGate)
+          this.applyControl(cGate, targetGate);
+          return true;
+        }
+      }
+      return false;
     },
     //-----------------------------------------------------------------------
     updateTracingLine: function() {
+      qasmMargin = 0;
+      if (this.qasmTextFlag) {
+        var qasmMargin = 15.4;
+      }
       document.getElementById("executionLine").style.marginLeft =
-        (3.8 * this.exeCount) + "em";
+        3.8 * this.exeCount + 3.2 + qasmMargin + "em";
+      document.getElementById("executionLine").size = this.rows * 85 + "";
+    },
+    //-----------------------------------------------------------------------
+    elementaryGates: function() {
+      var statesSystem = [];
+      var gatesSystem = [];
+      for (let i = 0; i < this.rows; i++) {
+        var wireCaller = this.$refs.wire[i];
+        statesSystem.push(wireCaller.getState());
+        gatesSystem.push(wireCaller.getGates(i));
+      }
+      var jsonObject = {
+        rows: gatesSystem
+      };
+      axios
+        .post("http://localhost:5000/elementaryGates", jsonObject)
+        .then(res => {
+          window.console.log(
+            "data sent and recived from the server successfully"
+          );
+          //window.console.log(res);
+          let json_object = {
+            wires: this.wires,
+            init: statesSystem,
+            rows: res.data.rows
+          };
+          //window.console.log(test_json_object);
+          this.setAlgorithm(json_object);
+        });
     }
-
+    //-----------------------------------------------------------------------
   }
 };
 </script>
@@ -549,14 +582,14 @@ textarea {
   border-radius: 0.5em;
   margin: 0.2em 0.2em 3em 0.2em;
   padding: 0.2em 0.2em 3em 0.2em;
-  min-width: 20%;
+  min-width: 18em;
 }
 #executionLine {
-  position: absolute; 
+  position: absolute;
   width: 10;
-  margin-top: 1em;
+  margin-top: 0em;
   margin-left: 3.2em;
   z-index: -1;
-  background-color: #5B758B;  
+  background-color: #5b758b;
 }
 </style>
