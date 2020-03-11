@@ -33,6 +33,25 @@ def graphDrawing(fig):
 def main():
     return "server is on fire"
 
+
+@app.route('/nthRoot',methods=['GET','POST'])
+def nthRoot():
+    import numpy as np
+    from qiskit.quantum_info.operators.predicates import is_unitary_matrix
+    from scipy.linalg import fractional_matrix_power
+    if request.method=='POST':
+        jsonObj=request.get_json()
+        gate=jsonObj["gate"]
+        root=jsonObj["root"]
+        if gate in jsonObj["custom"]:
+            customGtes=jsonObj["custom"]
+            a=np.matrix(customGtes[gate])
+        else:
+            a=np.matrix(c.gateToMatrix(gate))
+        matrix=fractional_matrix_power(a,1/int(root)).tolist()
+        print(is_unitary_matrix(matrix),matrix)
+        #print(matrix,is_unitary_matrix(matrix),jsonify({"isUnitary":is_unitary_matrix(matrix)}))
+        return jsonify({"isUnitary":is_unitary_matrix(matrix),"matrix":matrix})
 @app.route('/elementaryGates',methods=['GET','POST'])
 def elementaryGates():
     if request.method=='POST':
