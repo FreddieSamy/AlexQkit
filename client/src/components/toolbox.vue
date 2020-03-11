@@ -388,24 +388,30 @@ export default {
     // ----------------------------------------------------
     nthRoot: function() {
       var name = document.getElementById("rootGate").value;
-      window.console.log(name);
+      /*window.console.log(name);*/
       var root = document.getElementById("root").value;
       var jsonObject = {
         root: root,
         gate: name,
         custom: this.customsrever
       };
-      axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
-        if (res.isUnitary) {
-          this.addGate(root + "√" + name);
-          this.customsrever[root + "√" + name] = res.matrix;
-          document.getElementById("errormsg").innerHTML = null;
-          this.closeNav();
-        } else {
-          document.getElementById("errormsg").innerHTML =
-            "*sorry, " + root + "√" + name + " isn't unitary*";
-        }
-      });
+      if (root >= 2) {
+        axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
+          /*window.console.log(res.data);*/
+          if (res.data.isUnitary) {
+            this.addGate(root + "√" + name);
+            this.customsrever[root + "√" + name] = res.data.matrix;
+            document.getElementById("errormsg").innerHTML = null;
+            this.closeNav();
+          } else {
+            document.getElementById("errormsg").innerHTML =
+              "*sorry, " + root + "√" + name + " isn't unitary*";
+          }
+        });
+      } else {
+        document.getElementById("errormsg").innerHTML =
+          "*please, choose number more than one !!*";
+      }
     }
     // ----------------------------------------------------
 

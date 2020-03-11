@@ -17,22 +17,18 @@ app.config.from_object(__name__)
 CORS(app, resources={r'/*': {'origins': '*'}})
 CORS_DEBUG=1
 
-#testing
-"""
-c=Circuit()
-print(c.createCircuit({"wires":2,"rows": [['h'], ['i'], ['i'], ['i']]}))
-"""
 intialState = {'wires': 3, 'init': ['0', '0','0'], 'rows': [[], [],[]]}
 c=Circuit()
 c.createCircuit(intialState)
+
 def graphDrawing(fig):
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
+
 @app.route('/')
 def main():
     return "server is on fire"
-
 
 @app.route('/nthRoot',methods=['GET','POST'])
 def nthRoot():
@@ -45,13 +41,14 @@ def nthRoot():
         root=jsonObj["root"]
         if gate in jsonObj["custom"]:
             customGtes=jsonObj["custom"]
-            a=np.matrix(customGtes[gate])
+            a=np.matrix(c.strToComplex(customGtes[gate]))
         else:
             a=np.matrix(c.gateToMatrix(gate))
         matrix=fractional_matrix_power(a,1/int(root)).tolist()
-        print(is_unitary_matrix(matrix),matrix)
+        #print(is_unitary_matrix(matrix),matrix)
         #print(matrix,is_unitary_matrix(matrix),jsonify({"isUnitary":is_unitary_matrix(matrix)}))
-        return jsonify({"isUnitary":is_unitary_matrix(matrix),"matrix":matrix})
+        return jsonify({"isUnitary":is_unitary_matrix(matrix),"matrix":c.complexToStr(matrix)})
+
 @app.route('/elementaryGates',methods=['GET','POST'])
 def elementaryGates():
     if request.method=='POST':
@@ -61,6 +58,7 @@ def elementaryGates():
     else:
         returnedDictionary={}
     return  jsonify(returnedDictionary) 
+
 @app.route('/isUnitary',methods=['GET','POST'])
 def isUnitary():
     if request.method=='POST':
@@ -69,6 +67,7 @@ def isUnitary():
         from qiskit.quantum_info.operators.predicates import is_unitary_matrix
         #print(matrix,is_unitary_matrix(matrix),jsonify({"isUnitary":is_unitary_matrix(matrix)}))
         return jsonify({"isUnitary":is_unitary_matrix(matrix)})
+
 # sanity check route
 @app.route('/data',methods=['GET','POST'])
 def run():
@@ -88,16 +87,20 @@ def run():
         c.returnedDictionary={}
     c.returnedDictionary["qasmError"]="";
     return  jsonify(c.returnedDictionary) 
+
 @app.route('/blochsphere.png',methods=['GET','POST'])
 def blochSphere():
     return graphDrawing(c.blochSphereGraph)
+
 @app.route('/chart.png',methods=['GET','POST'])
 def chart():
     return graphDrawing(c.histoGramGraph)
 
+
 @app.route('/circuit.png',methods=['GET','POST'])
 def circuitDraw():
     return  graphDrawing(c.circutDrawing)
+
 @app.route('/reset',methods=['GET','POST'])
 def reset():
     if request.method=='POST':
@@ -105,59 +108,8 @@ def reset():
         c.createCircuit(recievedDic[0])
         #print(c.returnedDictionary['diracNotation'])
     return "success"
+
 if __name__ == "__main__":
     app.run(debug=True)
-
-#print(c.returnedDictionary)   
-#dic={"qasm":'OPENQASM 2.0;include "qelib1.inc";qreg q1[2];creg c1[2];x q1[0];cx q1[0],q1[1];measure q1[0] -> c1[0];measure q1[1] -> c1[1];'}
-
-
-
-'''{"wires":2,"cols":[["h"],["c","x"]]}
-
-
-{
-     "wires":6,
-     "cols":[["h"],
-             ["x"],
-             ["y"],
-             ["z"],
-             ["s"],
-             ["sdg"],
-             ["t"],
-             ["tdg"],
-             ["barrier"],
-             ["","swap","swap"],
-             ["","c","x"],
-             ["","oc","x"],
-             ["barrier"],
-             ["","","","c","swap","swap"],
-             ["","","","oc","swap","swap"],
-             ["","","","c","c","x"],
-             ["","","","oc","oc","x"],
-             ["barrier"],
-             ["","","c","c","swap","swap"],
-             ["","","oc","oc","swap","swap"],
-             ["","","c","c","c","x"],
-             ["","","oc","oc","oc","x"],
-             ["barrier"],
-             ["","","","","","custom_not"],
-             ["","","","custom_I4.0","","custom_I4.1"],
-             ["barrier"],
-             ["","","","","c","custom_not"],
-             ["","","c","custom_I4.0","c","custom_I4.1"],
-             ["barrier"],
-             ["","","","","oc","custom_not"],
-             ["","","oc","custom_I4.0","oc","custom_I4.1"],
-             ["barrier"],
-             ["m","m","m","m","m","m"]
-             ],
-     "init":[0,1,"+","-","i","-i"],
-     "shots":2048,
-     "custom":{
-               "not":[[0,1],[1,0]],
-               "I4":[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
-               }
-     }'''
 
 print(datetime.now() - startTime)
