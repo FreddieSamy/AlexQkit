@@ -290,7 +290,7 @@ class Circuit():
     
     #this function takes name of a gate (str)
     #and returns the matrix of the gate 
-    def gateToMatrix(self,gate,radian):
+    def gateToMatrix(self,gate,*radian):
         from qiskit import QuantumCircuit
         from qiskit import Aer
         from qiskit import execute

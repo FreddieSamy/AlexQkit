@@ -76,7 +76,7 @@
           <input class="angle" id="rxAngle" type="number" name="rx" value="90" />
           <input class="angle" id="ryAngle" type="number" name="ry" value="90" />
           <input class="angle" id="rzAngle" type="number" name="rz" value="90" />
-          
+
           <input type="radio" id="degree" name="angleType" value="degree" checked />
           <label for="degree" style="font-size: 15px;">degree</label>
           <input type="radio" id="radian" name="angleType" value="radian" />
@@ -134,9 +134,9 @@
         <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
         <div class="column1">
           <h1 class="p" style="color: black ">from matrix</h1>
-          <p style="color: black">nameof gate:</p>
+          <h3 style="color: black">name</h3>
           <input type="text" id="nameofgate" />
-          <h3 style="color: black">enter gate</h3>
+          <h3 style="color: black">gate matrix</h3>
           <textarea rows="4" id="valueofgate"></textarea>
           <br />
           <button
@@ -145,10 +145,44 @@
           >create</button>
         </div>
         <div class="column2">
-          <h1 style="color: black">from rotation</h1>
+          <h1 style="color: black;">from rotation</h1>
+          <h3 style="color: black;">select the gate</h3>
         </div>
         <div class="column3">
-          <h1 style="color: black">from circuit</h1>
+          <h1 style="color: black;">from circuit</h1>
+          <h3 style="color: black;">select the gate</h3>
+        </div>
+        <div class="column4">
+          <h1 style="color: black;">nth root</h1>
+          <h3 style="color: black">select the gate</h3>
+          <select id="rootGate" style="width:40%;">
+            <optgroup label="Gates">
+              <option
+                v-for="index in (gates2.length-1)"
+                :key="index"
+                :value="gates2[index-1].name"
+              >{{gates2[index-1].name}}</option>
+              <option
+                v-for="element in gates4"
+                :key="element.id"
+                :value="element.name"
+              >{{element.name}}</option>
+            </optgroup>
+            <optgroup v-if="customGates.length" label="Custom Gates">
+              <option
+                v-for="element in customGates"
+                :key="element.id"
+                :value="element.id"
+              >{{element.id}}</option>
+            </optgroup>
+          </select>
+          <h3 style="color: black;">root</h3>
+          <input style="width:40%;" id="root" type="number" value="2" />
+          <br />
+          <button
+            @click="nthRoot()"
+            style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
+          >create</button>
         </div>
         <div style="color:red; padding-top:30px; text-align: center; font-size: 35px;">
           <label id="errormsg"></label>
@@ -350,8 +384,29 @@ export default {
     // ----------------------------------------------------
     sendtoclone() {
       return this.customsrever;
-    }
+    },
     // ----------------------------------------------------
+    nthRoot: function() {
+      var name = document.getElementById("rootGate").value;
+      window.console.log(name);
+      var root = document.getElementById("root").value;
+      var jsonObject = {
+        root: root,
+        gate: name,
+        custom: this.customsrever
+      };
+      axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
+        if (res.isUnitary) {
+          this.addGate(root + "√" + name);
+          this.customsrever[root + "√" + name] = res.matrix;
+          document.getElementById("errormsg").innerHTML = null;
+          this.closeNav();
+        } else {
+          document.getElementById("errormsg").innerHTML =
+            "*sorry, " + root + "√" + name + " isn't unitary*";
+        }
+      });
+    }
     // ----------------------------------------------------
 
     // ----------------------------------------------------
@@ -510,36 +565,52 @@ export default {
 }
 
 .column1 {
-  width: 400px;
+  float: left;
+  width: 20em;
   min-height: 300px;
   background: rgb(47, 68, 85, 0.7);
-  float: left;
   margin-top: 20px;
   margin-left: 20px;
   text-align: center;
   border-radius: 25px;
   display: inline-block;
-  margin-right: 30px;
+  margin-right: 15px;
 }
 
 .column2 {
-  width: 400px;
+  float: left;
+  width: 20em;
   min-height: 300px;
   background: rgb(47, 68, 85, 0.7);
   position: center;
   margin-top: 20px;
   text-align: center;
   border-radius: 25px;
-  margin-right: 30px;
+  margin-right: 15px;
+  margin-left: 15px;
   display: inline-block;
 }
 .column3 {
-  width: 400px;
+  float: left;
+  width: 20em;
   min-height: 300px;
   background: rgb(47, 68, 85, 0.7);
   margin-top: 20px;
   text-align: center;
-
+  margin-right: 15px;
+  margin-left: 15px;
+  border-radius: 25px;
+  display: inline-block;
+}
+.column4 {
+  float: left;
+  width: 20em;
+  min-height: 300px;
+  background: rgb(47, 68, 85, 0.7);
+  margin-top: 20px;
+  text-align: center;
+  margin-right: 15px;
+  margin-left: 15px;
   border-radius: 25px;
   display: inline-block;
 }
