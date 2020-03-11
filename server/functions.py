@@ -518,6 +518,8 @@ class Circuit():
             shots=receivedDictionary["shots"]
         if "custom" in receivedDictionary:
             customGates=receivedDictionary["custom"]
+            for matrix in customGates.values():
+                self.strToComplex(matrix)
         
         if "rows" in receivedDictionary and "wires" in receivedDictionary: #cols and wires are mandatory
             wires=int(receivedDictionary["wires"])
@@ -714,4 +716,21 @@ class Circuit():
      
         return {"rows":np.transpose(columns).tolist()}
     
+###############################################################################################################################
+    
+    def strToComplex(self,matrix):
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                matrix[i][j]=matrix[i][j].replace("i","j")
+                matrix[i][j]=complex(matrix[i][j])
+        return matrix
+        
+###############################################################################################################################
+                
+    def complexToStr(self,matrix):
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                matrix[i][j]=str(matrix[i][j])
+        return matrix
+                
 ###############################################################################################################################
