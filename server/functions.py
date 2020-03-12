@@ -675,9 +675,11 @@ class Circuit():
                 else:
                     gateMatrix=self.gateToMatrix(columns[i][gatePos])
                 name="√("+columns[i][gatePos]+")"
-                customGates[name]=self.sqrt(np.array(gateMatrix))
+                if name not in customGates:
+                    customGates[name]=self.sqrt(np.array(gateMatrix))
                 name2=name+"†"
-                customGates[name2]=np.matrix(customGates[name]).getH().tolist()
+                if name2 not in customGates:
+                    customGates[name2]=np.matrix(customGates[name]).getH().tolist()
             
                 col=["i"]*len(columns[i])
                 col[c[0]]=columns[i][c[0]]
@@ -722,9 +724,9 @@ class Circuit():
                 i=i-1
             i=i+1
             
-            for matrix in customGates.values():
-                print(matrix)
-                self.complexToStr(matrix)
+        for matrix in customGates.values():
+            #print(matrix)
+            self.complexToStr(matrix)
      
         return {"rows":np.transpose(columns).tolist(),"custom":customGates}
     

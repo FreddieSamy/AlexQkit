@@ -3,6 +3,15 @@
     <div v-if="!qasmFlag" class="upper-circuit">
       <toolbox ref="toolbox"></toolbox>
       <ibm ref="ibm"></ibm>
+      <div>
+        <label class="lbl1">
+          Number
+          <br />Of
+          <br />Shots
+          <br />
+        </label>
+        <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
+      </div>
     </div>
     <br />
     <div class="qasmAndWires">
@@ -458,36 +467,50 @@ export default {
         rows: gatesSystem,
         custom: this.$refs.toolbox.customsrever
       };
-      axios
-        .post("http://localhost:5000/elementaryGates", jsonObject)
-        .then(res => {
-          window.console.log(
-            "data sent and recived from the server successfully"
-          );
-          //window.console.log(res);
-          this.$refs.toolbox.customsrever = res.data.custom;
-          var dic = res.data.custom;
-          var custom = this.$refs.toolbox.customGates;
-          for (let i in dic) {
-            if (custom.length == 0) {
-              this.$refs.toolbox.addGate(i);
-            } else {
-              for (let j in custom) {
-                if (i != this.$refs.toolbox.customGates[j].id) {
+
+      if (this.exeCount) {
+        axios
+          .post("http://localhost:5000/elementaryGates", jsonObject)
+          .then(res => {
+            window.console.log(
+              "data sent and recived from the server successfully"
+            );
+            //window.console.log(res);
+            window.console.log("res.data.custom:", res.data.custom);
+            this.$refs.toolbox.customsrever = res.data.custom;
+            var dic = res.data.custom;
+            var custom = this.$refs.toolbox.customGates;
+            var flag = true;
+            for (let i in dic) {
+              if (custom.length == 0) {
+                this.$refs.toolbox.addGate(i);
+              } else {
+                for (let j in custom) {
+                  if (i == this.$refs.toolbox.customGates[j].id) {
+                    flag = false;
+                    break;
+                  }
+                }
+                if (flag) {
                   this.$refs.toolbox.addGate(i);
                 }
+                flag = true;
               }
             }
-          }
-
-          let json_object = {
-            wires: this.wires,
-            init: statesSystem,
-            rows: res.data.rows
-          };
-          //window.console.log(test_json_object);
-          this.setAlgorithm(json_object);
-        });
+            window.console.log(
+              "customsrever:",
+              this.$refs.toolbox.customsrever
+            );
+            window.console.log("customGates:", this.$refs.toolbox.customGates);
+            let json_object = {
+              wires: this.wires,
+              init: statesSystem,
+              rows: res.data.rows
+            };
+            //window.console.log(test_json_object);
+            this.setAlgorithm(json_object);
+          });
+      }
     }
     //-----------------------------------------------------------------------
   }
