@@ -209,6 +209,7 @@ export default {
         statesSystem.push(wireCaller.getState());
         gatesSystem.push(wireCaller.getGates(i));
       }
+      window.console.log(gatesSystem);
       this.jsonObject = {
         reversedWires: this.reversedWires,
         exeCount: this.exeCount,
@@ -454,7 +455,8 @@ export default {
         gatesSystem.push(wireCaller.getGates(i));
       }
       var jsonObject = {
-        rows: gatesSystem
+        rows: gatesSystem,
+        custom: this.$refs.toolbox.customsrever
       };
       axios
         .post("http://localhost:5000/elementaryGates", jsonObject)
@@ -463,6 +465,21 @@ export default {
             "data sent and recived from the server successfully"
           );
           //window.console.log(res);
+          this.$refs.toolbox.customsrever = res.data.custom;
+          var dic = res.data.custom;
+          var custom = this.$refs.toolbox.customGates;
+          for (let i in dic) {
+            if (custom.length == 0) {
+              this.$refs.toolbox.addGate(i);
+            } else {
+              for (let j in custom) {
+                if (i != this.$refs.toolbox.customGates[j].id) {
+                  this.$refs.toolbox.addGate(i);
+                }
+              }
+            }
+          }
+
           let json_object = {
             wires: this.wires,
             init: statesSystem,

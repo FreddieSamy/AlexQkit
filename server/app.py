@@ -53,7 +53,7 @@ def nthRoot():
 def elementaryGates():
     if request.method=='POST':
         recievedDic=request.get_json()
-        returnedDictionary=c.elementaryGates(recievedDic["rows"])
+        returnedDictionary=c.elementaryGates(recievedDic["rows"],recievedDic["custom"])
         #print("retrived data from qiskit : ",c.returnedDictionary)
     else:
         returnedDictionary={}

@@ -399,13 +399,13 @@ export default {
         axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
           /*window.console.log(res.data);*/
           if (res.data.isUnitary) {
-            this.addGate(root + "√" + name);
-            this.customsrever[root + "√" + name] = res.data.matrix;
+            this.addGate(name + "^(1/" + root + ")");
+            this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
             document.getElementById("errormsg").innerHTML = null;
             this.closeNav();
           } else {
             document.getElementById("errormsg").innerHTML =
-              "*sorry, " + root + "√" + name + " isn't unitary*";
+              "*sorry, " + name + "^(1/" + root + ")" + " isn't unitary*";
           }
         });
       } else {

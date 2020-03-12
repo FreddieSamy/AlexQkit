@@ -654,7 +654,9 @@ class Circuit():
 
 ###############################################################################################################################
         
-    def elementaryGates(self,rows):
+    def elementaryGates(self,rows,customGates):
+        for matrix in customGates.values():
+            self.strToComplex(matrix)
         import numpy as np
         columns=np.transpose(rows).tolist()
         i=0
@@ -668,26 +670,18 @@ class Circuit():
                 else:
                     gatePos=j
             if len(c)>1:
-                name="sqrt("+columns[i][gatePos]+")"
-                name2=name+"t"
+                if columns[i][gatePos][7:] in customGates:
+                    gateMatrix=customGates[columns[i][gatePos][7:]]
+                else:
+                    gateMatrix=self.gateToMatrix(columns[i][gatePos])
+                name="√("+columns[i][gatePos]+")"
+                customGates[name]=self.sqrt(np.array(gateMatrix))
+                name2=name+"†"
+                customGates[name2]=np.matrix(customGates[name]).getH().tolist()
             
                 col=["i"]*len(columns[i])
                 col[c[0]]=columns[i][c[0]]
-                col[gatePos]=name
-                for k in range(len(c)-2):
-                    col[c[k+2]]=columns[i][c[k+2]]
-                columns.insert(i+1,col)
-            
-                col=["i"]*len(columns[i])
-                col[c[0]]=columns[i][c[0]]
-                col[c[1]]="x"
-                for k in range(len(c)-2):
-                    col[c[k+2]]=columns[i][c[k+2]]
-                columns.insert(i+1,col)
-            
-                col=["i"]*len(columns[i])
-                col[c[1]]=columns[i][c[1]]
-                col[gatePos]=name2
+                col[gatePos]="custom_"+name
                 for k in range(len(c)-2):
                     col[c[k+2]]=columns[i][c[k+2]]
                 columns.insert(i+1,col)
@@ -701,7 +695,21 @@ class Circuit():
             
                 col=["i"]*len(columns[i])
                 col[c[1]]=columns[i][c[1]]
-                col[gatePos]=name
+                col[gatePos]="custom_"+name2
+                for k in range(len(c)-2):
+                    col[c[k+2]]=columns[i][c[k+2]]
+                columns.insert(i+1,col)
+            
+                col=["i"]*len(columns[i])
+                col[c[0]]=columns[i][c[0]]
+                col[c[1]]="x"
+                for k in range(len(c)-2):
+                    col[c[k+2]]=columns[i][c[k+2]]
+                columns.insert(i+1,col)
+            
+                col=["i"]*len(columns[i])
+                col[c[1]]=columns[i][c[1]]
+                col[gatePos]="custom_"+name
                 for k in range(len(c)-2):
                     col[c[k+2]]=columns[i][c[k+2]]
                 columns.insert(i+1,col)
@@ -713,16 +721,21 @@ class Circuit():
             elif len(c)>2:
                 i=i-1
             i=i+1
+            
+            for matrix in customGates.values():
+                print(matrix)
+                self.complexToStr(matrix)
      
-        return {"rows":np.transpose(columns).tolist()}
+        return {"rows":np.transpose(columns).tolist(),"custom":customGates}
     
 ###############################################################################################################################
     
     def strToComplex(self,matrix):
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
-                matrix[i][j]=matrix[i][j].replace("i","j")
-                matrix[i][j]=complex(matrix[i][j])
+                if(type(matrix[i][j])==type("")):
+                    matrix[i][j]=matrix[i][j].replace("i","j")
+                    matrix[i][j]=complex(matrix[i][j])
         return matrix
         
 ###############################################################################################################################
@@ -730,7 +743,16 @@ class Circuit():
     def complexToStr(self,matrix):
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
-                matrix[i][j]=str(matrix[i][j])
+                if(type(matrix[i][j])==type(0j)):
+                    matrix[i][j]=str(matrix[i][j])
         return matrix
                 
+###############################################################################################################################
+        
+    def sqrt(self,gate):
+        import numpy as np
+        from scipy.linalg import fractional_matrix_power
+        a=np.matrix(gate)
+        return fractional_matrix_power(a,0.5).tolist()
+    
 ###############################################################################################################################
