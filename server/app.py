@@ -64,6 +64,7 @@ def isUnitary():
     if request.method=='POST':
         jsonObj=request.get_json()
         matrix=jsonObj["matrix"]
+        c.strToComplex(matrix)
         from qiskit.quantum_info.operators.predicates import is_unitary_matrix
         #print(matrix,is_unitary_matrix(matrix),jsonify({"isUnitary":is_unitary_matrix(matrix)}))
         return jsonify({"isUnitary":is_unitary_matrix(matrix)})

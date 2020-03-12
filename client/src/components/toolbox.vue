@@ -184,7 +184,8 @@
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
           >create</button>
         </div>
-        <div style="color:red; padding-top:30px; text-align: center; font-size: 35px;">
+
+        <div class="addGateError">
           <label id="errormsg"></label>
         </div>
       </div>
@@ -390,27 +391,32 @@ export default {
       var name = document.getElementById("rootGate").value;
       /*window.console.log(name);*/
       var root = document.getElementById("root").value;
-      var jsonObject = {
-        root: root,
-        gate: name,
-        custom: this.customsrever
-      };
-      if (root >= 2) {
-        axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
-          /*window.console.log(res.data);*/
-          if (res.data.isUnitary) {
-            this.addGate(name + "^(1/" + root + ")");
-            this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
-            document.getElementById("errormsg").innerHTML = null;
-            this.closeNav();
-          } else {
-            document.getElementById("errormsg").innerHTML =
-              "*sorry, " + name + "^(1/" + root + ")" + " isn't unitary*";
-          }
-        });
-      } else {
+      if (name + "^(1/" + root + ")" in this.customsrever) {
         document.getElementById("errormsg").innerHTML =
-          "*please, choose number more than one !!*";
+          "*sorry, " + name + "^(1/" + root + ")" + " is already exist*";
+      } else {
+        var jsonObject = {
+          root: root,
+          gate: name,
+          custom: this.customsrever
+        };
+        if (root >= 2) {
+          axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
+            /*window.console.log(res.data);*/
+            if (res.data.isUnitary) {
+              this.addGate(name + "^(1/" + root + ")");
+              this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
+              document.getElementById("errormsg").innerHTML = null;
+              this.closeNav();
+            } else {
+              document.getElementById("errormsg").innerHTML =
+                "*sorry, " + name + "^(1/" + root + ")" + " isn't unitary*";
+            }
+          });
+        } else {
+          document.getElementById("errormsg").innerHTML =
+            "*please, choose number more than one !!*";
+        }
       }
     }
     // ----------------------------------------------------
@@ -631,6 +637,13 @@ export default {
   font-size: 20px;
   color: #fff;
   cursor: pointer;
+}
+.addGateError {
+  color: red;
+  padding-top: 30px;
+  text-align: center;
+  font-size: 35px;
+  display: table;
 }
 #hover-element {
   display: none;

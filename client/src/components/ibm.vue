@@ -1,13 +1,5 @@
 <template>
   <div class="ibmBody">
-    <div style="float:right">
-      <label class="lbl1">
-        Number
-        <br />Of
-        <br />Shots
-      </label>
-      <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
-    </div>
     <div id="hover-div">
       <label class="lbl1">IBM Token</label>
       <span id="hover-element">
@@ -27,7 +19,7 @@
       <label class="lbl1">Device</label>
     </div>
     <div>
-      <select id="simulater" style="width:40%;">
+      <select id="simulater" style="width:90%;">
         <optgroup label="1 qubit">
           <option value="ibmq_armonk">ibmq_armonk</option>
         </optgroup>
@@ -92,7 +84,7 @@ export default {
   /*border: 2px dashed grey;*/
   padding: 0.2em 0.2em 0.2em 0.2em;
   margin: 0.2em 0.2em 0.2em 0.2em;
-  width: 29%;
+  width: 11em;
   float: right;
   /*display: block;*/
 }
