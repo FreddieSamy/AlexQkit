@@ -136,8 +136,8 @@
           <h1 class="p" style="color: black ">from matrix</h1>
           <h3 style="color: black">name</h3>
           <input type="text" id="nameofgate" />
-          <h3 style="color: black">gate matrix</h3>
-          <textarea rows="4" id="valueofgate"></textarea>
+          <h3 style="color: black">number of wires</h3>
+          <matrixcu ref="matrixcu"></matrixcu>
           <br />
           <button
             @click="create_the_matrix()"
@@ -221,11 +221,13 @@
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
+import matrixcu from "./matrixcu.vue";
 export default {
   name: "toolbox",
   display: "toolbox",
   components: {
-    draggable
+    draggable,
+    matrixcu
   },
   data() {
     return {
@@ -293,17 +295,28 @@ export default {
     openNav() {
       document.getElementById("myNav").style.width = "100%";
       document.getElementById("subCircuitName").value = null;
+      document.getElementById("nameofgate").value=null;
+      
     },
     // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("errormsg").innerHTML = null;
+      var conmatrixcu2 =this.$refs.matrixcu;
+      conmatrixcu2.clear();
     },
     // ----------------------------------------------------
     create_the_matrix() {
       var nameofgate = document.getElementById("nameofgate").value;
-      var valofgate = document.getElementById("valueofgate");
-      var matrix = this.make_matrix(valofgate);
+      //var valofgate = document.getElementById("valueofgate");
+      var conmatrixcu =this.$refs.matrixcu;
+      var matrix=conmatrixcu.pulldata();
+       var { matrix_validate, msg } = this.validate_of_matrix(
+          matrix,
+          nameofgate
+        );
+        window.console.log(matrix_validate);
+       window.console.log(msg);
       var isUnitary;
       var jsonObject = {};
       jsonObject["matrix"] = matrix;
@@ -318,7 +331,7 @@ export default {
           nameofgate
         );
         window.console.log(matrix_validate);
-        window.console.log(msg);
+       // window.console.log(msg);
         if (matrix_validate && isUnitary == false) {
           msg = "the matrix isn't unitary";
         }
@@ -335,24 +348,13 @@ export default {
           document.getElementById("errormsg").innerHTML = "*" + msg + "*";
         }
         document.getElementById("nameofgate").value = null;
-        document.getElementById("valueofgate").value = null;
+        conmatrixcu.clear();
+        //document.getElementById("valueofgate").value = null;
         //window.console.log("unitary:" + this.$parent.isUnitary);
       });
     },
     // ----------------------------------------------------
-    make_matrix(valofgate) {
-      var row = valofgate.value.split("\n");
-      var count;
-      var matrix = [];
-      for (count in row) {
-        row[count] = row[count].replace(/\s/g, "");
-        var sub = row[count].split(",").map(Number);
-        if (row[count] !== undefined && row[count] != "") {
-          matrix.push(sub);
-        }
-      }
-      return matrix;
-    },
+    // 
     // ----------------------------------------------------
     validate_of_matrix(matrix, nameofgate) {
       var matrix_validate = true;
@@ -373,6 +375,11 @@ export default {
       if (nameofgate == "" || nameofgate.length == 0) {
         matrix_validate = false;
         msg = "you have to write name for the gate";
+        return { matrix_validate, msg };
+      }
+       if (nameofgate.includes(".") ) {
+        matrix_validate = false;
+        msg = "name of gate can't include '.'";
         return { matrix_validate, msg };
       }
 
