@@ -507,13 +507,11 @@ class Circuit():
         resetExist=False
         shots=1024
         customGates=None
-        exeCount=0
+        
         if "radian" in receivedDictionary:
             radian=receivedDictionary["radian"]
         if "device" in receivedDictionary:
             device=receivedDictionary["device"]
-        if "exeCount" in receivedDictionary:
-            exeCount=receivedDictionary["exeCount"]
         if "shots" in receivedDictionary:
             shots=receivedDictionary["shots"]
         if "custom" in receivedDictionary:
@@ -526,6 +524,10 @@ class Circuit():
             cols=np.transpose(receivedDictionary["rows"]).tolist()
             normalCircuit=QuantumCircuit(wires,wires)
             reversedCircuit=QuantumCircuit(wires,wires)
+            
+            exeCount=len(cols)
+            if "exeCount" in receivedDictionary:
+                exeCount=receivedDictionary["exeCount"]
         
             if "init" in receivedDictionary:
                 self.initState(normalCircuit,receivedDictionary["init"],reversedWires=False)
@@ -624,18 +626,18 @@ class Circuit():
                 self.returnedDictionary["qasm"]=receivedDictionary["qasm"]
                 self.returnedDictionary["link"]=self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots,device)
                 self.returnedDictionary["cols"]=cols
-                self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+                #self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
             else:
                 self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
                 self.returnedDictionary["qasm"]=receivedDictionary["qasm"]
                 self.returnedDictionary["link"]=""
-                self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+                #self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
         else:
             self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
             self.returnedDictionary["qasm"]=receivedDictionary["qasm"]
             self.returnedDictionary["link"]=""
             self.returnedDictionary["cols"]=cols
-            self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
+            #self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
 
         #return self.returnedDictionary
 ###############################################################################################################################
@@ -658,7 +660,9 @@ class Circuit():
         for matrix in customGates.values():
             self.strToComplex(matrix)
         import numpy as np
+        print(rows)
         columns=np.transpose(rows).tolist()
+        print(columns)
         i=0
         while i <len(columns):
             c=[]
@@ -674,7 +678,15 @@ class Circuit():
                     gateMatrix=customGates[columns[i][gatePos][7:]]
                 else:
                     gateMatrix=self.gateToMatrix(columns[i][gatePos])
-                name="√("+columns[i][gatePos]+")"
+                if columns[i][gatePos][:7] =="custom_":                  
+                    end=columns[i][gatePos].find(".")
+                    print(columns[i][gatePos],end)
+                    if end==-1:
+                        name="√("+columns[i][gatePos][7:]+")"
+                    else:
+                        name="√("+columns[i][gatePos][7:end]+")"
+                else:
+                    name="√("+columns[i][gatePos]+")"
                 if name not in customGates:
                     customGates[name]=self.sqrt(np.array(gateMatrix))
                 name2=name+"†"
@@ -727,7 +739,12 @@ class Circuit():
         for matrix in customGates.values():
             #print(matrix)
             self.complexToStr(matrix)
-     
+            
+        """colsss=[]    
+        for i in range(len(columns)):
+            if "custom_√(√(x))" in columns[i] or "custom_√(√(x))†" in columns[i] or "x" in columns[i]:
+                colsss.append( columns[i])
+        colsss.reverse()"""
         return {"rows":np.transpose(columns).tolist(),"custom":customGates}
     
 ###############################################################################################################################
