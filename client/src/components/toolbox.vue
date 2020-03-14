@@ -150,7 +150,31 @@
         </div>
         <div class="column3">
           <h1 style="color: black;">from circuit</h1>
-          <h3 style="color: black;">select the gate</h3>
+          <h3 style="color: black;">Name</h3>
+          <input type="text" id="subCircuitName" />
+          <h3 style="color: black;">Rows</h3>
+          <label style="color: black;">From</label>
+          <select id="fromRow" style="width:15%;">
+            <option v-for="i in this.$parent.rows" :key="i" :value="i">{{i}}</option>
+          </select>
+          <label style="color: black;">To</label>
+          <select id="toRow" style="width:15%;">
+            <option v-for="i in this.$parent.rows" :key="i" :value="i">{{i}}</option>
+          </select>
+          <h3 style="color: black;">Columns</h3>
+          <label style="color: black;">From</label>
+          <select id="fromColumn" style="width:15%;">
+            <option v-for="i in this.$parent.maxWire" :key="i" :value="i">{{i}}</option>
+          </select>
+          <label style="color: black;">To</label>
+          <select id="toColumn" style="width:15%;">
+            <option v-for="i in this.$parent.maxWire" :key="i" :value="i">{{i}}</option>
+          </select>
+          <br />
+          <button
+            @click="subCircuitCustoGate()"
+            style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
+          >create</button>
         </div>
         <div class="column4">
           <h1 style="color: black;">nth root</h1>
@@ -268,6 +292,7 @@ export default {
     // ----------------------------------------------------
     openNav() {
       document.getElementById("myNav").style.width = "100%";
+      document.getElementById("subCircuitName").value = null;
     },
     // ----------------------------------------------------
     closeNav() {
@@ -418,9 +443,45 @@ export default {
             "*please, choose number more than one !!*";
         }
       }
-    }
+    },
     // ----------------------------------------------------
-
+    subCircuitCustoGate: function() {
+      var name = document.getElementById("subCircuitName").value;
+      var flag = true;
+      var fromRow = document.getElementById("fromRow").value;
+      var toRow = document.getElementById("toRow").value;
+      var fromColumn = document.getElementById("fromColumn").value;
+      var toColumn = document.getElementById("toColumn").value;
+      if (fromRow && toRow && fromColumn && toColumn) {
+        if (fromRow <= toRow && fromColumn <= toColumn) {
+          if (name == "" || name.length == 0) {
+            document.getElementById("errormsg").innerHTML =
+              "*please, enter a name for the gate*";
+          } else {
+            for (let i in this.customGates) {
+              for (let k in this.customGates[i]) {
+                if (this.customGates[i][k] === name) {
+                  flag = false;
+                  document.getElementById("errormsg").innerHTML =
+                    "*this name is already exist*";
+                }
+              }
+            }
+            if (flag) {
+              this.$parent.cloneSubCircuitCustoGate(
+                fromRow,
+                toRow,
+                fromColumn,
+                toColumn
+              );
+            }
+          }
+        } else {
+          document.getElementById("errormsg").innerHTML =
+            "*please, check the selected numbers*";
+        }
+      }
+    }
     // ----------------------------------------------------
   }
 };
@@ -579,7 +640,7 @@ export default {
 .column1 {
   float: left;
   width: 20em;
-  min-height: 300px;
+  min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   margin-top: 20px;
   margin-left: 20px;
@@ -592,7 +653,7 @@ export default {
 .column2 {
   float: left;
   width: 20em;
-  min-height: 300px;
+  min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   position: center;
   margin-top: 20px;
@@ -605,7 +666,7 @@ export default {
 .column3 {
   float: left;
   width: 20em;
-  min-height: 300px;
+  min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   margin-top: 20px;
   text-align: center;
@@ -617,7 +678,7 @@ export default {
 .column4 {
   float: left;
   width: 20em;
-  min-height: 300px;
+  min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   margin-top: 20px;
   text-align: center;
