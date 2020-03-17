@@ -33,7 +33,9 @@
             </div>
           </transition-group>
         </draggable>
+        
         <!-- ---------------------- gates 2 -------------------------- -->
+        
         <draggable
           class="Area2"
           :list="gates2"

@@ -23,14 +23,7 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click="rows++, updateTracingLine()">
-          add Wire
-        </button>
-        <button class="remove-wire" @click="rows--, updateTracingLine()">
-          Remove Wire
-        </button>
-        <button class="add-wire" @click="sendSystem">send</button>
-        <button class="reset-system" @click="resetSystem">reset system</button>
+        <toolbox2 class="toolbox2" :eventQueue="eventQueue" :setAlgorithm="setAlgorithm" />
         <div class="exe">
           <button class="exeBtn" @click="exeStart">start</button>
           <button class="exeBtn" @click="preExe">⟨exe|</button>
@@ -38,8 +31,6 @@
           <button class="exeBtn" @click="exeEnd">end</button>
         </div>
         <button class="exeBtn" @click="elementaryGates">Elementary Gates</button>
-        
-
         <button @click="clearConsole">Clear Console</button>
         <button @click="teleAlgorithm">
           set teleportation algorithm as a test algorithm
@@ -50,7 +41,6 @@
       <diracNotation></diracNotation>
     </div>
     <matrixRepresentation></matrixRepresentation>
-
     <div class="visual-row">
       <histoGram></histoGram>
       <blochSphere></blochSphere>
@@ -60,6 +50,7 @@
 <!-- =============================================================  -->
 <script>
 import toolbox from "./toolbox.vue";
+import toolbox2 from "./toolbox2.vue";
 import wire from "./wire.vue";
 import ibm from "./ibm.vue";
 import trash from "./trash.vue";
@@ -75,6 +66,7 @@ export default {
   display: "clone",
   components: {
     toolbox,
+    toolbox2,
     ibm,
     wire,
     trash,
@@ -108,7 +100,7 @@ export default {
       matrixRepresentation: [],
       jsonObject: {
         API_TOKEN: "",
-        wire: 0,
+        wires: 0,
         init: [],
         rows: [],
         reversedWires: true,
@@ -117,12 +109,19 @@ export default {
         shots: 1024,
         device: "",
       },
+      eventQueue:[]
     };
   },
   watch: {
     jsonObject: {
       immediate: true,
-      handler() {},
+      handler() {
+        //window.console.log("event queue updated");
+        this.eventQueue.push(this.jsonObject);
+        //window.console.log(this.jsonObject);
+        //window.console.log(this.eventQueue.length);
+       // window.console.log(this.eventQueue);
+      },
     },
   },
   methods: {
@@ -498,7 +497,6 @@ export default {
     },
     //-----------------------------------------------------------------------
     cloneSubCircuitCustoGate: function(fromRow, toRow, fromColumn, toColumn) {
-      window.console.log("cloneSubCircuitCustoGate");
       var gatesSystem = [];
       for (let i = fromRow - 1; i < toRow; i++) {
         var wireCaller = this.$refs.wire[i];
@@ -506,7 +504,6 @@ export default {
           wireCaller.getGates(i).slice(fromColumn - 1, toColumn)
         );
       }
-      window.console.log("here:", gatesSystem);
       var jsonObject = {
         wires: toRow - fromRow + 1,
         rows: gatesSystem
@@ -514,7 +511,6 @@ export default {
       axios
         .post("http://localhost:5000/subCircuitCustomGate", jsonObject)
         .then(res => {
-          /*window.console.log(res.data);*/
           if (res.data.isUnitary) {
             var name = document.getElementById("subCircuitName").value;
             this.$refs.toolbox.addGate(name);
@@ -556,43 +552,12 @@ export default {
   margin: 0.9em 0.2em 0.2em 0.2em;
   padding: 0em 0em 0em 0em;
 }
-.add-wire {
-  display: inline-block;
-  margin: 0.2em 0.2em 0em 0.2em;
-  padding: 0.1em 0.5em 0.1em 0.5em;
-  background-color: white;
-  border-radius: 0.5em;
-}
-.remove-wire {
-  display: inline-block;
-  margin: 0.2em 0.2em 0em 0.2em;
-  padding: 0.1em 0.5em 0.1em 0.5em;
-  background-color: white;
-  border-radius: 0.5em;
-}
 .exeBtn {
   display: inline-block;
   margin: 0.2em 0.2em 0em 0.2em;
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
   border-radius: 0.5em;
-}
-.reset-system {
-  display: inline-block;
-  margin: 0.2em 0.2em 0em 0.2em;
-  padding: 0.1em 0.5em 0.1em 0.5em;
-  background-color: white;
-  border-radius: 0.5em;
-}
-.trashArea {
-  color: #ef9494;
-  border: 0.1em dashed #ef9494;
-  border-radius: 0.2em;
-  display: block;
-  margin: 0.2em 0.2em 0em 0.2em;
-  padding: 0.1em 0.5em 0.1em 0.5em;
-  width: 97%;
-  text-align: center;
 }
 .qasm {
   display: block;
@@ -603,7 +568,6 @@ export default {
 }
 .qasmBtn {
   display: block;
-
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
   border-radius: 0.5em;
