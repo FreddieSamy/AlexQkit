@@ -2,14 +2,16 @@
   <div class="toolbox">
     <div class="tools-container">
       <div class="box-labels">
-        <div class="tool-box-label">
-          <label>Toolbox</label>
-        </div>
-        <div class="custom-gate-label">
-          <label v-if="customGates.length">Custom Gates</label>
-        </div>
-      </div>
+					<div class="tool-box-label">
+						<label>Toolbox</label>
+					</div>
+					<div class="custom-gate-label">
+						<label v-if="customGates.length">Custom Gates</label>
+					</div>
+      </div> <!--end box-labels-->
+
       <div class="toolbox-of-gates">
+        <!-- ---------------------- gates 1 -------------------------- -->
         <draggable
           class="Area1"
           :list="gates1"
@@ -31,6 +33,7 @@
             </div>
           </transition-group>
         </draggable>
+        <!-- ---------------------- gates 2 -------------------------- -->
         <draggable
           class="Area2"
           :list="gates2"
@@ -52,7 +55,8 @@
             </div>
           </transition-group>
         </draggable>
-        <div class="Area2">
+        <!-- ---------------------- gates 3 -------------------------- -->
+        <div class="angle-gates">
           <draggable
             :list="gates3"
             :group="{ name: 'gates', pull: 'clone', put: false }"
@@ -73,16 +77,40 @@
               </div>
             </transition-group>
           </draggable>
-          <input class="angle" id="rxAngle" type="number" name="rx" value="90" />
-          <input class="angle" id="ryAngle" type="number" name="ry" value="90" />
-          <input class="angle" id="rzAngle" type="number" name="rz" value="90" />
+          <input
+            class="angle"
+            id="rxAngle"
+            type="number"
+            name="rx"
+            value="90"
+          />
+          <input
+            class="angle"
+            id="ryAngle"
+            type="number"
+            name="ry"
+            value="90"
+          />
+          <input
+            class="angle"
+            id="rzAngle"
+            type="number"
+            name="rz"
+            value="90"
+          />
 
-          <input type="radio" id="degree" name="angleType" value="degree" checked />
+          <input
+            type="radio"
+            id="degree"
+            name="angleType"
+            value="degree"
+            checked
+          />
           <label for="degree" style="font-size: 15px;">degree</label>
           <input type="radio" id="radian" name="angleType" value="radian" />
           <label for="radian" style="font-size: 15px;">radian</label>
         </div>
-
+        <!-- ---------------------- gates 4 -------------------------- -->
         <draggable
           class="Area1"
           :list="gates4"
@@ -125,24 +153,39 @@
           </div>
         </transition-group>
       </draggable>
+    </div> <!-- end tools-container -->
+    <div>
+      <label class="lbl1">
+        Number Of Shots
+      </label>
+      <input
+        class="ibmToken"
+        type="number"
+        placeholder="1024"
+        id="numberofshots"
+      />
     </div>
-    <br />
     <div class="user-tools">
-      <button class="qasm" @click="this.$parent.qasm">OPENQASM Simulator</button>
+      <button class="qasm" @click="this.$parent.qasm">
+        OPENQASM Simulator
+      </button>
       <button class="qasm" @click="this.$parent.qasmTextFun">|qasm⟩</button>
       <div id="myNav" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
+        <a href="javascript:void(0)" class="closebtn" @click="closeNav()"
+          >&#10006;</a
+        >
         <div class="column1">
           <h1 class="p" style="color: black ">from matrix</h1>
           <h3 style="color: black">name</h3>
           <input type="text" id="nameofgate" />
           <h3 style="color: black">gate matrix</h3>
           <textarea rows="4" id="valueofgate"></textarea>
-          <br />
           <button
             @click="create_the_matrix()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
-          >create</button>
+          >
+            create
+          </button>
         </div>
         <div class="column2">
           <h1 style="color: black;">from rotation</h1>
@@ -158,31 +201,35 @@
           <select id="rootGate" style="width:40%;">
             <optgroup label="Gates">
               <option
-                v-for="index in (gates2.length-1)"
+                v-for="index in gates2.length - 1"
                 :key="index"
-                :value="gates2[index-1].name"
-              >{{gates2[index-1].name}}</option>
+                :value="gates2[index - 1].name"
+                >{{ gates2[index - 1].name }}</option
+              >
               <option
                 v-for="element in gates4"
                 :key="element.id"
                 :value="element.name"
-              >{{element.name}}</option>
+                >{{ element.name }}</option
+              >
             </optgroup>
             <optgroup v-if="customGates.length" label="Custom Gates">
               <option
                 v-for="element in customGates"
                 :key="element.id"
                 :value="element.id"
-              >{{element.id}}</option>
+                >{{ element.id }}</option
+              >
             </optgroup>
           </select>
           <h3 style="color: black;">root</h3>
           <input style="width:40%;" id="root" type="number" value="2" />
-          <br />
           <button
             @click="nthRoot()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
-          >create</button>
+          >
+            create
+          </button>
         </div>
 
         <div class="addGateError">
@@ -201,7 +248,7 @@ export default {
   name: "toolbox",
   display: "toolbox",
   components: {
-    draggable
+    draggable,
   },
   data() {
     return {
@@ -209,29 +256,29 @@ export default {
         { name: "c", id: "c", index: "", info: "closed control" },
         { name: "m", id: "m", index: "", info: "measurment gate" },
         { name: "oc", id: "oc", index: "", info: "open control" },
-        { name: "reset", id: "reset", index: "", info: "reset gate" }
+        { name: "reset", id: "reset", index: "", info: "reset gate" },
       ],
       gates2: [
         { name: "x", id: "x", index: "", info: "not gate" },
         { name: "y", id: "y", index: "", info: "" },
         { name: "z", id: "z", index: "", info: "" },
         { name: "h", id: "h", index: "", info: "simple super postition" },
-        { name: "swap", id: "swap", index: "", info: "" }
+        { name: "swap", id: "swap", index: "", info: "" },
       ],
       gates3: [
         { name: "rx", id: "rx", index: "", info: "" },
         { name: "ry", id: "ry", index: "", info: "" },
-        { name: "rz", id: "rz", index: "", info: "" }
+        { name: "rz", id: "rz", index: "", info: "" },
       ],
       gates4: [
         { name: "s", id: "s", index: "", info: "" },
         { name: "t", id: "t", index: "", info: "" },
         { name: "sdg", id: "sdg", index: "", info: "" },
-        { name: "tdg", id: "tdg", index: "", info: "" }
+        { name: "tdg", id: "tdg", index: "", info: "" },
       ],
       customGates: [],
       w: "width:7.7em",
-      customsrever: {}
+      customsrever: {},
       // jsonobjectall: {
       //   [this.nameofgate]: this.matrix
       // }
@@ -249,14 +296,14 @@ export default {
         name = name + "(" + document.getElementById("rzAngle").value + ")";
       }
       return {
-        name: name
+        name: name,
       };
     },
     // ----------------------------------------------------
     addGate(nameofgate) {
       this.customGates.push({
         name: "custom_" + nameofgate,
-        id: nameofgate
+        id: nameofgate,
       });
       if (this.customGates.length < 9) {
         this.w =
@@ -290,7 +337,7 @@ export default {
         //window.console.log(matrix);
         var { matrix_validate, msg } = this.validate_of_matrix(
           matrix,
-          nameofgate
+          nameofgate,
         );
         window.console.log(matrix_validate);
         window.console.log(msg);
@@ -398,7 +445,7 @@ export default {
         var jsonObject = {
           root: root,
           gate: name,
-          custom: this.customsrever
+          custom: this.customsrever,
         };
         if (root >= 2) {
           axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
@@ -418,11 +465,11 @@ export default {
             "*please, choose number more than one !!*";
         }
       }
-    }
+    },
     // ----------------------------------------------------
 
     // ----------------------------------------------------
-  }
+  },
 };
 </script>
 <!-- =============================================================  -->
@@ -469,6 +516,15 @@ export default {
   width: 7.7em;
 }
 .Area2 {
+  border: 1px solid black;
+  border-radius: 0.5em;
+  margin: 0.1em 0.1em 0.1em 0.1em;
+  display: inline-block;
+  /* white-space: pre-wrap; */
+  height: 6.6em;
+  width: 11.6em;
+}
+.angle-gates {
   border: 1px solid black;
   border-radius: 0.5em;
   margin: 0.1em 0.1em 0.1em 0.1em;
@@ -577,7 +633,6 @@ export default {
 }
 
 .column1 {
-  float: left;
   width: 20em;
   min-height: 300px;
   background: rgb(47, 68, 85, 0.7);
@@ -590,7 +645,6 @@ export default {
 }
 
 .column2 {
-  float: left;
   width: 20em;
   min-height: 300px;
   background: rgb(47, 68, 85, 0.7);
@@ -603,7 +657,6 @@ export default {
   display: inline-block;
 }
 .column3 {
-  float: left;
   width: 20em;
   min-height: 300px;
   background: rgb(47, 68, 85, 0.7);

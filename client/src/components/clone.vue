@@ -1,20 +1,10 @@
 <template>
-  <div class="circuit">
-    <div v-if="!qasmFlag" class="upper-circuit">
+  <div class="clone">
+    <div v-if="!qasmFlag" class="circuit-tools">
       <toolbox ref="toolbox"></toolbox>
       <ibm ref="ibm"></ibm>
-      <div>
-        <label class="lbl1">
-          Number
-          <br />Of
-          <br />Shots
-          <br />
-        </label>
-        <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
-      </div>
     </div>
-    <br />
-    <div class="qasmAndWires">
+    <div class="circuit">
       <pre class="qasmText" v-if="qasmTextFlag">{{ this.qasmText }}</pre>
       <div class="qasm" v-if="qasmFlag">
         <button class="qasmBtn" @click="qasm">Draggable Circuit</button>
@@ -23,17 +13,8 @@
       </div>
       <h3 v-if="qasmFlag">{{ qasmError }}</h3>
       <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
-
       <hr id="executionLine" width="2" size="160" />
-      <!-- 
-      <img
-        v-if="!qasmFlag"
-        :style="'height:' + tracingLineHeight + 'em'"
-        id="executionLine"
-        src="../assets/executionLine.png"
-      />
-      -->
-      <div v-if="!qasmFlag" class="wiresBlock">
+      <div v-if="!qasmFlag" class="circuit-wires">
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
@@ -42,8 +23,12 @@
     <div class="toolbox-2">
       <trash v-if="!qasmFlag"></trash>
       <div v-if="!qasmFlag" class="wires-buttons">
-        <button class="add-wire" @click=" addWire(),updateTracingLine()">add Wire</button>
-        <button class="remove-wire" @click="rows--, updateTracingLine()">Remove Wire</button>
+        <button class="add-wire" @click="rows++, updateTracingLine()">
+          add Wire
+        </button>
+        <button class="remove-wire" @click="rows--, updateTracingLine()">
+          Remove Wire
+        </button>
         <button class="add-wire" @click="sendSystem">send</button>
         <button class="reset-system" @click="resetSystem">reset system</button>
         <div class="exe">
@@ -52,13 +37,14 @@
           <button class="exeBtn" @click="nextExe">|exe⟩</button>
           <button class="exeBtn" @click="exeEnd">end</button>
         </div>
-        <button class="exeBtn" @click="elementaryGates">Elementary Gates</button>
-        <br />
+        <button class="exeBtn" @click="elementaryGates">
+          Elementary Gates
+        </button>
+
         <button @click="clearConsole">Clear Console</button>
-        <button
-          class="add-wire"
-          @click="teleAlgorithm"
-        >set teleportation algorithm as a test algorithm</button>
+        <button @click="teleAlgorithm">
+          set teleportation algorithm as a test algorithm
+        </button>
       </div>
     </div>
     <div class="visual-row">
@@ -97,10 +83,13 @@ export default {
     histoGram,
     diracNotation,
     circuitDrawing,
-    matrixRepresentation
+    matrixRepresentation,
   },
   mounted() {
     this.sendSystem();
+  },
+  updated() {
+    this.controlSystem();
   },
   data() {
     return {
@@ -127,9 +116,15 @@ export default {
         exeCount: 0,
         custom: {},
         shots: 1024,
-        device: ""
-      }
+        device: "",
+      },
     };
+  },
+  watch: {
+    jsonObject: {
+      immediate: true,
+      handler() {},
+    },
   },
   methods: {
     //-----------------------------------------------------------------------
@@ -143,16 +138,15 @@ export default {
     updateMaxWire: function() {
       let firstWire = this.$refs.wire[0];
       this.maxWire = firstWire.list.length;
-      for (let i = 1; i < this.rows; i++) {
+      for (let i = 0; i < this.rows; i++) {
         let wireCaller = this.$refs.wire[i];
         if (wireCaller.list.length > this.maxWire) {
           this.maxWire = wireCaller.list.length;
         }
       }
-      //update the trasing line
+
       this.exeCount = this.maxWire;
-      this.updateTracingLine();
-      // window.console.log("max wire = "+this.maxWire);
+      this.updateTracingLine(); //update the trasing line
     },
     //-----------------------------------------------------------------------
     resetSystem: function() {
@@ -182,7 +176,7 @@ export default {
         var wireCaller = this.$refs.wire[row];
         wireCaller.removeGateByIndex(columnIndex);
       }
-      this.maxWire--;
+      this.updateMaxWire();
       this.exeCount = this.maxWire;
       this.updateTracingLine();
     },
@@ -192,11 +186,9 @@ export default {
         var wireList = this.$refs.wire[i].list;
         var gateName = wireList[columnIndex]["name"];
         if (gateName.localeCompare("i") !== 0) {
-          //window.console.log("found a gate on column "+columnIndex+" is not identiy gate:"+ gateName);
           return false;
         }
       }
-      //window.console.log("all coulmn is "+columnIndex+" identity");
       return true;
     },
     //-----------------------------------------------------------------------
@@ -218,7 +210,6 @@ export default {
         statesSystem.push(wireCaller.getState());
         gatesSystem.push(wireCaller.getGates(i));
       }
-      window.console.log(gatesSystem);
       this.jsonObject = {
         reversedWires: this.reversedWires,
         exeCount: this.exeCount,
@@ -226,9 +217,8 @@ export default {
         init: statesSystem,
         rows: gatesSystem,
         custom: toolboxconnect.sendtoclone(),
-        shots: parseInt(ibmcon.returnshots())
+        shots: parseInt(ibmcon.returnshots()),
       };
-      //window.console.log(document.getElementById("checkbox").checked);
       if (document.getElementById("checkbox").checked) {
         this.jsonObject["API_TOKEN"] = this.API_TOKEN;
         this.jsonObject["device"] = this.device;
@@ -236,25 +226,17 @@ export default {
       if (document.getElementById("degree").checked) {
         this.jsonObject["radian"] = false;
       }
-      window.console.log(this.jsonObject);
-      //this.sendToServer(this.route, this.jsonObject);
       document.getElementById("checkbox").checked = false;
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
       axios.post(route, jsonObject).then(res => {
-        window.console.log(
-          "data sent and recived from the server successfully"
-        );
-        //window.console.log(res);
         this.draw();
         this.diracNotationData = res.data.diracNotation;
         this.qasmError = res.data.qasmError;
         this.qasmText = res.data.qasm;
         this.matrixRepresentation = res.data.matrixRepresentation;
         this.$refs.ibm.link = res.data.link;
-        //window.console.log(res.data.qasmError);
-        //window.console.log(res.data.matrixRepresentation);
       });
     },
     sendSystem: function() {
@@ -263,25 +245,21 @@ export default {
     },
     //-----------------------------------------------------------------------
     teleAlgorithm: function() {
+      // just a temp trial function (it works effectively)
       let test_json_object = {
         wires: 3,
         init: ["0", "0", "0"],
         rows: [
           ["x", "i", "c", "h", "i", "h"],
           ["i", "h", "c", "x", "c", "i"],
-          ["i", "i", "x", "i", "h", "c"]
-        ]
+          ["i", "i", "x", "i", "h", "c"],
+        ],
       };
-      //window.console.log(test_json_object);
       this.setAlgorithm(test_json_object);
     },
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
-      let rows = this.rows;
-      let algRow = systemObject["wires"];
-      for (let i = rows; i < algRow; i++) {
-        this.addWire();
-      }
+      this.rows = systemObject["wires"];
       this.$nextTick(() => {
         for (let row = 0; row < this.rows; row++) {
           var wireCaller = this.$refs.wire[row];
@@ -289,7 +267,6 @@ export default {
           wireCaller.setGates(systemObject["rows"][row]);
         }
         this.updateMaxWire();
-        //this.controlSystem();
       });
     },
     //-----------------------------------------------------------------------
@@ -319,18 +296,10 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    addWire: function() {
-      this.rows++;
-      this.$nextTick(() => {
-        var wireCaller = this.$refs.wire[this.rows - 1];
-        wireCaller.setGatesIdentity();
-      });
-    },
-    //-----------------------------------------------------------------------
     sendQasm: function() {
       this.qasmError = "";
       this.jsonObject = {
-        qasm: document.getElementById("textarea").value
+        qasm: document.getElementById("textarea").value,
       };
       this.sendToServer(this.route, this.jsonObject);
     },
@@ -379,24 +348,23 @@ export default {
     },
     //-----------------------------------------------------------------------
     applyControl: function(el1, el2) {
-      let x = el1.offsetLeft + el1.offsetWidth / 2;
-      let y1 = el1.offsetTop + el1.offsetHeight;
-      let y2 = el2.offsetTop;
-      let size = Math.abs(y2 - y1);
-
-      //window.console.log(x + " " + y1 + " " + y2 + " " + size);
-
-      var hr = document.createElement("hr");
-      hr.setAttribute("class", "cline");
-      //hr.setAttribute("id", col);
-      hr.setAttribute("width", "2");
-      hr.setAttribute("size", size);
-      hr.style.left = 0;
-      hr.style.top = 0;
-      hr.style.margin = "" + y1 + "px 0px 0px " + (x - 2) + "px";
-      var parent = this.$el;
-      parent.appendChild(hr);
+      if (el1 != null && el2 != null) {
+        let x = el1.offsetLeft + el1.offsetWidth / 2;
+        let y1 = el1.offsetTop + el1.offsetHeight;
+        let y2 = el2.offsetTop;
+        let size = Math.abs(y2 - y1);
+        var hr = document.createElement("hr");
+        hr.setAttribute("class", "cline");
+        hr.setAttribute("width", "2");
+        hr.setAttribute("size", size);
+        hr.style.left = 0;
+        hr.style.top = 0;
+        hr.style.margin = "" + y1 + "px 0px 0px " + (x - 2) + "px";
+        var parent = this.$el;
+        parent.appendChild(hr);
+      }
     },
+    //-----------------------------------------------------------------------
     removeControl: function() {
       var cline = document.querySelector(".cline");
       if (cline != null) {
@@ -404,45 +372,74 @@ export default {
         parent.removeChild(cline);
         return true;
       }
-      return false;
+      return false; // already cline = null (there is no control)
     },
+    //-----------------------------------------------------------------------
     removeControlSystem: function() {
       var flag = true;
       while (flag) {
         flag = this.removeControl();
       }
-      return true;
     },
+    //-----------------------------------------------------------------------
     controlSystem: function() {
       this.removeControlSystem();
-      for (let row = 0; row < this.rows; row++) {
-        var wireList = this.$refs.wire[row].list;
-        for (let col = 0; col < this.maxWire; col++) {
-          //window.console.log(wireList[col]['name']);
-          if (wireList[col]["name"] == "c") {
-            //window.console.log("found c at " +(row+1)+","+(col+1));
-            var cGate = document.querySelector(
-              "[row=_" + (row + 1) + "][col=_" + (col + 1) + "]"
-            );
-            this.controlColumn(cGate, row, col);
-          }
-        }
-      }
+      this.$nextTick(() => {
+        // wait to render the wire
+        for (let i = 0; i < this.maxWire; i++) {
+          this.$nextTick(() => {
+            // wait to render the added gate
+            this.$nextTick(() => {
+              // wait to render the identity
+              let colElements = document.querySelectorAll(
+                "[col=_" + (i + 1) + "]",
+              );
+              if (this.isControl(colElements)) {
+                this.controlColumn(colElements);
+              }
+            }); // all identity has been rendered
+          }); // added gate has been rendered
+        } // end for loop
+      }); // wire has been rendered
     },
-    controlColumn: function(cGate, row, col) {
-      for (let i = this.rows - 1; i > row; i--) {
-        var wireList = this.$refs.wire[i].list;
-        var wireGate = wireList[col]["name"];
-        if (wireGate != "i" && wireGate != "c" && wireGate != undefined) {
-          var targetGate = document.querySelector(
-            "[row=_" + (i + 1) + "][col=_" + (col + 1) + "]"
-          );
-          //window.console.log(targetGate)
-          this.applyControl(cGate, targetGate);
+    //-----------------------------------------------------------------------
+    isControl: function(colElements) {
+      for (let j = 0; j < colElements.length; j++) {
+        if (colElements[j].id == "c") {
           return true;
         }
       }
       return false;
+    },
+    //-----------------------------------------------------------------------
+    controlColumn: function(colElements) {
+      let flag1 = true;
+      let flag2 = true;
+      var el1 = null;
+      var el2 = null;
+      var size = colElements.length;
+      for (let i = 0; i < size; i++) {
+        if (flag1 || flag2) {
+          if (flag1) {
+            if (colElements[i].id != "i") {
+              // found first element (upper)
+              el1 = colElements[i];
+              flag1 = false; // no need to search from top again
+            }
+          }
+          if (flag2) {
+            if (colElements[size - i - 1].id != "i") {
+              // found second element (lower)
+              el2 = colElements[size - i - 1];
+              flag2 = false; // no need to search from bottom again
+            }
+          }
+        }
+      }
+      if (el1 !== el2) {
+        // if there is not only one c gate in the column
+        this.applyControl(el1, el2);
+      }
     },
     //-----------------------------------------------------------------------
     updateTracingLine: function() {
@@ -465,18 +462,12 @@ export default {
       }
       var jsonObject = {
         rows: gatesSystem,
-        custom: this.$refs.toolbox.customsrever
+        custom: this.$refs.toolbox.customsrever,
       };
-
       if (this.exeCount) {
         axios
           .post("http://localhost:5000/elementaryGates", jsonObject)
           .then(res => {
-            window.console.log(
-              "data sent and recived from the server successfully"
-            );
-            //window.console.log(res);
-            window.console.log("res.data.custom:", res.data.custom);
             this.$refs.toolbox.customsrever = res.data.custom;
             var dic = res.data.custom;
             var custom = this.$refs.toolbox.customGates;
@@ -497,31 +488,25 @@ export default {
                 flag = true;
               }
             }
-            window.console.log(
-              "customsrever:",
-              this.$refs.toolbox.customsrever
-            );
-            window.console.log("customGates:", this.$refs.toolbox.customGates);
             let json_object = {
               wires: this.wires,
               init: statesSystem,
-              rows: res.data.rows
+              rows: res.data.rows,
             };
-            //window.console.log(test_json_object);
             this.setAlgorithm(json_object);
           });
       }
-    }
+    },
     //-----------------------------------------------------------------------
-  }
+  },
 };
 </script>
 <!-- =============================================================  -->
 <style scoped>
-.circuit {
+.clone {
   white-space: nowrap;
 }
-.upper-circuit {
+.circuit-tools {
   /*border: 3px solid black;*/
   display: flex;
   margin: 0.2em 0.2em 0.2em 0.2em;
@@ -595,12 +580,12 @@ export default {
   right: 0;
   top: 0;
 }
-.wiresBlock {
+.circuit-wires {
   width: 99%;
   height: 99%;
   margin: 0em 0.2em 0em 0.2em;
 }
-.qasmAndWires {
+.circuit {
   /*border: dashed firebrick;*/
   display: inline-flex;
   width: 99%;

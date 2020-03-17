@@ -11,8 +11,6 @@ export default {
   name: "app",
   components:{
     clone,
-  },methods:{
-   
   }
 };
 </script>
