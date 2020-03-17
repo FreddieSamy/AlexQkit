@@ -30,6 +30,18 @@ def graphDrawing(fig):
 def main():
     return "server is on fire"
 
+
+@app.route('/subCircuitCustomGate',methods=['GET','POST'])
+def subCircuitCustomGate():
+    from qiskit.quantum_info.operators.predicates import is_unitary_matrix
+    if request.method=='POST':
+        recievedDic=request.get_json()
+        c.createCircuit(recievedDic)
+        matrix=c.returnedDictionary["matrixRepresentation"]
+    else:
+        c.returnedDictionary={}
+    return  jsonify({"isUnitary":is_unitary_matrix(c.strToComplex(matrix)),"matrix":c.complexToStr(matrix)}) 
+
 @app.route('/nthRoot',methods=['GET','POST'])
 def nthRoot():
     import numpy as np

@@ -178,8 +178,9 @@
           <h1 class="p" style="color: black ">from matrix</h1>
           <h3 style="color: black">name</h3>
           <input type="text" id="nameofgate" />
-          <h3 style="color: black">gate matrix</h3>
-          <textarea rows="4" id="valueofgate"></textarea>
+          <h3 style="color: black">number of wires</h3>
+          <matrixcu ref="matrixcu"></matrixcu>
+          <br />
           <button
             @click="create_the_matrix()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
@@ -193,7 +194,31 @@
         </div>
         <div class="column3">
           <h1 style="color: black;">from circuit</h1>
-          <h3 style="color: black;">select the gate</h3>
+          <h3 style="color: black;">Name</h3>
+          <input type="text" id="subCircuitName" />
+          <h3 style="color: black;">Rows</h3>
+          <label style="color: black;">From</label>
+          <select id="fromRow" style="width:15%;">
+            <option v-for="i in this.$parent.rows" :key="i" :value="i">{{i}}</option>
+          </select>
+          <label style="color: black;">To</label>
+          <select id="toRow" style="width:15%;">
+            <option v-for="i in this.$parent.rows" :key="i" :value="i">{{i}}</option>
+          </select>
+          <h3 style="color: black;">Columns</h3>
+          <label style="color: black;">From</label>
+          <select id="fromColumn" style="width:15%;">
+            <option v-for="i in this.$parent.maxWire" :key="i" :value="i">{{i}}</option>
+          </select>
+          <label style="color: black;">To</label>
+          <select id="toColumn" style="width:15%;">
+            <option v-for="i in this.$parent.maxWire" :key="i" :value="i">{{i}}</option>
+          </select>
+          <br />
+          <button
+            @click="subCircuitCustoGate()"
+            style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
+          >create</button>
         </div>
         <div class="column4">
           <h1 style="color: black;">nth root</h1>
@@ -244,11 +269,13 @@
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
+import matrixcu from "./matrixcu.vue";
 export default {
   name: "toolbox",
   display: "toolbox",
   components: {
     draggable,
+    matrixcu
   },
   data() {
     return {
@@ -315,17 +342,29 @@ export default {
     // ----------------------------------------------------
     openNav() {
       document.getElementById("myNav").style.width = "100%";
+      document.getElementById("subCircuitName").value = null;
+      document.getElementById("nameofgate").value=null;
+      
     },
     // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("errormsg").innerHTML = null;
+      var conmatrixcu2 =this.$refs.matrixcu;
+      conmatrixcu2.clear();
     },
     // ----------------------------------------------------
     create_the_matrix() {
       var nameofgate = document.getElementById("nameofgate").value;
-      var valofgate = document.getElementById("valueofgate");
-      var matrix = this.make_matrix(valofgate);
+      //var valofgate = document.getElementById("valueofgate");
+      var conmatrixcu =this.$refs.matrixcu;
+      var matrix=conmatrixcu.pulldata();
+       var { matrix_validate, msg } = this.validate_of_matrix(
+          matrix,
+          nameofgate
+        );
+        window.console.log(matrix_validate);
+       window.console.log(msg);
       var isUnitary;
       var jsonObject = {};
       jsonObject["matrix"] = matrix;
@@ -340,7 +379,7 @@ export default {
           nameofgate,
         );
         window.console.log(matrix_validate);
-        window.console.log(msg);
+       // window.console.log(msg);
         if (matrix_validate && isUnitary == false) {
           msg = "the matrix isn't unitary";
         }
@@ -357,24 +396,13 @@ export default {
           document.getElementById("errormsg").innerHTML = "*" + msg + "*";
         }
         document.getElementById("nameofgate").value = null;
-        document.getElementById("valueofgate").value = null;
+        conmatrixcu.clear();
+        //document.getElementById("valueofgate").value = null;
         //window.console.log("unitary:" + this.$parent.isUnitary);
       });
     },
     // ----------------------------------------------------
-    make_matrix(valofgate) {
-      var row = valofgate.value.split("\n");
-      var count;
-      var matrix = [];
-      for (count in row) {
-        row[count] = row[count].replace(/\s/g, "");
-        var sub = row[count].split(",").map(Number);
-        if (row[count] !== undefined && row[count] != "") {
-          matrix.push(sub);
-        }
-      }
-      return matrix;
-    },
+    // 
     // ----------------------------------------------------
     validate_of_matrix(matrix, nameofgate) {
       var matrix_validate = true;
@@ -395,6 +423,11 @@ export default {
       if (nameofgate == "" || nameofgate.length == 0) {
         matrix_validate = false;
         msg = "you have to write name for the gate";
+        return { matrix_validate, msg };
+      }
+       if (nameofgate.includes(".") ) {
+        matrix_validate = false;
+        msg = "name of gate can't include '.'";
         return { matrix_validate, msg };
       }
 
@@ -467,7 +500,43 @@ export default {
       }
     },
     // ----------------------------------------------------
-
+    subCircuitCustoGate: function() {
+      var name = document.getElementById("subCircuitName").value;
+      var flag = true;
+      var fromRow = document.getElementById("fromRow").value;
+      var toRow = document.getElementById("toRow").value;
+      var fromColumn = document.getElementById("fromColumn").value;
+      var toColumn = document.getElementById("toColumn").value;
+      if (fromRow && toRow && fromColumn && toColumn) {
+        if (fromRow <= toRow && fromColumn <= toColumn) {
+          if (name == "" || name.length == 0) {
+            document.getElementById("errormsg").innerHTML =
+              "*please, enter a name for the gate*";
+          } else {
+            for (let i in this.customGates) {
+              for (let k in this.customGates[i]) {
+                if (this.customGates[i][k] === name) {
+                  flag = false;
+                  document.getElementById("errormsg").innerHTML =
+                    "*this name is already exist*";
+                }
+              }
+            }
+            if (flag) {
+              this.$parent.cloneSubCircuitCustoGate(
+                fromRow,
+                toRow,
+                fromColumn,
+                toColumn
+              );
+            }
+          }
+        } else {
+          document.getElementById("errormsg").innerHTML =
+            "*please, check the selected numbers*";
+        }
+      }
+    }
     // ----------------------------------------------------
   },
 };
@@ -634,7 +703,7 @@ export default {
 
 .column1 {
   width: 20em;
-  min-height: 300px;
+  min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   margin-top: 20px;
   margin-left: 20px;
@@ -646,7 +715,7 @@ export default {
 
 .column2 {
   width: 20em;
-  min-height: 300px;
+  min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   position: center;
   margin-top: 20px;
@@ -658,7 +727,7 @@ export default {
 }
 .column3 {
   width: 20em;
-  min-height: 300px;
+  min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   margin-top: 20px;
   text-align: center;
@@ -670,7 +739,7 @@ export default {
 .column4 {
   float: left;
   width: 20em;
-  min-height: 300px;
+  min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   margin-top: 20px;
   text-align: center;
