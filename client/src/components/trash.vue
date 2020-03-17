@@ -30,9 +30,7 @@ export default {
   },
   methods: {
     add: function(evt) {
-      //window.console.log("from" + evt.from.id + "at" + evt.oldIndex);
       var wire = evt.from.id.replace("list","")
-      window.console.log("from wire "  + wire + " at " + evt.oldIndex);
       this.$parent.$refs.wire[wire-1].addGateByIndex(evt.oldIndex);
       this.list = [];
     },

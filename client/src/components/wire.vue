@@ -59,6 +59,7 @@ export default {
         this.$nextTick(() => {
           this.updateWireAttributes();
           this.$parent.controlSystem();
+          this.$parent.updateSystem();
         });
       },
     },
@@ -83,6 +84,7 @@ export default {
     },
     remove: function() {
       this.$parent.updateMaxWire();
+      this.$parent.removeIdentitySystem();
     },
     end: function() {
       this.$parent.updateSystem();
@@ -125,7 +127,6 @@ export default {
     },
     //-----------------------------------------------------------------------
     getGateByIndex: function(gateIndex) {
-      window.console.log(this.list[gateIndex]);
       return this.list[gateIndex];
     },
     //-----------------------------------------------------------------------
@@ -260,7 +261,7 @@ export default {
   /*border: 0.1em dashed black;*/
 }
 #i {
-  opacity: 0.009;
+  opacity: 0.69;
 }
 /*
 #c{
