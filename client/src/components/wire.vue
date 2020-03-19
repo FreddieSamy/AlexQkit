@@ -58,8 +58,11 @@ export default {
       handler() {
         this.$nextTick(() => {
           this.updateWireAttributes();
-          this.$parent.controlSystem();
-          this.$parent.updateSystem();
+          if(this.id == this.$parent.rows){ 
+            // the last updated wire (last wire) update the whole system
+            this.$parent.updateSystem();
+          }
+
         });
       },
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="clone">
     <div v-if="!qasmFlag" class="circuit-tools">
-      <toolbox ref="toolbox"></toolbox>
+      <toolbox ref="toolbox"></toolbox> 
       <ibm ref="ibm"></ibm>
     </div>
     <div class="circuit">
@@ -30,11 +30,7 @@
           <button class="exeBtn" @click="nextExe">|exe⟩</button>
           <button class="exeBtn" @click="exeEnd">end</button>
         </div>
-        <button class="exeBtn" @click="elementaryGates">Elementary Gates</button>
-        <button @click="clearConsole">Clear Console</button>
-        <button @click="teleAlgorithm">
-          set teleportation algorithm as a test algorithm
-        </button>
+        <button class="exeBtn" @click="elementaryGates">Elementary Gates</button>      
       </div>
     </div>
     <div class="visual-row">
@@ -77,9 +73,11 @@ export default {
     matrixRepresentation,
   },
   mounted() {
+    //window.console.log("clone has been mounted");
     this.sendSystem();
   },
   updated() {
+    //window.console.log("clone has been updated");
     this.controlSystem();
   },
   data() {
@@ -116,11 +114,7 @@ export default {
     jsonObject: {
       immediate: true,
       handler() {
-        //window.console.log("event queue updated");
         this.eventQueue.push(this.jsonObject);
-        //window.console.log(this.jsonObject);
-        //window.console.log(this.eventQueue.length);
-       // window.console.log(this.eventQueue);
       },
     },
   },
@@ -242,19 +236,7 @@ export default {
       this.sendToServer(this.route, this.jsonObject);
     },
     //-----------------------------------------------------------------------
-    teleAlgorithm: function() {
-      // just a temp trial function (it works effectively)
-      let test_json_object = {
-        wires: 3,
-        init: ["0", "0", "0"],
-        rows: [
-          ["x", "i", "c", "h", "i", "h"],
-          ["i", "h", "c", "x", "c", "i"],
-          ["i", "i", "x", "i", "h", "c"],
-        ],
-      };
-      this.setAlgorithm(test_json_object);
-    },
+
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
       this.rows = systemObject["wires"];
@@ -273,10 +255,6 @@ export default {
         return true;
       }
       return false;
-    },
-    //-----------------------------------------------------------------------
-    clearConsole: function() {
-      window.console.clear();
     },
     //-----------------------------------------------------------------------
     draw: function() {
