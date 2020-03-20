@@ -2,13 +2,14 @@
   <div class="toolbox">
     <div class="tools-container">
       <div class="box-labels">
-					<div class="tool-box-label">
-						<label>Toolbox</label>
-					</div>
-					<div class="custom-gate-label">
-						<label v-if="customGates.length">Custom Gates</label>
-					</div>
-      </div> <!--end box-labels-->
+        <div class="tool-box-label">
+          <label>Toolbox</label>
+        </div>
+        <div class="custom-gate-label">
+          <label v-if="customGates.length">Custom Gates</label>
+        </div>
+      </div>
+      <!--end box-labels-->
 
       <div class="toolbox-of-gates">
         <!-- ---------------------- gates 1 -------------------------- -->
@@ -33,9 +34,9 @@
             </div>
           </transition-group>
         </draggable>
-        
+
         <!-- ---------------------- gates 2 -------------------------- -->
-        
+
         <draggable
           class="Area2"
           :list="gates2"
@@ -79,35 +80,11 @@
               </div>
             </transition-group>
           </draggable>
-          <input
-            class="angle"
-            id="rxAngle"
-            type="number"
-            name="rx"
-            value="90"
-          />
-          <input
-            class="angle"
-            id="ryAngle"
-            type="number"
-            name="ry"
-            value="90"
-          />
-          <input
-            class="angle"
-            id="rzAngle"
-            type="number"
-            name="rz"
-            value="90"
-          />
+          <input class="angle" id="rxAngle" type="number" name="rx" value="90" />
+          <input class="angle" id="ryAngle" type="number" name="ry" value="90" />
+          <input class="angle" id="rzAngle" type="number" name="rz" value="90" />
 
-          <input
-            type="radio"
-            id="degree"
-            name="angleType"
-            value="degree"
-            checked
-          />
+          <input type="radio" id="degree" name="angleType" value="degree" checked />
           <label for="degree" style="font-size: 15px;">degree</label>
           <input type="radio" id="radian" name="angleType" value="radian" />
           <label for="radian" style="font-size: 15px;">radian</label>
@@ -155,27 +132,17 @@
           </div>
         </transition-group>
       </draggable>
-    </div> <!-- end tools-container -->
+    </div>
+    <!-- end tools-container -->
     <div>
-      <label class="lbl1">
-        Number Of Shots
-      </label>
-      <input
-        class="ibmToken"
-        type="number"
-        placeholder="1024"
-        id="numberofshots"
-      />
+      <label class="lbl1">Number Of Shots</label>
+      <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
     </div>
     <div class="user-tools">
-      <button class="qasm" @click="this.$parent.qasm">
-        OPENQASM Simulator
-      </button>
+      <button class="qasm" @click="this.$parent.qasm">OPENQASM Simulator</button>
       <button class="qasm" @click="this.$parent.qasmTextFun">|qasm⟩</button>
       <div id="myNav" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav()"
-          >&#10006;</a
-        >
+        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
         <div class="column1">
           <h1 class="p" style="color: black ">from matrix</h1>
           <h3 style="color: black">name</h3>
@@ -186,15 +153,13 @@
           <button
             @click="create_the_matrix()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
-          >
-            create
-          </button>
+          >create</button>
         </div>
         <div class="column2">
           <h1 style="color: black;">from rotation</h1>
           <h3 style="color: black;">select the gate</h3>
         </div>
-        <div class="column3">
+         <div class="column3">
           <h1 style="color: black;">from circuit</h1>
           <h3 style="color: black;">Name</h3>
           <input type="text" id="subCircuitName" />
@@ -221,7 +186,7 @@
             @click="subCircuitCustoGate()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
           >create</button>
-        </div>
+        </div> 
         <div class="column4">
           <h1 style="color: black;">nth root</h1>
           <h3 style="color: black">select the gate</h3>
@@ -231,22 +196,19 @@
                 v-for="index in gates2.length - 1"
                 :key="index"
                 :value="gates2[index - 1].name"
-                >{{ gates2[index - 1].name }}</option
-              >
+              >{{ gates2[index - 1].name }}</option>
               <option
                 v-for="element in gates4"
                 :key="element.id"
                 :value="element.name"
-                >{{ element.name }}</option
-              >
+              >{{ element.name }}</option>
             </optgroup>
             <optgroup v-if="customGates.length" label="Custom Gates">
               <option
                 v-for="element in customGates"
                 :key="element.id"
                 :value="element.id"
-                >{{ element.id }}</option
-              >
+              >{{ element.id }}</option>
             </optgroup>
           </select>
           <h3 style="color: black;">root</h3>
@@ -254,10 +216,9 @@
           <button
             @click="nthRoot()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
-          >
-            create
-          </button>
+          >create</button>
         </div>
+        
 
         <div class="addGateError">
           <label id="errormsg"></label>
@@ -285,29 +246,29 @@ export default {
         { name: "c", id: "c", index: "", info: "closed control" },
         { name: "m", id: "m", index: "", info: "measurment gate" },
         { name: "oc", id: "oc", index: "", info: "open control" },
-        { name: "reset", id: "reset", index: "", info: "reset gate" },
+        { name: "reset", id: "reset", index: "", info: "reset gate" }
       ],
       gates2: [
         { name: "x", id: "x", index: "", info: "not gate" },
         { name: "y", id: "y", index: "", info: "" },
         { name: "z", id: "z", index: "", info: "" },
         { name: "h", id: "h", index: "", info: "simple super postition" },
-        { name: "swap", id: "swap", index: "", info: "" },
+        { name: "swap", id: "swap", index: "", info: "" }
       ],
       gates3: [
         { name: "rx", id: "rx", index: "", info: "" },
         { name: "ry", id: "ry", index: "", info: "" },
-        { name: "rz", id: "rz", index: "", info: "" },
+        { name: "rz", id: "rz", index: "", info: "" }
       ],
       gates4: [
         { name: "s", id: "s", index: "", info: "" },
         { name: "t", id: "t", index: "", info: "" },
         { name: "sdg", id: "sdg", index: "", info: "" },
-        { name: "tdg", id: "tdg", index: "", info: "" },
+        { name: "tdg", id: "tdg", index: "", info: "" }
       ],
       customGates: [],
       w: "width:7.7em",
-      customsrever: {},
+      customsrever: {}
       // jsonobjectall: {
       //   [this.nameofgate]: this.matrix
       // }
@@ -325,14 +286,14 @@ export default {
         name = name + "(" + document.getElementById("rzAngle").value + ")";
       }
       return {
-        name: name,
+        name: name
       };
     },
     // ----------------------------------------------------
     addGate(nameofgate) {
       this.customGates.push({
         name: "custom_" + nameofgate,
-        id: nameofgate,
+        id: nameofgate
       });
       if (this.customGates.length < 9) {
         this.w =
@@ -345,71 +306,64 @@ export default {
     openNav() {
       document.getElementById("myNav").style.width = "100%";
       document.getElementById("subCircuitName").value = null;
-      document.getElementById("nameofgate").value=null;
-      
+      document.getElementById("nameofgate").value = null;
     },
     // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("errormsg").innerHTML = null;
-      var conmatrixcu2 =this.$refs.matrixcu;
+      document.getElementById("wires").value = null;
+
+      var conmatrixcu2 = this.$refs.matrixcu;
       conmatrixcu2.clear();
     },
     // ----------------------------------------------------
     create_the_matrix() {
       var nameofgate = document.getElementById("nameofgate").value;
       //var valofgate = document.getElementById("valueofgate");
-      var conmatrixcu =this.$refs.matrixcu;
-      var matrix=conmatrixcu.pulldata();
-       var { matrix_validate, msg } = this.validate_of_matrix(
-          matrix,
-          nameofgate
-        );
-        window.console.log(matrix_validate);
-       window.console.log(msg);
+      var conmatrixcu = this.$refs.matrixcu;
+      var matrix = conmatrixcu.pulldata();
+      var { matrix_validate, msg } = this.validate_of_matrix(
+        matrix,
+        nameofgate
+      );
+      window.console.log(matrix_validate);
+      window.console.log(msg);
       var isUnitary;
       var jsonObject = {};
       jsonObject["matrix"] = matrix;
-      axios.post("http://localhost:5000/isUnitary", jsonObject).then(res => {
-        window.console.log("the data success to returned be from the server");
-        isUnitary = res.data.isUnitary;
-        //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
-        window.console.log("new unitary:" + isUnitary);
-        //window.console.log(matrix);
-        var { matrix_validate, msg } = this.validate_of_matrix(
-          matrix,
-          nameofgate,
-        );
-        window.console.log(matrix_validate);
-       // window.console.log(msg);
-        if (matrix_validate && isUnitary == false) {
-          msg = "the matrix isn't unitary";
-        }
-        if (matrix_validate && isUnitary) {
-          // this.jsonobjectall = {
-          //   [nameofgate]: matrix
-          // };
-          this.addGate(nameofgate);
-          this.customsrever[nameofgate] = matrix;
-          // window.console.log(this.customsrever);
-          document.getElementById("errormsg").innerHTML = null;
-          this.closeNav();
-        } else {
-          document.getElementById("errormsg").innerHTML = "*" + msg + "*";
-        }
-        document.getElementById("nameofgate").value = null;
-        conmatrixcu.clear();
-        //document.getElementById("valueofgate").value = null;
-        //window.console.log("unitary:" + this.$parent.isUnitary);
-      });
+      window.console.log(matrix_validate);
+      // window.console.log(msg);
+
+      if (matrix_validate) {
+        axios.post("http://localhost:5000/isUnitary", jsonObject).then(res => {
+          window.console.log("the data success to returned be from the server");
+          isUnitary = res.data.isUnitary;
+          //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
+          window.console.log("new unitary:" + isUnitary);
+          if (isUnitary) {
+            this.addGate(nameofgate);
+            this.customsrever[nameofgate] = matrix;
+            // window.console.log(this.customsrever);
+            document.getElementById("errormsg").innerHTML = null;
+            this.closeNav();
+          }
+        });
+      } else {
+        document.getElementById("errormsg").innerHTML = "*" + msg + "*";
+      }
+      // document.getElementById("nameofgate").value = null;
+      // conmatrixcu.clear();
+      //document.getElementById("valueofgate").value = null;
+      //window.console.log("unitary:" + this.$parent.isUnitary);
     },
     // ----------------------------------------------------
-    // 
+    //
     // ----------------------------------------------------
     validate_of_matrix(matrix, nameofgate) {
       var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
-      var count1, count2, count3, check;
+      var count1, count2, check;
       var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
 
       for (let i in this.customGates) {
@@ -427,29 +381,12 @@ export default {
         msg = "you have to write name for the gate";
         return { matrix_validate, msg };
       }
-       if (nameofgate.includes(".") ) {
+      if (nameofgate.includes(".")) {
         matrix_validate = false;
         msg = "name of gate can't include '.'";
         return { matrix_validate, msg };
       }
 
-      if (Math.log2(matrix.length) == 0) {
-        matrix_validate = false;
-        return { matrix_validate, msg };
-      }
-
-      if (Number.isInteger(Math.log2(matrix.length))) {
-        matrix_validate = true;
-      } else {
-        matrix_validate = false;
-        return { matrix_validate, msg };
-      }
-      for (count3 in matrix)
-        if (matrix.length != matrix[count3].length) {
-          matrix_validate = false;
-          msg = "please check if the number of rows equal columns";
-          return { matrix_validate, msg };
-        }
       for (count1 in matrix) {
         for (count2 in matrix[count1]) {
           check = regex.test(matrix[count1][count2]);
@@ -480,7 +417,7 @@ export default {
         var jsonObject = {
           root: root,
           gate: name,
-          custom: this.customsrever,
+          custom: this.customsrever
         };
         if (root >= 2) {
           axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
@@ -540,7 +477,7 @@ export default {
       }
     }
     // ----------------------------------------------------
-  },
+  }
 };
 </script>
 <!-- =============================================================  -->
@@ -704,7 +641,8 @@ export default {
 }
 
 .column1 {
-  width: 20em;
+  float: left;
+  min-width: 20em;
   min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   margin-top: 20px;
@@ -716,7 +654,8 @@ export default {
 }
 
 .column2 {
-  width: 20em;
+  float: left;
+  min-width: 20em;
   min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   position: center;
@@ -728,7 +667,8 @@ export default {
   display: inline-block;
 }
 .column3 {
-  width: 20em;
+  float: left;
+  min-width: 20em;
   min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   margin-top: 20px;
@@ -740,7 +680,7 @@ export default {
 }
 .column4 {
   float: left;
-  width: 20em;
+  min-width: 20em;
   min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
   margin-top: 20px;
@@ -762,12 +702,15 @@ export default {
   color: #fff;
   cursor: pointer;
 }
-.addGateError {
+ .addGateError {
   color: red;
-  padding-top: 30px;
+  padding-top: 35px; 
+  padding-left:20px ;
   text-align: center;
-  font-size: 35px;
-  display: table;
+  font-size: 40px;
+  display: inline-block;
+
+  
 }
 #hover-element {
   display: none;
