@@ -29,6 +29,7 @@ export default {
   },
   methods: {
     design() {
+      this.clear();
       var wire = document.getElementById("wires").value;
       
       if(wire==0||wire==""){
@@ -48,8 +49,9 @@ export default {
           input.type = "text";
           input.setAttribute("size", "3");
           // input.style = ("border-radius: 70px;");
-          input.id = i;
-          this.removeel.push(i);
+          input.id = ""+i+k;
+         // window.console.log(input.id);
+          this.removeel.push(""+i+k);
           document.getElementById("inputField").appendChild(input);
         }
       }
@@ -82,7 +84,7 @@ export default {
        // window.console.log(this.removeel);
       }
       this.removeel = [];
-      document.getElementById("wires").value=null;
+     // document.getElementById("wires").value=null;
 
     },
 
