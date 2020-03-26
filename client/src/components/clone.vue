@@ -1,28 +1,26 @@
 <template>
   <div class="clone">
-    <div v-if="!qasmFlag" class="circuit-tools">
-      <toolbox ref="toolbox"></toolbox> 
+    <div class="circuit-tools">
+      <toolbox ref="toolbox"></toolbox>
       <ibm ref="ibm"></ibm>
     </div>
     <div class="circuit">
-      <pre class="qasmText" v-if="qasmTextFlag">{{ this.qasmText }}</pre>
       <div class="qasm" v-if="qasmFlag">
-        <button class="qasmBtn" @click="qasm">Draggable Circuit</button>
-        <textarea id="textarea">OPENQASM 2.0; include "qelib1.inc";</textarea>
+        <textarea id="textarea"></textarea>
         <button class="qasmBtn" @click="sendQasm">Run</button>
       </div>
-      <h3 v-if="qasmFlag">{{ qasmError }}</h3>
-      <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing>
+      <!-- <h3 v-if="qasmFlag">{{ qasmError }}</h3> -->
+      <!-- <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing> -->
       <hr id="executionLine" width="2" size="160" />
-      <div v-if="!qasmFlag" class="circuit-wires">
+      <div class="circuit-wires">
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
       </div>
     </div>
     <div class="toolbox-2">
-      <trash v-if="!qasmFlag"></trash>
-      <div v-if="!qasmFlag" class="wires-buttons">
+      <trash></trash>
+      <div class="wires-buttons">
         <toolbox2 class="toolbox2" :eventQueue="eventQueue" :setAlgorithm="setAlgorithm" />
         <div class="exe">
           <button class="exeBtn" @click="exeStart">start</button>
@@ -30,7 +28,7 @@
           <button class="exeBtn" @click="nextExe">|exe⟩</button>
           <button class="exeBtn" @click="exeEnd">end</button>
         </div>
-        <button class="exeBtn" @click="elementaryGates">Elementary Gates</button>      
+        <button class="exeBtn" @click="elementaryGates">Elementary Gates</button>
       </div>
     </div>
     <div class="visual-row">
@@ -54,7 +52,7 @@ import axios from "axios";
 import blochSphere from "./blochSphere.vue";
 import histoGram from "./histoGram.vue";
 import diracNotation from "./diracNotation.vue";
-import circuitDrawing from "./circuitDrawing.vue";
+// import circuitDrawing from "./circuitDrawing.vue";
 import matrixRepresentation from "./matrixRepresentation.vue";
 
 export default {
@@ -69,8 +67,8 @@ export default {
     blochSphere,
     histoGram,
     diracNotation,
-    circuitDrawing,
-    matrixRepresentation,
+    // circuitDrawing,
+    matrixRepresentation
   },
   mounted() {
     //window.console.log("clone has been mounted");
@@ -84,7 +82,6 @@ export default {
     return {
       API_TOKEN: "",
       qasmError: "",
-      qasmText: "There is no circuit",
       reversedWires: true,
       diracNotationData: "|000⟩",
       exeCount: 0,
@@ -94,7 +91,6 @@ export default {
       rows: 2, // number of wires
       maxWire: 0, // maximum number of gates in a wire
       qasmFlag: false,
-      qasmTextFlag: false,
       matrixRepresentation: [],
       jsonObject: {
         API_TOKEN: "",
@@ -105,9 +101,9 @@ export default {
         exeCount: 0,
         custom: {},
         shots: 1024,
-        device: "",
+        device: ""
       },
-      eventQueue:[]
+      eventQueue: []
     };
   },
   watch: {
@@ -115,8 +111,8 @@ export default {
       immediate: true,
       handler() {
         this.eventQueue.push(this.jsonObject);
-      },
-    },
+      }
+    }
   },
   methods: {
     //-----------------------------------------------------------------------
@@ -150,7 +146,6 @@ export default {
       this.exeCount = 0;
       this.updateTracingLine();
       this.removeControlSystem();
-      this.qasmText = "There is no circuit";
       this.sendSystem();
     },
     //-----------------------------------------------------------------------
@@ -209,7 +204,7 @@ export default {
         init: statesSystem,
         rows: gatesSystem,
         custom: toolboxconnect.sendtoclone(),
-        shots: parseInt(ibmcon.returnshots()),
+        shots: parseInt(ibmcon.returnshots())
       };
       if (document.getElementById("checkbox").checked) {
         this.jsonObject["API_TOKEN"] = this.API_TOKEN;
@@ -226,9 +221,13 @@ export default {
         this.draw();
         this.diracNotationData = res.data.diracNotation;
         this.qasmError = res.data.qasmError;
-        this.qasmText = res.data.qasm;
         this.matrixRepresentation = res.data.matrixRepresentation;
         this.$refs.ibm.link = res.data.link;
+        if (this.qasmFlag) {
+          this.$nextTick(() => {
+            document.getElementById("textarea").value = res.data.qasm;
+          });
+        }
       });
     },
     sendSystem: function() {
@@ -265,30 +264,30 @@ export default {
       imgofblochSphere.src =
         "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
 
-      if (this.qasmFlag) {
-        var imgOfCircuit = document.getElementById("circuitDrawing");
-        imgOfCircuit.src =
-          "http://127.0.0.1:5000/circuit.png?time=" + new Date();
-      }
+      // if (this.qasmFlag) {
+      //   var imgOfCircuit = document.getElementById("circuitDrawing");
+      //   imgOfCircuit.src =
+      //     "http://127.0.0.1:5000/circuit.png?time=" + new Date();
+      // }
     },
     //-----------------------------------------------------------------------
     sendQasm: function() {
       this.qasmError = "";
       this.jsonObject = {
-        qasm: document.getElementById("textarea").value,
+        qasm: document.getElementById("textarea").value
       };
       this.sendToServer(this.route, this.jsonObject);
     },
     //-----------------------------------------------------------------------
-    qasmTextFun: function() {
-      this.qasmTextFlag = !this.qasmTextFlag;
-      this.updateTracingLine();
-      this.sendSystem();
-    },
-    //-----------------------------------------------------------------------
     qasm: function() {
       this.qasmFlag = !this.qasmFlag;
-      this.qasmTextFlag = false;
+      this.updateTracingLine();
+      this.sendSystem();
+      if (this.qasmFlag) {
+        document.getElementById("qasmToolboxBtn").innerHTML = "⟨ qasm |";
+      } else {
+        document.getElementById("qasmToolboxBtn").innerHTML = "| qasm ⟩";
+      }
     },
     //-----------------------------------------------------------------------
     nextExe: function() {
@@ -368,7 +367,7 @@ export default {
             this.$nextTick(() => {
               // wait to render the identity
               let colElements = document.querySelectorAll(
-                "[col=_" + (i + 1) + "]",
+                "[col=_" + (i + 1) + "]"
               );
               if (this.isControl(colElements)) {
                 this.controlColumn(colElements);
@@ -420,7 +419,7 @@ export default {
     //-----------------------------------------------------------------------
     updateTracingLine: function() {
       qasmMargin = 0;
-      if (this.qasmTextFlag) {
+      if (this.qasmFlag) {
         var qasmMargin = 15.4;
       }
       document.getElementById("executionLine").style.marginLeft =
@@ -438,7 +437,7 @@ export default {
       }
       var jsonObject = {
         rows: gatesSystem,
-        custom: this.$refs.toolbox.customsrever,
+        custom: this.$refs.toolbox.customsrever
       };
       if (this.exeCount) {
         axios
@@ -467,7 +466,7 @@ export default {
             let json_object = {
               wires: this.wires,
               init: statesSystem,
-              rows: res.data.rows,
+              rows: res.data.rows
             };
             this.setAlgorithm(json_object);
           });
@@ -539,7 +538,7 @@ export default {
 }
 .qasm {
   display: block;
-  width: 30%;
+  width: 18em;
   margin: 0em 0.2em 0em 0em;
   /*border: 1px solid black;*/
   border-radius: 0.5em;
@@ -567,19 +566,12 @@ export default {
 .visual-row {
   display: flex;
 }
-textarea {
-  width: 90%;
+#textarea {
+  width: 99%;
   height: 99%;
   bottom: 0;
   border-radius: 0.5em;
   margin: auto;
-}
-.qasmText {
-  border: 1px solid black;
-  border-radius: 0.5em;
-  margin: 0.2em 0.2em 3em 0.2em;
-  padding: 0.2em 0.2em 3em 0.2em;
-  min-width: 18em;
 }
 #executionLine {
   position: absolute;

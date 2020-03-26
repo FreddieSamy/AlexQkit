@@ -139,8 +139,7 @@
       <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
     </div>
     <div class="user-tools">
-      <button class="qasm" @click="this.$parent.qasm">OPENQASM Simulator</button>
-      <button class="qasm" @click="this.$parent.qasmTextFun">|qasm⟩</button>
+      <button id="qasmToolboxBtn" class="qasm" @click="this.$parent.qasm">| qasm ⟩</button>
       <div id="myNav" class="overlay">
         <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
         <div class="column1">
@@ -159,7 +158,7 @@
           <h1 style="color: black;">from rotation</h1>
           <h3 style="color: black;">select the gate</h3>
         </div>
-         <div class="column3">
+        <div class="column3">
           <h1 style="color: black;">from circuit</h1>
           <h3 style="color: black;">Name</h3>
           <input type="text" id="subCircuitName" />
@@ -186,7 +185,7 @@
             @click="subCircuitCustoGate()"
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
           >create</button>
-        </div> 
+        </div>
         <div class="column4">
           <h1 style="color: black;">nth root</h1>
           <h3 style="color: black">select the gate</h3>
@@ -218,7 +217,6 @@
             style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
           >create</button>
         </div>
-        
 
         <div class="addGateError">
           <label id="errormsg"></label>
@@ -702,15 +700,13 @@ export default {
   color: #fff;
   cursor: pointer;
 }
- .addGateError {
+.addGateError {
   color: red;
-  padding-top: 35px; 
-  padding-left:20px ;
+  padding-top: 35px;
+  padding-left: 20px;
   text-align: center;
   font-size: 40px;
   display: inline-block;
-
-  
 }
 #hover-element {
   display: none;
