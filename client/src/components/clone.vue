@@ -9,7 +9,6 @@
         <textarea id="textarea"></textarea>
         <button class="qasmBtn" @click="sendQasm">Run</button>
       </div>
-      <!-- <h3 v-if="qasmFlag">{{ qasmError }}</h3> -->
       <!-- <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing> -->
       <hr id="executionLine" width="2" size="160" />
       <div class="circuit-wires">
@@ -81,9 +80,8 @@ export default {
   data() {
     return {
       API_TOKEN: "",
-      qasmError: "",
       reversedWires: true,
-      diracNotationData: "|000⟩",
+      diracNotationData: "|00⟩",
       exeCount: 0,
       route: "http://localhost:5000/data",
       resetRoute: "http://localhost:5000/reset",
@@ -147,6 +145,7 @@ export default {
       this.updateTracingLine();
       this.removeControlSystem();
       this.sendSystem();
+      this.wires = 2;
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -220,7 +219,6 @@ export default {
       axios.post(route, jsonObject).then(res => {
         this.draw();
         this.diracNotationData = res.data.diracNotation;
-        this.qasmError = res.data.qasmError;
         this.matrixRepresentation = res.data.matrixRepresentation;
         this.$refs.ibm.link = res.data.link;
         if (this.qasmFlag) {
@@ -272,12 +270,33 @@ export default {
     },
     //-----------------------------------------------------------------------
     sendQasm: function() {
-      this.qasmError = "";
-      this.jsonObject = {
+      let jsonObject = {
         qasm: document.getElementById("textarea").value
       };
-      this.sendToServer(this.route, this.jsonObject);
+      axios.post(this.route, jsonObject).then(res => {
+        if (res.data.qasmError == "") {
+          this.draw();
+          this.diracNotationData = res.data.diracNotation;
+          this.matrixRepresentation = res.data.matrixRepresentation;
+          this.$refs.ibm.link = res.data.link;
+          if (this.qasmFlag) {
+            document.getElementById("textarea").value = res.data.qasm;
+          }
+          if (res.data.qasmRows) {
+            // undefined qasmRows leads to an error
+            let circuit = {
+              wires: res.data.qasmRows.length,
+              init: Array(res.data.qasmRows.length).fill("0"),
+              rows: res.data.qasmRows
+            };
+            this.setAlgorithm(circuit);
+          }
+        } else {
+          alert("qasm code error :\n" + res.data.qasmError);
+        }
+      });
     },
+
     //-----------------------------------------------------------------------
     qasm: function() {
       this.qasmFlag = !this.qasmFlag;
