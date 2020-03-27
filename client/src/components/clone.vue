@@ -5,10 +5,13 @@
       <ibm ref="ibm"></ibm>
     </div>
     <div class="circuit">
-      <div class="qasm" v-if="qasmFlag">
-        <textarea id="textarea"></textarea>
+      <div class="editor" v-if="qasmFlag">
+        <div class="qasm">
+          <prism-editor :lineNumbers="true" :code="qasmCode" v-model="qasmCode" language="js"></prism-editor>
+        </div>
         <button class="qasmBtn" @click="sendQasm">Run</button>
       </div>
+
       <!-- <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing> -->
       <hr id="executionLine" width="2" size="160" />
       <div class="circuit-wires">
@@ -42,6 +45,10 @@
 </template>
 <!-- =============================================================  -->
 <script>
+import "prismjs";
+import "prismjs/themes/prism.css";
+import "vue-prism-editor/dist/VuePrismEditor.css";
+import PrismEditor from "vue-prism-editor";
 import toolbox from "./toolbox.vue";
 import toolbox2 from "./toolbox2.vue";
 import wire from "./wire.vue";
@@ -58,6 +65,7 @@ export default {
   name: "clone",
   display: "clone",
   components: {
+    PrismEditor,
     toolbox,
     toolbox2,
     ibm,
@@ -79,6 +87,7 @@ export default {
   },
   data() {
     return {
+      qasmCode: "",
       API_TOKEN: "",
       reversedWires: true,
       diracNotationData: "|00⟩",
@@ -142,10 +151,10 @@ export default {
       }
       this.maxWire = 0;
       this.exeCount = 0;
+      this.rows = 2;
       this.updateTracingLine();
       this.removeControlSystem();
       this.sendSystem();
-      this.wires = 2;
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -223,7 +232,7 @@ export default {
         this.$refs.ibm.link = res.data.link;
         if (this.qasmFlag) {
           this.$nextTick(() => {
-            document.getElementById("textarea").value = res.data.qasm;
+            this.qasmCode = res.data.qasm;
           });
         }
       });
@@ -270,8 +279,9 @@ export default {
     },
     //-----------------------------------------------------------------------
     sendQasm: function() {
+      // window.console.log(this.qasmCode);
       let jsonObject = {
-        qasm: document.getElementById("textarea").value
+        qasm: this.qasmCode
       };
       axios.post(this.route, jsonObject).then(res => {
         if (res.data.qasmError == "") {
@@ -280,7 +290,7 @@ export default {
           this.matrixRepresentation = res.data.matrixRepresentation;
           this.$refs.ibm.link = res.data.link;
           if (this.qasmFlag) {
-            document.getElementById("textarea").value = res.data.qasm;
+            this.qasmCode = res.data.qasm;
           }
           if (res.data.qasmRows) {
             // undefined qasmRows leads to an error
@@ -439,7 +449,7 @@ export default {
     updateTracingLine: function() {
       qasmMargin = 0;
       if (this.qasmFlag) {
-        var qasmMargin = 15.4;
+        var qasmMargin = 18;
       }
       document.getElementById("executionLine").style.marginLeft =
         3.8 * this.exeCount + 3.2 + qasmMargin + "em";
@@ -520,6 +530,9 @@ export default {
         });
       document.getElementById("errormsg").innerHTML = null;
     }
+    //-----------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------
   }
 };
 </script>
@@ -556,13 +569,19 @@ export default {
   border-radius: 0.5em;
 }
 .qasm {
-  display: block;
+  overflow-y: auto;
   width: 18em;
+  max-height: 20em;
   margin: 0em 0.2em 0em 0em;
-  /*border: 1px solid black;*/
   border-radius: 0.5em;
 }
+.editor {
+  display: block;
+  height: 100%;
+  width: 18em;
+}
 .qasmBtn {
+  margin: 0.2em 0.2em 0.2em 0em;
   display: block;
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
@@ -580,18 +599,12 @@ export default {
   display: inline-flex;
   width: 99%;
   height: 50%;
-  margin: 0.2em 0.2em 3em 0.2em;
+  margin: 0.2em 0.2em 0.2em 0.2em;
 }
 .visual-row {
   display: flex;
 }
-#textarea {
-  width: 99%;
-  height: 99%;
-  bottom: 0;
-  border-radius: 0.5em;
-  margin: auto;
-}
+
 #executionLine {
   position: absolute;
   width: 10;
