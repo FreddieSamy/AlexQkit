@@ -536,9 +536,11 @@ class Circuit():
             for i in range(exeCount):
                 if "reset" in cols[i]:
                     resetExist=True
-                if cols[i]==["barrier"]:
-                    normalCircuit.barrier()
-                    reversedCircuit.barrier()
+                if "barrier" in cols[i]:
+                    from more_itertools import locate
+                    barrierPos=list(locate(cols[i], lambda x: x == 'barrier'))
+                    normalCircuit.barrier(barrierPos)
+                    reversedCircuit.barrier(barrierPos)
                 elif "c" in cols[i] or "oc" in cols[i]:
                     self.controlledColumns(normalCircuit,reversedCircuit,cols[i],customGates,radian)
                 else:
@@ -588,6 +590,8 @@ class Circuit():
         for i in range(len(circuit.data)):
             name=circuit.data[i][0].name
             #print(name)
+            if name=="measure":
+                name="m"
             column=['i']*circuit.data[0][1][0].register.size
             for j in range(len(circuit.data[i][1])):
                 pos=circuit.data[i][1][j].index
@@ -605,6 +609,7 @@ class Circuit():
 ###############################################################################################################################
 
     def qasm(self,receivedDictionary):
+        import numpy as np
         from qiskit import QuantumCircuit
         circuit=QuantumCircuit(1)
         circuit=circuit.from_qasm_str(receivedDictionary["qasm"])
@@ -620,23 +625,25 @@ class Circuit():
         self.blochSphereGraph = self.blochSphere(circuit)
         self.histoGramGraph = self.graph(circuit,shots)
         self.circutDrawing = self.draw(circuit)    
+        print(cols)
         if "API_TOKEN" in receivedDictionary:
             if receivedDictionary["API_TOKEN"] !="":
                 self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
                 self.returnedDictionary["qasm"]=receivedDictionary["qasm"]
                 self.returnedDictionary["link"]=self.runOnIBMQ(receivedDictionary["API_TOKEN"],circuit,shots,device)
-                self.returnedDictionary["cols"]=cols
+                self.returnedDictionary["qasmRows"]=np.transpose(cols).tolist()
                 #self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
             else:
                 self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
                 self.returnedDictionary["qasm"]=receivedDictionary["qasm"]
                 self.returnedDictionary["link"]=""
+                self.returnedDictionary["qasmRows"]=np.transpose(cols).tolist()
                 #self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
         else:
             self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
             self.returnedDictionary["qasm"]=receivedDictionary["qasm"]
             self.returnedDictionary["link"]=""
-            self.returnedDictionary["cols"]=cols
+            self.returnedDictionary["qasmRows"]=np.transpose(cols).tolist()
             #self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
 
         #return self.returnedDictionary
