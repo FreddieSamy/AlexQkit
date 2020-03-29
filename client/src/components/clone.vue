@@ -11,10 +11,9 @@
         </div>
         <button class="qasmBtn" @click="sendQasm">Run</button>
       </div>
-
-      <!-- <circuitDrawing v-if="qasmFlag && qasmError == ''"></circuitDrawing> -->
-      <hr id="executionLine" width="2" size="160" />
-      <div class="circuit-wires">
+      <hr v-if="!qasmIncludeIfFlag" id="executionLine" width="2" size="160" />
+      <circuitDrawing v-if="qasmIncludeIfFlag "></circuitDrawing>
+      <div v-if="!qasmIncludeIfFlag" class="circuit-wires">
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
@@ -23,14 +22,19 @@
     <div class="toolbox-2">
       <trash></trash>
       <div class="wires-buttons">
-        <toolbox2 class="toolbox2" :eventQueue="eventQueue" :setAlgorithm="setAlgorithm" />
-        <div class="exe">
+        <toolbox2
+          v-if="!qasmIncludeIfFlag"
+          class="toolbox2"
+          :eventQueue="eventQueue"
+          :setAlgorithm="setAlgorithm"
+        />
+        <div v-if="!qasmIncludeIfFlag" class="exe">
           <button class="exeBtn" @click="exeStart">start</button>
           <button class="exeBtn" @click="preExe">⟨exe|</button>
           <button class="exeBtn" @click="nextExe">|exe⟩</button>
           <button class="exeBtn" @click="exeEnd">end</button>
         </div>
-        <button class="exeBtn" @click="elementaryGates">Elementary Gates</button>
+        <button v-if="!qasmIncludeIfFlag" class="exeBtn" @click="elementaryGates">Elementary Gates</button>
       </div>
     </div>
     <div class="visual-row">
@@ -58,7 +62,7 @@ import axios from "axios";
 import blochSphere from "./blochSphere.vue";
 import histoGram from "./histoGram.vue";
 import diracNotation from "./diracNotation.vue";
-// import circuitDrawing from "./circuitDrawing.vue";
+import circuitDrawing from "./circuitDrawing.vue";
 import matrixRepresentation from "./matrixRepresentation.vue";
 
 export default {
@@ -74,7 +78,7 @@ export default {
     blochSphere,
     histoGram,
     diracNotation,
-    // circuitDrawing,
+    circuitDrawing,
     matrixRepresentation
   },
   mounted() {
@@ -89,7 +93,6 @@ export default {
     return {
       qasmCode: "",
       API_TOKEN: "",
-      reversedWires: true,
       diracNotationData: "|00⟩",
       exeCount: 0,
       route: "http://localhost:5000/data",
@@ -98,13 +101,13 @@ export default {
       rows: 2, // number of wires
       maxWire: 0, // maximum number of gates in a wire
       qasmFlag: false,
+      qasmIncludeIfFlag: false,
       matrixRepresentation: [],
       jsonObject: {
         API_TOKEN: "",
         wires: 0,
         init: [],
         rows: [],
-        reversedWires: true,
         exeCount: 0,
         custom: {},
         shots: 1024,
@@ -206,7 +209,6 @@ export default {
         gatesSystem.push(wireCaller.getGates(i));
       }
       this.jsonObject = {
-        reversedWires: this.reversedWires,
         exeCount: this.exeCount,
         wires: this.rows,
         init: statesSystem,
@@ -230,11 +232,7 @@ export default {
         this.diracNotationData = res.data.diracNotation;
         this.matrixRepresentation = res.data.matrixRepresentation;
         this.$refs.ibm.link = res.data.link;
-        if (this.qasmFlag) {
-          this.$nextTick(() => {
-            this.qasmCode = res.data.qasm;
-          });
-        }
+        this.qasmCode = res.data.qasm;
       });
     },
     sendSystem: function() {
@@ -270,12 +268,11 @@ export default {
       var imgofblochSphere = document.getElementById("bloch");
       imgofblochSphere.src =
         "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
-
-      // if (this.qasmFlag) {
-      //   var imgOfCircuit = document.getElementById("circuitDrawing");
-      //   imgOfCircuit.src =
-      //     "http://127.0.0.1:5000/circuit.png?time=" + new Date();
-      // }
+      if (this.qasmIncludeIfFlag) {
+        var imgOfCircuit = document.getElementById("circuitDrawing");
+        imgOfCircuit.src =
+          "http://127.0.0.1:5000/circuit.png?time=" + new Date();
+      }
     },
     //-----------------------------------------------------------------------
     sendQasm: function() {
@@ -291,8 +288,10 @@ export default {
           this.$refs.ibm.link = res.data.link;
           if (this.qasmFlag) {
             this.qasmCode = res.data.qasm;
+            this.qasmIncludeIfFlag = this.qasmCode.includes("if");
           }
-          if (res.data.qasmRows) {
+
+          if (res.data.qasmRows && !this.qasmIncludeIfFlag) {
             // undefined qasmRows leads to an error
             let circuit = {
               wires: res.data.qasmRows.length,
@@ -311,7 +310,7 @@ export default {
     qasm: function() {
       this.qasmFlag = !this.qasmFlag;
       this.updateTracingLine();
-      this.sendSystem();
+      // this.sendSystem();
       if (this.qasmFlag) {
         document.getElementById("qasmToolboxBtn").innerHTML = "⟨ qasm |";
       } else {

@@ -613,7 +613,9 @@ class Circuit():
         from qiskit import QuantumCircuit
         circuit=QuantumCircuit(1)
         circuit=circuit.from_qasm_str(receivedDictionary["qasm"])
-        cols=self.getGates(circuit)
+        cols=[]
+        if("if" not in receivedDictionary["qasm"]):
+            cols=self.getGates(circuit)
         
         device='ibmq_16_melbourne'
         if "device" in receivedDictionary:
@@ -625,7 +627,7 @@ class Circuit():
         self.blochSphereGraph = self.blochSphere(circuit)
         self.histoGramGraph = self.graph(circuit,shots)
         self.circutDrawing = self.draw(circuit)    
-        print(cols)
+        #print(cols)
         if "API_TOKEN" in receivedDictionary:
             if receivedDictionary["API_TOKEN"] !="":
                 self.returnedDictionary["diracNotation"]=self.diracNotation(circuit)
