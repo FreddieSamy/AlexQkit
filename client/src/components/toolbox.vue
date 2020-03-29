@@ -273,7 +273,10 @@ export default {
     };
   },
   methods: {
-    log: function() {},
+    log: function() {
+      this.$parent.qasmIncludeIfFlag = false;
+      //this.$parent.maxWire = 0;
+    },
     // ----------------------------------------------------
     cloneGate({ name }) {
       if (name == "rx") {
