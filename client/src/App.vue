@@ -4,13 +4,12 @@
   </div>
 </template>
 <script>
-
 import clone from "./components/clone.vue";
 export default {
   name: "app",
   components:{
     clone,
-  },
+  }
 };
 </script>
 
@@ -26,5 +25,10 @@ body {
   color: #2c3e50;
   margin-top: 0px;
   overflow: auto;
+}
+.cline{
+  position:absolute;
+  background-color: black;
+  z-index :-1;
 }
 </style>

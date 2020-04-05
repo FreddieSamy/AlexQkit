@@ -1,8 +1,10 @@
 <template>
   <div class="wire" :id="'wire-' + id">
+    <!--
     <div class="delete-wire" :id="'d-' + id">
       <button class="delete" @click="deleteWire">x</button>
     </div>
+    -->
     <div class="qubit">
       <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">
         |{{ state }}⟩
@@ -10,20 +12,22 @@
     </div>
     <draggable
       class="wire-drop-area"
+      :id="'list' + id"
       :list="list"
       group="gates"
       @add="add"
       @remove="remove"
       @update="update"
-      @onEnd="change"
+      @end="end"
     >
       <div
         class="circuit-gate"
         v-for="element in list"
         :key="element.id"
         :id="element.name"
-        v-text="element.name"
-      ></div>
+      >
+        {{ displayName(element.name) }}
+      </div>
     </draggable>
   </div>
 </template>
@@ -35,100 +39,74 @@ export default {
   name: "wire",
   display: "wire",
   components: {
-    draggable
+    draggable,
   },
   data() {
     return {
       list: [],
       state: "0",
-      gates: []
+      gates: [],
     };
   },
   props: ["id"],
+  created: function() {
+    this.setGatesIdentity();
+  },
+  watch: {
+    list: {
+      immediate: true,
+      handler() {
+        this.$nextTick(() => {
+          this.updateWireAttributes();
+          if(this.id == this.$parent.rows){ 
+            // the last updated wire (last wire) update the whole system
+            this.$parent.updateSystem();
+          }
+
+        });
+      },
+    },
+  },
+
   methods: {
     //-----------------------------------------------------------------------
     add: function(evt) {
-      var gate = evt.to.childNodes[evt.newIndex];
-      gate.setAttribute("row", this.id);
-      gate.setAttribute("col", evt.newIndex + 1);
-      //window.console.log(gate);
-      //window.console.log(gate);
-      //window.console.log(evt.item.innerHTML);
-      //window.console.log("happen add");
-      //window.console.log("enter on end")
-      //window.console.log("item id : "+evt.item.id);
-      //window.console.log("to      : "+evt.to.classList.value);
-      //window.console.log(evt.from.childNodes);
-      //window.console.log("old i   : "+evt.oldIndex);
-      //window.console.log("new i   : "+evt.newIndex);
-      //window.console.log(evt.clone);
-      //window.console.log(evt.pullMode);
-
+      if(evt.from.id[0] == 'l'){
+      var wire = evt.from.id.replace("list","")
+      this.$parent.$refs.wire[wire-1].addGateByIndex(evt.oldIndex);
+       }
+      this.$parent.updateMaxWire();
+      this.$parent.addIdentityToColumn(this.id);
+      this.$parent.updateMaxWire();
+      this.$parent.removeIdentitySystem();
+    },
+    update: function() {
       this.$parent.updateMaxWire();
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
-
-      //var x = document.querySelectorAll(".circuit-gate")
-      //x=x.hasAttribute("col");
-      //window.console.log(x);
     },
-    update: function(evt) {
-      var gate = evt.to.childNodes[evt.newIndex];
-      gate.setAttribute("row", this.id);
-      gate.setAttribute("col", evt.newIndex + 1);
-      window.console.log(gate);
-      /*
-      window.console.log("enter on update")
-      window.console.log("item id : "+evt.item.id);
-      window.console.log("to      : "+evt.to.classList.value);
-      window.console.log("event   : "+evt.from.classList.value);
-      window.console.log("old i   : "+evt.oldIndex);
-      window.console.log("new i   : "+evt.newIndex);
-      */
+    remove: function() {
       this.$parent.updateMaxWire();
       this.$parent.removeIdentitySystem();
     },
-    remove: function(/*evt*/) {
-      /*
-      window.console.log("enter on remove");
-      window.console.log("item");
-      window.console.log(evt.item);
-      window.console.log("to");
-      window.console.log(evt.to);
-      window.console.log("from");
-      window.console.log(evt.from);
-      window.console.log("old i: "+evt.oldIndex);
-      window.console.log("new i: "+evt.newIndex);
-      this.$parent.updateMaxWire();
-      */
-      this.addIdentity();
-      this.$parent.removeIdentitySystem();
+    end: function() {
+      this.$parent.updateSystem();
     },
-    change: function(/*event,evt*/) {
-      window.console.log("happen change");
-      /*
-      window.console.log("enter on change")
-      this.$parent.updateMaxWire(); // update wire that has maximum gates
-      var element = evt.item;
-      window.console.log("element = "+element);
-      var eventName = Object.keys(event)[0];
-      var gateName = event[eventName]["element"]["name"];
-      //var gateIndex = event[eventName]['newIndex'];
-      if (eventName == "added") {
-         if(gateName == 'c'){
-            window.console.log('yarab ba2a');
-         }
-        this.$parent.addIdentityToColumn(this.id);
+    updateGate: function(gate, row, col) {
+      gate.setAttribute("row", "_" + row);
+      gate.setAttribute("col", "_" + col);
+      this.$parent.updateMaxWire();
+    },
+    updateWireAttributes: function() {
+      let wire = document.querySelector("#list" + this.id + "");
+      if (this.list.length) {
+        let gates = wire.childNodes;
+        for (let i = 0; i < this.list.length; i++) {
+          this.$nextTick(() => {
+            this.updateGate(gates[i], this.id, i + 1);
+          });
+        }
       }
-      if (eventName == "removed") {
-        this.addIdentity();
-      }
-      this.$parent.removeIdentitySystem();
-      this.$parent.showSystem(); 
-      //set tracing line at the end to run the whole circuit
-      this.$parent.exeCount = this.$parent.maxWire;
-      //this.$parent.updateTracingLine();
-      */
     },
     //-----------------------------------------------------------------------
     qubitState: function(evt) {
@@ -145,37 +123,27 @@ export default {
     },
     //-----------------------------------------------------------------------
     addIdentity: function() {
+      // add identiy across the columns of same wire (row)
       for (let i = this.list.length; i < this.$parent.maxWire; i++) {
         this.list.push({ name: "i" });
       }
     },
     //-----------------------------------------------------------------------
     getGateByIndex: function(gateIndex) {
-      window.console.log(this.list[gateIndex]);
       return this.list[gateIndex];
     },
     //-----------------------------------------------------------------------
+    addGateByIndex: function(gateIndex) {
+      this.list.splice(gateIndex, 0, { name: "i" });
+    },
     removeGateByIndex: function(gateIndex) {
       if (this.list[gateIndex]["name"] == "i") {
-        //window.console.log("remove "+gateIndex+" th gate at wire"+this.id);
         this.list.splice(gateIndex, 1);
       }
     },
     //-----------------------------------------------------------------------
     resetWire: function() {
       this.list = [];
-    },
-    //-----------------------------------------------------------------------
-    lastIdentity: function() {
-      if (this.list.length == this.$parent.maxWire) {
-        return this.list[this.$parent.maxWire - 1]["name"];
-      } else {
-        return "";
-      }
-    },
-    //-----------------------------------------------------------------------
-    popLast: function() {
-      this.list.pop();
     },
     //-----------------------------------------------------------------------
     getState: function() {
@@ -204,23 +172,31 @@ export default {
         this.list.push({ name: gatesList[colIdx] });
       }
     },
-    //-----------------------------------------------------------------------
-    objectNames: function(listOfObject) {
-      // unused till now
-      var names = [];
-      for (let i = 0; i < listOfObject.length; i++) {
-        names.push(listOfObject[i]["name"]);
+    setGatesIdentity: function() {
+      var maxWire = this.$parent.maxWire;
+      let list = [...this.list];
+      for (let colIdx = 0; colIdx < maxWire; colIdx++) {
+        list.push({ name: "i" });
       }
-      return names;
-    }
+      this.list = list;
+    },
     //-----------------------------------------------------------------------
-  }
+    displayName: function(name) {
+      if (name.startsWith("custom_")) {
+        return name.slice(7);
+      } else {
+        return name;
+      }
+    },
+    //-----------------------------------------------------------------------
+  },
 };
 </script>
 <!-- =============================================================  -->
 <style scoped>
 .wire {
-  margin: 0.7em 0em 0em 0em;
+  margin: 0.5em 0em 0em 0em;
+  z-index: -1;
 }
 .circuit-gate {
   color: white;
@@ -234,6 +210,7 @@ export default {
   width: 2.5em;
   height: 2.5em;
   background-color: #5d6d7e;
+  z-index: 2;
 }
 
 .lbl-wire {
@@ -287,7 +264,7 @@ export default {
   /*border: 0.1em dashed black;*/
 }
 #i {
-  opacity: 0.5;
+  opacity: 0.69;
 }
 /*
 #c{

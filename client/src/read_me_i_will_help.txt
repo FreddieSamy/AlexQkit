@@ -24,8 +24,3 @@ row swap
 
 
 
-Tasks on Mario
---------------------
-control gate 
-set system at specific algorithm 
-forward column step by step

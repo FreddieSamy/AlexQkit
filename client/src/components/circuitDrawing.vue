@@ -15,11 +15,11 @@ export default {};
 <!-- ========================================================== -->
 <style scoped>
 .circuitDrawing {
-  flex: 1;
-  border: 0.05em solid black;
+  /*flex: 1;*/
+  /*border: 0.05em solid black;
   padding: 0.2em 0.2em 0.2em 0.2em;
   margin: 1.5em 0em 0em 0em;
-  border-radius: 0.5em;
+  border-radius: 0.5em;*/
 }
 .circuitDrawing-image {
   /*margin: 4em 0em 0em 0em;
