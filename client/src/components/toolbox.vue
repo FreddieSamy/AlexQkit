@@ -140,14 +140,18 @@
     </div>
     <div class="user-tools">
       <button id="qasmToolboxBtn" class="qasm" @click="this.$parent.qasm">| qasm ⟩</button>
-      <div id="myNav" class="overlay">
+      </div>
+    <div class="user-tools">
+      <addcustomgate ref="addcustomgate"></addcustomgate>
+    </div>
+      <!-- <div id="myNav" class="overlay">
         <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
         <div class="column1">
           <h1 class="p" style="color: black ">from matrix</h1>
           <h3 style="color: black">name</h3>
           <input type="text" id="nameofgate" />
           <h3 style="color: black">number of wires</h3>
-          <matrixcu ref="matrixcu"></matrixcu>
+          <CustomMx ref="matrixcu"></CustomMx>
           <br />
           <button
             @click="create_the_matrix()"
@@ -221,22 +225,24 @@
         <div class="addGateError">
           <label id="errormsg"></label>
         </div>
-      </div>
-      <button class="addGate" @click="openNav()">Add Custom Gate</button>
-    </div>
+      </div> -->
+      <!-- <button class="addGate" @click="openNav()">Add Custom Gate</button> -->
+
+    
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
-import matrixcu from "./matrixcu.vue";
+import addcustomgate from "./addcustomgate" ;
+
 export default {
   name: "toolbox",
   display: "toolbox",
   components: {
-    draggable,
-    matrixcu
+   draggable,
+   addcustomgate
   },
   data() {
     return {
@@ -291,121 +297,125 @@ export default {
       };
     },
     // ----------------------------------------------------
-    addGate(nameofgate) {
-      this.customGates.push({
-        name: "custom_" + nameofgate,
-        id: nameofgate
-      });
-      if (this.customGates.length < 9) {
-        this.w =
-          "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
-      } else {
-        this.w = "width:15.9em";
-      }
-    },
-    // ----------------------------------------------------
-    openNav() {
-      document.getElementById("myNav").style.width = "100%";
-      document.getElementById("subCircuitName").value = null;
-      document.getElementById("nameofgate").value = null;
-    },
-    // ----------------------------------------------------
-    closeNav() {
-      document.getElementById("myNav").style.width = "0%";
-      document.getElementById("errormsg").innerHTML = null;
-      document.getElementById("wires").value = null;
+     addGate(nameofgate) {
+       this.customGates.push({
+         name: "custom_" + nameofgate,
+         id: nameofgate
+       });
+       if (this.customGates.length < 9) {
+         this.w =
+           "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
+       } else {
+         this.w = "width:15.9em";
+       }
+     },
+     sendtoclone(){
+       var z= this.$refs.addcustomgate;
+       return z.sendtotoolbox();
+     },
+    // // ----------------------------------------------------
+    // openNav() {
+    //   document.getElementById("myNav").style.width = "100%";
+    //   document.getElementById("subCircuitName").value = null;
+    //   document.getElementById("nameofgate").value = null;
+    // },
+    // // ----------------------------------------------------
+    // closeNav() {
+    //   document.getElementById("myNav").style.width = "0%";
+    //   document.getElementById("errormsg").innerHTML = null;
+    //   document.getElementById("wires").value = null;
 
-      var conmatrixcu2 = this.$refs.matrixcu;
-      conmatrixcu2.clear();
-    },
-    // ----------------------------------------------------
-    create_the_matrix() {
-      var nameofgate = document.getElementById("nameofgate").value;
-      //var valofgate = document.getElementById("valueofgate");
-      var conmatrixcu = this.$refs.matrixcu;
-      var matrix = conmatrixcu.pulldata();
-      var { matrix_validate, msg } = this.validate_of_matrix(
-        matrix,
-        nameofgate
-      );
-      window.console.log(matrix_validate);
-      window.console.log(msg);
-      var isUnitary;
-      var jsonObject = {};
-      jsonObject["matrix"] = matrix;
-      window.console.log(matrix_validate);
-      // window.console.log(msg);
+    //   var conmatrixcu2 = this.$refs.matrixcu;
+    //   conmatrixcu2.clear();
+    // },
+    // // ----------------------------------------------------
+    // create_the_matrix() {
+    //   var nameofgate = document.getElementById("nameofgate").value;
+    //   //var valofgate = document.getElementById("valueofgate");
+    //   var conmatrixcu = this.$refs.matrixcu;
+    //   var matrix = conmatrixcu.pulldata();
+    //   var { matrix_validate, msg } = this.validate_of_matrix(
+    //     matrix,
+    //     nameofgate
+    //   );
+    //   window.console.log(matrix_validate);
+    //   window.console.log(msg);
+    //   var isUnitary;
+    //   var jsonObject = {};
+    //   jsonObject["matrix"] = matrix;
+    //   window.console.log(matrix_validate);
+    //   // window.console.log(msg);
 
-      if (matrix_validate) {
-        axios.post("http://localhost:5000/isUnitary", jsonObject).then(res => {
-          window.console.log("the data success to returned be from the server");
-          isUnitary = res.data.isUnitary;
-          //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
-          window.console.log("new unitary:" + isUnitary);
-          if (isUnitary) {
-            this.addGate(nameofgate);
-            this.customsrever[nameofgate] = matrix;
-            // window.console.log(this.customsrever);
-            document.getElementById("errormsg").innerHTML = null;
-            this.closeNav();
-          }
-        });
-      } else {
-        document.getElementById("errormsg").innerHTML = "*" + msg + "*";
-      }
-      // document.getElementById("nameofgate").value = null;
-      // conmatrixcu.clear();
-      //document.getElementById("valueofgate").value = null;
-      //window.console.log("unitary:" + this.$parent.isUnitary);
-    },
-    // ----------------------------------------------------
-    //
-    // ----------------------------------------------------
-    validate_of_matrix(matrix, nameofgate) {
-      var matrix_validate = true;
-      var msg = "please check the dimenons of the matrix";
-      var count1, count2, check;
-      var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
+    //   if (matrix_validate) {
+    //     axios.post("http://localhost:5000/isUnitary", jsonObject).then(res => {
+    //       window.console.log("the data success to returned be from the server");
+    //       isUnitary = res.data.isUnitary;
+    //       //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
+    //       window.console.log("new unitary:" + isUnitary);
+    //       if (isUnitary) {
+    //         this.addGate(nameofgate);
+    //         this.customsrever[nameofgate] = matrix;
+    //         // window.console.log(this.customsrever);
+    //         document.getElementById("errormsg").innerHTML = null;
+    //         this.closeNav();
+    //       }
+    //     });
+    //   } else {
+    //     document.getElementById("errormsg").innerHTML = "*" + msg + "*";
+    //   }
+    //   // document.getElementById("nameofgate").value = null;
+    //   // conmatrixcu.clear();
+    //   //document.getElementById("valueofgate").value = null;
+    //   //window.console.log("unitary:" + this.$parent.isUnitary);
+    // },
+    // // ----------------------------------------------------
+    // //
+    // // ----------------------------------------------------
+    // validate_of_matrix(matrix, nameofgate) {
+    //   var matrix_validate = true;
+    //   var msg = "please check the dimenons of the matrix";
+    //   var count1, count2, check;
+    //   var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
 
-      for (let i in this.customGates) {
-        for (let k in this.customGates[i]) {
-          if (this.customGates[i][k] === nameofgate) {
-            matrix_validate = false;
-            msg = "this name is already exist,please choose different name";
-            return { matrix_validate, msg };
-          }
-        }
-      }
+    //   for (let i in this.customGates) {
+    //     for (let k in this.customGates[i]) {
+    //       if (this.customGates[i][k] === nameofgate) {
+    //         matrix_validate = false;
+    //         msg = "this name is already exist,please choose different name";
+    //         return { matrix_validate, msg };
+    //       }
+    //     }
+    //   }
 
-      if (nameofgate == "" || nameofgate.length == 0) {
-        matrix_validate = false;
-        msg = "you have to write name for the gate";
-        return { matrix_validate, msg };
-      }
-      if (nameofgate.includes(".")) {
-        matrix_validate = false;
-        msg = "name of gate can't include '.'";
-        return { matrix_validate, msg };
-      }
+    //   if (nameofgate == "" || nameofgate.length == 0) {
+    //     matrix_validate = false;
+    //     msg = "you have to write name for the gate";
+    //     return { matrix_validate, msg };
+    //   }
+    //   if (nameofgate.includes(".")) {
+    //     matrix_validate = false;
+    //     msg = "name of gate can't include '.'";
+    //     return { matrix_validate, msg };
+    //   }
 
-      for (count1 in matrix) {
-        for (count2 in matrix[count1]) {
-          check = regex.test(matrix[count1][count2]);
-          if (!check) {
-            matrix_validate = false;
-            msg = "please check value of every element in matrix ";
-            return { matrix_validate, msg };
-          }
-        }
-      }
-      msg = "";
-      return { matrix_validate, msg };
-    },
+    //   for (count1 in matrix) {
+    //     for (count2 in matrix[count1]) {
+    //       check = regex.test(matrix[count1][count2]);
+    //       if (!check) {
+    //         matrix_validate = false;
+    //         msg = "please check value of every element in matrix ";
+    //         return { matrix_validate, msg };
+    //       }
+    //     }
+    //   }
+    //   msg = "";
+    //   return { matrix_validate, msg };
+    // },
 
-    // ----------------------------------------------------
-    sendtoclone() {
-      return this.customsrever;
-    },
+    // // ----------------------------------------------------
+    // sendtoclone() {
+    //   return this.customsrever;
+    // },
     // ----------------------------------------------------
     nthRoot: function() {
       var name = document.getElementById("rootGate").value;
@@ -555,7 +565,7 @@ export default {
   transition: transform 0.3s;
 }
 .user-tools {
-  display: block;
+  display: inline-block;
 }
 
 .shots {
@@ -572,17 +582,18 @@ export default {
   background-color: red;
 }
 */
-.addGate {
+ .addGate {
   margin: 0em 0em 0em 0.2em;
   background-color: white;
   border-radius: 0.5em;
-}
+} 
 .qasm {
   margin: 0em 0em 0em 0.2em;
   background-color: white;
   border-radius: 0.5em;
+  display: inline-block;
 }
-.overlay {
+/* .overlay {
   height: 100%;
   width: 0;
   position: fixed;
@@ -639,9 +650,9 @@ export default {
     top: 15px;
     right: 35px;
   }
-}
+} */
 
-.column1 {
+/* .column1 {
   float: left;
   min-width: 20em;
   min-height: 25em;
@@ -710,7 +721,7 @@ export default {
   text-align: center;
   font-size: 40px;
   display: inline-block;
-}
+} */
 #hover-element {
   display: none;
   position: absolute;
