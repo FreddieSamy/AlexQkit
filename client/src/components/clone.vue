@@ -65,6 +65,7 @@ import diracNotation from "./diracNotation.vue";
 import circuitDrawing from "./circuitDrawing.vue";
 import matrixRepresentation from "./matrixRepresentation.vue";
 
+
 export default {
   name: "clone",
   display: "clone",
@@ -79,7 +80,9 @@ export default {
     histoGram,
     diracNotation,
     circuitDrawing,
-    matrixRepresentation
+    matrixRepresentation,
+    
+
   },
   mounted() {
     //window.console.log("clone has been mounted");
