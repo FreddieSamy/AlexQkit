@@ -1,9 +1,9 @@
 <template>
   <div class="histoGram">
-      <img 
-      src="http://127.0.0.1:5000/chart.png" 
-      alt="histogram" 
-      id="chart" 
+      <img
+      src="http://127.0.0.1:5000/chart.png"
+      alt="histogram"
+      id="chart"
       class="histogram-image responsive"
       />
   </div>
@@ -11,7 +11,7 @@
 <!-- ========================================================== -->
 <script>
 export default {
-}
+  }
 </script>
 <!-- ========================================================== -->
 <style scoped>
@@ -23,7 +23,7 @@ export default {
   border-radius: 0.5em;
 
 }
-.histogram-image{ 
+.histogram-image{
   margin: 4em 0em 0em 0em;
   padding: 0em 0em 0em 0em;
   height:auto;
