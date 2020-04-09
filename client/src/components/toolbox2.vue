@@ -25,7 +25,7 @@
 </template>
 <!-- =============================================================  -->
 <script>
-import { Algorithms } from "./../Algorithms";
+import { mapState } from 'vuex'
 export default {
   name: "toolbox2",
   display: "toolbox2",
@@ -34,7 +34,6 @@ export default {
     return {
       eventIndex: 0,
       selectedAlgorithm: null,
-      algorithms: Algorithms,
       savedCirciutName: "",
     };
   },
@@ -45,6 +44,9 @@ export default {
         this.selectedAlgorithm=null;
       }
     },
+  },
+  computed: {
+    ...mapState(['algorithms'])
   },
   methods: {
     addWire: function() {

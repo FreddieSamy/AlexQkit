@@ -1,17 +1,19 @@
 import Vue from "vue";
 import App from "./App.vue";
 import axios from "axios";
+import store from './store'
 
 Vue.config.productionTip = false;
 
 new Vue({
+  store,
   methods: {
   },
   render: h => h(App),
 
   mounted() {
     axios
-      .get("http://localhost:5000/", { useCredentials: true })
+      .get(this.$store.state.routes.serverRoute, { useCredentials: true })
       .then(res => {
         window.console.log("Server Request responds  : "+res.data);
       });

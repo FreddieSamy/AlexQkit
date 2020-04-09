@@ -64,7 +64,7 @@ import histoGram from "./histoGram.vue";
 import diracNotation from "./diracNotation.vue";
 import circuitDrawing from "./circuitDrawing.vue";
 import matrixRepresentation from "./matrixRepresentation.vue";
-
+// import { mapState } from 'vuex';
 
 export default {
   name: "clone",
@@ -81,16 +81,16 @@ export default {
     diracNotation,
     circuitDrawing,
     matrixRepresentation,
-    
-
   },
   mounted() {
     //window.console.log("clone has been mounted");
     this.sendSystem();
+    window.console.log()
   },
   updated() {
     //window.console.log("clone has been updated");
     this.controlSystem();
+   
   },
   data() {
     return {
@@ -98,11 +98,9 @@ export default {
       API_TOKEN: "",
       diracNotationData: "|00⟩",
       exeCount: 0,
-      route: "http://localhost:5000/data",
-      resetRoute: "http://localhost:5000/reset",
-      states: ["0", "1", "+", "-", "i", "-i"],
-      rows: 2, // number of wires
-      maxWire: 0, // maximum number of gates in a wire
+      route: this.$store.state.routes.appRoute,
+      rows: 2,        // number of wires
+      maxWire: 0,     // maximum number of gates in a wire
       qasmFlag: false,
       qasmIncludeIfFlag: false,
       matrixRepresentation: [],
@@ -126,6 +124,9 @@ export default {
         this.eventQueue.push(this.jsonObject);
       }
     }
+  },
+  computed:{
+    // ...mapState['jsonObject']
   },
   methods: {
     //-----------------------------------------------------------------------

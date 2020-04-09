@@ -113,8 +113,8 @@ export default {
       var i = (parseInt(evt.target.id["3"]) + 1) % 6;
       var id = evt.target.id.substring(0, 3);
       evt.target.id = id + i;
-      evt.target.innerHTML = "|" + this.$parent.states[i] + "⟩";
-      this.state = this.$parent.states[i];
+      this.state = this.$store.state.states[i]
+      evt.target.innerHTML = "|" + this.state + "⟩";
     },
     //-----------------------------------------------------------------------
     deleteWire: function(evt) {
