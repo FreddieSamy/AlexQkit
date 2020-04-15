@@ -94,7 +94,6 @@
 <script>
 import { mapState } from "vuex";
 import draggable from "vuedraggable";
-import axios from "axios";
 import addcustomgate from "./addcustomgate";
 
 export default {
@@ -182,11 +181,11 @@ export default {
   font-size: 10px;
   border-radius: 8px;
 }
-.user-tools{
+.user-tools {
   flex-basis: 100%;
   display: flex;
   flex-direction: row;
-  flex-wrap:nowrap;
+  flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: baseline;
 }
