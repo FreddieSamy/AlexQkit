@@ -20,7 +20,10 @@
         {{ item.name }}
       </option>
     </select>
+    <!-- just devolopment block  (will be deleted)-->
+    <br>
     <button @click="clearConsole">Clear Console</button>
+    <!-- end development block -->
   </div>
 </template>
 <!-- =============================================================  -->
