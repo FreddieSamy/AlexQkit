@@ -2,7 +2,7 @@
   <div class="clone">
     <div class="circuit-tools">
       <toolbox ref="toolbox"></toolbox>
-      <ibm ref="ibm"></ibm>
+      <ibm  class="ib" ref="ibm"></ibm>
     </div>
     <div class="circuit">
       <div class="editor" v-if="qasmFlag">
@@ -545,12 +545,15 @@ export default {
   white-space: nowrap;
 }
 .circuit-tools {
-  /*border: 3px solid black;*/
   display: flex;
   margin: 0.2em 0.2em 0.2em 0.2em;
   padding: 0em 0em 0em 0em;
-  width: 99%;
-  white-space: normal;
+}
+.toolbox {
+  flex-basis:70%;
+}
+.ibm {
+  flex-basis:30%;
 }
 .wires {
   /*border: 0.1em dashed blue;*/
