@@ -503,38 +503,7 @@ export default {
             this.setAlgorithm(json_object);
           });
       }
-    },
-    //-----------------------------------------------------------------------
-    cloneSubCircuitCustoGate: function(fromRow, toRow, fromColumn, toColumn) {
-      var gatesSystem = [];
-      for (let i = fromRow - 1; i < toRow; i++) {
-        var wireCaller = this.$refs.wire[i];
-        gatesSystem.push(
-          wireCaller.getGates(i).slice(fromColumn - 1, toColumn)
-        );
-      }
-      var jsonObject = {
-        wires: toRow - fromRow + 1,
-        rows: gatesSystem
-      };
-      axios
-        .post("http://localhost:5000/subCircuitCustomGate", jsonObject)
-        .then(res => {
-          if (res.data.isUnitary) {
-            var name = document.getElementById("subCircuitName").value;
-            this.$refs.toolbox.addGate(name);
-            this.$refs.toolbox.customsrever[name] = res.data.matrix;
-            document.getElementById("errormsg").innerHTML = null;
-            this.$refs.toolbox.closeNav();
-          } else {
-            document.getElementById("errormsg").innerHTML =
-              "*sorry, this subcircuit isn't unitary*";
-          }
-        });
-      document.getElementById("errormsg").innerHTML = null;
     }
-    //-----------------------------------------------------------------------
-
     //-----------------------------------------------------------------------
   }
 };

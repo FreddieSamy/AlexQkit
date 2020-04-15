@@ -1,91 +1,92 @@
 <template>
-  <div >
-    
-      <div id="myNav" class="overlay">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
-        <div class="column1">
-          <h1 class="p" style="color: black ">from matrix</h1>
-          <h3 style="color: black">name</h3>
-          <input type="text" id="nameofgate" />
-          <h3 style="color: black">number of wires</h3>
-          <CustomMx ref="matrixcu"></CustomMx>
-          <br />
-          <button
-            @click="create_the_matrix()"
-            style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
-          >create</button>
-        </div>
-        <div class="column2">
-          <h1 style="color: black;">from rotation</h1>
-          <h3 style="color: black;">select the gate</h3>
-        </div>
-        <!-- <div class="column3">
-          <h1 style="color: black;">from circuit</h1>
-          <h3 style="color: black;">Name</h3>
-          <input type="text" id="subCircuitName" />
-          <h3 style="color: black;">Rows</h3>
-          <label style="color: black;">From</label>
-          <select id="fromRow" style="width:15%;">
-            <option v-for="i in this.$parent.rows" :key="i" :value="i">{{i}}</option>
-          </select>
-          <label style="color: black;">To</label>
-          <select id="toRow" style="width:15%;">
-            <option v-for="i in this.$parent.rows" :key="i" :value="i">{{i}}</option>
-          </select>
-          <h3 style="color: black;">Columns</h3>
-          <label style="color: black;">From</label>
-          <select id="fromColumn" style="width:15%;">
-            <option v-for="i in this.$parent.maxWire" :key="i" :value="i">{{i}}</option>
-          </select>
-          <label style="color: black;">To</label>
-          <select id="toColumn" style="width:15%;">
-            <option v-for="i in this.$parent.maxWire" :key="i" :value="i">{{i}}</option>
-          </select>
-          <br />
-          <button
-            @click="subCircuitCustoGate()"
-            style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
-          >create</button>
-        </div>
-        <div class="column4">
-          <h1 style="color: black;">nth root</h1>
-          <h3 style="color: black">select the gate</h3>
-          <select id="rootGate" style="width:40%;">
-            <optgroup label="Gates">
-              <option
-                v-for="index in gates2.length - 1"
-                :key="index"
-                :value="gates2[index - 1].name"
-              >{{ gates2[index - 1].name }}</option>
-              <option
-                v-for="element in gates4"
-                :key="element.id"
-                :value="element.name"
-              >{{ element.name }}</option>
-            </optgroup>
-            <optgroup v-if="customGates.length" label="Custom Gates">
-              <option
-                v-for="element in customGates"
-                :key="element.id"
-                :value="element.id"
-              >{{ element.id }}</option>
-            </optgroup>
-          </select>
-          <h3 style="color: black;">root</h3>
-          <input style="width:40%;" id="root" type="number" value="2" />
-          <button
-            @click="nthRoot()"
-            style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
-          >create</button>
-        </div>
--->
-        <div class="addGateError">
-          <label id="errormsg"></label>
-        </div> 
+  <div class="toolbox">
+    <div id="myNav" class="overlay">
+      <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
+
+      <div class="column1">
+        <h1 class="p" style="color: black ">from matrix</h1>
+        <h3 style="color: black">name</h3>
+        <input type="text" id="nameofgate" />
+        <h3 style="color: black">number of wires</h3>
+        <CustomMx ref="matrixcu"></CustomMx>
+        <br />
+        <button
+          @click="create_the_matrix()"
+          style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
+        >create</button>
       </div>
-      <button class="addGate" @click="openNav()">Add Custom Gate</button>
+
+      <div class="column2">
+        <h1 style="color: black;">from rotation</h1>
+        <h3 style="color: black;">select the gate</h3>
+      </div>
+
+      <div class="column3">
+        <h1 style="color: black;">from circuit</h1>
+        <h3 style="color: black;">Name</h3>
+        <input type="text" id="subCircuitName" />
+        <h3 style="color: black;">Rows</h3>
+        <label style="color: black;">From</label>
+        <select id="fromRow" style="width:15%;">
+          <option v-for="i in this.$parent.$parent.rows" :key="i" :value="i">{{i}}</option>
+        </select>
+        <label style="color: black;">To</label>
+        <select id="toRow" style="width:15%;">
+          <option v-for="i in this.$parent.$parent.rows" :key="i" :value="i">{{i}}</option>
+        </select>
+        <h3 style="color: black;">Columns</h3>
+        <label style="color: black;">From</label>
+        <select id="fromColumn" style="width:15%;">
+          <option v-for="i in this.$parent.$parent.maxWire" :key="i" :value="i">{{i}}</option>
+        </select>
+        <label style="color: black;">To</label>
+        <select id="toColumn" style="width:15%;">
+          <option v-for="i in this.$parent.$parent.maxWire" :key="i" :value="i">{{i}}</option>
+        </select>
+        <br />
+        <button
+          @click="subCircuitCustoGate()"
+          style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
+        >create</button>
+      </div>
+
+      <div class="column4">
+        <h1 style="color: black;">nth root</h1>
+        <h3 style="color: black">select the gate</h3>
+        <select id="rootGate" style="width:40%;">
+          <optgroup label="Gates">
+            <option value="x">X</option>
+            <option value="y">Y</option>
+            <option value="z">Z</option>
+            <option value="h">H</option>
+            <option value="s">S</option>
+            <option value="t">T</option>
+            <option value="sdg">S†</option>
+            <option value="tdg">T†</option>
+          </optgroup>
+          <optgroup v-if="this.$parent.customGates.length" label="Custom Gates">
+            <option
+              v-for="element in this.$parent.customGates"
+              :key="element.id"
+              :value="element.id"
+            >{{ element.id }}</option>
+          </optgroup>
+        </select>
+        <h3 style="color: black;">root</h3>
+        <input style="width:40%;" id="root" type="number" value="2" />
+        <button
+          @click="nthRoot()"
+          style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
+        >create</button>
+      </div>
+
+      <div class="addGateError">
+        <label id="errormsg"></label>
+      </div>
     </div>
-  
+
+    <button class="addGate" @click="openNav()">Add Custom Gate</button>
+  </div>
 </template>
 <!-- =============================================================  -->
 <script>
@@ -100,10 +101,9 @@ export default {
     CustomMx
   },
   data() {
-     return{
-     customsrever: {}
-  
- };
+    return {
+      customsrever: {}
+    };
   },
   methods: {
     // log: function() {
@@ -124,12 +124,12 @@ export default {
     //   };
     // },
     // ----------------------------------------------------
-    
+
     // ----------------------------------------------------
     openNav() {
       document.getElementById("myNav").style.width = "100%";
-    //   document.getElementById("subCircuitName").value = null;
-       document.getElementById("nameofgate").value = null;
+      //   document.getElementById("subCircuitName").value = null;
+      document.getElementById("nameofgate").value = null;
     },
     // ----------------------------------------------------
     closeNav() {
@@ -165,7 +165,7 @@ export default {
           //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
           window.console.log("new unitary:" + isUnitary);
           if (isUnitary) {
-            this.$parent.addGate(nameofgate);
+            this.addGate(nameofgate, nameofgate);
             this.customsrever[nameofgate] = matrix;
             // window.console.log(this.customsrever);
             document.getElementById("errormsg").innerHTML = null;
@@ -229,83 +229,140 @@ export default {
       return this.customsrever;
     },
     // ----------------------------------------------------
-    // nthRoot: function() {
-    //   var name = document.getElementById("rootGate").value;
-    //   /*window.console.log(name);*/
-    //   var root = document.getElementById("root").value;
-    //   if (name + "^(1/" + root + ")" in this.customsrever) {
-    //     document.getElementById("errormsg").innerHTML =
-    //       "*sorry, " + name + "^(1/" + root + ")" + " is already exist*";
-    //   } else {
-    //     var jsonObject = {
-    //       root: root,
-    //       gate: name,
-    //       custom: this.customsrever
-    //     };
-    //     if (root >= 2) {
-    //       axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
-    //         /*window.console.log(res.data);*/
-    //         if (res.data.isUnitary) {
-    //           this.addGate(name + "^(1/" + root + ")");
-    //           this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
-    //           document.getElementById("errormsg").innerHTML = null;
-    //           this.closeNav();
-    //         } else {
-    //           document.getElementById("errormsg").innerHTML =
-    //             "*sorry, " + name + "^(1/" + root + ")" + " isn't unitary*";
-    //         }
-    //       });
-    //     } else {
-    //       document.getElementById("errormsg").innerHTML =
-    //         "*please, choose number more than one !!*";
-    //     }
-    //   }
-    // },
+    nthRoot: function() {
+      var select = document.getElementById("rootGate");
+      var name = select.value;
+      var frontName = select.options[select.selectedIndex].text;
+      /*window.console.log(name);*/
+      var root = document.getElementById("root").value;
+      if (name + "^(1/" + root + ")" in this.customsrever) {
+        document.getElementById("errormsg").innerHTML =
+          "*sorry, " + frontName + "^(1/" + root + ")" + " is already exist*";
+      } else {
+        var jsonObject = {
+          root: root,
+          gate: name,
+          custom: this.customsrever
+        };
+        if (root >= 2) {
+          axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
+            /*window.console.log(res.data);*/
+            if (res.data.isUnitary) {
+              this.addGate(
+                name + "^(1/" + root + ")",
+                frontName + "^(1/" + root + ")"
+              );
+              this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
+              document.getElementById("errormsg").innerHTML = null;
+              this.closeNav();
+            } else {
+              document.getElementById("errormsg").innerHTML =
+                "*sorry, " +
+                frontName +
+                "^(1/" +
+                root +
+                ")" +
+                " isn't unitary*";
+            }
+          });
+        } else {
+          document.getElementById("errormsg").innerHTML =
+            "*please, choose number more than one !!*";
+        }
+      }
+    },
     // ----------------------------------------------------
-    // subCircuitCustoGate: function() {
-    //   var name = document.getElementById("subCircuitName").value;
-    //   var flag = true;
-    //   var fromRow = document.getElementById("fromRow").value;
-    //   var toRow = document.getElementById("toRow").value;
-    //   var fromColumn = document.getElementById("fromColumn").value;
-    //   var toColumn = document.getElementById("toColumn").value;
-    //   if (fromRow && toRow && fromColumn && toColumn) {
-    //     if (fromRow <= toRow && fromColumn <= toColumn) {
-    //       if (name == "" || name.length == 0) {
-    //         document.getElementById("errormsg").innerHTML =
-    //           "*please, enter a name for the gate*";
-    //       } else {
-    //         for (let i in this.customGates) {
-    //           for (let k in this.customGates[i]) {
-    //             if (this.customGates[i][k] === name) {
-    //               flag = false;
-    //               document.getElementById("errormsg").innerHTML =
-    //                 "*this name is already exist*";
-    //             }
-    //           }
-    //         }
-    //         if (flag) {
-    //           this.$parent.cloneSubCircuitCustoGate(
-    //             fromRow,
-    //             toRow,
-    //             fromColumn,
-    //             toColumn
-    //           );
-    //         }
-    //       }
-    //     } else {
-    //       document.getElementById("errormsg").innerHTML =
-    //         "*please, check the selected numbers*";
-    //     }
-    //   }
-    // }
+    subCircuitCustoGate: function() {
+      var name = document.getElementById("subCircuitName").value;
+      var flag = true;
+      var fromRow = document.getElementById("fromRow").value;
+      var toRow = document.getElementById("toRow").value;
+      var fromColumn = document.getElementById("fromColumn").value;
+      var toColumn = document.getElementById("toColumn").value;
+      if (fromRow && toRow && fromColumn && toColumn) {
+        if (fromRow <= toRow && fromColumn <= toColumn) {
+          if (name == "" || name.length == 0) {
+            document.getElementById("errormsg").innerHTML =
+              "*please, enter a name for the gate*";
+          } else {
+            for (let i in this.$parent.customGates) {
+              for (let k in this.$parent.customGates[i]) {
+                if (this.$parent.customGates[i][k] === name) {
+                  flag = false;
+                  document.getElementById("errormsg").innerHTML =
+                    "*this name is already exist*";
+                }
+              }
+            }
+            if (flag) {
+              this.cloneSubCircuitCustoGate(
+                fromRow,
+                toRow,
+                fromColumn,
+                toColumn
+              );
+            }
+          }
+        } else {
+          document.getElementById("errormsg").innerHTML =
+            "*please, check the selected numbers*";
+        }
+      }
+    },
+    //-----------------------------------------------------------------------
+    cloneSubCircuitCustoGate: function(fromRow, toRow, fromColumn, toColumn) {
+      var gatesSystem = [];
+      for (let i = fromRow - 1; i < toRow; i++) {
+        gatesSystem.push(
+          this.$parent.$parent.jsonObject.rows[i].slice(
+            fromColumn - 1,
+            toColumn
+          )
+        );
+      }
+
+      var jsonObject = {
+        wires: toRow - fromRow + 1,
+        rows: gatesSystem
+      };
+      axios
+        .post("http://localhost:5000/subCircuitCustomGate", jsonObject)
+        .then(res => {
+          if (res.data.isUnitary) {
+            var name = document.getElementById("subCircuitName").value;
+            this.addGate(name, name);
+            this.customsrever[name] = res.data.matrix;
+            document.getElementById("errormsg").innerHTML = null;
+            document.getElementById("subCircuitName").value = null;
+            this.closeNav();
+          } else {
+            document.getElementById("errormsg").innerHTML =
+              "*sorry, this subcircuit isn't unitary*";
+          }
+        });
+      document.getElementById("errormsg").innerHTML = null;
+    },
+    // ----------------------------------------------------
+    addGate(nameofgate, id) {
+      this.$parent.customGates.push({
+        name: "custom_" + nameofgate,
+        id: id
+      });
+      if (this.$parent.customGates.length < 9) {
+        this.$parent.w =
+          "width:" +
+          Math.ceil(this.$parent.customGates.length / 2) * 3.85 +
+          "em";
+      } else {
+        this.$parent.w = "width:15.9em";
+      }
+    }
     // ----------------------------------------------------
   }
 };
 </script>
 <!-- =============================================================  -->
 <style scoped>
-
 .overlay {
   height: 100%;
   width: 0;
@@ -436,10 +493,9 @@ export default {
   display: inline-block;
 }
 .addGate {
-display: inline-block;
+  display: inline-block;
   margin: 0em 0em 0em 0.2em;
   background-color: white;
   border-radius: 0.5em;
 }
-
 </style>
