@@ -2,7 +2,7 @@
   <div class="clone">
     <div class="circuit-tools">
       <toolbox ref="toolbox"></toolbox>
-      <ibm  class="ib" ref="ibm"></ibm>
+      <ibm class="ib" ref="ibm"></ibm>
     </div>
     <div class="circuit">
       <div class="editor" v-if="qasmFlag">
@@ -80,17 +80,16 @@ export default {
     histoGram,
     diracNotation,
     circuitDrawing,
-    matrixRepresentation,
+    matrixRepresentation
   },
   mounted() {
     //window.console.log("clone has been mounted");
     this.sendSystem();
-    window.console.log()
+    window.console.log();
   },
   updated() {
     //window.console.log("clone has been updated");
     this.controlSystem();
-   
   },
   data() {
     return {
@@ -99,8 +98,8 @@ export default {
       diracNotationData: "|00⟩",
       exeCount: 0,
       route: this.$store.state.routes.appRoute,
-      rows: 2,        // number of wires
-      maxWire: 0,     // maximum number of gates in a wire
+      rows: 2, // number of wires
+      maxWire: 0, // maximum number of gates in a wire
       qasmFlag: false,
       qasmIncludeIfFlag: false,
       matrixRepresentation: [],
@@ -125,7 +124,7 @@ export default {
       }
     }
   },
-  computed:{
+  computed: {
     // ...mapState['jsonObject']
   },
   methods: {
@@ -481,7 +480,7 @@ export default {
             var flag = true;
             for (let i in dic) {
               if (custom.length == 0) {
-                this.$refs.toolbox.addGate(i);
+                this.$refs.toolbox.$refs.addcustomgate.addGate(i, i);
               } else {
                 for (let j in custom) {
                   if (i == this.$refs.toolbox.customGates[j].id) {
@@ -490,13 +489,13 @@ export default {
                   }
                 }
                 if (flag) {
-                  this.$refs.toolbox.addGate(i);
+                  this.$refs.toolbox.$refs.addcustomgate.addGate(i, i);
                 }
                 flag = true;
               }
             }
             let json_object = {
-              wires: this.wires,
+              wires: res.data.rows.length,
               init: statesSystem,
               rows: res.data.rows
             };
@@ -519,10 +518,10 @@ export default {
   padding: 0em 0em 0em 0em;
 }
 .toolbox {
-  flex-basis:70%;
+  flex-basis: 70%;
 }
 .ibm {
-  flex-basis:30%;
+  flex-basis: 30%;
 }
 .wires {
   /*border: 0.1em dashed blue;*/
