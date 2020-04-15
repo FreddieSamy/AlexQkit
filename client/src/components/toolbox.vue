@@ -7,25 +7,24 @@
     </div>
     <!--end box-labels-->
 
-  
-      <!-- ---------------------- gates  -------------------------- -->
+    <!-- ---------------------- gates  -------------------------- -->
 
-      <draggable
-        :list="gates"
-        :group="{ name: 'gates', pull: 'clone', put: false }"
-        :clone="cloneGate"
-        @change="log"
-      >
-        <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
-          <div class="toolbox-gates" v-for="gate in gates" :key="gate.id" :id="gate.name">
-            <!-- in case of angle-gates -->
-            <div
-              v-if="gate.name == 'rx' || gate.name == 'ry' || gate.name == 'rz' "
-              class="gate-name"
-              id="hover-div"
-            >
-              {{ gate.name }}
-              <br />
+    <draggable
+      :list="gates"
+      :group="{ name: 'gates', pull: 'clone', put: false }"
+      :clone="cloneGate"
+      @change="log"
+    >
+      <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
+        <div class="toolbox-gates" v-for="gate in gates" :key="gate.id" :id="gate.name">
+          <!-- in case of angle-gates -->
+          <div
+            v-if="gate.name == 'rx' || gate.name == 'ry' || gate.name == 'rz' "
+            class="gate-name"
+            id="hover-div"
+          >
+            {{ gate.name }}
+            <div>
               <input
                 class="angle"
                 :id="gate.name+ 'Angle'"
@@ -33,23 +32,19 @@
                 :name="gate.name"
                 value="90"
               />
-              <span id="hover-element">{{ gate.info }}</span>
             </div>
-            <!-- else cases (add built in gates ) -->
-            <div v-else class="gate-name" id="hover-div">
-              {{ gate.name }}
-              <span id="hover-element">{{ gate.info }}</span>
-            </div>
+            <span id="hover-element">{{ gate.info }}</span>
           </div>
-        </transition-group>
-      </draggable>
-    <div class="degree-or-radaian">
-      <input type="radio" id="degree" name="angleType" value="degree" checked />
-      <label for="degree" style="font-size: 15px;">degree</label>
-      <input type="radio" id="radian" name="angleType" value="radian" />
-      <label for="radian" style="font-size: 15px;">radian</label>
-    </div>
+          <!-- else cases (add built in gates ) -->
+          <div v-else class="gate-name" id="hover-div">
+            {{ gate.name }}
+            <span id="hover-element">{{ gate.info }}</span>
+          </div>
+        </div>
+      </transition-group>
+    </draggable>
 
+    <!-- ------------------- end built in gates and start custom gates ---------- -->
     <draggable
       v-if="customGates.length"
       class="custom-gates"
@@ -71,26 +66,36 @@
       </transition-group>
     </draggable>
 
-    <!-- end tools-container -->
-    <div>
-      <label class="lbl1">Number Of Shots</label>
-      <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
-    </div>
+    <!--------------------   end of custom gates  ----------------------- -->
     <div class="user-tools">
-      <button id="qasmToolboxBtn" class="qasm" @click="this.$parent.qasm">| qasm ⟩</button>
-    </div>
-    <div class="user-tools">
-      <addcustomgate ref="addcustomgate"></addcustomgate>
+      <div class="qasm-box">
+        <button id="qasmToolboxBtn" class="qasm" @click="this.$parent.qasm">| qasm ⟩</button>
+      </div>
+
+      <div class="number-of-shots">
+        <label class="lbl1">Number Of Shots</label>
+        <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
+      </div>
+
+      <div class="degree-or-radian">
+        <input type="radio" id="degree" name="angleType" value="degree" checked />
+        <label for="degree" style="font-size: 15px;">degree</label>
+        <input type="radio" id="radian" name="angleType" value="radian" />
+        <label for="radian" style="font-size: 15px;">radian</label>
+      </div>
+
+      <div class="add-custom-gate-box">
+        <addcustomgate ref="addcustomgate"></addcustomgate>
+      </div>
     </div>
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 import draggable from "vuedraggable";
 import axios from "axios";
 import addcustomgate from "./addcustomgate";
-
 
 export default {
   name: "toolbox",
@@ -99,32 +104,11 @@ export default {
     draggable,
     addcustomgate
   },
-  computed:{
-    ...mapState(['gates'])
+  computed: {
+    ...mapState(["gates"])
   },
   data() {
     return {
-      
-      /*
-      gates: [
-        { name: "c", id: "c", index: "", info: "closed control" },
-        { name: "m", id: "m", index: "", info: "measurment gate" },
-        { name: "oc", id: "oc", index: "", info: "open control" },
-        { name: "reset", id: "reset", index: "", info: "reset gate" },
-        { name: "x", id: "x", index: "", info: "not gate" },
-        { name: "y", id: "y", index: "", info: "" },
-        { name: "z", id: "z", index: "", info: "" },
-        { name: "h", id: "h", index: "", info: "simple super postition" },
-        { name: "swap", id: "swap", index: "", info: "" },
-        { name: "s", id: "s", index: "", info: "" },
-        { name: "t", id: "t", index: "", info: "" },
-        { name: "sdg", id: "sdg", index: "", info: "" },
-        { name: "tdg", id: "tdg", index: "", info: "" },
-        { name: "rx", id: "rx", index: "", info: "" },
-        { name: "ry", id: "ry", index: "", info: "" },
-        { name: "rz", id: "rz", index: "", info: "" }
-      ],
-      */
       customGates: [],
       w: "width:7.7em",
       customsrever: {}
@@ -363,8 +347,8 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content:flex-start;
-  align-items:baseline;
+  justify-content: flex-start;
+  align-items: baseline;
 }
 
 .toolbox-gates {
@@ -384,9 +368,37 @@ export default {
   font-size: 10px;
   border-radius: 8px;
 }
+.user-tools{
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap:nowrap;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.qasm-box {
+  flex-basis: 15%;
+}
+
+.number-of-shots {
+  flex-basis: 15%;
+}
+.number-of-shots input {
+  margin: 0em 0em 0em 1em;
+  border-radius: 5px;
+}
+
+.degree-or-radian {
+  margin: 0em 0em 0em 2em;
+  flex-basis: 25%;
+}
+.add-custom-gate-box {
+  margin: 0em 0em 0em 2em;
+  flex-basis: 25%;
+}
 
 /* ==================  */
-
 
 .angle-gates {
   border: 1px solid black;
@@ -405,9 +417,6 @@ export default {
 
 .flip-list-move {
   transition: transform 0.3s;
-}
-.user-tools {
-  display: inline-block;
 }
 
 .shots {
