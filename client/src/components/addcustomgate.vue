@@ -80,9 +80,9 @@
         >create</button>
       </div>
 
-      <div class="addGateError">
+      <!-- <div class="addGateError">
         <label id="errormsg"></label>
-      </div>
+      </div>-->
     </div>
 
     <button class="addGate" @click="openNav()">Add Custom Gate</button>
@@ -106,26 +106,6 @@ export default {
     };
   },
   methods: {
-    // log: function() {
-    //   this.$parent.qasmIncludeIfFlag = false;
-    //   //this.$parent.maxWire = 0;
-    // },
-    // // ----------------------------------------------------
-    // cloneGate({ name }) {
-    //   if (name == "rx") {
-    //     name = name + "(" + document.getElementById("rxAngle").value + ")";
-    //   } else if (name == "ry") {
-    //     name = name + "(" + document.getElementById("ryAngle").value + ")";
-    //   } else if (name == "rz") {
-    //     name = name + "(" + document.getElementById("rzAngle").value + ")";
-    //   }
-    //   return {
-    //     //name: name
-    //   };
-    // },
-    // ----------------------------------------------------
-
-    // ----------------------------------------------------
     openNav() {
       document.getElementById("myNav").style.width = "100%";
       //   document.getElementById("subCircuitName").value = null;
@@ -134,7 +114,6 @@ export default {
     // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav").style.width = "0%";
-      document.getElementById("errormsg").innerHTML = null;
       document.getElementById("wires").value = null;
 
       var conmatrixcu2 = this.$refs.matrixcu;
@@ -163,17 +142,18 @@ export default {
           window.console.log("the data success to returned be from the server");
           isUnitary = res.data.isUnitary;
           //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
-          window.console.log("new unitary:" + isUnitary);
+          // window.console.log("new unitary:" + isUnitary);
           if (isUnitary) {
             this.addGate(nameofgate, nameofgate);
             this.customsrever[nameofgate] = matrix;
             // window.console.log(this.customsrever);
-            document.getElementById("errormsg").innerHTML = null;
             this.closeNav();
+          } else {
+            alert("please, enter unitary matrix");
           }
         });
       } else {
-        document.getElementById("errormsg").innerHTML = "*" + msg + "*";
+        alert(msg);
       }
       // document.getElementById("nameofgate").value = null;
       // conmatrixcu.clear();
@@ -236,8 +216,9 @@ export default {
       /*window.console.log(name);*/
       var root = document.getElementById("root").value;
       if (name + "^(1/" + root + ")" in this.customsrever) {
-        document.getElementById("errormsg").innerHTML =
-          "*sorry, " + frontName + "^(1/" + root + ")" + " is already exist*";
+        alert(
+          "sorry, " + frontName + "^(1/" + root + ")" + " is already exist"
+        );
       } else {
         var jsonObject = {
           root: root,
@@ -253,21 +234,15 @@ export default {
                 frontName + "^(1/" + root + ")"
               );
               this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
-              document.getElementById("errormsg").innerHTML = null;
               this.closeNav();
             } else {
-              document.getElementById("errormsg").innerHTML =
-                "*sorry, " +
-                frontName +
-                "^(1/" +
-                root +
-                ")" +
-                " isn't unitary*";
+              alert(
+                "sorry, " + frontName + "^(1/" + root + ")" + " isn't unitary"
+              );
             }
           });
         } else {
-          document.getElementById("errormsg").innerHTML =
-            "*please, choose number more than one !!*";
+          alert("please, choose number more than one !!");
         }
       }
     },
@@ -282,15 +257,13 @@ export default {
       if (fromRow && toRow && fromColumn && toColumn) {
         if (fromRow <= toRow && fromColumn <= toColumn) {
           if (name == "" || name.length == 0) {
-            document.getElementById("errormsg").innerHTML =
-              "*please, enter a name for the gate*";
+            alert("please, enter a name for the gate");
           } else {
             for (let i in this.$parent.customGates) {
               for (let k in this.$parent.customGates[i]) {
                 if (this.$parent.customGates[i][k] === name) {
                   flag = false;
-                  document.getElementById("errormsg").innerHTML =
-                    "*this name is already exist*";
+                  alert("this name is already exist");
                 }
               }
             }
@@ -304,8 +277,7 @@ export default {
             }
           }
         } else {
-          document.getElementById("errormsg").innerHTML =
-            "*please, check the selected numbers*";
+          alert("please, check the selected numbers");
         }
       }
     },
@@ -331,16 +303,14 @@ export default {
           if (res.data.isUnitary) {
             var name = document.getElementById("subCircuitName").value;
             this.addGate(name, name);
+            window.console.log(res.data.matrix);
             this.customsrever[name] = res.data.matrix;
-            document.getElementById("errormsg").innerHTML = null;
             document.getElementById("subCircuitName").value = null;
             this.closeNav();
           } else {
-            document.getElementById("errormsg").innerHTML =
-              "*sorry, this subcircuit isn't unitary*";
+            alert("sorry, this subcircuit isn't unitary");
           }
         });
-      document.getElementById("errormsg").innerHTML = null;
     },
     // ----------------------------------------------------
     addGate(nameofgate, id) {
@@ -484,14 +454,14 @@ export default {
   color: #fff;
   cursor: pointer;
 }
-.addGateError {
+/* .addGateError {
   color: red;
   padding-top: 35px;
   padding-left: 20px;
   text-align: center;
   font-size: 40px;
   display: inline-block;
-}
+} */
 .addGate {
   display: inline-block;
   margin: 0em 0em 0em 0.2em;
