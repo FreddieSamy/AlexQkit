@@ -10,25 +10,19 @@
 
     <button @click="saveCircuit(savedCirciutName,eventQueue[eventQueue.length-1])">Save system</button>
 
-    <label> Select Algorithm </label>
+    <label>Select Algorithm</label>
     <select v-model="selectedAlgorithm">
-      <option
-        v-for="(item, index) in algorithms"
-        :key="index"
-        :value="item.circuit"
-      >
-        {{ item.name }}
-      </option>
+      <option v-for="(item, index) in algorithms" :key="index" :value="item.circuit">{{ item.name }}</option>
     </select>
     <!-- just devolopment block  (will be deleted)-->
-    <br>
+    <br />
     <button @click="clearConsole">Clear Console</button>
     <!-- end development block -->
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   name: "toolbox2",
   display: "toolbox2",
@@ -37,19 +31,19 @@ export default {
     return {
       eventIndex: 0,
       selectedAlgorithm: null,
-      savedCirciutName: "",
+      savedCirciutName: ""
     };
   },
   watch: {
     selectedAlgorithm() {
       if (this.selectedAlgorithm != null) {
         this.setAlgorithm(this.selectedAlgorithm);
-        this.selectedAlgorithm=null;
+        this.selectedAlgorithm = null;
       }
-    },
+    }
   },
   computed: {
-    ...mapState(['algorithms'])
+    ...mapState(["algorithms"])
   },
   methods: {
     addWire: function() {
@@ -67,15 +61,19 @@ export default {
       this.selectedAlgorithm = null;
       this.$parent.resetSystem();
     },
-    saveCircuit(name,circuit) {
-      window.console.log(name);
-      this.algorithms.push({'name':name,'circuit':circuit});
-      this.savedCirciutName="";
+    saveCircuit(name, circuit) {
+      if (name != "") {
+        window.console.log(name);
+        this.algorithms.push({ name: name, circuit: circuit });
+        this.savedCirciutName = "";
+      } else {
+        alert("Please, enter name for the algorithm");
+      }
     },
     clearConsole: function() {
       window.console.clear();
-    },
-  },
+    }
+  }
 };
 0;
 </script>
