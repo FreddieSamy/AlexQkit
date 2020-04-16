@@ -94,7 +94,6 @@
 <script>
 import { mapState } from "vuex";
 import draggable from "vuedraggable";
-import axios from "axios";
 import addcustomgate from "./addcustomgate";
 
 export default {
@@ -133,195 +132,9 @@ export default {
       };
     },
     // ----------------------------------------------------
-    addGate(nameofgate) {
-      this.customGates.push({
-        name: "custom_" + nameofgate,
-        id: nameofgate
-      });
-      if (this.customGates.length < 9) {
-        this.w =
-          "width:" + Math.ceil(this.customGates.length / 2) * 3.85 + "em";
-      } else {
-        this.w = "width:15.9em";
-      }
-    },
     sendtoclone() {
       var z = this.$refs.addcustomgate;
       return z.sendtotoolbox();
-    },
-    // // ----------------------------------------------------
-    // openNav() {
-    //   document.getElementById("myNav").style.width = "100%";
-    //   document.getElementById("subCircuitName").value = null;
-    //   document.getElementById("nameofgate").value = null;
-    // },
-    // // ----------------------------------------------------
-    // closeNav() {
-    //   document.getElementById("myNav").style.width = "0%";
-    //   document.getElementById("errormsg").innerHTML = null;
-    //   document.getElementById("wires").value = null;
-
-    //   var conmatrixcu2 = this.$refs.matrixcu;
-    //   conmatrixcu2.clear();
-    // },
-    // // ----------------------------------------------------
-    // create_the_matrix() {
-    //   var nameofgate = document.getElementById("nameofgate").value;
-    //   //var valofgate = document.getElementById("valueofgate");
-    //   var conmatrixcu = this.$refs.matrixcu;
-    //   var matrix = conmatrixcu.pulldata();
-    //   var { matrix_validate, msg } = this.validate_of_matrix(
-    //     matrix,
-    //     nameofgate
-    //   );
-    //   window.console.log(matrix_validate);
-    //   window.console.log(msg);
-    //   var isUnitary;
-    //   var jsonObject = {};
-    //   jsonObject["matrix"] = matrix;
-    //   window.console.log(matrix_validate);
-    //   // window.console.log(msg);
-
-    //   if (matrix_validate) {
-    //     axios.post("http://localhost:5000/isUnitary", jsonObject).then(res => {
-    //       window.console.log("the data success to returned be from the server");
-    //       isUnitary = res.data.isUnitary;
-    //       //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
-    //       window.console.log("new unitary:" + isUnitary);
-    //       if (isUnitary) {
-    //         this.addGate(nameofgate);
-    //         this.customsrever[nameofgate] = matrix;
-    //         // window.console.log(this.customsrever);
-    //         document.getElementById("errormsg").innerHTML = null;
-    //         this.closeNav();
-    //       }
-    //     });
-    //   } else {
-    //     document.getElementById("errormsg").innerHTML = "*" + msg + "*";
-    //   }
-    //   // document.getElementById("nameofgate").value = null;
-    //   // conmatrixcu.clear();
-    //   //document.getElementById("valueofgate").value = null;
-    //   //window.console.log("unitary:" + this.$parent.isUnitary);
-    // },
-    // // ----------------------------------------------------
-    // //
-    // // ----------------------------------------------------
-    // validate_of_matrix(matrix, nameofgate) {
-    //   var matrix_validate = true;
-    //   var msg = "please check the dimenons of the matrix";
-    //   var count1, count2, check;
-    //   var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
-
-    //   for (let i in this.customGates) {
-    //     for (let k in this.customGates[i]) {
-    //       if (this.customGates[i][k] === nameofgate) {
-    //         matrix_validate = false;
-    //         msg = "this name is already exist,please choose different name";
-    //         return { matrix_validate, msg };
-    //       }
-    //     }
-    //   }
-
-    //   if (nameofgate == "" || nameofgate.length == 0) {
-    //     matrix_validate = false;
-    //     msg = "you have to write name for the gate";
-    //     return { matrix_validate, msg };
-    //   }
-    //   if (nameofgate.includes(".")) {
-    //     matrix_validate = false;
-    //     msg = "name of gate can't include '.'";
-    //     return { matrix_validate, msg };
-    //   }
-
-    //   for (count1 in matrix) {
-    //     for (count2 in matrix[count1]) {
-    //       check = regex.test(matrix[count1][count2]);
-    //       if (!check) {
-    //         matrix_validate = false;
-    //         msg = "please check value of every element in matrix ";
-    //         return { matrix_validate, msg };
-    //       }
-    //     }
-    //   }
-    //   msg = "";
-    //   return { matrix_validate, msg };
-    // },
-
-    // // ----------------------------------------------------
-    // sendtoclone() {
-    //   return this.customsrever;
-    // },
-    // ----------------------------------------------------
-    nthRoot: function() {
-      var name = document.getElementById("rootGate").value;
-      /*window.console.log(name);*/
-      var root = document.getElementById("root").value;
-      if (name + "^(1/" + root + ")" in this.customsrever) {
-        document.getElementById("errormsg").innerHTML =
-          "*sorry, " + name + "^(1/" + root + ")" + " is already exist*";
-      } else {
-        var jsonObject = {
-          root: root,
-          gate: name,
-          custom: this.customsrever
-        };
-        if (root >= 2) {
-          axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
-            /*window.console.log(res.data);*/
-            if (res.data.isUnitary) {
-              this.addGate(name + "^(1/" + root + ")");
-              this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
-              document.getElementById("errormsg").innerHTML = null;
-              this.closeNav();
-            } else {
-              document.getElementById("errormsg").innerHTML =
-                "*sorry, " + name + "^(1/" + root + ")" + " isn't unitary*";
-            }
-          });
-        } else {
-          document.getElementById("errormsg").innerHTML =
-            "*please, choose number more than one !!*";
-        }
-      }
-    },
-    // ----------------------------------------------------
-    subCircuitCustoGate: function() {
-      var name = document.getElementById("subCircuitName").value;
-      var flag = true;
-      var fromRow = document.getElementById("fromRow").value;
-      var toRow = document.getElementById("toRow").value;
-      var fromColumn = document.getElementById("fromColumn").value;
-      var toColumn = document.getElementById("toColumn").value;
-      if (fromRow && toRow && fromColumn && toColumn) {
-        if (fromRow <= toRow && fromColumn <= toColumn) {
-          if (name == "" || name.length == 0) {
-            document.getElementById("errormsg").innerHTML =
-              "*please, enter a name for the gate*";
-          } else {
-            for (let i in this.customGates) {
-              for (let k in this.customGates[i]) {
-                if (this.customGates[i][k] === name) {
-                  flag = false;
-                  document.getElementById("errormsg").innerHTML =
-                    "*this name is already exist*";
-                }
-              }
-            }
-            if (flag) {
-              this.$parent.cloneSubCircuitCustoGate(
-                fromRow,
-                toRow,
-                fromColumn,
-                toColumn
-              );
-            }
-          }
-        } else {
-          document.getElementById("errormsg").innerHTML =
-            "*please, check the selected numbers*";
-        }
-      }
     }
     // ----------------------------------------------------
   }
@@ -368,11 +181,11 @@ export default {
   font-size: 10px;
   border-radius: 8px;
 }
-.user-tools{
+.user-tools {
   flex-basis: 100%;
   display: flex;
   flex-direction: row;
-  flex-wrap:nowrap;
+  flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: baseline;
 }
@@ -428,11 +241,6 @@ export default {
   width: 3em;
   height: 1em;
 }
-.addGate {
-  margin: 0em 0em 0em 0.2em;
-  background-color: white;
-  border-radius: 0.5em;
-}
 .qasm {
   margin: 0em 0em 0em 0.2em;
   background-color: white;
@@ -447,7 +255,6 @@ export default {
   border: solid;
   border-radius: 5px;
 }
-
 #hover-div:hover #hover-element {
   display: block;
 }
