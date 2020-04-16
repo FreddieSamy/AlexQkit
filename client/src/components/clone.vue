@@ -532,10 +532,10 @@ export default {
   padding: 0em 0em 0em 0em;
 }
 .toolbox {
-  flex-basis: 70%;
+  flex-basis: 60%;
 }
 .ibm {
-  flex-basis: 30%;
+  flex-basis: 40%;
 }
 .wires {
   /*border: 0.1em dashed blue;*/
