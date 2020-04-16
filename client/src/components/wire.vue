@@ -264,7 +264,7 @@ export default {
   /*border: 0.1em dashed black;*/
 }
 #i {
-  opacity: 0.69;
+  opacity: 0.01;
 }
 /*
 #c{

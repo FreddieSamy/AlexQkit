@@ -2,6 +2,9 @@ import Vue from "vue";
 import App from "./App.vue";
 import axios from "axios";
 import store from './store'
+import noUiSlider from 'nouislider'
+
+window.noUiSlider = noUiSlider;
 
 Vue.config.productionTip = false;
 

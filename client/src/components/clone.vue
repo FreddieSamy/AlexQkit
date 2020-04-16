@@ -1,10 +1,13 @@
 <template>
   <div class="clone">
+    <!-------------------------- upper circiut - tools -------------------- --> 
     <div class="circuit-tools">
       <toolbox ref="toolbox"></toolbox>
       <ibm  class="ib" ref="ibm"></ibm>
     </div>
+    <!-- ------------------------ Circiut ---------------------> 
     <div class="circuit">
+      <!-- ------------------- qasm ----------------------->
       <div class="editor" v-if="qasmFlag">
         <div class="qasm">
           <prism-editor :lineNumbers="true" :code="qasmCode" v-model="qasmCode" language="js"></prism-editor>
@@ -13,14 +16,23 @@
       </div>
       <hr v-if="!qasmIncludeIfFlag" id="executionLine" width="2" size="160" />
       <circuitDrawing v-if="qasmIncludeIfFlag "></circuitDrawing>
+      <!-- ------------ circiutloops & wires ------------->
       <div v-if="!qasmIncludeIfFlag" class="circuit-wires">
+       <!-- ------------ circiutloops & wires ------------->
+       <!-- ------------ circiutloops  ------------->
+       <Circiutloops :maxWire=maxWire />
+       <!-- ------------  wires ------------->
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
+        
       </div>
+
     </div>
     <div class="toolbox-2">
       <trash></trash>
+  
+
       <div class="wires-buttons">
         <toolbox2
           v-if="!qasmIncludeIfFlag"
@@ -56,6 +68,7 @@ import PrismEditor from "vue-prism-editor";
 import toolbox from "./toolbox.vue";
 import toolbox2 from "./toolbox2.vue";
 import wire from "./wire.vue";
+import Circiutloops from './CircuitLoops.vue'
 import ibm from "./ibm.vue";
 import trash from "./trash.vue";
 import axios from "axios";
@@ -70,16 +83,18 @@ export default {
   name: "clone",
   display: "clone",
   components: {
-    PrismEditor,
     toolbox,
-    toolbox2,
     ibm,
+    PrismEditor,
+    circuitDrawing,
+    Circiutloops,
     wire,
     trash,
+    toolbox2,
     blochSphere,
     histoGram,
     diracNotation,
-    circuitDrawing,
+   
     matrixRepresentation,
   },
   mounted() {
@@ -550,10 +565,10 @@ export default {
   padding: 0em 0em 0em 0em;
 }
 .toolbox {
-  flex-basis:70%;
+  flex-basis:55%;
 }
 .ibm {
-  flex-basis:30%;
+  flex-basis:45%;
 }
 .wires {
   /*border: 0.1em dashed blue;*/
@@ -619,4 +634,7 @@ export default {
   z-index: -1;
   background-color: #5b758b;
 }
+
+
+
 </style>
