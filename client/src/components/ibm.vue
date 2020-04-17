@@ -3,10 +3,11 @@
     <div id="hover-div">
       <label class="lbl1">IBM Token</label>
       <span id="hover-element">
-        <pre>Get your API_TOKEN from:
-<a id="link" target="_blank" :href="anchor">{{anchor}}</a>
-To run your circuit on IBM Q
-</pre>
+        <div>Get your API_TOKEN from:</div>
+        <div>
+          <a id="link" target="_blank" :href="anchor">{{anchor}}</a>
+        </div>
+        <div>To run your circuit on IBM Q</div>
       </span>
     </div>
     <input class="ibmtoken" type="text" id="ibmtextfield" />
@@ -18,7 +19,7 @@ To run your circuit on IBM Q
             v-for="device in type"
             :key="device"
             :value="device"
-            :selected=" device =='ibmq_16_melbourne' ? true : false "
+            :selected=" device =='IBMQ_16_melbourne' ? true : false "
           >{{device}}</option>
         </optgroup>
       </select>
@@ -43,7 +44,7 @@ export default {
     return {
       anchor: "https://quantum-computing.ibm.com/account",
       link: "",
-      device: "ibmq_16_melbourne"
+      device: "IBMQ_16_melbourne"
     };
   },
   computed: {
