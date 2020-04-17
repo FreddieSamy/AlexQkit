@@ -782,5 +782,45 @@ class Circuit():
         from scipy.linalg import fractional_matrix_power
         a=np.matrix(gate)
         return fractional_matrix_power(a,0.5).tolist()
-    
+
 ###############################################################################################################################
+    def repettion(self,circuitList,listOfPositions,listOfNumberOfRepetition):
+        import numpy as np
+        dic = self.dicOfBlockAndPosition(circuitList,listOfPositions,listOfNumberOfRepetition)
+        circuitList = np.array(circuitList)
+    #repetedBlock , insertPostition , endPosition = blockToRepet(circutList,position)
+        for key in dic :
+            import numpy as np
+            repetedBlock , insertPostition , numberOfRepetition = dic[key]['repetedBlock'] , dic[key]['insertPostion'] , dic[key]['NumberOfRepetition']
+            for repet in range(numberOfRepetition-1) :
+                circuitList = np.insert(circuitList,insertPostition,repetedBlock,axis=1)
+        return circuitList.tolist()
+####################################################################################################################################################
+    def blockToRepet(self,circutList,position):
+        import numpy as np
+        circutList = np.array(circutList)
+        repetBlock = circutList[ : , position[0] : position[1] + 1 ].transpose()
+        return  repetBlock , position[0] , position[1]
+#####################################################################################################################################################
+    def dicOfBlockAndPosition(self,circutList,listOfPositions,listOfNumberOfRepetition):
+        dicOfPos = {}
+        for i in range(len(listOfPositions)):
+            repetedBlock , insertPosition , endPosition = self.blockToRepet(circutList,listOfPositions[i])
+            if i :
+                previousInsertPosition = dicOfPos[i]['insertPostion']
+                print(self.factor(insertPosition,endPreviousPos))
+                insertPosition = self.positionEquation(previousInsertPosition,listOfNumberOfRepetition[i-1],len(dicOfPos[i]['repetedBlock']),factor(insertPosition,endPreviousPos))
+            endPreviousPos = endPosition
+            dicOfPos[i+1] =  { 'repetedBlock': repetedBlock ,'insertPostion' : insertPosition ,'NumberOfRepetition' : listOfNumberOfRepetition[i] } 
+
+        return dicOfPos
+#######################################################################################################################################################
+    def positionEquation(self,previousInsertPosition,numberOfRepetition,lengthOfBlock,factor):
+        return previousInsertPosition + factor + ( numberOfRepetition * lengthOfBlock ) 
+##############################################################################################################################
+    def factor(self , startNextPosition , endPreviousPosition):
+        fac = startNextPosition - endPreviousPosition  
+        if fac <= 0 :
+            return 0
+        return fac - 1
+#######################################################################################################################################################

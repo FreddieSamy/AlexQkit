@@ -16,10 +16,10 @@
         >create</button>
       </div>
 
-      <div class="column2">
+      <!-- <div class="column2">
         <h1 style="color: black;">from rotation</h1>
         <h3 style="color: black;">select the gate</h3>
-      </div>
+      </div>-->
 
       <div class="column3">
         <h1 style="color: black;">from circuit</h1>
@@ -64,9 +64,9 @@
             <option value="sdg">S†</option>
             <option value="tdg">T†</option>
           </optgroup>
-          <optgroup v-if="this.$parent.customGates.length" label="Custom Gates">
+          <optgroup v-if="nthRootCustomGates().length" label="Custom Gates">
             <option
-              v-for="element in this.$parent.customGates"
+              v-for="element in nthRootCustomGates()"
               :key="element.id"
               :value="element.id"
             >{{ element.id }}</option>
@@ -79,6 +79,8 @@
           style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
         >create</button>
       </div>
+
+      <!-- <img class="capturedImage" :src="capturedImage" /> -->
 
       <!-- <div class="addGateError">
         <label id="errormsg"></label>
@@ -93,6 +95,7 @@
 //import draggable from "vuedraggable";
 import axios from "axios";
 import CustomMx from "./custom_mx.vue";
+// import html2canvas from "html2canvas";
 export default {
   name: "addcustomgate",
   display: "addcustomgate",
@@ -102,14 +105,28 @@ export default {
   },
   data() {
     return {
+      // capturedImage: "",
       customsrever: {}
     };
   },
   methods: {
     openNav() {
       document.getElementById("myNav").style.width = "100%";
-      //   document.getElementById("subCircuitName").value = null;
+      document.getElementById("subCircuitName").value = null;
       document.getElementById("nameofgate").value = null;
+
+      // html2canvas(document.querySelector("#circuit-wires")).then(canvas => {
+      //   this.capturedImage = canvas.toDataURL();
+      //   window.console.log("canvas.toDataURL() -->" + this.capturedImage);
+      //   canvas.toBlob(function(blob) {
+      //     var reader = new FileReader();
+      //     reader.readAsDataURL(blob);
+      //     reader.onloadend = function() {
+      //       let base64data = reader.result;
+      //       window.console.log("Base64--> " + base64data);
+      //     };
+      //   });
+      // });
     },
     // ----------------------------------------------------
     closeNav() {
@@ -144,7 +161,7 @@ export default {
           //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
           // window.console.log("new unitary:" + isUnitary);
           if (isUnitary) {
-            this.addGate(nameofgate, nameofgate);
+            this.addGate(nameofgate);
             this.customsrever[nameofgate] = matrix;
             // window.console.log(this.customsrever);
             this.closeNav();
@@ -211,34 +228,27 @@ export default {
     // ----------------------------------------------------
     nthRoot: function() {
       var select = document.getElementById("rootGate");
-      var name = select.value;
-      var frontName = select.options[select.selectedIndex].text;
-      /*window.console.log(name);*/
+      var backName = select.value;
+      var name = select.options[select.selectedIndex].text;
+      // window.console.log(name);
       var root = document.getElementById("root").value;
       if (name + "^(1/" + root + ")" in this.customsrever) {
-        alert(
-          "sorry, " + frontName + "^(1/" + root + ")" + " is already exist"
-        );
+        alert("sorry, " + name + "^(1/" + root + ")" + " is already exist");
       } else {
         var jsonObject = {
           root: root,
-          gate: name,
+          gate: backName,
           custom: this.customsrever
         };
         if (root >= 2) {
           axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
             /*window.console.log(res.data);*/
             if (res.data.isUnitary) {
-              this.addGate(
-                name + "^(1/" + root + ")",
-                frontName + "^(1/" + root + ")"
-              );
+              this.addGate(name + "^(1/" + root + ")");
               this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
               this.closeNav();
             } else {
-              alert(
-                "sorry, " + frontName + "^(1/" + root + ")" + " isn't unitary"
-              );
+              alert("sorry, " + name + "^(1/" + root + ")" + " isn't unitary");
             }
           });
         } else {
@@ -302,7 +312,7 @@ export default {
         .then(res => {
           if (res.data.isUnitary) {
             var name = document.getElementById("subCircuitName").value;
-            this.addGate(name, name);
+            this.addGate(name);
             window.console.log(res.data.matrix);
             this.customsrever[name] = res.data.matrix;
             document.getElementById("subCircuitName").value = null;
@@ -313,10 +323,10 @@ export default {
         });
     },
     // ----------------------------------------------------
-    addGate(nameofgate, id) {
+    addGate(nameofgate) {
       this.$parent.customGates.push({
         name: "custom_" + nameofgate,
-        id: id
+        id: nameofgate
       });
       if (this.$parent.customGates.length < 9) {
         this.$parent.w =
@@ -326,6 +336,16 @@ export default {
       } else {
         this.$parent.w = "width:15.9em";
       }
+    },
+    // ----------------------------------------------------
+    nthRootCustomGates: function() {
+      var gates = [];
+      for (let element of this.$parent.customGates) {
+        if (!element.id.includes("^(1/")) {
+          gates.push(element);
+        }
+      }
+      return gates;
     }
     // ----------------------------------------------------
   }
@@ -454,7 +474,7 @@ export default {
   color: #fff;
   cursor: pointer;
 }
-/* .addGateError {
+/* .zddGateError {
   color: red;
   padding-top: 35px;
   padding-left: 20px;
