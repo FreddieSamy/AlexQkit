@@ -167,7 +167,7 @@ export default {
       var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
       var count1, count2, check;
-      var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
+      var regex = /^(-)?([0-9]*[.])?[0-9]+$|^(-)?(([0-9]*[.])?[0-9]+)?i$|^(-)?([0-9]*[.])?[0-9]+(-|\+)(([0-9]*[.])?[0-9]+)?i$/;
 
       for (let i in this.customGates) {
         for (let k in this.customGates[i]) {

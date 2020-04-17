@@ -47,7 +47,8 @@ export default {
         for (let k = 0; k < wire; k++) {
           var input = document.createElement("input");
           input.type = "text";
-          input.setAttribute("size", "3");
+          input.setAttribute("size", "4");
+          input.setAttribute("placeholder","1.0+3.5i")
           // input.style = ("border-radius: 70px;");
           input.id = ""+i+k;
          // window.console.log(input.id);
