@@ -1,5 +1,5 @@
 <template>
-  <div class="toolbox">
+  <div class="add-custom-gate">
     <div id="myNav" class="overlay">
       <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
 

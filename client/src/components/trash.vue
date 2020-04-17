@@ -30,8 +30,11 @@ export default {
   },
   methods: {
     add: function(evt) {
+  
+      if(evt.from.classList != 'toolbox-gates-area'){
       var wire = evt.from.id.replace("list","")
       this.$parent.$refs.wire[wire-1].addGateByIndex(evt.oldIndex);
+      }
       this.list = [];
     },
   },

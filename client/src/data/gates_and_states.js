@@ -12,12 +12,13 @@ export const gates = [
     { name: "c", id: "c", index: "", info: "closed control" },
     { name: "m", id: "m", index: "", info: "measurment gate" },
     { name: "oc", id: "oc", index: "", info: "open control" },
+    { name: "rx", id: "rx", index: "", info: "" },
+    { name: "ry", id: "ry", index: "", info: "" },
+    { name: "rz", id: "rz", index: "", info: "" },
     { name: "reset", id: "reset", index: "", info: "reset gate" },
     { name: "sdg", id: "sdg", index: "", info: "" },
     { name: "tdg", id: "tdg", index: "", info: "" },
-    { name: "rx", id: "rx", index: "", info: "" },
-    { name: "ry", id: "ry", index: "", info: "" },
-    { name: "rz", id: "rz", index: "", info: "" }
+ 
 ]
 
 

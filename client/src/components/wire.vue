@@ -26,7 +26,7 @@
         :key="element.id"
         :id="element.name"
       >
-        {{ displayName(element.name) }}
+        {{ displayName(element.name).toUpperCase() }}
       </div>
     </draggable>
   </div>
@@ -202,10 +202,10 @@ export default {
   color: white;
   text-align: center;
   line-height: 2.5em;
-  border: 0.15em solid black;
-  border-radius: 0.7em;
+  border: 0.5px solid grey;
+  border-radius: 0.5em;
   display: inline-block;
-  margin: 0.8em 0.5em 0.5em 0.5em;
+  margin: 0.9em 0.5em 0.5em 0.5em;
   padding: 0em 0em 0em 0em;
   width: 2.5em;
   height: 2.5em;
@@ -266,6 +266,8 @@ export default {
 #i {
   opacity: 0.01;
 }
+
+
 /*
 #c{
   
