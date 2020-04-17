@@ -14,7 +14,7 @@
     <div>
       <label>Device</label>
       <select id="simulater" v-model="device">
-        <optgroup v-for="(type,index) in devices" :key="type" :label="index">
+        <optgroup v-for="(type,index) in devices" :key="index" :label="index">
           <option
             v-for="device in type"
             :key="device"
