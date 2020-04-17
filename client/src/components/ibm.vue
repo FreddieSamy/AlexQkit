@@ -3,40 +3,23 @@
     <div id="hover-div">
       <label class="lbl1">IBM Token</label>
       <span id="hover-element">
-        Get your API_TOKEN from:
-        <br />
-        <a
-          id="link"
-          target="_blank"
-          href="https://quantum-computing.ibm.com/account"
-        >https://quantum-computing.ibm.com/account</a>
-        <br />To run your circuit on IBM Q
+        <pre>Get your API_TOKEN from:
+<a id="link" target="_blank" :href="anchor">{{anchor}}</a>
+To run your circuit on IBM Q
+</pre>
       </span>
     </div>
     <input class="ibmtoken" type="text" id="ibmtextfield" />
-
     <div>
-      <label class="lbl1">Device</label>
-    </div>
-    <div>
-      <select id="simulater" style="width:90%;">
-        <optgroup label="1 qubit">
-          <option value="ibmq_armonk">ibmq_armonk</option>
-        </optgroup>
-        <optgroup label=" 5 qubits">
-          <option value="ibmq_london">ibmq_london</option>
-          <option value="ibmq_burlington">ibmq_burlington</option>
-          <option value="ibmq_essex">ibmq_essex</option>
-          <option value="ibmq_ourense">ibmq_ourense</option>
-          <option value="ibmq_vigo">ibmq_vigo</option>
-          <option value="ibmq_5_yorktown">ibmq_5_yorktown</option>
-        </optgroup>
-        <optgroup label="15 qubits">
-          <option value="ibmq_16_melbourne" selected>ibmq_16_melbourne</option>
-        </optgroup>
-
-        <optgroup label="up to 32 qubits">
-          <option value="ibmq_qasm_simulator">ibmq_qasm_simulator</option>
+      <label>Device</label>
+      <select id="simulater" v-model="device">
+        <optgroup v-for="(type,index) in devices" :key="type" :label="index">
+          <option
+            v-for="device in type"
+            :key="device"
+            :value="device"
+            :selected=" device =='ibmq_16_melbourne' ? true : false "
+          >{{device}}</option>
         </optgroup>
       </select>
     </div>
@@ -44,8 +27,6 @@
     <div class="checkbox">
       <input type="checkbox" id="checkbox" />
       <label for="checkbox">Run on IBMQ</label>
-    </div>
-    <div>
       <button @click="sendto()">Send</button>
     </div>
     <a id="link" target="_blank" :href="link">{{ link }}</a>
@@ -53,17 +34,25 @@
 </template>
 <!-- =============================================================  -->
 <script>
+import { mapState } from "vuex";
 export default {
   name: "ibm",
   display: "ibm",
   order: 3,
   data() {
-    return { link: "" };
+    return {
+      anchor: "https://quantum-computing.ibm.com/account",
+      link: "",
+      device: "ibmq_16_melbourne"
+    };
+  },
+  computed: {
+    ...mapState(["devices"])
   },
   methods: {
     sendto() {
+      /*  all of this can be optimized */
       this.$parent.API_TOKEN = document.getElementById("ibmtextfield").value;
-
       var sim = document.getElementById("simulater");
       window.console.log(sim.options[sim.selectedIndex].value);
       this.$parent.device = sim.options[sim.selectedIndex].value;
@@ -81,15 +70,10 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .ibmBody {
-  /*border: 2px dashed grey;*/
   padding: 0.2em 0.2em 0.2em 0.2em;
   margin: 0.2em 0.2em 0.2em 0.2em;
   width: 11em;
   float: right;
-  /*display: block;*/
-}
-.lbl1 {
-  display: block;
 }
 .ibmToken {
   display: block;
@@ -98,6 +82,21 @@ export default {
 .checkbox {
   display: block;
 }
+input {
+  border-radius: 5px;
+}
+select {
+  margin: 1em;
+  border: 1px solid black;
+  padding: 1px;
+  border-radius: 5px;
+  background: white;
+}
+button {
+  border-radius: 7px;
+
+  margin: 0px 0px 0px 15px;
+}
 #hover-element {
   display: none;
   position: absolute;
@@ -105,6 +104,7 @@ export default {
   padding: 10px;
   border: solid;
   border-radius: 5px;
+  transition-delay: 3s;
 }
 #hover-div:hover #hover-element {
   display: block;
