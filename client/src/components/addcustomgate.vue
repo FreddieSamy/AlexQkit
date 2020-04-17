@@ -64,9 +64,9 @@
             <option value="sdg">S†</option>
             <option value="tdg">T†</option>
           </optgroup>
-          <optgroup v-if="this.$parent.customGates.length" label="Custom Gates">
+          <optgroup v-if="nthRootCustomGates().length" label="Custom Gates">
             <option
-              v-for="element in this.$parent.customGates"
+              v-for="element in nthRootCustomGates()"
               :key="element.id"
               :value="element.id"
             >{{ element.id }}</option>
@@ -112,7 +112,7 @@ export default {
   methods: {
     openNav() {
       document.getElementById("myNav").style.width = "100%";
-      //   document.getElementById("subCircuitName").value = null;
+      document.getElementById("subCircuitName").value = null;
       document.getElementById("nameofgate").value = null;
 
       // html2canvas(document.querySelector("#circuit-wires")).then(canvas => {
@@ -336,6 +336,16 @@ export default {
       } else {
         this.$parent.w = "width:15.9em";
       }
+    },
+    // ----------------------------------------------------
+    nthRootCustomGates: function() {
+      var gates = [];
+      for (let element of this.$parent.customGates) {
+        if (!element.id.includes("^(1/")) {
+          gates.push(element);
+        }
+      }
+      return gates;
     }
     // ----------------------------------------------------
   }
