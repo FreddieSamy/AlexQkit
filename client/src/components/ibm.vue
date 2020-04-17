@@ -71,10 +71,11 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .ibmBody {
+  background: white;
+  border:1px solid black;
   padding: 0.2em 0.2em 0.2em 0.2em;
   margin: 0.2em 0.2em 0.2em 0.2em;
-  width: 11em;
-  float: right;
+  border-radius:10px;
 }
 .ibmToken {
   display: block;

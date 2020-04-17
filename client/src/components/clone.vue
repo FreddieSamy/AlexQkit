@@ -525,6 +525,7 @@ export default {
 <style scoped>
 .clone {
   white-space: nowrap;
+  padding: 1em;
 }
 .circuit-tools {
   display: flex;
@@ -592,6 +593,8 @@ export default {
 .visual-row {
   display: flex;
 }
+
+
 
 #executionLine {
   position: absolute;

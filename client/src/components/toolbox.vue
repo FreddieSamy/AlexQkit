@@ -6,9 +6,7 @@
       <label v-if="customGates.length">Custom Gates</label>
     </div>
     <!--end box-labels-->
-
-    <!-- ---------------------- gates  -------------------------- -->
-
+    <!-- ---------------------- build in gates  -------------------------- -->
     <draggable
       :list="gates"
       :group="{ name: 'gates', pull: 'clone', put: false }"
@@ -18,28 +16,20 @@
       <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
         <div class="toolbox-gates" v-for="gate in gates" :key="gate.id" :id="gate.name">
           <!-- in case of angle-gates -->
-          <div
-            v-if="gate.name == 'rx' || gate.name == 'ry' || gate.name == 'rz' "
-            class="gate-name"
-            id="hover-div"
-          >
-            {{ gate.name }}
-            <div>
-              <input
-                class="angle"
-                :id="gate.name+ 'Angle'"
-                type="number"
-                :name="gate.name"
-                value="90"
-              />
-            </div>
-            <span id="hover-element">{{ gate.info }}</span>
+          <div class="gate-name" id="hover-div">
+            {{ gate.name.toUpperCase() }}
+             <span id="hover-element">{{ gate.info }}</span>
           </div>
-          <!-- else cases (add built in gates ) -->
-          <div v-else class="gate-name" id="hover-div">
-            {{ gate.name }}
-            <span id="hover-element">{{ gate.info }}</span>
-          </div>
+
+            <input
+              v-if="gate.name == 'rx' || gate.name == 'ry' || gate.name == 'rz' "
+              class="angle"
+              :id="gate.name+ 'Angle'"
+              type="number"
+              :name="gate.name"
+              value="90"
+            />
+
         </div>
       </transition-group>
     </draggable>
@@ -66,6 +56,9 @@
       </transition-group>
     </draggable>
 
+      <div class="add-custom-gate-box">
+        <addcustomgate ref="addcustomgate"></addcustomgate>
+      </div>
     <!--------------------   end of custom gates  ----------------------- -->
     <div class="user-tools">
       <div class="qasm-box">
@@ -82,10 +75,6 @@
         <label for="degree" style="font-size: 15px;">degree</label>
         <input type="radio" id="radian" name="angleType" value="radian" />
         <label for="radian" style="font-size: 15px;">radian</label>
-      </div>
-
-      <div class="add-custom-gate-box">
-        <addcustomgate ref="addcustomgate"></addcustomgate>
       </div>
     </div>
   </div>
@@ -143,44 +132,83 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .toolbox {
+  background:white;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid black;
 }
 .toolbox-labels {
   flex-basis: 100%;
+
 }
 
 .toolbox-gates-area {
-  margin: 1em;
+  margin: 0.1em;
   flex-basis: 100%;
-
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: baseline;
+
 }
 
 .toolbox-gates {
+  font-size: 15px;
+  color: white;
   text-align: center;
-  margin: 0.3em 0.7em 0.3em 0.5em;
+  line-height: 2.5em;
+  border: 0.5px solid grey;
+  border-radius: 0.5em;
+  display: inline-block;
+  margin: 0.8em 0.5em 0.5em 0.5em;
+  padding: 0em 0em 0em 0em;
   width: 2.5em;
   height: 2.5em;
-  border-radius: 0.3em;
-  background-color: #979a9a;
+  background-color: #5d6d7e;
+  z-index: 0;
 }
 
-.toolbox-gates input {
+#rx .gate-name,
+#ry .gate-name,
+#rz .gate-name,
+#reset .gate-name,
+#swap .gate-name {
+
+ opacity: 0.01;
+}
+
+#rx {
+
+}
+#ry {
+
+}
+#rz {
+
+}
+#reset{
+
+} 
+#swap{
+
+}
+
+.angle {
+  display: block;
   text-align: center;
-  margin: 0px 0px 0px 0px;
-  padding: 3px 0px 2px 0px;
-  width: 90%;
+  margin: -1.9em 0em 0em 0em;
+  padding: 2px 0px 2px 0px;
+  width: 87%;
   font-size: 10px;
   border-radius: 8px;
 }
+
 .user-tools {
   flex-basis: 100%;
   display: flex;
@@ -213,17 +241,11 @@ export default {
 
 /* ==================  */
 
-.angle-gates {
-  border: 1px solid black;
-  border-radius: 0.5em;
-  margin: 0.1em 0.1em 0.1em 0.1em;
-  /* white-space: pre-wrap; */
-}
+
 .custom-gates {
   border: 1px solid black;
   display: inline-block;
   height: 7.4em;
-
   border-radius: 0.3em;
   min-width: 7.7em;
 }
@@ -236,17 +258,16 @@ export default {
   display: inline-block;
   margin: 0em 1em 0em 1em;
 }
-.angle {
-  margin: 0em 0.7em 0.1em 0.5em;
-  width: 3em;
-  height: 1em;
-}
+
 .qasm {
   margin: 0em 0em 0em 0.2em;
   background-color: white;
   border-radius: 0.5em;
   display: inline-block;
 }
+
+
+
 #hover-element {
   display: none;
   position: absolute;
