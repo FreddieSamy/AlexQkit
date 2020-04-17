@@ -161,7 +161,7 @@ export default {
           //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
           // window.console.log("new unitary:" + isUnitary);
           if (isUnitary) {
-            this.addGate(nameofgate, nameofgate);
+            this.addGate(nameofgate);
             this.customsrever[nameofgate] = matrix;
             // window.console.log(this.customsrever);
             this.closeNav();
@@ -244,10 +244,7 @@ export default {
           axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
             /*window.console.log(res.data);*/
             if (res.data.isUnitary) {
-              this.addGate(
-                name + "^(1/" + root + ")",
-                name + "^(1/" + root + ")"
-              );
+              this.addGate(name + "^(1/" + root + ")");
               this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
               this.closeNav();
             } else {
@@ -315,7 +312,7 @@ export default {
         .then(res => {
           if (res.data.isUnitary) {
             var name = document.getElementById("subCircuitName").value;
-            this.addGate(name, name);
+            this.addGate(name);
             window.console.log(res.data.matrix);
             this.customsrever[name] = res.data.matrix;
             document.getElementById("subCircuitName").value = null;
@@ -326,10 +323,10 @@ export default {
         });
     },
     // ----------------------------------------------------
-    addGate(nameofgate, id) {
+    addGate(nameofgate) {
       this.$parent.customGates.push({
         name: "custom_" + nameofgate,
-        id: id
+        id: nameofgate
       });
       if (this.$parent.customGates.length < 9) {
         this.$parent.w =
@@ -467,7 +464,7 @@ export default {
   color: #fff;
   cursor: pointer;
 }
-/* .addGateError {
+/* .zddGateError {
   color: red;
   padding-top: 35px;
   padding-left: 20px;
