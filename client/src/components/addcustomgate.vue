@@ -16,10 +16,10 @@
         >create</button>
       </div>
 
-      <div class="column2">
+      <!-- <div class="column2">
         <h1 style="color: black;">from rotation</h1>
         <h3 style="color: black;">select the gate</h3>
-      </div>
+      </div>-->
 
       <div class="column3">
         <h1 style="color: black;">from circuit</h1>
@@ -80,6 +80,8 @@
         >create</button>
       </div>
 
+      <!-- <img class="capturedImage" :src="capturedImage" /> -->
+
       <!-- <div class="addGateError">
         <label id="errormsg"></label>
       </div>-->
@@ -93,6 +95,7 @@
 //import draggable from "vuedraggable";
 import axios from "axios";
 import CustomMx from "./custom_mx.vue";
+// import html2canvas from "html2canvas";
 export default {
   name: "addcustomgate",
   display: "addcustomgate",
@@ -102,6 +105,7 @@ export default {
   },
   data() {
     return {
+      // capturedImage: "",
       customsrever: {}
     };
   },
@@ -110,6 +114,19 @@ export default {
       document.getElementById("myNav").style.width = "100%";
       //   document.getElementById("subCircuitName").value = null;
       document.getElementById("nameofgate").value = null;
+
+      // html2canvas(document.querySelector("#circuit-wires")).then(canvas => {
+      //   this.capturedImage = canvas.toDataURL();
+      //   window.console.log("canvas.toDataURL() -->" + this.capturedImage);
+      //   canvas.toBlob(function(blob) {
+      //     var reader = new FileReader();
+      //     reader.readAsDataURL(blob);
+      //     reader.onloadend = function() {
+      //       let base64data = reader.result;
+      //       window.console.log("Base64--> " + base64data);
+      //     };
+      //   });
+      // });
     },
     // ----------------------------------------------------
     closeNav() {
@@ -167,7 +184,7 @@ export default {
       var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
       var count1, count2, check;
-      var regex = /^(-)?([0-9]*[.])?[0-9]+$|^(-)?(([0-9]*[.])?[0-9]+)?i$|^(-)?([0-9]*[.])?[0-9]+(-|\+)(([0-9]*[.])?[0-9]+)?i$/;
+      var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
 
       for (let i in this.customGates) {
         for (let k in this.customGates[i]) {
@@ -211,18 +228,16 @@ export default {
     // ----------------------------------------------------
     nthRoot: function() {
       var select = document.getElementById("rootGate");
-      var name = select.value;
-      var frontName = select.options[select.selectedIndex].text;
-      /*window.console.log(name);*/
+      var backName = select.value;
+      var name = select.options[select.selectedIndex].text;
+      // window.console.log(name);
       var root = document.getElementById("root").value;
       if (name + "^(1/" + root + ")" in this.customsrever) {
-        alert(
-          "sorry, " + frontName + "^(1/" + root + ")" + " is already exist"
-        );
+        alert("sorry, " + name + "^(1/" + root + ")" + " is already exist");
       } else {
         var jsonObject = {
           root: root,
-          gate: name,
+          gate: backName,
           custom: this.customsrever
         };
         if (root >= 2) {
@@ -231,14 +246,12 @@ export default {
             if (res.data.isUnitary) {
               this.addGate(
                 name + "^(1/" + root + ")",
-                frontName + "^(1/" + root + ")"
+                name + "^(1/" + root + ")"
               );
               this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
               this.closeNav();
             } else {
-              alert(
-                "sorry, " + frontName + "^(1/" + root + ")" + " isn't unitary"
-              );
+              alert("sorry, " + name + "^(1/" + root + ")" + " isn't unitary");
             }
           });
         } else {
