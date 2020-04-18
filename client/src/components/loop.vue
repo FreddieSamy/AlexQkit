@@ -34,7 +34,9 @@ export default {
 input{
   padding: 0em 0em 0em 0.5em;
   width:60px;
-  border-radius: 5px;;
+  border-radius: 5px;
+  margin-top: 100px;
+  margin-left: 40px;
 }
 </style>
 
