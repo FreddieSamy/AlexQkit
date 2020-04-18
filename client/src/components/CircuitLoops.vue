@@ -53,8 +53,13 @@ export default {
         this.ListOfPositions.push(arr);
         this.Repeats.push(loopCaller.repeat);
         this.closeNav();
+   
       }
-
+      let list1 = this.ListOfPositions
+      let list2 = this.Repeats
+      let repeated = {list1,list2}
+      this.$parent.$parent.jsonObject['repeated']=repeated;
+      //window.console.log(this.$parent.$parent.jsonObject)
     },
      openNav() {
        document.getElementById("myNav1").style.width = "30%";

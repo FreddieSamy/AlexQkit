@@ -3,7 +3,7 @@
     <!-------------------------- upper circiut - tools -------------------- --> 
     <div class="circuit-tools">
       <toolbox ref="toolbox"></toolbox>
-      <ibm class="ib" ref="ibm"></ibm>
+      <ibm class="ibm" ref="ibm"></ibm>
     </div>
     <!-- ------------------------ Circiut ---------------------> 
     <div class="circuit">
@@ -20,7 +20,6 @@
       <div v-if="!qasmIncludeIfFlag" class="circuit-wires">
        <!-- ------------ circiutloops & wires ------------->
        <!-- ------------ circiutloops  ------------->
-       <Circiutloops :maxWire=maxWire />
        <!-- ------------  wires ------------->
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
@@ -68,7 +67,7 @@ import PrismEditor from "vue-prism-editor";
 import toolbox from "./toolbox.vue";
 import toolbox2 from "./toolbox2.vue";
 import wire from "./wire.vue";
-import Circiutloops from './CircuitLoops.vue'
+
 import ibm from "./ibm.vue";
 import trash from "./trash.vue";
 import axios from "axios";
@@ -87,7 +86,6 @@ export default {
     ibm,
     PrismEditor,
     circuitDrawing,
-    Circiutloops,
     wire,
     trash,
     toolbox2,
@@ -125,7 +123,8 @@ export default {
         exeCount: 0,
         custom: {},
         shots: 1024,
-        device: ""
+        device: "",
+        repeated:{}
       },
       eventQueue: []
     };
@@ -370,7 +369,7 @@ export default {
     applyControl: function(el1, el2) {
       if (el1 != null && el2 != null) {
         let x = el1.offsetLeft + el1.offsetWidth / 2;
-        let y1 = el1.offsetTop + el1.offsetHeight;
+        let y1 = el1.offsetTop + el1.offsetHeight/2;
         let y2 = el2.offsetTop;
         let size = Math.abs(y2 - y1);
         var hr = document.createElement("hr");
@@ -415,6 +414,7 @@ export default {
                 "[col=_" + (i + 1) + "]"
               );
               if (this.isControl(colElements)) {
+   
                 this.controlColumn(colElements);
               }
             }); // all identity has been rendered
@@ -525,7 +525,7 @@ export default {
 <style scoped>
 .clone {
   white-space: nowrap;
-  padding: 1em;
+
 }
 .circuit-tools {
   display: flex;
@@ -534,10 +534,10 @@ export default {
   border:1px dashed red;
 }
 .toolbox {
-  flex-basis: 60%;
+  flex-basis: 75%;
 }
 .ibm {
-  flex-basis: 40%;
+  flex-basis: 25%;
 }
 .wires {
   /*border: 0.1em dashed blue;*/
