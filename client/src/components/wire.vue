@@ -25,8 +25,9 @@
         v-for="element in list"
         :key="element.id"
         :id="element.name"
+        v-html="displayName(element.name)"
       >
-        {{ displayName(element.name).toUpperCase() }}
+    
       </div>
     </draggable>
   </div>
@@ -183,9 +184,14 @@ export default {
     //-----------------------------------------------------------------------
     displayName: function(name) {
       if (name.startsWith("custom_")) {
-        return name.slice(7);
-      } else {
-        return name;
+        return name.slice(7).toUpperCase();
+      }else if(name=='c'){
+        return '●'
+      }else if(name=="oc"){
+        return'○'
+      }
+      else {
+        return name.toUpperCase();
       }
     },
     //-----------------------------------------------------------------------
@@ -195,37 +201,58 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .wire {
-  margin: 0.5em 0em 0em 0em;
+
+  margin: 0em;
   z-index: -1;
+  display: flex;
+  align-items: flex-start;
+  height:45px;
 }
 .circuit-gate {
   color: white;
+  font-size: 15px;
+  text-align: center;
+  line-height: 2.5em;
+  border: 0.5px solid grey;
+  border-radius: 0.5em;
+  display: inline-table;
+  margin: 0.1em 0.5em 0.5em 0.5em;
+  padding: 0em;
+  width: 35px;
+  height: 35px;
+  background-color: #5d6d7e;
+  z-index: 2;
+}
+
+div[id^='r'],
+#swap  {
+  color: white;
+  font-size: 10px;
   text-align: center;
   line-height: 2.5em;
   border: 0.5px solid grey;
   border-radius: 0.5em;
   display: inline-block;
-  margin: 0.9em 0.5em 0.5em 0.5em;
-  padding: 0em 0em 0em 0em;
-  width: 2.5em;
-  height: 2.5em;
+  margin: 0.5em 0.5em 0.5em 0.5em;
+  padding: 0em;
+  width: 35px;
+  height: 35px;
   background-color: #5d6d7e;
   z-index: 2;
 }
-
 .lbl-wire {
   margin: 0.8em 0.5em 0.5em 0.5em;
 }
 .qubit {
   float: left;
-  margin: 0.7em 0em 0em 0em;
+  margin: 0em 0em 0em 0em;
   padding: 0em 0em 0em 0em;
   width: 3em;
   height: 3em;
   display: inline-table;
 }
 .qubitState {
-  margin: 0.9em 0em 0em 0em;
+  margin: 0.5em 0em 0em 0em;
   border-radius: 0.5em;
   width: 2.5em;
   height: 2em;
@@ -253,12 +280,10 @@ export default {
   /*opacity:0.4;*/
 }
 .wire-drop-area {
-  height: 70px;
+
+  height: 40px;
   width: 100%;
-  margin: auto;
-  max-width: 90%;
-  padding: auto;
-  display: inline-table;
+  display: inline-flex;
   background-size: contain;
   background-image: url("../assets/wire.png");
   /*border: 0.1em dashed black;*/
@@ -269,16 +294,23 @@ export default {
   opacity: 0.01;
 }
 
+#c , #oc{
 
-/*
-#c{
-  
+  line-height: 1.7em;
+  color:black;
+  font-size:20px;
+  background: none;
+  border:none
+  /*
+  z-index:-1;
+  opacity: 0.9;
   color:black;
   background-color:white;
-  background-size: 2.4em 2.9em;
-  background-image: url("../assets/c.png");
+  background-size: 2.4em 2.4em;
+  background-image: url("../assets/dot.png");
   border:transparent;
+  */
   
 }
-*/
+
 </style>

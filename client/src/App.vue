@@ -21,7 +21,7 @@ body {
   text-align: center;
 }
 #app {
-  background: #F1F2F1;
+  
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   color: #2c3e50;
   margin-top: 0px;

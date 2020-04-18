@@ -1,7 +1,8 @@
 <template>
   <div class="ibmBody">
     <div id="hover-div">
-      <label class="lbl1">IBM Token</label>
+      <label class="ibm-label">IBM Token</label>
+      <input class="ibmtoken" type="text" id="ibmtextfield" />
       <span id="hover-element">
         <div>Get your API_TOKEN from:</div>
         <div>
@@ -10,9 +11,10 @@
         <div>To run your circuit on IBM Q</div>
       </span>
     </div>
-    <input class="ibmtoken" type="text" id="ibmtextfield" />
+
+
     <div>
-      <label>Device</label>
+      <label class="device-label">Device</label>
       <select id="simulater" v-model="device">
         <optgroup v-for="(type,index) in devices" :key="index" :label="index">
           <option
@@ -28,7 +30,7 @@
     <div class="checkbox">
       <input type="checkbox" id="checkbox" />
       <label for="checkbox">Run on IBMQ</label>
-      <button @click="sendto()">Send</button>
+      <button @click="sendto()">RUN</button>
     </div>
     <a id="link" target="_blank" :href="link">{{ link }}</a>
   </div>
@@ -72,17 +74,19 @@ export default {
 <style scoped>
 .ibmBody {
   background: white;
-  border:1px solid black;
   padding: 0.2em 0.2em 0.2em 0.2em;
   margin: 0.2em 0.2em 0.2em 0.2em;
   border-radius:10px;
 }
 .ibmToken {
-  display: block;
   margin: 0.5em 0.2em 0.2em 0.2em;
 }
-.checkbox {
-  display: block;
+
+.ibm-label{
+  margin:0em 1.1em 0em 0em;
+}
+.device-label{
+  margin:0em 2em 0em 0em;
 }
 input {
   border-radius: 5px;

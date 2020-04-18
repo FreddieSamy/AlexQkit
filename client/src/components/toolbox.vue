@@ -1,11 +1,12 @@
 <template>
   <div class="toolbox">
-    <!-- toolcox-labels -->
+    <!-- toolcox-labels --
+
     <div class="toolbox-labels">
       <label>Toolbox</label>
       <label v-if="customGates.length">Custom Gates</label>
     </div>
-    <!--end box-labels-->
+    --end box-labels-->
     <!-- ---------------------- build in gates  -------------------------- -->
     <draggable
       :list="gates"
@@ -31,10 +32,13 @@
             />
 
         </div>
+        
       </transition-group>
+      
     </draggable>
 
     <!-- ------------------- end built in gates and start custom gates ---------- -->
+
     <draggable
       v-if="customGates.length"
       class="custom-gates"
@@ -51,20 +55,23 @@
           :key="element.id"
           :id="element.name"
         >
+        
           <div class="gate-name">{{ element.id }}</div>
         </div>
       </transition-group>
     </draggable>
 
-      <div class="add-custom-gate-box">
-        <addcustomgate ref="addcustomgate"></addcustomgate>
-      </div>
+
     <!--------------------   end of custom gates  ----------------------- -->
     <div class="user-tools">
       <div class="qasm-box">
         <button id="qasmToolboxBtn" class="qasm" @click="this.$parent.qasm">| qasm ⟩</button>
       </div>
-
+      
+      <div class="circiut-loop">
+        <Circiutloops :maxWire=this.$parent.maxWire />
+      </div>
+      
       <div class="number-of-shots">
         <label class="lbl1">Number Of Shots</label>
         <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
@@ -76,6 +83,9 @@
         <input type="radio" id="radian" name="angleType" value="radian" />
         <label for="radian" style="font-size: 15px;">radian</label>
       </div>
+      <div>
+        <addcustomgate  class="add-custom-gate-box" ref="addcustomgate"></addcustomgate>
+      </div>
     </div>
   </div>
 </template>
@@ -84,13 +94,15 @@
 import { mapState } from "vuex";
 import draggable from "vuedraggable";
 import addcustomgate from "./addcustomgate";
+import Circiutloops from './CircuitLoops.vue'
 
 export default {
   name: "toolbox",
   display: "toolbox",
   components: {
     draggable,
-    addcustomgate
+    addcustomgate,
+    Circiutloops
   },
   computed: {
     ...mapState(["gates"])
@@ -138,9 +150,8 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
-  padding: 5px;
+  padding: 0px;
   border-radius: 10px;
-  border: 1px solid black;
 }
 .toolbox-labels {
   flex-basis: 100%;
@@ -148,14 +159,13 @@ export default {
 }
 
 .toolbox-gates-area {
-  margin: 0.1em;
+  margin: 0em;
   flex-basis: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: baseline;
-  border: 1px solid green;
 }
 
 .toolbox-gates {
@@ -166,12 +176,23 @@ export default {
   border: 0.5px solid grey;
   border-radius: 0.5em;
   display: inline-block;
-  margin: 0.8em 0.5em 0.5em 0.5em;
-  padding: 0em 0em 0em 0em;
-  width: 2.5em;
-  height: 2.5em;
+  margin: 0.5em 0.5em 0.5em 0.5em;
+  padding: 0px;
+  width: 35px;
+  height: 35px;
   background-color: #5d6d7e;
   z-index: 0;
+}
+
+.custom-gates {
+  margin: 0em;
+  flex-basis: 10%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+  border: 0.5px solid grey;
 }
 
 #rx .gate-name,
@@ -184,23 +205,7 @@ export default {
  padding: 0px;
 
 }
-/*
-#rx {
 
-}
-#ry {
-
-}
-#rz {
-
-}
-#reset{
-
-} 
-#swap{
-
-}
-*/
 .angle {
   display: block;
   text-align: center;
@@ -221,11 +226,13 @@ export default {
 }
 
 .qasm-box {
-  flex-basis: 15%;
+  flex-basis: 10%;
 }
-
+.circiut-loop{
+  flex-basis: 10%;
+}
 .number-of-shots {
-  flex-basis: 15%;
+  flex-basis: 5%;
 }
 .number-of-shots input {
   margin: 0em 0em 0em 1em;
@@ -233,24 +240,15 @@ export default {
 }
 
 .degree-or-radian {
-  margin: 0em 0em 0em 2em;
-  flex-basis: 25%;
+  margin: 0em 0em 0em 1em;
+  flex-basis: 15%;
 }
 .add-custom-gate-box {
-  margin: 0em 0em 0em 2em;
-  flex-basis: 25%;
+  flex-basis: 10%;
 }
 
 /* ==================  */
 
-
-.custom-gates {
-  border: 1px solid black;
-  display: inline-block;
-  height: 7.4em;
-  border-radius: 0.3em;
-  min-width: 7.7em;
-}
 
 .flip-list-move {
   transition: transform 0.3s;
@@ -267,7 +265,6 @@ export default {
   border-radius: 0.5em;
   display: inline-block;
 }
-
 
 
 #hover-element {
