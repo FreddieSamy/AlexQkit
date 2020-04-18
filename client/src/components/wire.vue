@@ -263,6 +263,8 @@ export default {
   background-image: url("../assets/wire.png");
   /*border: 0.1em dashed black;*/
 }
+
+
 #i {
   opacity: 0.01;
 }
