@@ -155,7 +155,7 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: baseline;
-
+  border: 1px solid green;
 }
 
 .toolbox-gates {
@@ -180,9 +180,11 @@ export default {
 #reset .gate-name,
 #swap .gate-name {
 
- opacity: 0.01;
-}
+ font-size:10px;
+ padding: 0px;
 
+}
+/*
 #rx {
 
 }
@@ -198,7 +200,7 @@ export default {
 #swap{
 
 }
-
+*/
 .angle {
   display: block;
   text-align: center;

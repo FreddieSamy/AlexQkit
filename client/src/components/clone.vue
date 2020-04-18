@@ -530,7 +530,8 @@ export default {
 .circuit-tools {
   display: flex;
   margin: 0.2em 0.2em 0.2em 0.2em;
-  padding: 0em 0em 0em 0em;
+  padding: 10px;
+  border:1px dashed red;
 }
 .toolbox {
   flex-basis: 60%;
