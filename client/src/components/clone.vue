@@ -523,19 +523,17 @@ export default {
 <style scoped>
 .clone {
   white-space: nowrap;
-
 }
 .circuit-tools {
   display: flex;
-  margin: 0.2em 0.2em 0.2em 0.2em;
-  padding: 10px;
-  border:1px dashed red;
+  margin: 0.2em;
+
 }
 .toolbox {
-  flex-basis: 75%;
+  flex-basis: 65%;
 }
 .ibm {
-  flex-basis: 25%;
+  flex-basis: 35%;
 }
 .wires {
   /*border: 0.1em dashed blue;*/

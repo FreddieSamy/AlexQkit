@@ -1,31 +1,23 @@
 <template>
-  <div class="toolbox2">
+  <div class="toolbox-2">
+    <button @click="addWire">add Wire</button>
+    <button @click="removeWire">Remove Wire</button>
+    <button @click="cloneSendSystem">send</button>
+    <button @click="cloneResetSystem">reset system</button>
 
-    <div class="savesystem-and-algoritms">
-      <label>Save System by Name</label>
-      <input type="text" v-model="savedCirciutName" />
+    <input
+      class="save-circuit"
+      type="text"
+      placeholder="Save Circuit by Name"
+      v-model="savedCirciutName"
+    />
 
-      <button @click="saveCircuit(savedCirciutName,eventQueue[eventQueue.length-1])">Save system</button>
+    <button @click="saveCircuit(savedCirciutName,eventQueue[eventQueue.length-1])">Save Circuit</button>
 
-      <label class="select-algorithm">Select an Algorithm</label>
-      <select v-model="selectedAlgorithm">
-        <option
-          v-for="(item, index) in algorithms"
-          :key="index"
-          :value="item.circuit"
-        >{{ item.name }}</option>
-      </select>
-    </div>
-    <div class="toolbox2-buttons">
-      <button @click="addWire">add Wire</button>
-      <button @click="removeWire">Remove Wire</button>
-      <button @click="cloneSendSystem">send</button>
-      <button @click="cloneResetSystem">reset system</button>
-      <!-- just devolopment block  (will be deleted)-->
-        <button @click="clearConsole">Clear Console</button>
-      <!-- end development block -->
-    </div>
-
+    <label class="select-algorithm">Select an Algorithm</label>
+    <select v-model="selectedAlgorithm">
+      <option v-for="(item, index) in algorithms" :key="index" :value="item.circuit">{{ item.name }}</option>
+    </select>
   </div>
 </template>
 <!-- =============================================================  -->
@@ -87,20 +79,32 @@ export default {
 </script>
 <!-- =============================================================  -->
 <style scoped>
+toolbox-2 {
+  display: flex;
+}
 button {
   display: inline-block;
-  margin: 0.2em 0.2em 0em 0.2em;
+  margin: 0em 0.2em 0em 0.2em;
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
   border-radius: 0.5em;
 }
-.savesystem-and-algoritms {
-  margin:1em ;
+input {
+  border-radius: 7px;
 }
-.select-algorithm{
-  margin:0em 0em 0em 3em;
+select {
+  border-radius: 7px;
+  background: white;
 }
+
+.save-circuit {
+  margin: 0em 0.5em 0em 13em;
+}
+.select-algorithm {
+  margin: 0em 0.5em 0em 2em;
+}
+
 .toolbox2-buttons {
-  margin:1em;
+  margin: 1em;
 }
 </style>
