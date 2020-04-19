@@ -227,10 +227,12 @@ export default {
 #ry,
 #rz{
   align-self: center;
+  
 }
 div[id^='r'],
 #swap  {
   font-size: 10px;
+  margin: 0em 0.75em 0em 0.75em;
 }
 #c , #oc{
   color:black;
@@ -241,10 +243,8 @@ div[id^='r'],
   background: none;
   border:none;
 }
-#oc{
- 
-
-background-image: url("../assets/whitedot.png");
+#oc{  
+  background-image: url("../assets/whitedot.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 11px 11px;

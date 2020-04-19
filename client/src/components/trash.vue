@@ -10,7 +10,6 @@
       >
         {{ element.name }}
       </div>
-      <!-- Trash Drop Area -->
     </draggable>
   </div>
 </template>
@@ -30,16 +29,14 @@ export default {
   },
   methods: {
     add: function(evt) {
-  
       if(evt.from.classList != 'toolbox-gates-area'){
       var wire = evt.from.id.replace("list","")
       this.$parent.$refs.wire[wire-1].addGateByIndex(evt.oldIndex);
       }
       this.list = [];
-    },
-  },
+    }
+  }
 };
-0;
 </script>
 <!-- =============================================================  -->
 <style scoped>
@@ -48,23 +45,10 @@ export default {
   border: 0.1em dashed #ef9494;
   border-radius: 0.2em;
   display: block;
-  margin: 0.2em 0.2em 0em 0.2em;
+  margin: 0em 0em 0em 3.5em;
   padding: 0.1em 0.5em 0.1em 0.5em;
-  width: 97%;
+  width: 92%;
   text-align: center;
 }
-.circuit-gate {
-  color: white;
-  /*text-align: center;*/
-  line-height: 2.5em;
-  border: 0.15em solid black;
-  border-radius: 0.7em;
-  display: inline-block;
-  margin: 0.8em 0.5em 0.5em 0.5em;
-  padding: 0em 0em 0em 0em;
-  width: 2.5em;
-  height: 2.5em;
-  background-color: #5d6d7e;
-  z-index: 2;
-}
+
 </style>

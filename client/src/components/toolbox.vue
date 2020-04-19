@@ -189,7 +189,6 @@ export default {
  
 }
 
-
 #rx,
 #ry,
 #rz{
@@ -243,7 +242,7 @@ export default {
   flex-basis: 10%;
 }
 .number-of-shots {
-  flex-basis: 5%;
+  flex-basis: 10%;
 }
 .number-of-shots input {
   margin: 0em 0em 0em 1em;
@@ -252,10 +251,10 @@ export default {
 
 .degree-or-radian {
   margin: 0em 0em 0em 1em;
-  flex-basis: 15%;
+  flex-basis: 18%;
 }
 .add-custom-gate-box {
-  flex-basis: 10%;
+  flex-basis: 20%;
 }
 
 /* ==================  */

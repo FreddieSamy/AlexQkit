@@ -74,7 +74,7 @@ export default {
 <style scoped>
 .ibmBody {
   background: white;
-  padding: 0.2em 0.2em 0.2em 0.2em;
+  padding: 0px;
   margin: 0.2em 0.2em 0.2em 0.2em;
   border-radius:10px;
 }
@@ -92,9 +92,9 @@ input {
   border-radius: 5px;
 }
 select {
-  margin: 1em;
+  margin: 0.7em;
   border: 1px solid black;
-  padding: 1px;
+  padding: 0px;
   border-radius: 5px;
   background: white;
 }
@@ -107,7 +107,7 @@ button {
   display: none;
   position: absolute;
   background-color: lightgray;
-  padding: 10px;
+  padding: 5px;
   border: solid;
   border-radius: 5px;
   transition-delay: 3s;
