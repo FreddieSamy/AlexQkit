@@ -227,17 +227,23 @@ export default {
 #ry,
 #rz{
   align-self: center;
-  
 }
+
 div[id^='r'],
 #swap  {
   font-size: 10px;
   margin: 0em 0.75em 0em 0.75em;
 }
+
+div[id^='rx'],
+div[id^='ry'],
+div[id^='rz']{
+  font-weight: bold;
+  background:#FF8C61;
+}
 #c , #oc{
   color:black;
   line-height: 10px;
-
   margin: 0em 0.265em 0em 0.265em;
   font-size:30px;
   background: none;
@@ -248,7 +254,6 @@ div[id^='r'],
   background-repeat: no-repeat;
   background-position: center;
   background-size: 11px 11px;
-
 }
 
 .lbl-wire {
@@ -297,7 +302,6 @@ div[id^='r'],
   display: inline-flex;
   background-size: contain;
   background-image: url("../assets/wire.png");
-  /*border: 0.1em dashed black;*/
 }
 
 
