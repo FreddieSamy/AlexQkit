@@ -238,7 +238,7 @@ export default {
   flex-basis: 10%;
 }
 .circiut-loop {
-  flex-basis: 16%;
+  flex-basis: 12%;
 }
 .number-of-shots {
   flex-basis: 30%;
