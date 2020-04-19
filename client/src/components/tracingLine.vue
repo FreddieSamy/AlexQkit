@@ -1,6 +1,6 @@
 <template>
   <hr
-    v-if="!this.$parent.qasmIncludeIfFlag"
+    v-if="!this.$parent.$refs.qasm.qasmIncludeIfFlag"
     id="tracingLine"
     :width="width"
     :size="updateTracingLine()"
@@ -25,8 +25,8 @@ export default {
       var gateMargin = 0;
 
       this.$nextTick(() => {
-        if (this.$parent.qasmFlag) {
-          qasmMargin = 18;
+        if (this.$parent.$refs.qasm.qasmFlag) {
+          qasmMargin = document.getElementsByClassName("editor")[0].offsetWidth;
         }
         if (document.getElementsByClassName("qubit")[0] != undefined) {
           var ele = document.getElementsByClassName("qubit")[0];
@@ -52,11 +52,11 @@ export default {
           qasmMargin +
           this.width +
           "px";
-        // document.getElementById("tracingLine").style.marginLeft =
-        // 3.8 * this.$parent.exeCount + 3.2 + qasmMargin + "em";
         document.getElementById(
           "tracingLine"
-        ).size = document.getElementsByClassName("circuit")[0].offsetHeight;
+        ).size = document.getElementsByClassName(
+          "circuit-wires"
+        )[0].offsetHeight;
       });
     }
     //-----------------------------------------------------------------------

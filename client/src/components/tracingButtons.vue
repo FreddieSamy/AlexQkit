@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!this.$parent.$parent.qasmIncludeIfFlag" class="exe">
+  <div v-if="!this.$parent.$parent.$refs.qasm.qasmIncludeIfFlag" class="exe">
     <button class="exeBtn" @click="exeStart">start</button>
     <button class="exeBtn" @click="preExe">⟨exe|</button>
     <button class="exeBtn" @click="nextExe">|exe⟩</button>

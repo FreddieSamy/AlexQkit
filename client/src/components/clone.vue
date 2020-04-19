@@ -7,17 +7,11 @@
     </div>
     <!-- ------------------------ Circiut --------------------->
     <div class="circuit">
-      <!-- ------------------- qasm ----------------------->
-      <div class="editor" v-if="qasmFlag">
-        <div class="qasm">
-          <prism-editor :lineNumbers="true" :code="qasmCode" v-model="qasmCode" language="js"></prism-editor>
-        </div>
-        <button class="qasmBtn" @click="sendQasm">Run</button>
-      </div>
+      <qasm ref="qasm"></qasm>
       <tracingLine ref="tracingLine"></tracingLine>
-      <circuitDrawing v-if="qasmIncludeIfFlag "></circuitDrawing>
+      <circuitDrawing v-if="this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })"></circuitDrawing>
       <!-- ------------ circiutloops & wires ------------->
-      <div v-if="!qasmIncludeIfFlag" class="circuit-wires">
+      <div v-if="!this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })" class="circuit-wires">
         <!-- ------------  wires ------------->
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
@@ -29,18 +23,16 @@
 
       <div class="wires-buttons">
         <toolbox2
-          v-if="!qasmIncludeIfFlag"
+          v-if="!this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })"
           class="toolbox2"
           :eventQueue="eventQueue"
           :setAlgorithm="setAlgorithm"
         />
-        <!-- <div v-if="!qasmIncludeIfFlag" class="exe">
-          <button class="exeBtn" @click="exeStart">start</button>
-          <button class="exeBtn" @click="preExe">⟨exe|</button>
-          <button class="exeBtn" @click="nextExe">|exe⟩</button>
-          <button class="exeBtn" @click="exeEnd">end</button>
-        </div>-->
-        <button v-if="!qasmIncludeIfFlag" class="exeBtn" @click="elementaryGates">Elementary Gates</button>
+        <button
+          v-if="!this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })"
+          class="exeBtn"
+          @click="elementaryGates"
+        >Elementary Gates</button>
       </div>
     </div>
     <div class="visual-row">
@@ -55,10 +47,6 @@
 </template>
 <!-- =============================================================  -->
 <script>
-import "prismjs";
-import "prismjs/themes/prism.css";
-import "vue-prism-editor/dist/VuePrismEditor.css";
-import PrismEditor from "vue-prism-editor";
 import toolbox from "./toolbox.vue";
 import toolbox2 from "./toolbox2.vue";
 import wire from "./wire.vue";
@@ -71,6 +59,7 @@ import diracNotation from "./diracNotation.vue";
 import circuitDrawing from "./circuitDrawing.vue";
 import matrixRepresentation from "./matrixRepresentation.vue";
 import tracingLine from "./tracingLine.vue";
+import qasm from "./qasm.vue";
 // import { mapState } from 'vuex';
 
 export default {
@@ -79,7 +68,6 @@ export default {
   components: {
     toolbox,
     ibm,
-    PrismEditor,
     circuitDrawing,
     wire,
     trash,
@@ -88,6 +76,7 @@ export default {
     histoGram,
     diracNotation,
     matrixRepresentation,
+    qasm,
     tracingLine
   },
   mounted() {
@@ -101,15 +90,12 @@ export default {
   },
   data() {
     return {
-      qasmCode: "",
       API_TOKEN: "",
       diracNotationData: "|00⟩",
       exeCount: 0,
       route: this.$store.state.routes.appRoute,
       rows: 2, // number of wires
       maxWire: 0, // maximum number of gates in a wire
-      qasmFlag: false,
-      qasmIncludeIfFlag: false,
       matrixRepresentation: [],
       jsonObject: {
         API_TOKEN: "",
@@ -244,7 +230,7 @@ export default {
         this.diracNotationData = res.data.diracNotation;
         this.matrixRepresentation = res.data.matrixRepresentation;
         this.$refs.ibm.link = res.data.link;
-        this.qasmCode = res.data.qasm;
+        this.$refs.qasm.qasmCode = res.data.qasm;
       });
     },
     sendSystem: function() {
@@ -280,53 +266,10 @@ export default {
       var imgofblochSphere = document.getElementById("bloch");
       imgofblochSphere.src =
         "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
-      if (this.qasmIncludeIfFlag) {
+      if (this.$refs.qasm.qasmIncludeIfFlag) {
         var imgOfCircuit = document.getElementById("circuitDrawing");
         imgOfCircuit.src =
           "http://127.0.0.1:5000/circuit.png?time=" + new Date();
-      }
-    },
-    //-----------------------------------------------------------------------
-    sendQasm: function() {
-      // window.console.log(this.qasmCode);
-      let jsonObject = {
-        qasm: this.qasmCode
-      };
-      axios.post(this.route, jsonObject).then(res => {
-        if (res.data.qasmError == "") {
-          this.draw();
-          this.diracNotationData = res.data.diracNotation;
-          this.matrixRepresentation = res.data.matrixRepresentation;
-          this.$refs.ibm.link = res.data.link;
-          if (this.qasmFlag) {
-            this.qasmCode = res.data.qasm;
-            this.qasmIncludeIfFlag = this.qasmCode.includes("if");
-          }
-
-          if (res.data.qasmRows && !this.qasmIncludeIfFlag) {
-            // undefined qasmRows leads to an error
-            let circuit = {
-              wires: res.data.qasmRows.length,
-              init: Array(res.data.qasmRows.length).fill("0"),
-              rows: res.data.qasmRows
-            };
-            this.setAlgorithm(circuit);
-          }
-        } else {
-          alert("qasm code error :\n" + res.data.qasmError);
-        }
-      });
-    },
-
-    //-----------------------------------------------------------------------
-    qasm: function() {
-      this.qasmFlag = !this.qasmFlag;
-      this.$refs.tracingLine.updateTracingLine();
-      // this.sendSystem();
-      if (this.qasmFlag) {
-        document.getElementById("qasmToolboxBtn").innerHTML = "⟨ qasm |";
-      } else {
-        document.getElementById("qasmToolboxBtn").innerHTML = "| qasm ⟩";
       }
     },
     //-----------------------------------------------------------------------
@@ -507,27 +450,6 @@ export default {
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
   border-radius: 0.5em;
-}
-.qasm {
-  overflow-y: auto;
-  width: 18em;
-  max-height: 20em;
-  margin: 0em 0.2em 0em 0em;
-  border-radius: 0.5em;
-}
-.editor {
-  display: block;
-  height: 100%;
-  width: 18em;
-}
-.qasmBtn {
-  margin: 0.2em 0.2em 0.2em 0em;
-  display: block;
-  padding: 0.1em 0.5em 0.1em 0.5em;
-  background-color: white;
-  border-radius: 0.5em;
-  right: 0;
-  top: 0;
 }
 .circuit-wires {
   width: 99%;

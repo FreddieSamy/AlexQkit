@@ -13,7 +13,7 @@
           <div class="gate-name" id="hover-div">
             {{ gate.name.toUpperCase() }}
             <span id="hover-element">{{ gate.info }}</span>
-            
+
             <input
               v-if="gate.name == 'rx' || gate.name == 'ry' || gate.name == 'rz' "
               class="angle-input"
@@ -22,7 +22,6 @@
               :name="gate.name"
               value="90"
             />
-          
           </div>
         </div>
       </transition-group>
@@ -54,7 +53,7 @@
     <!--------------------   end of custom gates  ----------------------- -->
     <div class="user-tools">
       <div class="qasm-box">
-        <button id="qasmToolboxBtn" class="qasm" @click="this.$parent.qasm">| qasm ⟩</button>
+        <button id="qasmToolboxBtn" class="qasm" @click="$parent.$refs.qasm.qasm()">| qasm ⟩</button>
       </div>
 
       <div class="circiut-loop">
@@ -105,7 +104,7 @@ export default {
   },
   methods: {
     log: function() {
-      this.$parent.qasmIncludeIfFlag = false;
+      this.$parent.$refs.qasm.qasmIncludeIfFlag = false;
       //this.$parent.maxWire = 0;
     },
     // ----------------------------------------------------
@@ -190,7 +189,7 @@ export default {
 
 #rx,
 #ry,
-#rz{
+#rz {
   align-self: center;
 }
 
@@ -208,7 +207,6 @@ export default {
 #rz .gate-name,
 #reset .gate-name,
 #swap .gate-name {
- 
   font-size: 10px;
   padding: 0px;
   margin: 0px;
