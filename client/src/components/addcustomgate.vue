@@ -4,7 +4,7 @@
       <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
 
       <div class="column1">
-        <h1 class="p" style="color: black ">from matrix</h1>
+        <h1 class="p" style="color: black ">matrix</h1>
         <h3 style="color: black">name</h3>
         <input type="text" id="nameofgate" />
         <h3 style="color: black">number of wires</h3>
@@ -22,24 +22,24 @@
       </div>-->
 
       <div class="column3">
-        <h1 style="color: black;">from circuit</h1>
-        <h3 style="color: black;">Name</h3>
+        <h1 style="color: black;">sub-circuit</h1>
+        <h3 style="color: black;">name</h3>
         <input type="text" id="subCircuitName" />
         <h3 style="color: black;">Rows</h3>
-        <label style="color: black;">From</label>
+        <label class="from-to">From</label>
         <select id="fromRow" style="width:15%;">
           <option v-for="i in this.$parent.$parent.rows" :key="i" :value="i">{{i}}</option>
         </select>
-        <label style="color: black;">To</label>
+        <label class="from-to">To</label>
         <select id="toRow" style="width:15%;">
           <option v-for="i in this.$parent.$parent.rows" :key="i" :value="i">{{i}}</option>
         </select>
         <h3 style="color: black;">Columns</h3>
-        <label style="color: black;">From</label>
+        <label class="from-to">From</label>
         <select id="fromColumn" style="width:15%;">
           <option v-for="i in this.$parent.$parent.maxWire" :key="i" :value="i">{{i}}</option>
         </select>
-        <label style="color: black;">To</label>
+        <label class="from-to">To</label>
         <select id="toColumn" style="width:15%;">
           <option v-for="i in this.$parent.$parent.maxWire" :key="i" :value="i">{{i}}</option>
         </select>
@@ -74,6 +74,7 @@
         </select>
         <h3 style="color: black;">root</h3>
         <input style="width:40%;" id="root" type="number" value="2" />
+        <br />
         <button
           @click="nthRoot()"
           style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
@@ -487,5 +488,10 @@ export default {
   margin: 0em 0em 0em 0.2em;
   background-color: white;
   border-radius: 0.5em;
+}
+.from-to {
+  color: black;
+  margin-left: 0.4em;
+  margin-right: 0.2em;
 }
 </style>
