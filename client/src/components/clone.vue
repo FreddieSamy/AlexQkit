@@ -18,8 +18,6 @@
       <circuitDrawing v-if="qasmIncludeIfFlag "></circuitDrawing>
       <!-- ------------ circiutloops & wires ------------->
       <div v-if="!qasmIncludeIfFlag" class="circuit-wires">
-       <!-- ------------ circiutloops & wires ------------->
-       <!-- ------------ circiutloops  ------------->
        <!-- ------------  wires ------------->
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
@@ -369,8 +367,8 @@ export default {
     applyControl: function(el1, el2) {
       if (el1 != null && el2 != null) {
         let x = el1.offsetLeft + el1.offsetWidth / 2;
-        let y1 = el1.offsetTop + el1.offsetHeight/2;
-        let y2 = el2.offsetTop;
+        let y1 = el1.offsetTop + (el1.offsetHeight / 2);
+        let y2 = el2.offsetTop +  el1.offsetHeight / 2;
         let size = Math.abs(y2 - y1);
         var hr = document.createElement("hr");
         hr.setAttribute("class", "cline");
@@ -425,7 +423,7 @@ export default {
     //-----------------------------------------------------------------------
     isControl: function(colElements) {
       for (let j = 0; j < colElements.length; j++) {
-        if (colElements[j].id == "c") {
+        if (colElements[j].id == "c" || colElements[j].id == "oc" ) {
           return true;
         }
       }

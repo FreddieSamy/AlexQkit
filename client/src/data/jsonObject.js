@@ -7,7 +7,8 @@ export default {
     exeCount: 0,
     custom: {},
     shots: 1024,
-    device: ""
-  
+    device: "",
+    repeated:{}
+    
 }
   
