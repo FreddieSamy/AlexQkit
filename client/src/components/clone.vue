@@ -1,11 +1,11 @@
 <template>
   <div class="clone">
-    <!-------------------------- upper circiut - tools -------------------- --> 
+    <!-------------------------- upper circiut - tools -------------------- -->
     <div class="circuit-tools">
       <toolbox ref="toolbox"></toolbox>
       <ibm class="ibm" ref="ibm"></ibm>
     </div>
-    <!-- ------------------------ Circiut ---------------------> 
+    <!-- ------------------------ Circiut --------------------->
     <div class="circuit">
       <!-- ------------------- qasm ----------------------->
       <div class="editor" v-if="qasmFlag">
@@ -14,21 +14,18 @@
         </div>
         <button class="qasmBtn" @click="sendQasm">Run</button>
       </div>
-      <hr v-if="!qasmIncludeIfFlag" id="executionLine" width="2" size="160" />
+      <tracingLine ref="tracingLine"></tracingLine>
       <circuitDrawing v-if="qasmIncludeIfFlag "></circuitDrawing>
       <!-- ------------ circiutloops & wires ------------->
       <div v-if="!qasmIncludeIfFlag" class="circuit-wires">
-       <!-- ------------  wires ------------->
+        <!-- ------------  wires ------------->
         <div class="wires">
           <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
-        
       </div>
-
     </div>
     <div class="toolbox-2">
       <trash></trash>
-  
 
       <div class="wires-buttons">
         <toolbox2
@@ -37,12 +34,12 @@
           :eventQueue="eventQueue"
           :setAlgorithm="setAlgorithm"
         />
-        <div v-if="!qasmIncludeIfFlag" class="exe">
+        <!-- <div v-if="!qasmIncludeIfFlag" class="exe">
           <button class="exeBtn" @click="exeStart">start</button>
           <button class="exeBtn" @click="preExe">⟨exe|</button>
           <button class="exeBtn" @click="nextExe">|exe⟩</button>
           <button class="exeBtn" @click="exeEnd">end</button>
-        </div>
+        </div>-->
         <button v-if="!qasmIncludeIfFlag" class="exeBtn" @click="elementaryGates">Elementary Gates</button>
       </div>
     </div>
@@ -65,7 +62,6 @@ import PrismEditor from "vue-prism-editor";
 import toolbox from "./toolbox.vue";
 import toolbox2 from "./toolbox2.vue";
 import wire from "./wire.vue";
-
 import ibm from "./ibm.vue";
 import trash from "./trash.vue";
 import axios from "axios";
@@ -74,6 +70,7 @@ import histoGram from "./histoGram.vue";
 import diracNotation from "./diracNotation.vue";
 import circuitDrawing from "./circuitDrawing.vue";
 import matrixRepresentation from "./matrixRepresentation.vue";
+import tracingLine from "./tracingLine.vue";
 // import { mapState } from 'vuex';
 
 export default {
@@ -90,7 +87,8 @@ export default {
     blochSphere,
     histoGram,
     diracNotation,
-    matrixRepresentation
+    matrixRepresentation,
+    tracingLine
   },
   mounted() {
     //window.console.log("clone has been mounted");
@@ -122,7 +120,7 @@ export default {
         custom: {},
         shots: 1024,
         device: "",
-        repeated:{}
+        repeated: {}
       },
       eventQueue: []
     };
@@ -158,7 +156,7 @@ export default {
       }
 
       this.exeCount = this.maxWire;
-      this.updateTracingLine(); //update the trasing line
+      this.$refs.tracingLine.updateTracingLine(); //update the trasing line
     },
     //-----------------------------------------------------------------------
     resetSystem: function() {
@@ -169,7 +167,7 @@ export default {
       this.maxWire = 0;
       this.exeCount = 0;
       this.rows = 2;
-      this.updateTracingLine();
+      this.$refs.tracingLine.updateTracingLine();
       this.removeControlSystem();
       this.sendSystem();
     },
@@ -190,7 +188,7 @@ export default {
       }
       this.updateMaxWire();
       this.exeCount = this.maxWire;
-      this.updateTracingLine();
+      this.$refs.tracingLine.updateTracingLine();
     },
     //-----------------------------------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
@@ -323,7 +321,7 @@ export default {
     //-----------------------------------------------------------------------
     qasm: function() {
       this.qasmFlag = !this.qasmFlag;
-      this.updateTracingLine();
+      this.$refs.tracingLine.updateTracingLine();
       // this.sendSystem();
       if (this.qasmFlag) {
         document.getElementById("qasmToolboxBtn").innerHTML = "⟨ qasm |";
@@ -332,43 +330,11 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    nextExe: function() {
-      if (this.exeCount < this.maxWire) {
-        this.exeCount++;
-        this.updateTracingLine();
-        this.sendSystem();
-      }
-    },
-    //-----------------------------------------------------------------------
-    preExe: function() {
-      if (this.exeCount > 0) {
-        this.exeCount--;
-        this.updateTracingLine();
-        this.sendSystem();
-      }
-    },
-    //-----------------------------------------------------------------------
-    exeStart: function() {
-      if (this.exeCount != 0) {
-        this.exeCount = 0;
-        this.updateTracingLine();
-        this.sendSystem();
-      }
-    },
-    //-----------------------------------------------------------------------
-    exeEnd: function() {
-      if (this.exeCount != this.maxWire) {
-        this.exeCount = this.maxWire;
-        this.updateTracingLine();
-        this.sendSystem();
-      }
-    },
-    //-----------------------------------------------------------------------
     applyControl: function(el1, el2) {
       if (el1 != null && el2 != null) {
         let x = el1.offsetLeft + el1.offsetWidth / 2;
-        let y1 = el1.offsetTop + (el1.offsetHeight / 2);
-        let y2 = el2.offsetTop +  el1.offsetHeight / 2;
+        let y1 = el1.offsetTop + el1.offsetHeight / 2;
+        let y2 = el2.offsetTop + el1.offsetHeight / 2;
         let size = Math.abs(y2 - y1);
         var hr = document.createElement("hr");
         hr.setAttribute("class", "cline");
@@ -412,7 +378,6 @@ export default {
                 "[col=_" + (i + 1) + "]"
               );
               if (this.isControl(colElements)) {
-   
                 this.controlColumn(colElements);
               }
             }); // all identity has been rendered
@@ -423,7 +388,7 @@ export default {
     //-----------------------------------------------------------------------
     isControl: function(colElements) {
       for (let j = 0; j < colElements.length; j++) {
-        if (colElements[j].id == "c" || colElements[j].id == "oc" ) {
+        if (colElements[j].id == "c" || colElements[j].id == "oc") {
           return true;
         }
       }
@@ -458,16 +423,6 @@ export default {
         // if there is not only one c gate in the column
         this.applyControl(el1, el2);
       }
-    },
-    //-----------------------------------------------------------------------
-    updateTracingLine: function() {
-      qasmMargin = 0;
-      if (this.qasmFlag) {
-        var qasmMargin = 18;
-      }
-      document.getElementById("executionLine").style.marginLeft =
-        3.8 * this.exeCount + 3.2 + qasmMargin + "em";
-      document.getElementById("executionLine").size = this.rows * 85 + "";
     },
     //-----------------------------------------------------------------------
     elementaryGates: function() {
@@ -527,7 +482,6 @@ export default {
 .circuit-tools {
   display: flex;
   margin: 0.2em;
-
 }
 .toolbox {
   flex-basis: 65%;
@@ -590,18 +544,4 @@ export default {
 .visual-row {
   display: flex;
 }
-
-
-
-#executionLine {
-  position: absolute;
-  width: 10;
-  margin-top: 0em;
-  margin-left: 3.2em;
-  z-index: -1;
-  background-color: #5b758b;
-}
-
-
-
 </style>

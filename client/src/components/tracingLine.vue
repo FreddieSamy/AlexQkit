@@ -1,0 +1,76 @@
+<template>
+  <hr
+    v-if="!this.$parent.qasmIncludeIfFlag"
+    id="tracingLine"
+    :width="width"
+    :size="updateTracingLine()"
+  />
+</template>
+<!-- ========================================================== -->
+<script>
+export default {
+  name: "tracingLine",
+  display: "tracingLine",
+  data() {
+    return {
+      width: 2
+    };
+  },
+  methods: {
+    //-----------------------------------------------------------------------
+
+    updateTracingLine: function() {
+      var qasmMargin = 0;
+      var stateBtnMargin = 0;
+      var gateMargin = 0;
+
+      this.$nextTick(() => {
+        if (this.$parent.qasmFlag) {
+          qasmMargin = 18;
+        }
+        if (document.getElementsByClassName("qubit")[0] != undefined) {
+          var ele = document.getElementsByClassName("qubit")[0];
+          var style = ele.currentStyle || window.getComputedStyle(ele);
+          stateBtnMargin =
+            document.getElementsByClassName("qubit")[0].offsetWidth +
+            parseFloat(style.marginLeft) +
+            parseFloat(style.marginRight);
+        }
+        if (document.getElementsByClassName("circuit-gate")[0] != undefined) {
+          ele = document.getElementsByClassName("circuit-gate")[0];
+          style = ele.currentStyle || window.getComputedStyle(ele);
+          // window.console.log(style.marginLeft);
+          gateMargin =
+            document.getElementsByClassName("circuit-gate")[0].offsetWidth +
+            parseFloat(style.marginLeft) +
+            parseFloat(style.marginRight);
+        }
+
+        document.getElementById("tracingLine").style.marginLeft =
+          gateMargin * this.$parent.exeCount +
+          stateBtnMargin +
+          qasmMargin +
+          this.width +
+          "px";
+        // document.getElementById("tracingLine").style.marginLeft =
+        // 3.8 * this.$parent.exeCount + 3.2 + qasmMargin + "em";
+        document.getElementById(
+          "tracingLine"
+        ).size = document.getElementsByClassName("circuit")[0].offsetHeight;
+      });
+    }
+    //-----------------------------------------------------------------------
+  }
+};
+</script>
+<!-- ========================================================== -->
+<style scoped>
+#tracingLine {
+  position: absolute;
+  width: 10;
+  margin-top: 0em;
+  /* margin-left: 3.2em; */
+  z-index: -1;
+  background-color: #5b758b;
+}
+</style>

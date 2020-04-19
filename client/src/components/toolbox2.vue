@@ -18,14 +18,18 @@
     <select v-model="selectedAlgorithm">
       <option v-for="(item, index) in algorithms" :key="index" :value="item.circuit">{{ item.name }}</option>
     </select>
+
+    <tracingButtons></tracingButtons>
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import { mapState } from "vuex";
+import tracingButtons from "./tracingButtons.vue";
 export default {
   name: "toolbox2",
   display: "toolbox2",
+  components: { tracingButtons },
   props: ["eventQueue", "setAlgorithm"],
   data() {
     return {
@@ -48,11 +52,11 @@ export default {
   methods: {
     addWire: function() {
       this.$parent.rows++;
-      this.$parent.updateTracingLine();
+      this.$parent.$refs.tracingLine.updateTracingLine();
     },
     removeWire: function() {
       this.$parent.rows--;
-      this.$parent.updateTracingLine();
+      this.$parent.$refs.tracingLine.updateTracingLine();
     },
     cloneSendSystem: function() {
       this.$parent.sendSystem();
