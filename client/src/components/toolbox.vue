@@ -62,7 +62,7 @@
       </div>
 
       <div class="number-of-shots">
-        <label class="lbl1">Number Of Shots</label>
+        <label class="lbl1">Number of Shots</label>
         <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
       </div>
 
@@ -186,7 +186,6 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: baseline;
- 
 }
 
 #rx,
@@ -239,13 +238,14 @@ export default {
   flex-basis: 10%;
 }
 .circiut-loop {
-  flex-basis: 10%;
+  flex-basis: 16%;
 }
 .number-of-shots {
-  flex-basis: 10%;
+  flex-basis: 30%;
 }
 .number-of-shots input {
   margin: 0em 0em 0em 1em;
+  width: 70px;
   border-radius: 5px;
 }
 
