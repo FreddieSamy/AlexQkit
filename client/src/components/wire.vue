@@ -188,7 +188,7 @@ export default {
       }else if(name=='c'){
         return '●'
       }else if(name=="oc"){
-        return'○'
+        return '○'
       }
       else {
         return name.toUpperCase();
@@ -201,7 +201,6 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .wire {
-
   margin: 0em;
   z-index: -1;
   display: flex;
@@ -211,35 +210,47 @@ export default {
 .circuit-gate {
   color: white;
   font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  line-height: 2.5em;
   border: 0.5px solid grey;
   border-radius: 0.5em;
-  display: inline-table;
-  margin: 0.1em 0.5em 0.5em 0.5em;
-  padding: 0em;
+  margin: 0em 0.5em 0em 0.5em;
+  padding: 0px;
   width: 35px;
   height: 35px;
   background-color: #5d6d7e;
-  z-index: 2;
+  z-index: 0;
 }
-
+#rx,
+#ry,
+#rz{
+  align-self: center;
+}
 div[id^='r'],
 #swap  {
-  color: white;
   font-size: 10px;
-  text-align: center;
-  line-height: 2.5em;
-  border: 0.5px solid grey;
-  border-radius: 0.5em;
-  display: inline-block;
-  margin: 0.5em 0.5em 0.5em 0.5em;
-  padding: 0em;
-  width: 35px;
-  height: 35px;
-  background-color: #5d6d7e;
-  z-index: 2;
 }
+#c , #oc{
+  color:black;
+  line-height: 10px;
+
+  margin: 0em 0.265em 0em 0.265em;
+  font-size:30px;
+  background: none;
+  border:none;
+}
+#oc{
+ 
+
+background-image: url("../assets/whitedot.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 11px 11px;
+
+}
+
 .lbl-wire {
   margin: 0.8em 0.5em 0.5em 0.5em;
 }
@@ -294,23 +305,7 @@ div[id^='r'],
   opacity: 0.01;
 }
 
-#c , #oc{
 
-  line-height: 1.7em;
-  color:black;
-  font-size:20px;
-  background: none;
-  border:none
-  /*
-  z-index:-1;
-  opacity: 0.9;
-  color:black;
-  background-color:white;
-  background-size: 2.4em 2.4em;
-  background-image: url("../assets/dot.png");
-  border:transparent;
-  */
-  
-}
+
 
 </style>

@@ -1,12 +1,5 @@
 <template>
   <div class="toolbox">
-    <!-- toolcox-labels --
-
-    <div class="toolbox-labels">
-      <label>Toolbox</label>
-      <label v-if="customGates.length">Custom Gates</label>
-    </div>
-    --end box-labels-->
     <!-- ---------------------- build in gates  -------------------------- -->
     <draggable
       :list="gates"
@@ -19,22 +12,20 @@
           <!-- in case of angle-gates -->
           <div class="gate-name" id="hover-div">
             {{ gate.name.toUpperCase() }}
-             <span id="hover-element">{{ gate.info }}</span>
-          </div>
-
+            <span id="hover-element">{{ gate.info }}</span>
+            
             <input
               v-if="gate.name == 'rx' || gate.name == 'ry' || gate.name == 'rz' "
-              class="angle"
+              class="angle-input"
               :id="gate.name+ 'Angle'"
               type="number"
               :name="gate.name"
               value="90"
             />
-
+          
+          </div>
         </div>
-        
       </transition-group>
-      
     </draggable>
 
     <!-- ------------------- end built in gates and start custom gates ---------- -->
@@ -55,23 +46,21 @@
           :key="element.id"
           :id="element.name"
         >
-        
           <div class="gate-name">{{ element.id }}</div>
         </div>
       </transition-group>
     </draggable>
-
 
     <!--------------------   end of custom gates  ----------------------- -->
     <div class="user-tools">
       <div class="qasm-box">
         <button id="qasmToolboxBtn" class="qasm" @click="this.$parent.qasm">| qasm ⟩</button>
       </div>
-      
+
       <div class="circiut-loop">
-        <Circiutloops :maxWire=this.$parent.maxWire />
+        <Circiutloops :maxWire="this.$parent.maxWire" />
       </div>
-      
+
       <div class="number-of-shots">
         <label class="lbl1">Number Of Shots</label>
         <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
@@ -84,7 +73,7 @@
         <label for="radian" style="font-size: 15px;">radian</label>
       </div>
       <div>
-        <addcustomgate  class="add-custom-gate-box" ref="addcustomgate"></addcustomgate>
+        <addcustomgate class="add-custom-gate-box" ref="addcustomgate"></addcustomgate>
       </div>
     </div>
   </div>
@@ -94,7 +83,7 @@
 import { mapState } from "vuex";
 import draggable from "vuedraggable";
 import addcustomgate from "./addcustomgate";
-import Circiutloops from './CircuitLoops.vue'
+import Circiutloops from "./CircuitLoops.vue";
 
 export default {
   name: "toolbox",
@@ -144,7 +133,7 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .toolbox {
-  background:white;
+  background: white;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -155,7 +144,6 @@ export default {
 }
 .toolbox-labels {
   flex-basis: 100%;
-
 }
 
 .toolbox-gates-area {
@@ -169,19 +157,25 @@ export default {
 }
 
 .toolbox-gates {
-  font-size: 15px;
   color: white;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  line-height: 2.5em;
   border: 0.5px solid grey;
   border-radius: 0.5em;
-  display: inline-block;
-  margin: 0.5em 0.5em 0.5em 0.5em;
+  margin: 0em 0.5em 0em 0.5em;
   padding: 0px;
   width: 35px;
   height: 35px;
   background-color: #5d6d7e;
   z-index: 0;
+}
+.gates-name {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
 }
 
 .custom-gates {
@@ -192,7 +186,23 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: baseline;
-  border: 0.5px solid grey;
+ 
+}
+
+
+#rx,
+#ry,
+#rz{
+  align-self: center;
+}
+
+#rx,
+#ry,
+#rz,
+#reset,
+#swap {
+  font-size: 10px;
+  color: white;
 }
 
 #rx .gate-name,
@@ -200,18 +210,19 @@ export default {
 #rz .gate-name,
 #reset .gate-name,
 #swap .gate-name {
-
- font-size:10px;
- padding: 0px;
-
+ 
+  font-size: 10px;
+  padding: 0px;
+  margin: 0px;
 }
 
-.angle {
-  display: block;
+.angle-input {
+  display: flex;
+  flex-basis: 100%;
   text-align: center;
-  margin: -1.9em 0em 0em 0em;
+  margin: 0px;
   padding: 2px 0px 2px 0px;
-  width: 87%;
+  width: 90%;
   font-size: 10px;
   border-radius: 8px;
 }
@@ -228,7 +239,7 @@ export default {
 .qasm-box {
   flex-basis: 10%;
 }
-.circiut-loop{
+.circiut-loop {
   flex-basis: 10%;
 }
 .number-of-shots {
@@ -249,7 +260,6 @@ export default {
 
 /* ==================  */
 
-
 .flip-list-move {
   transition: transform 0.3s;
 }
@@ -265,7 +275,6 @@ export default {
   border-radius: 0.5em;
   display: inline-block;
 }
-
 
 #hover-element {
   display: none;
