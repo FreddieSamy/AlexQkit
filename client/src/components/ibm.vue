@@ -65,12 +65,6 @@ export default {
       } else {
         alert("make sure to select the checkbox to run on IBMQ devices");
       }
-    },
-    returnshots() {
-      if (document.getElementById("numberofshots").value == "") {
-        document.getElementById("numberofshots").value = 1024;
-      }
-      return document.getElementById("numberofshots").value;
     }
   }
 };

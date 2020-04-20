@@ -62,7 +62,7 @@
 
       <div class="number-of-shots">
         <label class="lbl1">Number of Shots</label>
-        <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
+        <input class="ibmToken" type="number" placeholder="1024" v-model="$parent.jsonObject.shots" />
       </div>
 
       <div class="degree-or-radian">

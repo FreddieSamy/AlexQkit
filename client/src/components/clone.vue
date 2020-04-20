@@ -199,7 +199,6 @@ export default {
       var statesSystem = [];
       var gatesSystem = [];
       var toolboxconnect = this.$refs.toolbox;
-      var ibmcon = this.$refs.ibm;
       for (let i = 0; i < this.rows; i++) {
         var wireCaller = this.$refs.wire[i];
         statesSystem.push(wireCaller.getState());
@@ -210,8 +209,7 @@ export default {
         wires: this.rows,
         init: statesSystem,
         rows: gatesSystem,
-        custom: toolboxconnect.sendtoclone(),
-        shots: parseInt(ibmcon.returnshots())
+        custom: toolboxconnect.sendtoclone()
       };
       if (document.getElementById("degree").checked) {
         this.jsonObject["radian"] = false;
@@ -226,6 +224,7 @@ export default {
         this.$refs.ibm.link = res.data.link;
         this.$refs.qasm.qasmCode = res.data.qasm;
       });
+      window.console.log(this.jsonObject);
     },
     sendSystem: function() {
       // this.updateSystem();
