@@ -105,7 +105,8 @@ export default {
         custom: {},
         shots: 1024,
         device: "",
-        repeated: {}
+        repeated: {},
+        radian: false
       },
       eventQueue: []
     };
@@ -211,9 +212,6 @@ export default {
         rows: gatesSystem,
         custom: toolboxconnect.sendtoclone()
       };
-      if (document.getElementById("degree").checked) {
-        this.jsonObject["radian"] = false;
-      }
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
