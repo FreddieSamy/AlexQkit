@@ -51,11 +51,11 @@ export default {
   },
   methods: {
     addWire: function() {
-      this.$parent.rows++;
+      this.$parent.jsonObject.wires++;
       this.$parent.$refs.tracingLine.updateTracingLine();
     },
     removeWire: function() {
-      this.$parent.rows--;
+      this.$parent.jsonObject.wires--;
       this.$parent.$refs.tracingLine.updateTracingLine();
     },
     cloneSendSystem: function() {

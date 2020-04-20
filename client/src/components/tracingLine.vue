@@ -47,7 +47,7 @@ export default {
         }
 
         document.getElementById("tracingLine").style.marginLeft =
-          gateMargin * this.$parent.exeCount +
+          gateMargin * this.$parent.jsonObject.exeCount +
           stateBtnMargin +
           qasmMargin +
           this.width +

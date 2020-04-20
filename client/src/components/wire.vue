@@ -6,9 +6,7 @@
     </div>
     -->
     <div class="qubit">
-      <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">
-        |{{ state }}⟩
-      </button>
+      <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
     </div>
     <draggable
       class="wire-drop-area"
@@ -26,9 +24,7 @@
         :key="element.id"
         :id="element.name"
         v-html="displayName(element.name)"
-      >
-    
-      </div>
+      ></div>
     </draggable>
   </div>
 </template>
@@ -40,13 +36,13 @@ export default {
   name: "wire",
   display: "wire",
   components: {
-    draggable,
+    draggable
   },
   data() {
     return {
       list: [],
       state: "0",
-      gates: [],
+      gates: []
     };
   },
   props: ["id"],
@@ -59,23 +55,22 @@ export default {
       handler() {
         this.$nextTick(() => {
           this.updateWireAttributes();
-          if(this.id == this.$parent.rows){ 
+          if (this.id == this.$parent.jsonObject.wires) {
             // the last updated wire (last wire) update the whole system
             this.$parent.updateSystem();
           }
-
         });
-      },
-    },
+      }
+    }
   },
 
   methods: {
     //-----------------------------------------------------------------------
     add: function(evt) {
-      if(evt.from.id[0] == 'l'){
-      var wire = evt.from.id.replace("list","")
-      this.$parent.$refs.wire[wire-1].addGateByIndex(evt.oldIndex);
-       }
+      if (evt.from.id[0] == "l") {
+        var wire = evt.from.id.replace("list", "");
+        this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex);
+      }
       this.$parent.updateMaxWire();
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.updateMaxWire();
@@ -114,7 +109,7 @@ export default {
       var i = (parseInt(evt.target.id["3"]) + 1) % 6;
       var id = evt.target.id.substring(0, 3);
       evt.target.id = id + i;
-      this.state = this.$store.state.states[i]
+      this.state = this.$store.state.states[i];
       evt.target.innerHTML = "|" + this.state + "⟩";
     },
     //-----------------------------------------------------------------------
@@ -185,17 +180,16 @@ export default {
     displayName: function(name) {
       if (name.startsWith("custom_")) {
         return name.slice(7).toUpperCase();
-      }else if(name=='c'){
-        return '●'
-      }else if(name=="oc"){
-        return '○'
-      }
-      else {
+      } else if (name == "c") {
+        return "●";
+      } else if (name == "oc") {
+        return "○";
+      } else {
         return name.toUpperCase();
       }
-    },
+    }
     //-----------------------------------------------------------------------
-  },
+  }
 };
 </script>
 <!-- =============================================================  -->
@@ -205,7 +199,7 @@ export default {
   z-index: -1;
   display: flex;
   align-items: flex-start;
-  height:45px;
+  height: 45px;
 }
 .circuit-gate {
   color: white;
@@ -225,31 +219,32 @@ export default {
 }
 #rx,
 #ry,
-#rz{
+#rz {
   align-self: center;
 }
 
-div[id^='r'],
-#swap  {
+div[id^="r"],
+#swap {
   font-size: 10px;
   margin: 0em 0.75em 0em 0.75em;
 }
 
-div[id^='rx'],
-div[id^='ry'],
-div[id^='rz']{
+div[id^="rx"],
+div[id^="ry"],
+div[id^="rz"] {
   font-weight: bold;
-  background:#FF8C61;
+  background: #ff8c61;
 }
-#c , #oc{
-  color:black;
+#c,
+#oc {
+  color: black;
   line-height: 10px;
   margin: 0em 0.265em 0em 0.265em;
-  font-size:30px;
+  font-size: 30px;
   background: none;
-  border:none;
+  border: none;
 }
-#oc{  
+#oc {
   background-image: url("../assets/whitedot.png");
   background-repeat: no-repeat;
   background-position: center;
@@ -296,7 +291,6 @@ div[id^='rz']{
   /*opacity:0.4;*/
 }
 .wire-drop-area {
-
   height: 40px;
   width: 100%;
   display: inline-flex;
@@ -304,12 +298,7 @@ div[id^='rz']{
   background-image: url("../assets/wire.png");
 }
 
-
 #i {
   opacity: 0.01;
 }
-
-
-
-
 </style>

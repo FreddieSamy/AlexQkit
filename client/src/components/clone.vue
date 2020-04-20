@@ -14,7 +14,7 @@
       <div v-if="!this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })" class="circuit-wires">
         <!-- ------------  wires ------------->
         <div class="wires">
-          <wire v-for="row in rows" :key="row" :id="row" :ref="'wire'"></wire>
+          <wire v-for="row in jsonObject.wires" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
       </div>
     </div>
@@ -90,16 +90,14 @@ export default {
   },
   data() {
     return {
-      diracNotationData: "|00⟩",
-      exeCount: 0,
+      diracNotationData: "",
       route: this.$store.state.routes.appRoute,
-      rows: 2, // number of wires
       maxWire: 0, // maximum number of gates in a wire
       matrixRepresentation: [],
       jsonObject: {
         API_TOKEN: "",
-        wires: 0,
-        init: [],
+        wires: 2,
+        init: ["0", "0"],
         rows: [],
         exeCount: 0,
         custom: {},
@@ -125,7 +123,7 @@ export default {
   methods: {
     //-----------------------------------------------------------------------
     showSystem: function() {
-      for (let i = 0; i < this.rows; i++) {
+      for (let i = 0; i < this.jsonObject.wires; i++) {
         var wireCaller = this.$refs.wire[i];
         window.console.log(JSON.stringify(wireCaller.list));
       }
@@ -134,32 +132,32 @@ export default {
     updateMaxWire: function() {
       let firstWire = this.$refs.wire[0];
       this.maxWire = firstWire.list.length;
-      for (let i = 0; i < this.rows; i++) {
+      for (let i = 0; i < this.jsonObject.wires; i++) {
         let wireCaller = this.$refs.wire[i];
         if (wireCaller.list.length > this.maxWire) {
           this.maxWire = wireCaller.list.length;
         }
       }
 
-      this.exeCount = this.maxWire;
+      this.jsonObject.exeCount = this.maxWire;
       this.$refs.tracingLine.updateTracingLine(); //update the trasing line
     },
     //-----------------------------------------------------------------------
     resetSystem: function() {
-      for (let i = 0; i < this.rows; i++) {
+      for (let i = 0; i < this.jsonObject.wires; i++) {
         var wireCaller = this.$refs.wire[i];
         wireCaller.resetWire();
       }
       this.maxWire = 0;
-      this.exeCount = 0;
-      this.rows = 2;
+      this.jsonObject.exeCount = 0;
+      this.jsonObject.wires = 2;
       this.$refs.tracingLine.updateTracingLine();
       this.removeControlSystem();
       this.sendSystem();
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
-      for (let i = 0; i < this.rows; i++) {
+      for (let i = 0; i < this.jsonObject.wires; i++) {
         if (i + 1 != wireId) {
           var wireCaller = this.$refs.wire[i];
           wireCaller.addIdentity();
@@ -168,17 +166,17 @@ export default {
     },
     //-----------------------------------------------------------------------
     removeIdentityColumn: function(columnIndex) {
-      for (let row = 0; row < this.rows; row++) {
+      for (let row = 0; row < this.jsonObject.wires; row++) {
         var wireCaller = this.$refs.wire[row];
         wireCaller.removeGateByIndex(columnIndex);
       }
       this.updateMaxWire();
-      this.exeCount = this.maxWire;
+      this.jsonObject.exeCount = this.maxWire;
       this.$refs.tracingLine.updateTracingLine();
     },
     //-----------------------------------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
-      for (let i = 0; i < this.rows; i++) {
+      for (let i = 0; i < this.jsonObject.wires; i++) {
         var wireList = this.$refs.wire[i].list;
         var gateName = wireList[columnIndex]["name"];
         if (gateName.localeCompare("i") !== 0) {
@@ -199,19 +197,13 @@ export default {
     updateSystem: function() {
       var statesSystem = [];
       var gatesSystem = [];
-      var toolboxconnect = this.$refs.toolbox;
-      for (let i = 0; i < this.rows; i++) {
+      for (let i = 0; i < this.jsonObject.wires; i++) {
         var wireCaller = this.$refs.wire[i];
         statesSystem.push(wireCaller.getState());
         gatesSystem.push(wireCaller.getGates(i));
       }
-      this.jsonObject = {
-        exeCount: this.exeCount,
-        wires: this.rows,
-        init: statesSystem,
-        rows: gatesSystem,
-        custom: toolboxconnect.sendtoclone()
-      };
+      this.jsonObject.init = statesSystem;
+      this.jsonObject.rows = gatesSystem;
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
@@ -232,9 +224,9 @@ export default {
 
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
-      this.rows = systemObject["wires"];
+      this.jsonObject.wires = systemObject["wires"];
       this.$nextTick(() => {
-        for (let row = 0; row < this.rows; row++) {
+        for (let row = 0; row < this.jsonObject.wires; row++) {
           var wireCaller = this.$refs.wire[row];
           wireCaller.setState(systemObject["init"][row]);
           wireCaller.setGates(systemObject["rows"][row]);
@@ -243,12 +235,12 @@ export default {
       });
     },
     //-----------------------------------------------------------------------
-    setRows: function(rows) {
-      if (this.rows === rows) {
-        return true;
-      }
-      return false;
-    },
+    // setRows: function(rows) {
+    //   if (this.rows === rows) {
+    //     return true;
+    //   }
+    //   return false;
+    // },
     //-----------------------------------------------------------------------
     draw: function() {
       var imgOfHistoGram = document.getElementById("chart");
@@ -360,22 +352,11 @@ export default {
     },
     //-----------------------------------------------------------------------
     elementaryGates: function() {
-      var statesSystem = [];
-      var gatesSystem = [];
-      for (let i = 0; i < this.rows; i++) {
-        var wireCaller = this.$refs.wire[i];
-        statesSystem.push(wireCaller.getState());
-        gatesSystem.push(wireCaller.getGates(i));
-      }
-      var jsonObject = {
-        rows: gatesSystem,
-        custom: this.$refs.toolbox.customsrever
-      };
-      if (this.exeCount) {
+      if (this.jsonObject.exeCount) {
         axios
-          .post("http://localhost:5000/elementaryGates", jsonObject)
+          .post("http://localhost:5000/elementaryGates", this.jsonObject)
           .then(res => {
-            this.$refs.toolbox.customsrever = res.data.custom;
+            this.jsonObject.custom = res.data.custom;
             var dic = res.data.custom;
             var custom = this.$refs.toolbox.customGates;
             var flag = true;
@@ -395,12 +376,12 @@ export default {
                 flag = true;
               }
             }
-            let json_object = {
-              wires: res.data.rows.length,
-              init: statesSystem,
-              rows: res.data.rows
-            };
-            this.setAlgorithm(json_object);
+            if (res.data.rows.length) {
+              this.jsonObject.wires = res.data.rows.length;
+              this.jsonObject.rows = res.data.rows;
+            }
+
+            this.setAlgorithm(this.jsonObject);
           });
       }
     }
