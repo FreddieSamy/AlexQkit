@@ -111,8 +111,7 @@ export default {
   data() {
     return {
       customGates: [],
-      w: "width:7.7em",
-      customsrever: {}
+      w: "width:7.7em"
     };
   },
   methods: {
@@ -132,11 +131,6 @@ export default {
       return {
         name: name
       };
-    },
-    // ----------------------------------------------------
-    sendtoclone() {
-      var z = this.$refs.addcustomgate;
-      return z.sendtotoolbox();
     }
     // ----------------------------------------------------
   }

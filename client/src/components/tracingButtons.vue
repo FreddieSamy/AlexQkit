@@ -14,32 +14,36 @@ export default {
   methods: {
     //-----------------------------------------------------------------------
     nextExe: function() {
-      if (this.$parent.$parent.exeCount < this.$parent.$parent.maxWire) {
-        this.$parent.$parent.exeCount++;
+      if (
+        this.$parent.$parent.jsonObject.exeCount < this.$parent.$parent.maxWire
+      ) {
+        this.$parent.$parent.jsonObject.exeCount++;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
         this.$parent.$parent.sendSystem();
       }
     },
     //-----------------------------------------------------------------------
     preExe: function() {
-      if (this.$parent.$parent.exeCount > 0) {
-        this.$parent.$parent.exeCount--;
+      if (this.$parent.$parent.jsonObject.exeCount > 0) {
+        this.$parent.$parent.jsonObject.exeCount--;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
         this.$parent.$parent.sendSystem();
       }
     },
     //-----------------------------------------------------------------------
     exeStart: function() {
-      if (this.$parent.$parent.exeCount != 0) {
-        this.$parent.$parent.exeCount = 0;
+      if (this.$parent.$parent.jsonObject.exeCount != 0) {
+        this.$parent.$parent.jsonObject.exeCount = 0;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
         this.$parent.$parent.sendSystem();
       }
     },
     //-----------------------------------------------------------------------
     exeEnd: function() {
-      if (this.$parent.$parent.exeCount != this.$parent.$parent.maxWire) {
-        this.$parent.$parent.exeCount = this.$parent.$parent.maxWire;
+      if (
+        this.$parent.$parent.jsonObject.exeCount != this.$parent.$parent.maxWire
+      ) {
+        this.$parent.$parent.jsonObject.exeCount = this.$parent.$parent.maxWire;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
         this.$parent.$parent.sendSystem();
       }
