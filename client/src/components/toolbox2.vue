@@ -67,9 +67,13 @@ export default {
     },
     saveCircuit(name, circuit) {
       if (name != "") {
-        window.console.log(name);
-        this.algorithms.push({ name: name, circuit: circuit });
-        this.savedCirciutName = "";
+        if (this.$parent.maxWire) {
+          window.console.log(name);
+          this.algorithms.push({ name: name, circuit: circuit });
+          this.savedCirciutName = "";
+        } else {
+          alert("empty circuit !!");
+        }
       } else {
         alert("Please, enter name for the algorithm");
       }
