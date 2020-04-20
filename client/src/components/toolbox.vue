@@ -66,9 +66,22 @@
       </div>
 
       <div class="degree-or-radian">
-        <input type="radio" id="degree" name="angleType" value="degree" checked />
+        <input
+          type="radio"
+          id="degree"
+          name="angleType"
+          :value="false"
+          v-model="$parent.jsonObject.radian"
+          checked
+        />
         <label for="degree" style="font-size: 15px;">degree</label>
-        <input type="radio" id="radian" name="angleType" value="radian" />
+        <input
+          type="radio"
+          id="radian"
+          name="angleType"
+          :value="true"
+          v-model="$parent.jsonObject.radian"
+        />
         <label for="radian" style="font-size: 15px;">radian</label>
       </div>
       <div>
