@@ -21,6 +21,7 @@
             :key="device"
             :value="device"
             :selected=" device =='ibmq_16_melbourne' ? true : false "
+            :disabled="parseInt(index.slice(0,2))<$parent.jsonObject.wires"
           >{{device}}</option>
         </optgroup>
       </select>
