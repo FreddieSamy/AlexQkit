@@ -149,13 +149,13 @@ export default {
       window.console.log(matrix_validate);
       window.console.log(msg);
       var isUnitary;
-      var jsonObject = {};
-      jsonObject["matrix"] = matrix;
+      var json_object = {};
+      json_object["matrix"] = matrix;
       window.console.log(matrix_validate);
       // window.console.log(msg);
 
       if (matrix_validate) {
-        axios.post("http://localhost:5000/isUnitary", jsonObject).then(res => {
+        axios.post("http://localhost:5000/isUnitary", json_object).then(res => {
           window.console.log("the data success to returned be from the server");
           isUnitary = res.data.isUnitary;
           //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
@@ -302,12 +302,12 @@ export default {
         );
       }
 
-      var jsonObject = {
+      var json_object = {
         wires: toRow - fromRow + 1,
         rows: gatesSystem
       };
       axios
-        .post("http://localhost:5000/subCircuitCustomGate", jsonObject)
+        .post("http://localhost:5000/subCircuitCustomGate", json_object)
         .then(res => {
           if (res.data.isUnitary) {
             var name = document.getElementById("subCircuitName").value;
