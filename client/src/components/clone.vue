@@ -90,7 +90,6 @@ export default {
   },
   data() {
     return {
-      API_TOKEN: "",
       diracNotationData: "|00⟩",
       exeCount: 0,
       route: this.$store.state.routes.appRoute,
@@ -214,14 +213,9 @@ export default {
         custom: toolboxconnect.sendtoclone(),
         shots: parseInt(ibmcon.returnshots())
       };
-      if (document.getElementById("checkbox").checked) {
-        this.jsonObject["API_TOKEN"] = this.API_TOKEN;
-        this.jsonObject["device"] = this.device;
-      }
       if (document.getElementById("degree").checked) {
         this.jsonObject["radian"] = false;
       }
-      document.getElementById("checkbox").checked = false;
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
@@ -234,7 +228,7 @@ export default {
       });
     },
     sendSystem: function() {
-      this.updateSystem();
+      // this.updateSystem();
       this.sendToServer(this.route, this.jsonObject);
     },
     //-----------------------------------------------------------------------
