@@ -107,10 +107,8 @@ export default {
     //-----------------------------------------------------------------------
     qubitState: function(evt) {
       var i = (parseInt(evt.target.id.slice(-1)) + 1) % 6;
-      window.console.log(evt.target.id);
       var id = evt.target.id.substring(0, evt.target.id.search("-") + 1);
       evt.target.id = id + i;
-      window.console.log(id);
       this.state = this.$store.state.states[i];
       evt.target.innerHTML = "|" + this.state + "⟩";
       this.$parent.jsonObject.init[id.slice(1, -1) - 1] = this.state;
@@ -162,6 +160,11 @@ export default {
     },
     //-----------------------------------------------------------------------
     setState: function(state) {
+      let i = this.$store.state.states.indexOf(this.state);
+      document.getElementById("q" + this.id + "-" + i).innerHTML =
+        "|" + state + "⟩";
+      document.getElementById("q" + this.id + "-" + i).id =
+        "q" + this.id + "-" + state;
       this.state = state;
     },
     //-----------------------------------------------------------------------
