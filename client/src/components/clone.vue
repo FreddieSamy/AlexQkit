@@ -219,8 +219,6 @@ export default {
       this.sendToServer(this.route, this.jsonObject);
     },
     //-----------------------------------------------------------------------
-
-    //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
       this.jsonObject.wires = systemObject["wires"];
       this.$nextTick(() => {
