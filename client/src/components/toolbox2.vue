@@ -56,6 +56,7 @@ export default {
     },
     removeWire: function() {
       this.$parent.jsonObject.wires--;
+      this.$parent.jsonObject.init.pop();
       this.$parent.$refs.tracingLine.updateTracingLine();
     },
     cloneSendSystem: function() {
