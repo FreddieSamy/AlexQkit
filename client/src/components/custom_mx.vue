@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <input type="text" id="wires" />
+      <input type="number" min="1" id="wires" />
     </div>
     <form id="inputField" role="form"></form>
     <input
