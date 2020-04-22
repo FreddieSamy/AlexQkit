@@ -40,10 +40,10 @@ export default {
     //-----------------------------------------------------------------------
     sendQasm: function() {
       // window.console.log(this.qasmCode);
-      let jsonObject = {
+      let json_object = {
         qasm: this.qasmCode
       };
-      axios.post(this.$parent.route, jsonObject).then(res => {
+      axios.post(this.$parent.route, json_object).then(res => {
         if (res.data.qasmError == "") {
           this.$parent.draw();
           this.$parent.diracNotationData = res.data.diracNotation;
@@ -56,12 +56,16 @@ export default {
 
           if (res.data.qasmRows && !this.qasmIncludeIfFlag) {
             // undefined qasmRows leads to an error
-            let circuit = {
-              wires: res.data.qasmRows.length,
-              init: Array(res.data.qasmRows.length).fill("0"),
-              rows: res.data.qasmRows
-            };
-            this.$parent.setAlgorithm(circuit);
+            if (res.data.qasmRows.length) {
+              this.$parent.jsonObject.wires = res.data.qasmRows.length;
+              this.$parent.jsonObject.rows = res.data.qasmRows;
+              this.$parent.jsonObject.init = Array(
+                res.data.qasmRows.length
+              ).fill("0");
+              this.$parent.setAlgorithm(this.$parent.jsonObject);
+            } else {
+              alert("empty circuit !");
+            }
           }
         } else {
           alert("qasm code error :\n" + res.data.qasmError);

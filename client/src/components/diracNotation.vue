@@ -1,14 +1,19 @@
 <template>
   <div class="diracNotation" id="diracNotation">
-      <h4>Dirac Notation</h4>
-      <h4>{{ this.$parent.diracNotationData }}</h4>
+    <h4>Dirac Notation</h4>
+    <h4>{{ this.value}}</h4>
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 export default {
   name: "diracNotation",
-  display: "diracNotation"
+  display: "diracNotation",
+  data() {
+    return {
+      value: ""
+    };
+  }
 };
 </script>
 <!-- =============================================================  -->
@@ -17,8 +22,8 @@ export default {
   /*border: 1px solid black;*/
   border-radius: 0.5em;
 }
-.diracNotation h4{
-    display: inline-block;
-    margin: 1em 1em 1em 1em;
+.diracNotation h4 {
+  display: inline-block;
+  margin: 1em 1em 1em 1em;
 }
 </style>

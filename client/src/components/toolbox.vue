@@ -62,13 +62,26 @@
 
       <div class="number-of-shots">
         <label class="lbl1">Number of Shots</label>
-        <input class="ibmToken" type="number" placeholder="1024" id="numberofshots" />
+        <input class="ibmToken" type="number" placeholder="1024" v-model="$parent.jsonObject.shots" />
       </div>
 
       <div class="degree-or-radian">
-        <input type="radio" id="degree" name="angleType" value="degree" checked />
+        <input
+          type="radio"
+          id="degree"
+          name="angleType"
+          :value="false"
+          v-model="$parent.jsonObject.radian"
+          checked
+        />
         <label for="degree" style="font-size: 15px;">degree</label>
-        <input type="radio" id="radian" name="angleType" value="radian" />
+        <input
+          type="radio"
+          id="radian"
+          name="angleType"
+          :value="true"
+          v-model="$parent.jsonObject.radian"
+        />
         <label for="radian" style="font-size: 15px;">radian</label>
       </div>
       <div>
@@ -98,8 +111,7 @@ export default {
   data() {
     return {
       customGates: [],
-      w: "width:7.7em",
-      customsrever: {}
+      w: "width:7.7em"
     };
   },
   methods: {
@@ -119,11 +131,6 @@ export default {
       return {
         name: name
       };
-    },
-    // ----------------------------------------------------
-    sendtoclone() {
-      var z = this.$refs.addcustomgate;
-      return z.sendtotoolbox();
     }
     // ----------------------------------------------------
   }
