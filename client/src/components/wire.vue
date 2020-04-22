@@ -31,6 +31,7 @@
 <!-- =============================================================  -->
 <script>
 import draggable from "vuedraggable";
+import { mapActions } from "vuex";
 
 export default {
   name: "wire",
@@ -41,8 +42,7 @@ export default {
   data() {
     return {
       list: [],
-      state: "0",
-      gates: []
+      state: "0"
     };
   },
   props: ["id"],
@@ -53,18 +53,24 @@ export default {
     list: {
       immediate: true,
       handler() {
+        this.updateWireAttributes();
         this.$nextTick(() => {
-          this.updateWireAttributes();
           if (this.id == this.$parent.jsonObject.wires) {
-            // the last updated wire (last wire) update the whole system
-            this.$parent.updateSystem();
+            //window.console.log("wire :"+this.id+" send the system");
+            this.$parent.controlSystem();
+            this.$parent.sendSystem()
           }
+          
         });
       }
-    }
+    },
   },
-
+  updated() {
+    let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
+    this.setWire(wire);
+  },
   methods: {
+    ...mapActions(["setWire"]),
     //-----------------------------------------------------------------------
     add: function(evt) {
       if (evt.from.id[0] == "l") {
@@ -112,6 +118,7 @@ export default {
       this.state = this.$store.state.states[i];
       evt.target.innerHTML = "|" + this.state + "⟩";
       this.$parent.jsonObject.init[id.slice(1, -1) - 1] = this.state;
+      this.$parent.sendSystem();
     },
     //-----------------------------------------------------------------------
     deleteWire: function(evt) {
@@ -149,15 +156,15 @@ export default {
     },
     //-----------------------------------------------------------------------
     getGates: function(rowId) {
-      this.gates = [];
+      var gates = [];
       for (let colIdx = 0; colIdx < this.list.length; colIdx++) {
         if (this.list[colIdx]["name"].startsWith("custom_")) {
-          this.gates.push(this.list[colIdx]["name"] + "." + rowId);
+          gates.push(this.list[colIdx]["name"] + "." + rowId);
         } else {
-          this.gates.push(this.list[colIdx]["name"]);
+          gates.push(this.list[colIdx]["name"]);
         }
       }
-      return this.gates;
+      return gates;
     },
     //-----------------------------------------------------------------------
     setState: function(state) {
