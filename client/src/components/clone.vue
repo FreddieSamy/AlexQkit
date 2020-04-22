@@ -34,6 +34,9 @@
         >Elementary Gates</button>
       </div>
     </div>
+
+    <GChart style="width:500px" type="ColumnChart" :data="chartData" :options="chartOptions" />
+
     <div class="visual-row">
       <diracNotation ref="diracNotation"></diracNotation>
     </div>
@@ -62,6 +65,8 @@ import tracingLine from "./tracingLine.vue";
 import qasm from "./qasm.vue";
 import { mapState } from "vuex";
 
+import { GChart } from "vue-google-charts";
+
 export default {
   name: "clone",
   display: "clone",
@@ -77,7 +82,8 @@ export default {
     diracNotation,
     matrixRepresentation,
     qasm,
-    tracingLine
+    tracingLine,
+    GChart
   },
   mounted() {
     //window.console.log("clone has been mounted");
@@ -85,6 +91,23 @@ export default {
   },
   data() {
     return {
+      chartData: [
+        ["Qbit", "state"],
+        ["000",  0.49267578125,],
+        ["001", 0.0],
+        ["010",  0.50732421875,],
+        ["011", 0],
+        ["100", 0],
+        ["101", 0],
+        ["110", 0],
+        ["111", 0]
+      ],
+      chartOptions: {
+        chart: {
+          title: "Company Performance",
+          subtitle: "Sales, Expenses, and Profit: 2014-2017"
+        }
+      },
       route: this.$store.state.routes.appRoute,
       maxWire: 0 // maximum number of gates in a wire
     };
@@ -166,7 +189,8 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    updateSystem: function() {   // should be terminated
+    updateSystem: function() {
+      // should be terminated
       var statesSystem = [];
       var gatesSystem = [];
       for (let i = 0; i < this.jsonObject.wires; i++) {
