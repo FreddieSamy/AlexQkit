@@ -2,7 +2,10 @@ import Vue from "vue";
 import App from "./App.vue";
 import axios from "axios";
 import store from './store'
+import VueGoogleCharts from 'vue-google-charts'
 
+
+Vue.use(VueGoogleCharts)
 
 //import noUiSlider from 'nouislider'
 // import Vuex from 'vuex';
