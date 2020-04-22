@@ -4,15 +4,14 @@
       <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
 
       <div class="column1">
-        <h1 class="p" style="color: black ">matrix</h1>
-        <h3 style="color: black">name</h3>
+        <h1 class="p" >matrix</h1>
+        <h3>name</h3>
         <input type="text" id="nameofgate" />
-        <h3 style="color: black">number of wires</h3>
+        <h3>number of wires</h3>
         <CustomMx ref="matrixcu"></CustomMx>
         <br />
         <button
           @click="create_the_matrix()"
-          style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 10px;"
         >create</button>
       </div>
 
@@ -22,37 +21,38 @@
       </div>-->
 
       <div class="column3">
-        <h1 style="color: black;">sub-circuit</h1>
-        <h3 style="color: black;">name</h3>
+        <h1 >sub-circuit</h1>
+        <h3 >name</h3>
         <input type="text" id="subCircuitName" />
-        <h3 style="color: black;">Rows</h3>
+        <h3>Rows</h3>
         <label class="from-to">From</label>
         <select id="fromRow" style="width:15%;">
           <option v-for="i in this.$parent.$parent.rows" :key="i" :value="i">{{i}}</option>
         </select>
         <label class="from-to">To</label>
-        <select id="toRow" style="width:15%;">
+        <select id="toRow">
           <option v-for="i in this.$parent.$parent.rows" :key="i" :value="i">{{i}}</option>
         </select>
-        <h3 style="color: black;">Columns</h3>
+        <h3>Columns</h3>
         <label class="from-to">From</label>
-        <select id="fromColumn" style="width:15%;">
+        <select id="fromColumn">
           <option v-for="i in this.$parent.$parent.maxWire" :key="i" :value="i">{{i}}</option>
         </select>
         <label class="from-to">To</label>
-        <select id="toColumn" style="width:15%;">
+        <select id="toColumn">
           <option v-for="i in this.$parent.$parent.maxWire" :key="i" :value="i">{{i}}</option>
         </select>
         <br />
         <button
           @click="subCircuitCustoGate()"
-          style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
         >create</button>
       </div>
 
       <div class="column4">
-        <h1 style="color: black;">nth root</h1>
-        <h3 style="color: black">select the gate</h3>
+        <h1> n<sup>th</sup> root of gate</h1>
+        <p><sub>n√gate</sub></p>
+     
+        <h3>select the gate</h3>
         <select id="rootGate" style="width:40%;">
           <optgroup label="Gates">
             <option value="x">X</option>
@@ -77,7 +77,6 @@
         <br />
         <button
           @click="nthRoot()"
-          style="background: none;color: white; border: 1px solid white; font-size: 20px; margin-top: 2em;"
         >create</button>
       </div>
 
@@ -354,25 +353,22 @@ export default {
 </script>
 <!-- =============================================================  -->
 <style scoped>
+div{
+  color:black
+}
 .overlay {
   height: 100%;
-  width: 0;
-  position: fixed;
-  z-index: 1;
   top: 0;
   left: 0;
-  background-color: rgba(11, 12, 16, 0.8);
+  position: fixed;
+  z-index: 1;
+
+  background-color: rgba(103, 106, 97, 0.55);
   overflow-x: hidden;
   transition: 0.5s;
-}
 
-.overlay-content {
-  position: relative;
-  top: 25%;
-  width: 100%;
-  text-align: center;
-  margin-top: 30px;
-  font-family: "Lato", sans-serif;
+  display: flex;
+
 }
 
 .overlay a {
@@ -395,13 +391,8 @@ export default {
   right: 45px;
   font-size: 30px;
 }
-.overlay.button {
-  background-color: Transparent;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  overflow: hidden;
-  outline: none;
-}
+
+
 @media screen and (max-height: 450px) {
   .overlay a {
     font-size: 20px;
@@ -414,7 +405,7 @@ export default {
 }
 
 .column1 {
-  float: left;
+
   min-width: 20em;
   min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
@@ -427,7 +418,7 @@ export default {
 }
 
 .column2 {
-  float: left;
+
   min-width: 20em;
   min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
@@ -440,7 +431,7 @@ export default {
   display: inline-block;
 }
 .column3 {
-  float: left;
+
   min-width: 20em;
   min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
@@ -452,7 +443,7 @@ export default {
   display: inline-block;
 }
 .column4 {
-  float: left;
+
   min-width: 20em;
   min-height: 25em;
   background: rgb(47, 68, 85, 0.7);
@@ -493,5 +484,12 @@ export default {
   color: black;
   margin-left: 0.4em;
   margin-right: 0.2em;
+}
+input{
+  border-radius: 10px;
+}
+select{
+  border-radius:10px;
+  width:100px;
 }
 </style>

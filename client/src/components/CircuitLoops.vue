@@ -5,6 +5,7 @@
     </div>
     <div id="myNav1" class="overlay">
       <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
+      <h1>Loops</h1>
       <div class="loops">
         <loop v-for="count in loopCounts" :key="count" :ref="'loops'"></loop>
       </div>
@@ -120,6 +121,9 @@ button {
   top: 20px;
   right: 45px;
   font-size: 30px;
+}
+div{
+  color:white
 }
 </style>
 
