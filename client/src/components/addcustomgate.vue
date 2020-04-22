@@ -27,11 +27,11 @@
         <h3>Rows</h3>
         <label class="from-to">From</label>
         <select id="fromRow" style="width:15%;">
-          <option v-for="i in this.$parent.$parent.rows" :key="i" :value="i">{{i}}</option>
+          <option v-for="i in this.$parent.$parent.jsonObject.wires" :key="i" :value="i">{{i}}</option>
         </select>
         <label class="from-to">To</label>
-        <select id="toRow">
-          <option v-for="i in this.$parent.$parent.rows" :key="i" :value="i">{{i}}</option>
+        <select id="toRow" style="width:15%;">
+          <option v-for="i in this.$parent.$parent.jsonObject.wires" :key="i" :value="i">{{i}}</option>
         </select>
         <h3>Columns</h3>
         <label class="from-to">From</label>
@@ -105,8 +105,7 @@ export default {
   },
   data() {
     return {
-      // capturedImage: "",
-      customsrever: {}
+      // capturedImage: ""
     };
   },
   methods: {
@@ -149,21 +148,20 @@ export default {
       window.console.log(matrix_validate);
       window.console.log(msg);
       var isUnitary;
-      var jsonObject = {};
-      jsonObject["matrix"] = matrix;
+      var json_object = {};
+      json_object["matrix"] = matrix;
       window.console.log(matrix_validate);
       // window.console.log(msg);
 
       if (matrix_validate) {
-        axios.post("http://localhost:5000/isUnitary", jsonObject).then(res => {
+        axios.post("http://localhost:5000/isUnitary", json_object).then(res => {
           window.console.log("the data success to returned be from the server");
           isUnitary = res.data.isUnitary;
           //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
           // window.console.log("new unitary:" + isUnitary);
           if (isUnitary) {
             this.addGate(nameofgate);
-            this.customsrever[nameofgate] = matrix;
-            // window.console.log(this.customsrever);
+            this.$parent.$parent.jsonObject.custom[nameofgate] = matrix;
             this.closeNav();
           } else {
             alert("please, enter unitary matrix");
@@ -220,11 +218,6 @@ export default {
       msg = "";
       return { matrix_validate, msg };
     },
-
-    // ----------------------------------------------------
-    sendtotoolbox() {
-      return this.customsrever;
-    },
     // ----------------------------------------------------
     nthRoot: function() {
       var select = document.getElementById("rootGate");
@@ -232,20 +225,25 @@ export default {
       var name = select.options[select.selectedIndex].text;
       // window.console.log(name);
       var root = document.getElementById("root").value;
-      if (name + "^(1/" + root + ")" in this.customsrever) {
+      if (
+        name + "^(1/" + root + ")" in
+        this.$parent.$parent.jsonObject.custom
+      ) {
         alert("sorry, " + name + "^(1/" + root + ")" + " is already exist");
       } else {
-        var jsonObject = {
+        var json_object = {
           root: root,
           gate: backName,
-          custom: this.customsrever
+          custom: this.$parent.$parent.jsonObject.custom
         };
         if (root >= 2) {
-          axios.post("http://localhost:5000/nthRoot", jsonObject).then(res => {
+          axios.post("http://localhost:5000/nthRoot", json_object).then(res => {
             /*window.console.log(res.data);*/
             if (res.data.isUnitary) {
               this.addGate(name + "^(1/" + root + ")");
-              this.customsrever[name + "^(1/" + root + ")"] = res.data.matrix;
+              this.$parent.$parent.jsonObject.custom[
+                name + "^(1/" + root + ")"
+              ] = res.data.matrix;
               this.closeNav();
             } else {
               alert("sorry, " + name + "^(1/" + root + ")" + " isn't unitary");
@@ -303,18 +301,18 @@ export default {
         );
       }
 
-      var jsonObject = {
+      var json_object = {
         wires: toRow - fromRow + 1,
         rows: gatesSystem
       };
       axios
-        .post("http://localhost:5000/subCircuitCustomGate", jsonObject)
+        .post("http://localhost:5000/subCircuitCustomGate", json_object)
         .then(res => {
           if (res.data.isUnitary) {
             var name = document.getElementById("subCircuitName").value;
             this.addGate(name);
             window.console.log(res.data.matrix);
-            this.customsrever[name] = res.data.matrix;
+            this.$parent.$parent.jsonObject.custom[name] = res.data.matrix;
             document.getElementById("subCircuitName").value = null;
             this.closeNav();
           } else {

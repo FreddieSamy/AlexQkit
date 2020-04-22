@@ -12,7 +12,6 @@
       </span>
     </div>
 
-
     <div>
       <label class="device-label">Device</label>
       <select id="simulater" v-model="device">
@@ -21,7 +20,8 @@
             v-for="device in type"
             :key="device"
             :value="device"
-            :selected=" device =='IBMQ_16_melbourne' ? true : false "
+            :selected=" device =='ibmq_16_melbourne' ? true : false "
+            :disabled="parseInt(index.slice(0,2))<$parent.jsonObject.wires"
           >{{device}}</option>
         </optgroup>
       </select>
@@ -46,7 +46,7 @@ export default {
     return {
       anchor: "https://quantum-computing.ibm.com/account",
       link: "",
-      device: "IBMQ_16_melbourne"
+      device: "ibmq_16_melbourne"
     };
   },
   computed: {
@@ -54,18 +54,18 @@ export default {
   },
   methods: {
     sendto() {
-      /*  all of this can be optimized */
-      this.$parent.API_TOKEN = document.getElementById("ibmtextfield").value;
-      var sim = document.getElementById("simulater");
-      window.console.log(sim.options[sim.selectedIndex].value);
-      this.$parent.device = sim.options[sim.selectedIndex].value;
-      this.$parent.sendSystem();
-    },
-    returnshots() {
-      if (document.getElementById("numberofshots").value == "") {
-        document.getElementById("numberofshots").value = 1024;
+      if (document.getElementById("checkbox").checked) {
+        this.$parent.jsonObject.API_TOKEN = document.getElementById(
+          "ibmtextfield"
+        ).value;
+        var sim = document.getElementById("simulater");
+        this.device = sim.options[sim.selectedIndex].value;
+        this.$parent.jsonObject.device = this.device;
+        this.$parent.sendSystem();
+        document.getElementById("checkbox").checked = false;
+      } else {
+        alert("make sure to select the checkbox to run on IBMQ devices");
       }
-      return document.getElementById("numberofshots").value;
     }
   }
 };
@@ -76,17 +76,17 @@ export default {
   background: white;
   padding: 0px;
   margin: 0.2em 0.2em 0.2em 0.2em;
-  border-radius:10px;
+  border-radius: 10px;
 }
 .ibmToken {
   margin: 0.5em 0.2em 0.2em 0.2em;
 }
 
-.ibm-label{
-  margin:0em 1.1em 0em 0em;
+.ibm-label {
+  margin: 0em 1.1em 0em 0em;
 }
-.device-label{
-  margin:0em 2em 0em 0em;
+.device-label {
+  margin: 0em 2em 0em 0em;
 }
 input {
   border-radius: 5px;

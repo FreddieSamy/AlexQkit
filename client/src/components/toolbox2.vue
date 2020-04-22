@@ -51,11 +51,12 @@ export default {
   },
   methods: {
     addWire: function() {
-      this.$parent.rows++;
+      this.$parent.jsonObject.wires++;
       this.$parent.$refs.tracingLine.updateTracingLine();
     },
     removeWire: function() {
-      this.$parent.rows--;
+      this.$parent.jsonObject.wires--;
+      this.$parent.jsonObject.init.pop();
       this.$parent.$refs.tracingLine.updateTracingLine();
     },
     cloneSendSystem: function() {
@@ -67,9 +68,13 @@ export default {
     },
     saveCircuit(name, circuit) {
       if (name != "") {
-        window.console.log(name);
-        this.algorithms.push({ name: name, circuit: circuit });
-        this.savedCirciutName = "";
+        if (this.$parent.maxWire) {
+          window.console.log(name);
+          this.algorithms.push({ name: name, circuit: circuit });
+          this.savedCirciutName = "";
+        } else {
+          alert("empty circuit !!");
+        }
       } else {
         alert("Please, enter name for the algorithm");
       }
