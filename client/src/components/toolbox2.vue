@@ -12,7 +12,7 @@
       v-model="savedCirciutName"
     />
 
-    <button @click="saveCircuit(savedCirciutName,eventQueue[eventQueue.length-1])">Save Circuit</button>
+    <button @click="saveCircuit(savedCirciutName)">Save Circuit</button>
 
     <label class="select-algorithm">Select an Algorithm</label>
     <select v-model="selectedAlgorithm">
@@ -30,10 +30,9 @@ export default {
   name: "toolbox2",
   display: "toolbox2",
   components: { tracingButtons },
-  props: ["eventQueue", "setAlgorithm"],
+  props: ["setAlgorithm"],
   data() {
     return {
-      eventIndex: 0,
       selectedAlgorithm: null,
       savedCirciutName: ""
     };
@@ -41,13 +40,15 @@ export default {
   watch: {
     selectedAlgorithm() {
       if (this.selectedAlgorithm != null) {
+        //window.console.log(this.selectedAlgorithm)
         this.setAlgorithm(this.selectedAlgorithm);
         this.selectedAlgorithm = null;
       }
     }
   },
   computed: {
-    ...mapState(["algorithms"])
+    ...mapState(["algorithms"]),
+    ...mapState(["jsonObject"])
   },
   methods: {
     addWire: function() {
@@ -66,11 +67,18 @@ export default {
       this.selectedAlgorithm = null;
       this.$parent.resetSystem();
     },
-    saveCircuit(name, circuit) {
+    saveCircuit(name) {
       if (name != "") {
         if (this.$parent.maxWire) {
-          window.console.log(name);
-          this.algorithms.push({ name: name, circuit: circuit });
+          this.algorithms.push({
+            name: name,
+            circuit: {
+              wires: this.jsonObject.wires,
+              init: [...this.jsonObject.init],
+              rows: [...this.jsonObject.rows]
+            }
+          });
+          //window.console.log(this.algorithms);
           this.savedCirciutName = "";
         } else {
           alert("empty circuit !!");
@@ -79,12 +87,8 @@ export default {
         alert("Please, enter name for the algorithm");
       }
     },
-    clearConsole: function() {
-      window.console.clear();
-    }
   }
 };
-0;
 </script>
 <!-- =============================================================  -->
 <style scoped>

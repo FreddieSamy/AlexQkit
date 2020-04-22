@@ -25,7 +25,6 @@
         <toolbox2
           v-if="!this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })"
           class="toolbox2"
-          :eventQueue="eventQueue"
           :setAlgorithm="setAlgorithm"
         />
         <button
@@ -38,11 +37,12 @@
     <div class="visual-row">
       <diracNotation ref="diracNotation"></diracNotation>
     </div>
-    <matrixRepresentation ref="matrixRepresentation"></matrixRepresentation>
+
     <div class="visual-row">
       <histoGram></histoGram>
       <blochSphere></blochSphere>
     </div>
+    <matrixRepresentation ref="matrixRepresentation"></matrixRepresentation>
   </div>
 </template>
 <!-- =============================================================  -->
@@ -60,7 +60,7 @@ import circuitDrawing from "./circuitDrawing.vue";
 import matrixRepresentation from "./matrixRepresentation.vue";
 import tracingLine from "./tracingLine.vue";
 import qasm from "./qasm.vue";
-// import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
 export default {
   name: "clone",
@@ -81,43 +81,18 @@ export default {
   },
   mounted() {
     //window.console.log("clone has been mounted");
-    this.sendSystem();
-    window.console.log();
-  },
-  updated() {
-    //window.console.log("clone has been updated");
-    this.controlSystem();
+    //this.sendSystem();
   },
   data() {
     return {
       route: this.$store.state.routes.appRoute,
-      maxWire: 0, // maximum number of gates in a wire
-      jsonObject: {
-        API_TOKEN: "",
-        wires: 2,
-        init: ["0", "0"],
-        rows: [],
-        exeCount: 0,
-        custom: {},
-        shots: 1024,
-        device: "",
-        repeated: {},
-        radian: false
-      },
-      eventQueue: []
+      maxWire: 0 // maximum number of gates in a wire
     };
   },
-  watch: {
-    jsonObject: {
-      immediate: true,
-      handler() {
-        this.eventQueue.push(this.jsonObject);
-      }
-    }
-  },
   computed: {
-    // ...mapState['jsonObject']
+    ...mapState(["jsonObject"])
   },
+
   methods: {
     //-----------------------------------------------------------------------
     showSystem: function() {
@@ -136,7 +111,6 @@ export default {
           this.maxWire = wireCaller.list.length;
         }
       }
-
       this.jsonObject.exeCount = this.maxWire;
       this.$refs.tracingLine.updateTracingLine(); //update the trasing line
     },
@@ -202,20 +176,32 @@ export default {
       }
       this.jsonObject.init = statesSystem;
       this.jsonObject.rows = gatesSystem;
+      // window.console.log("System Updated");
+      // window.console.log(this.jsonObject);
     },
     //-----------------------------------------------------------------------
     sendToServer: function(route, jsonObject) {
-      axios.post(route, jsonObject).then(res => {
-        this.draw();
-        this.$refs.diracNotation.value = res.data.diracNotation;
-        this.$refs.matrixRepresentation.value = res.data.matrixRepresentation;
-        this.$refs.ibm.link = res.data.link;
-        this.$refs.qasm.qasmCode = res.data.qasm;
-      });
-      window.console.log(this.jsonObject);
+      try {
+        axios.post(route, jsonObject).then(
+          res => {
+            this.draw();
+            this.$refs.diracNotation.value = res.data.diracNotation;
+            this.$refs.matrixRepresentation.value =
+              res.data.matrixRepresentation;
+            this.$refs.ibm.link = res.data.link;
+            this.$refs.qasm.qasmCode = res.data.qasm;
+          },
+          error => {
+            window.console.log(error);
+          }
+        );
+      } catch (error) {
+        window.console.log("i think there is an error " + error);
+      }
+
+      //window.console.log(this.jsonObject);
     },
     sendSystem: function() {
-      // this.updateSystem();
       this.sendToServer(this.route, this.jsonObject);
     },
     //-----------------------------------------------------------------------
