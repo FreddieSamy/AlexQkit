@@ -4,7 +4,7 @@
     <button @click="removeWire">Remove Wire</button>
     <button @click="cloneSendSystem">send</button>
     <button @click="cloneResetSystem">reset system</button>
-
+    <tracingButtons></tracingButtons>
     <input
       class="save-circuit"
       type="text"
@@ -19,7 +19,7 @@
       <option v-for="(item, index) in algorithms" :key="index" :value="item.circuit">{{ item.name }}</option>
     </select>
 
-    <tracingButtons></tracingButtons>
+    
   </div>
 </template>
 <!-- =============================================================  -->
@@ -109,9 +109,8 @@ select {
   border-radius: 7px;
   background: white;
 }
-
 .save-circuit {
-  margin: 0em 0.5em 0em 13em;
+  margin: 0em 0.5em 0em 5em;
 }
 .select-algorithm {
   margin: 0em 0.5em 0em 2em;
