@@ -166,7 +166,7 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    updateSystem: function() {
+    updateSystem: function() {   // should be terminated
       var statesSystem = [];
       var gatesSystem = [];
       for (let i = 0; i < this.jsonObject.wires; i++) {

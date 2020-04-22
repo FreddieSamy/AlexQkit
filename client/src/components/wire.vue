@@ -92,7 +92,7 @@ export default {
       this.$parent.removeIdentitySystem();
     },
     end: function() {
-      this.$parent.updateSystem();
+      this.$parent.updateSystem(); // should be terminated
     },
     updateGate: function(gate, row, col) {
       gate.setAttribute("row", "_" + row);
