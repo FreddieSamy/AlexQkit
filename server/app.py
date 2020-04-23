@@ -87,7 +87,7 @@ def run():
     if request.method=='POST':
         recievedDic=request.get_json()
         #print("recieved data from Vue : ",recievedDic[0])
-        #print(recievedDic)
+        print(recievedDic)
         if "qasm" in recievedDic:
             try:
                 c.qasm(recievedDic)
