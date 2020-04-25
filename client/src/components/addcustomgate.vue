@@ -93,10 +93,10 @@
 </template>
 <!-- =============================================================  -->
 <script>
-//import draggable from "vuedraggable";
+
 import axios from "axios";
 import CustomMx from "./custom_mx.vue";
-// import html2canvas from "html2canvas";
+import { isUnitaryRoute, subCirciutRoute, nthRootRoute } from './../data/routes'
 export default {
   name: "addcustomgate",
   display: "addcustomgate",
@@ -137,7 +137,7 @@ export default {
       json_object["matrix"] = matrix;
 
       if (matrix_validate) {
-        axios.post("http://localhost:5000/isUnitary", json_object).then(res => {
+        axios.post(isUnitaryRoute, json_object).then(res => {
           //window.console.log("the data success to returned be from the server");
           isUnitary = res.data.isUnitary;
           //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
@@ -216,7 +216,7 @@ export default {
           custom: this.$parent.$parent.jsonObject.custom
         };
         if (root >= 2) {
-          axios.post("http://localhost:5000/nthRoot", json_object).then(res => {
+          axios.post(nthRootRoute, json_object).then(res => {
             /*window.console.log(res.data);*/
             if (res.data.isUnitary) {
               this.addGate(name + "^(1/" + root + ")");
@@ -279,13 +279,12 @@ export default {
           )
         );
       }
-
       var json_object = {
         wires: toRow - fromRow + 1,
         rows: gatesSystem
       };
       axios
-        .post("http://localhost:5000/subCircuitCustomGate", json_object)
+        .post(subCirciutRoute, json_object)
         .then(res => {
           if (res.data.isUnitary) {
             var name = document.getElementById("subCircuitName").value;
@@ -341,14 +340,12 @@ div{
   background-color: rgba(103, 106, 97, 0.55);
   overflow-x: hidden;
   transition: 0.5s;
-
   display: flex;
   justify-content:center;
   align-items:stretch;
   flex-wrap: wrap;
 
 }
-
 .overlay a {
   padding: 8px;
   text-decoration: none;
@@ -401,14 +398,6 @@ div{
   color: #fff;
   cursor: pointer;
 }
-/* .zddGateError {
-  color: red;
-  padding-top: 35px;
-  padding-left: 20px;
-  text-align: center;
-  font-size: 40px;
-  display: inline-block;
-} */
 button{
   background:white;
   border-radius: 10px;

@@ -8,9 +8,13 @@
    export const qasmCircuitRoute = "http://127.0.0.1:5000/circuit.png?time=";
    export const elementaryGates  = "http://localhost:5000/elementaryGates";
    export const customGates      = "http://localhost:5000/subCircuitCustomGate";
-    
+   export const isUnitaryRoute   = "http://localhost:5000/isUnitary";
+   export const subCirciutRoute  = "http://localhost:5000/subCircuitCustomGate";
+   export const nthRootRoute     = "http://localhost:5000/nthRoot";
+
    export const defaultHistogramRoute = "http://127.0.0.1:5000/chart.png";
    export const defaultBlockSphereRoute = "http://127.0.0.1:5000/blochsphere.png";
    export const defaultQasmCircuitRoute = "http://127.0.0.1:5000/circuit.png";
 
 
+  

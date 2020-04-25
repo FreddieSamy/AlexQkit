@@ -1,7 +1,7 @@
 <template>
   <div class="circuitDrawing">
     <img
-      :src="defaultqasmCircuitRoute"
+      :src="defaultQasmCircuitRoute"
       alt="circuitDrawing"
       id="circuitDrawing"
       class="circutDrawing-image responsive"
@@ -10,11 +10,11 @@
 </template>
 <!-- ========================================================== -->
 <script>
-import {defaultqasmCircuitRoute} from './../data/routes'
+import {defaultQasmCircuitRoute} from './../data/routes'
 export default {
   data() {
     return {
-      defaultqasmCircuitRoute:defaultqasmCircuitRoute
+      defaultQasmCircuitRoute:defaultQasmCircuitRoute
     }
   },
 };
