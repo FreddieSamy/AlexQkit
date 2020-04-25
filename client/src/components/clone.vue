@@ -65,7 +65,9 @@ import circuitDrawing from "./circuitDrawing.vue";
 import matrixRepresentation from "./matrixRepresentation.vue";
 import tracingLine from "./tracingLine.vue";
 import qasm from "./qasm.vue";
-import { mapState } from "vuex";
+import { mapState , mapActions } from "vuex";
+import { appRoute, histogramRoute, blockSphereRoute, 
+         qasmCircuitRoute , elementaryGates} from "./../data/routes.js"
 
 //import { GChart } from "vue-google-charts";
 
@@ -93,26 +95,25 @@ export default {
   },
   data() {
     return {
-      chartData: [
-        ["Qbit", "state"],
-        ["000",  0.49267578125,],
-        ["001", 0.0],
-        ["010",  0.50732421875,],
-        ["011", 0],
-        ["100", 0],
-        ["101", 0.8],
-        ["110", 0],
-        ["111", 0]
-      ],
-      chartOptions: {
-        chart: {
-          title: "Company Performance",
-          subtitle: "Sales, Expenses, and Profit: 2014-2017"
-        },vAxis: {
-            maxValue: 1,
-          }
-      },
-      route: this.$store.state.routes.appRoute,
+      // chartData: [
+      //   ["Qbit", "state"],
+      //   ["000",  0.49267578125,],
+      //   ["001", 0.0],
+      //   ["010",  0.50732421875,],
+      //   ["011", 0],
+      //   ["100", 0],
+      //   ["101", 0.8],
+      //   ["110", 0],
+      //   ["111", 0]
+      // ],
+      // chartOptions: {
+      //   chart: {
+      //     title: "Company Performance",
+      //     subtitle: "Sales, Expenses, and Profit: 2014-2017"
+      //   },vAxis: {
+      //       maxValue: 1,
+      //     }
+      // },
       maxWire: 0 // maximum number of gates in a wire
     };
   },
@@ -121,6 +122,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(['resetCircuit']),
     //-----------------------------------------------------------------------
     showSystem: function() {
       for (let i = 0; i < this.jsonObject.wires; i++) {
@@ -147,12 +149,10 @@ export default {
         var wireCaller = this.$refs.wire[i];
         wireCaller.resetWire();
       }
-      this.maxWire = 0;
-      this.jsonObject.exeCount = 0;
-      this.jsonObject.wires = 2;
+      this.resetCircuit();
       this.$refs.tracingLine.updateTracingLine();
       this.removeControlSystem();
-      this.sendSystem();
+      //this.sendSystem();
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -193,7 +193,8 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    updateSystem: function() {
+   // will be terminated
+   updateSystem: function() { 
       // should be terminated
       var statesSystem = [];
       var gatesSystem = [];
@@ -208,6 +209,7 @@ export default {
       // window.console.log(this.jsonObject);
     },
     //-----------------------------------------------------------------------
+    // will be tarnsfared to Vuex
     sendToServer: function(route, jsonObject) {
       try {
         axios.post(route, jsonObject).then(
@@ -226,11 +228,10 @@ export default {
       } catch (error) {
         window.console.log("i think there is an error " + error);
       }
-
       //window.console.log(this.jsonObject);
     },
     sendSystem: function() {
-      this.sendToServer(this.route, this.jsonObject);
+      this.sendToServer(appRoute, this.jsonObject);
     },
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
@@ -245,24 +246,17 @@ export default {
       });
     },
     //-----------------------------------------------------------------------
-    // setRows: function(rows) {
-    //   if (this.rows === rows) {
-    //     return true;
-    //   }
-    //   return false;
-    // },
-    //-----------------------------------------------------------------------
+    // will be terminated
     draw: function() {
       var imgOfHistoGram = document.getElementById("chart");
-      imgOfHistoGram.src = "http://127.0.0.1:5000/chart.png?time" + new Date();
+      imgOfHistoGram.src = histogramRoute + new Date();
 
       var imgofblochSphere = document.getElementById("bloch");
-      imgofblochSphere.src =
-        "http://127.0.0.1:5000/blochsphere.png?time=" + new Date();
+      imgofblochSphere.src = blockSphereRoute + new Date();
+
       if (this.$refs.qasm.qasmIncludeIfFlag) {
         var imgOfCircuit = document.getElementById("circuitDrawing");
-        imgOfCircuit.src =
-          "http://127.0.0.1:5000/circuit.png?time=" + new Date();
+        imgOfCircuit.src = qasmCircuitRoute + new Date();
       }
     },
     //-----------------------------------------------------------------------
@@ -281,23 +275,6 @@ export default {
         hr.style.margin = "" + y1 + "px 0px 0px " + (x - 2) + "px";
         var parent = this.$el;
         parent.appendChild(hr);
-      }
-    },
-    //-----------------------------------------------------------------------
-    removeControl: function() {
-      var cline = document.querySelector(".cline");
-      if (cline != null) {
-        var parent = this.$el;
-        parent.removeChild(cline);
-        return true;
-      }
-      return false; // already cline = null (there is no control)
-    },
-    //-----------------------------------------------------------------------
-    removeControlSystem: function() {
-      var flag = true;
-      while (flag) {
-        flag = this.removeControl();
       }
     },
     //-----------------------------------------------------------------------
@@ -361,10 +338,27 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    elementaryGates: function() {
+    removeControl: function() {
+      var cline = document.querySelector(".cline");
+      if (cline != null) {
+        var parent = this.$el;
+        parent.removeChild(cline);
+        return true;
+      }
+      return false; // already cline = null (there is no control)
+    },
+    //-----------------------------------------------------------------------
+    removeControlSystem: function() {
+      var flag = true;
+      while (flag) {
+        flag = this.removeControl();
+      }
+    },
+    //-----------------------------------------------------------------------
+   elementaryGates: function() {
       if (this.jsonObject.exeCount) {
         axios
-          .post("http://localhost:5000/elementaryGates", this.jsonObject)
+          .post(elementaryGates, this.jsonObject)
           .then(res => {
             this.jsonObject.custom = res.data.custom;
             var dic = res.data.custom;

@@ -1,7 +1,7 @@
 <template>
   <div class="histoGram">
       <img
-      src="http://127.0.0.1:5000/chart.png"
+      :src="defaultHistogramRoute"
       alt="histogram"
       id="chart"
       class="histogram-image responsive"
@@ -10,7 +10,13 @@
 </template>
 <!-- ========================================================== -->
 <script>
+import {defaultHistogramRoute} from './../data/routes'
 export default {
+  data() {
+    return {
+      defaultHistogramRoute : defaultHistogramRoute
+    }
+  },
   }
 </script>
 <!-- ========================================================== -->

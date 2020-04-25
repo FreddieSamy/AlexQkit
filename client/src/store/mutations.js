@@ -9,8 +9,16 @@ export default {
   removeInit:state => state.jsonObject.init.pop(),
   appendWire:state => state.jsonObject.wire++ ,
 
-  remoceWire:(state) => {
+  removeWire:(state) => {
     state.jsonObject.wire--;
     state.jsonObject.rows.pop();
-  } 
+  },
+  
+  reset:(state) => {
+    state.maxWire = 0;
+    state.jsonObject.exeCount = 0;
+    state.jsonObject.wires = 2 ;
+    state.jsonObject.init = ['0','0'];
+    state.jsonObject.rows = [[],[]];
+  }
 };

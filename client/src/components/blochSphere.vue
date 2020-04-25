@@ -2,7 +2,7 @@
   <div class="blochSphereGraph">
     <center>
       <img
-        src="http://127.0.0.1:5000/blochsphere.png"
+        :src="defaultBlockSphereRoute"
         alt="blochSphere"
         id="bloch"
         class="blochsphere-image responsive"
@@ -12,7 +12,13 @@
 </template>
 <!-- ========================================================== -->
 <script>
+import {defaultBlockSphereRoute} from './../data/routes'
 export default {
+  data(){
+    return{
+      defaultBlockSphereRoute : defaultBlockSphereRoute
+    }
+  }
 }
 </script>
 <!-- ========================================================== -->

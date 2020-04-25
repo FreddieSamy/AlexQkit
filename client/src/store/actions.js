@@ -1,8 +1,7 @@
 
 export default {
-
   setWire:({ commit }, wire) => {
-    commit('setRow',wire)
+    commit('setRow', wire)
   },
   addWire:({commit}) => {
      commit('appendInit')
@@ -11,6 +10,9 @@ export default {
   removeWire:({commit}) => {
     commit('popInit')
     commit('popWire')
+  },
+  resetCircuit:({commit}) => {
+    commit('reset')
   }
 
 }
