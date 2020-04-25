@@ -16,7 +16,6 @@
       @add="add"
       @remove="remove"
       @update="update"
-      @end="end"
     >
       <div
         class="circuit-gate"
@@ -90,23 +89,24 @@ export default {
       this.$parent.updateMaxWire();
       this.$parent.removeIdentitySystem();
     },
+    //-----------------------------------------------------------------------
     update: function() {
       this.$parent.updateMaxWire();
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
     },
+    //-----------------------------------------------------------------------
     remove: function() {
       this.$parent.updateMaxWire();
       this.$parent.removeIdentitySystem();
     },
-    end: function() {
-      this.$parent.updateSystem(); // should be terminated
-    },
+    //-----------------------------------------------------------------------
     updateGate: function(gate, row, col) {
       gate.setAttribute("row", "_" + row);
       gate.setAttribute("col", "_" + col);
       this.$parent.updateMaxWire();
     },
+    //-----------------------------------------------------------------------
     updateWireAttributes: function() { // replace it by javascript numpy alternative
       let wire = document.querySelector("#list" + this.id + "");
       if (this.list.length) {
@@ -120,8 +120,11 @@ export default {
     },
     //-----------------------------------------------------------------------
     qubitState: function(evt) {
+      window.console.log(evt.target.id)
       var i = (parseInt(evt.target.id.slice(-1)) + 1) % 6;
+      window.console.log(i)
       var id = evt.target.id.substring(0, evt.target.id.search("-") + 1);
+      window.console.log(id)
       evt.target.id = id + i;
       this.state = this.$store.state.states[i];
       evt.target.innerHTML = "|" + this.state + "⟩";
@@ -138,7 +141,7 @@ export default {
       // add identiy across the columns of same wire (row)
       for (let i = this.list.length; i < this.$parent.maxWire; i++) {
         this.list.push({ name: "i" });
-      } //window.console.log("hello add Identity")
+      } 
     },
     //-----------------------------------------------------------------------
     getGateByIndex: function(gateIndex) {
@@ -148,6 +151,7 @@ export default {
     addGateByIndex: function(gateIndex) {
       this.list.splice(gateIndex, 0, { name: "i" });
     },
+    //-----------------------------------------------------------------------
     removeGateByIndex: function(gateIndex) {
       if (this.list[gateIndex]["name"] == "i") {
         this.list.splice(gateIndex, 1);
@@ -190,8 +194,8 @@ export default {
         this.list.push({ name: gatesList[colIdx] });
       }
     },
+    //-----------------------------------------------------------------------
     setGatesIdentity: function() { // when add a ner wire
-      window.console.log("hello i have been called")
       var maxWire = this.$parent.maxWire;
       let list = [...this.list];
       for (let colIdx = 0; colIdx < maxWire; colIdx++) {

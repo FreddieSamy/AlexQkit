@@ -38,13 +38,14 @@
 <!-- =============================================================  -->
 <script>
 import { mapState } from "vuex";
+import { ibmLink } from "./../data/routes";
 export default {
   name: "ibm",
   display: "ibm",
   order: 3,
   data() {
     return {
-      anchor: "https://quantum-computing.ibm.com/account",
+      anchor: ibmLink,
       link: "",
       device: "ibmq_16_melbourne"
     };

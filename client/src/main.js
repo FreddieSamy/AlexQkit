@@ -3,7 +3,7 @@ import App from "./App.vue";
 import axios from "axios";
 import store from './store'
 import VueGoogleCharts from 'vue-google-charts'
-
+import { serverRoute } from './data/routes'
 
 Vue.use(VueGoogleCharts)
 
@@ -22,7 +22,7 @@ new Vue({
 
   mounted() {
     axios
-      .get(this.$store.state.routes.serverRoute, { useCredentials: true })
+      .get(serverRoute, { useCredentials: true })
       .then(res => {
         window.console.log("Server Request responds  : "+res.data);
       });

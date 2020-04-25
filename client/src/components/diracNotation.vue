@@ -1,7 +1,7 @@
 <template>
   <div class="diracNotation" id="diracNotation">
     <h4>Dirac Notation</h4>
-    <h4>{{ this.value}}</h4>
+    <h4>{{this.value}}</h4>
   </div>
 </template>
 <!-- =============================================================  -->
