@@ -1,12 +1,12 @@
 <template>
   <div class="add-custom-gate">
-    <div id="myNav" class="overlay">
-      <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
+    <div id="myNav" class="overlay" style="width:0%">
+      <a href="javascript:void(0)"  class="closebtn" @click="closeNav()">&#10006;</a>
 
-      <div class="column1">
-        <h1 class="p" >matrix</h1>
-        <h3>name</h3>
-        <input type="text" id="nameofgate" />
+      <div class="column">
+        <h1>Add Matrix</h1>
+        <h3>Name</h3>
+        <input type="text" id="nameofgate" required />
         <h3>number of wires</h3>
         <CustomMx ref="matrixcu"></CustomMx>
         <br />
@@ -15,22 +15,23 @@
         >create</button>
       </div>
 
-      <!-- <div class="column2">
+      <!--
+       <div class="column">
         <h1 style="color: black;">from rotation</h1>
         <h3 style="color: black;">select the gate</h3>
-      </div>-->
-
-      <div class="column3">
+       </div>
+      -->
+      <div class="column">
         <h1 >sub-circuit</h1>
         <h3 >name</h3>
         <input type="text" id="subCircuitName" />
         <h3>Rows</h3>
         <label class="from-to">From</label>
-        <select id="fromRow" style="width:15%;">
+        <select id="fromRow" >
           <option v-for="i in this.$parent.$parent.jsonObject.wires" :key="i" :value="i">{{i}}</option>
         </select>
         <label class="from-to">To</label>
-        <select id="toRow" style="width:15%;">
+        <select id="toRow">
           <option v-for="i in this.$parent.$parent.jsonObject.wires" :key="i" :value="i">{{i}}</option>
         </select>
         <h3>Columns</h3>
@@ -48,12 +49,12 @@
         >create</button>
       </div>
 
-      <div class="column4">
+      <div class="column">
         <h1> n<sup>th</sup> root of gate</h1>
-        <p><sub>n√gate</sub></p>
+ 
      
         <h3>select the gate</h3>
-        <select id="rootGate" style="width:40%;">
+        <select id="rootGate" >
           <optgroup label="Gates">
             <option value="x">X</option>
             <option value="y">Y</option>
@@ -73,7 +74,7 @@
           </optgroup>
         </select>
         <h3 style="color: black;">root</h3>
-        <input style="width:40%;" id="root" type="number" value="2" />
+        <input id="root" type="number" value="2"  />
         <br />
         <button
           @click="nthRoot()"
@@ -113,25 +114,11 @@ export default {
       document.getElementById("myNav").style.width = "100%";
       document.getElementById("subCircuitName").value = null;
       document.getElementById("nameofgate").value = null;
-
-      // html2canvas(document.querySelector("#circuit-wires")).then(canvas => {
-      //   this.capturedImage = canvas.toDataURL();
-      //   window.console.log("canvas.toDataURL() -->" + this.capturedImage);
-      //   canvas.toBlob(function(blob) {
-      //     var reader = new FileReader();
-      //     reader.readAsDataURL(blob);
-      //     reader.onloadend = function() {
-      //       let base64data = reader.result;
-      //       window.console.log("Base64--> " + base64data);
-      //     };
-      //   });
-      // });
     },
     // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav").style.width = "0%";
       document.getElementById("wires").value = null;
-
       var conmatrixcu2 = this.$refs.matrixcu;
       conmatrixcu2.clear();
     },
@@ -145,17 +132,13 @@ export default {
         matrix,
         nameofgate
       );
-      window.console.log(matrix_validate);
-      window.console.log(msg);
       var isUnitary;
       var json_object = {};
       json_object["matrix"] = matrix;
-      window.console.log(matrix_validate);
-      // window.console.log(msg);
 
       if (matrix_validate) {
         axios.post("http://localhost:5000/isUnitary", json_object).then(res => {
-          window.console.log("the data success to returned be from the server");
+          //window.console.log("the data success to returned be from the server");
           isUnitary = res.data.isUnitary;
           //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
           // window.console.log("new unitary:" + isUnitary);
@@ -170,10 +153,6 @@ export default {
       } else {
         alert(msg);
       }
-      // document.getElementById("nameofgate").value = null;
-      // conmatrixcu.clear();
-      //document.getElementById("valueofgate").value = null;
-      //window.console.log("unitary:" + this.$parent.isUnitary);
     },
     // ----------------------------------------------------
     //
@@ -311,7 +290,6 @@ export default {
           if (res.data.isUnitary) {
             var name = document.getElementById("subCircuitName").value;
             this.addGate(name);
-            window.console.log(res.data.matrix);
             this.$parent.$parent.jsonObject.custom[name] = res.data.matrix;
             document.getElementById("subCircuitName").value = null;
             this.closeNav();
@@ -352,7 +330,7 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 div{
-  color:black
+  color:white
 }
 .overlay {
   height: 100%;
@@ -360,12 +338,14 @@ div{
   left: 0;
   position: fixed;
   z-index: 1;
-
   background-color: rgba(103, 106, 97, 0.55);
   overflow-x: hidden;
   transition: 0.5s;
 
   display: flex;
+  justify-content:center;
+  align-items:stretch;
+  flex-wrap: wrap;
 
 }
 
@@ -402,55 +382,12 @@ div{
   }
 }
 
-.column1 {
-
-  min-width: 20em;
-  min-height: 25em;
+.column{
   background: rgb(47, 68, 85, 0.7);
-  margin-top: 20px;
-  margin-left: 20px;
-  text-align: center;
-  border-radius: 25px;
-  display: inline-block;
-  margin-right: 15px;
-}
+  margin: 3em;
+  padding: 1em;
+  border-radius: 1em;
 
-.column2 {
-
-  min-width: 20em;
-  min-height: 25em;
-  background: rgb(47, 68, 85, 0.7);
-  position: center;
-  margin-top: 20px;
-  text-align: center;
-  border-radius: 25px;
-  margin-right: 15px;
-  margin-left: 15px;
-  display: inline-block;
-}
-.column3 {
-
-  min-width: 20em;
-  min-height: 25em;
-  background: rgb(47, 68, 85, 0.7);
-  margin-top: 20px;
-  text-align: center;
-  margin-right: 15px;
-  margin-left: 15px;
-  border-radius: 25px;
-  display: inline-block;
-}
-.column4 {
-
-  min-width: 20em;
-  min-height: 25em;
-  background: rgb(47, 68, 85, 0.7);
-  margin-top: 20px;
-  text-align: center;
-  margin-right: 15px;
-  margin-left: 15px;
-  border-radius: 25px;
-  display: inline-block;
 }
 .create {
   padding: 10px 25px;
@@ -472,10 +409,17 @@ div{
   font-size: 40px;
   display: inline-block;
 } */
+button{
+  background:white;
+  border-radius: 10px;
+  border:3px solid grey;
+  margin:30px 0px 0px 100px;
+}
 .addGate {
   display: inline-block;
   margin: 0em 0em 0em 0.2em;
   background-color: white;
+  color:black;
   border-radius: 0.5em;
 }
 .from-to {
@@ -486,8 +430,15 @@ div{
 input{
   border-radius: 10px;
 }
+input[type="number"]{
+  padding:0px 0px 0px 5px;
+  width:50px;
+}
 select{
   border-radius:10px;
   width:100px;
+}
+h3{
+  margin: 20px 1px 10px 1px;
 }
 </style>

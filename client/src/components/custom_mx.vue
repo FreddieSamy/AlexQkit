@@ -1,9 +1,10 @@
 <template>
   <div>
     <div>
-      <input type="number" min="1" id="wires" />
+      <input type="number" min="1"  max="4" id="wires" v-model="wires" value="1" />
     </div>
     <form id="inputField" role="form"></form>
+    <!--
     <input
       type="button"
       @click="design()"
@@ -11,6 +12,7 @@
       name="design"
       
     />
+    -->
     <!-- <input type="button" @click="pulldata()" value="pulldata" name="pulldata"  /> -->
     <!-- <input type="button" @click="clear()" value="clear" name="clear"  /> -->
     <div id="resultField"></div>
@@ -24,22 +26,32 @@ export default {
 
   data() {
     return {
-      removeel: []
+      removeel: [],
+      wires: 1
     };
+  },
+  watch: {
+    wires: {
+      immediate: true,
+      handler() {
+        this.$nextTick(() => {
+          this.design();
+        });
+      }
+    }
   },
   methods: {
     design() {
       this.clear();
-      var wire = document.getElementById("wires").value;
-      
-      if(wire==0||wire==""){
-      
-      alert("number of wire can't be zero");
-      this.clear();
-      return 0;
+      //var wire = document.getElementById("wires").value;
+      var wire = this.wires;
+      if (wire == 0 || wire == "") {
+        alert("number of wire can't be zero");
+        this.clear();
+        return 0;
       }
       wire = Math.pow(2, wire);
-      window.console.log(wire);
+
       for (let i = 0; i < wire; i++) {
         var div = document.createElement("div");
         document.getElementById("inputField").appendChild(div);
@@ -48,15 +60,16 @@ export default {
           var input = document.createElement("input");
           input.type = "text";
           input.setAttribute("size", "4");
-          input.setAttribute("placeholder","1.0+3.5i")
-          // input.style = ("border-radius: 70px;");
-          input.id = ""+i+k;
-         // window.console.log(input.id);
-          this.removeel.push(""+i+k);
+          input.setAttribute("placeholder", "1.0+3.5i");
+          input.style.padding = '3px';
+          input.style.margin = '3px';
+          input.style.borderRadius = '8px';
+          input.id = "" + i + k;
+
+          this.removeel.push("" + i + k);
           document.getElementById("inputField").appendChild(input);
         }
       }
-      
     },
     pulldata() {
       var wire = document.getElementById("wires").value;
@@ -69,24 +82,20 @@ export default {
         }
       }
       var matrix = this.split(myArr, wire);
-     // window.console.log("this");
-      //window.console.log(matrix);
-      // show map values as a popup
-      //window.console.log(name_value_array.map(Number));
+
       return matrix;
     },
 
     clear() {
-      //window.console.log(this.removeel);
+
       for (let i = 0; i < this.removeel.length; i++) {
         var element = document.getElementById(this.removeel[i]);
-      //  window.console.log(element);
+
         element.remove(element);
-       // window.console.log(this.removeel);
+
       }
       this.removeel = [];
-     // document.getElementById("wires").value=null;
-
+      // document.getElementById("wires").value=null;
     },
 
     split(myArray, chunk_size) {
@@ -110,4 +119,12 @@ export default {
 </script>
 <!-- =============================================================  -->
 <style scoped>
+input{
+  padding:0px 0px 0px 5px;
+  border-radius:10px;
+  width:50px;
+}
+#inputField{
+  margin:20px;
+}
 </style>

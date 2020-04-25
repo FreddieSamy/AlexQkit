@@ -39,15 +39,25 @@ export default {
   components: {
     draggable
   },
+  props: ["id"],
+  created: function() {
+    this.setGatesIdentity();
+    let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
+    this.setWire(wire);
+  },
+
+  updated() {
+    let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
+    this.setWire(wire);
+  },
+  destroyed(){
+    this.$parent.controlSystem()
+  },  
   data() {
     return {
       list: [],
       state: "0"
     };
-  },
-  props: ["id"],
-  created: function() {
-    this.setGatesIdentity();
   },
   watch: {
     list: {
@@ -58,17 +68,15 @@ export default {
           if (this.id == this.$parent.jsonObject.wires) {
             //window.console.log("wire :"+this.id+" send the system");
             this.$parent.controlSystem();
-            this.$parent.sendSystem()
+            //this.$parent.sendSystem()
+            //window.console.log("hello watcher of "+this.id)
           }
           
         });
       }
     },
   },
-  updated() {
-    let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
-    this.setWire(wire);
-  },
+
   methods: {
     ...mapActions(["setWire"]),
     //-----------------------------------------------------------------------
@@ -99,7 +107,7 @@ export default {
       gate.setAttribute("col", "_" + col);
       this.$parent.updateMaxWire();
     },
-    updateWireAttributes: function() {
+    updateWireAttributes: function() { // replace it by javascript numpy alternative
       let wire = document.querySelector("#list" + this.id + "");
       if (this.list.length) {
         let gates = wire.childNodes;
@@ -130,7 +138,7 @@ export default {
       // add identiy across the columns of same wire (row)
       for (let i = this.list.length; i < this.$parent.maxWire; i++) {
         this.list.push({ name: "i" });
-      }
+      } //window.console.log("hello add Identity")
     },
     //-----------------------------------------------------------------------
     getGateByIndex: function(gateIndex) {
@@ -182,7 +190,8 @@ export default {
         this.list.push({ name: gatesList[colIdx] });
       }
     },
-    setGatesIdentity: function() {
+    setGatesIdentity: function() { // when add a ner wire
+      window.console.log("hello i have been called")
       var maxWire = this.$parent.maxWire;
       let list = [...this.list];
       for (let colIdx = 0; colIdx < maxWire; colIdx++) {
@@ -282,6 +291,7 @@ div[id^="rz"] {
   width: 2.5em;
   height: 2em;
   background-color: white;
+  border:2px solid #306ba2;
 }
 .delete-wire {
   float: left;
@@ -313,6 +323,6 @@ div[id^="rz"] {
 }
 
 #i {
-  opacity: 0.01;
+  opacity: 0.91;
 }
 </style>

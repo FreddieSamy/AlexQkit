@@ -1,7 +1,6 @@
 <template>
   <div class="toolbox-2">
-    <button @click="addWire">add Wire</button>
-    <button @click="removeWire">Remove Wire</button>
+
     <button @click="cloneSendSystem">send</button>
     <button @click="cloneResetSystem">reset system</button>
     <tracingButtons></tracingButtons>
@@ -51,15 +50,7 @@ export default {
     ...mapState(["jsonObject"])
   },
   methods: {
-    addWire: function() {
-      this.$parent.jsonObject.wires++;
-      this.$parent.$refs.tracingLine.updateTracingLine();
-    },
-    removeWire: function() {
-      this.$parent.jsonObject.wires--;
-      this.$parent.jsonObject.init.pop();
-      this.$parent.$refs.tracingLine.updateTracingLine();
-    },
+
     cloneSendSystem: function() {
       this.$parent.sendSystem();
     },
@@ -101,6 +92,7 @@ button {
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
   border-radius: 0.5em;
+  border:2px solid grey;
 }
 input {
   border-radius: 7px;

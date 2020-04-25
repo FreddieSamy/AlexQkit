@@ -539,6 +539,10 @@ class Circuit():
             customGates = receivedDictionary["custom"]
             for matrix in customGates.values():
                 self.strToComplex(matrix)
+        if "repeated" in receivedDictionary and receivedDictionary["repeated"] != {}:
+            receivedDictionary["repeated"]['listOfPos']
+            receivedDictionary['rows'] = self.repettion(receivedDictionary["rows"],receivedDictionary["repeated"]['listOfPos'],receivedDictionary["repeated"]['listOfRep'])
+            print(receivedDictionary)
 
         if "rows" in receivedDictionary and "wires" in receivedDictionary:  # cols and wires are mandatory
             wires = int(receivedDictionary["wires"])
@@ -823,17 +827,14 @@ class Circuit():
 ###############################################################################################################################
     def repettion(self, circuitList, listOfPositions, listOfNumberOfRepetition):
         import numpy as np
-        dic = self.dicOfBlockAndPosition(
-            circuitList, listOfPositions, listOfNumberOfRepetition)
+        dic = self.dicOfBlockAndPosition(circuitList, listOfPositions, listOfNumberOfRepetition)
         circuitList = np.array(circuitList)
     #repetedBlock , insertPostition , endPosition = blockToRepet(circutList,position)
         for key in dic:
             import numpy as np
-            repetedBlock, insertPostition, numberOfRepetition = dic[key][
-                'repetedBlock'], dic[key]['insertPostion'], dic[key]['NumberOfRepetition']
+            repetedBlock, insertPostition, numberOfRepetition = dic[key]['repetedBlock'], dic[key]['insertPostion'], dic[key]['NumberOfRepetition']
             for repet in range(numberOfRepetition-1):
-                circuitList = np.insert(
-                    circuitList, insertPostition, repetedBlock, axis=1)
+                circuitList = np.insert(circuitList, insertPostition, repetedBlock, axis=1)
         return circuitList.tolist()
 ####################################################################################################################################################
 
@@ -853,10 +854,9 @@ class Circuit():
                 previousInsertPosition = dicOfPos[i]['insertPostion']
                 print(self.factor(insertPosition, endPreviousPos))
                 insertPosition = self.positionEquation(previousInsertPosition, listOfNumberOfRepetition[i-1], len(
-                    dicOfPos[i]['repetedBlock']), factor(insertPosition, endPreviousPos))
+                    dicOfPos[i]['repetedBlock']), self.factor(insertPosition, endPreviousPos))
             endPreviousPos = endPosition
-            dicOfPos[i+1] = {'repetedBlock': repetedBlock, 'insertPostion': insertPosition,
-                             'NumberOfRepetition': listOfNumberOfRepetition[i]}
+            dicOfPos[i+1] = {'repetedBlock': repetedBlock, 'insertPostion': insertPosition,'NumberOfRepetition': listOfNumberOfRepetition[i]}
 
         return dicOfPos
 #######################################################################################################################################################

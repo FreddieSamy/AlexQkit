@@ -1,5 +1,7 @@
 <template>
   <div class="clone">
+    <label class="app-title">Alexandria Quantum Computer Kit</label>
+    <hr>
     <!-------------------------- upper circiut - tools -------------------- -->
     <div class="circuit-tools">
       <toolbox ref="toolbox"></toolbox>
@@ -34,9 +36,9 @@
         >Elementary Gates</button>
       </div>
     </div>
-
+    <!--
     <GChart style="width:500px" type="ColumnChart" :data="chartData" :options="chartOptions" />
-
+    -->
     <div class="visual-row">
       <diracNotation ref="diracNotation"></diracNotation>
     </div>
@@ -65,7 +67,7 @@ import tracingLine from "./tracingLine.vue";
 import qasm from "./qasm.vue";
 import { mapState } from "vuex";
 
-import { GChart } from "vue-google-charts";
+//import { GChart } from "vue-google-charts";
 
 export default {
   name: "clone",
@@ -83,7 +85,7 @@ export default {
     matrixRepresentation,
     qasm,
     tracingLine,
-    GChart
+    //GChart
   },
   mounted() {
     //window.console.log("clone has been mounted");
@@ -98,7 +100,7 @@ export default {
         ["010",  0.50732421875,],
         ["011", 0],
         ["100", 0],
-        ["101", 0],
+        ["101", 0.8],
         ["110", 0],
         ["111", 0]
       ],
@@ -106,7 +108,9 @@ export default {
         chart: {
           title: "Company Performance",
           subtitle: "Sales, Expenses, and Profit: 2014-2017"
-        }
+        },vAxis: {
+            maxValue: 1,
+          }
       },
       route: this.$store.state.routes.appRoute,
       maxWire: 0 // maximum number of gates in a wire
@@ -400,15 +404,24 @@ export default {
 .clone {
   white-space: nowrap;
 }
+.app-title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bolder;
+  margin:0px 0px -5px 0px;
+}
 .circuit-tools {
   display: flex;
   margin: 0.2em;
 }
 .toolbox {
-  flex-basis: 65%;
+  flex-basis: 63%;
 }
 .ibm {
-  flex-basis: 35%;
+  flex-basis: 37%;
 }
 .wires {
   /*border: 0.1em dashed blue;*/
@@ -443,5 +456,8 @@ export default {
 }
 .visual-row {
   display: flex;
+}
+button{
+  border:2px solid grey;
 }
 </style>
