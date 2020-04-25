@@ -38,19 +38,19 @@ export default {
 
   computed: {},
   methods: {
-    applyLoop() {
+       applyLoop() {
       this.ListOfPositions = [];
       this.Repeats = [];
       for (let i = 0; i < this.loopCounts; i++) {
         let loopCaller = this.$refs.loops[i];
-        let arr = [loopCaller.from, loopCaller.to];
+        let arr = [parseInt(loopCaller.from), parseInt(loopCaller.to)];
         this.ListOfPositions.push(arr);
-        this.Repeats.push(loopCaller.repeat);
+        this.Repeats.push(parseInt(loopCaller.repeat));
         this.closeNav();
       }
-      let list1 = this.ListOfPositions;
-      let list2 = this.Repeats;
-      let repeated = { list1, list2 };
+      let listOfPos = this.ListOfPositions;
+      let listOfRep = this.Repeats;
+      let repeated = { listOfPos, listOfRep };
       this.$parent.$parent.jsonObject["repeated"] = repeated;
       //window.console.log(this.$parent.$parent.jsonObject)
     },
