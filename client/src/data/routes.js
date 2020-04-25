@@ -11,6 +11,6 @@
     
    export const defaultHistogramRoute = "http://127.0.0.1:5000/chart.png";
    export const defaultBlockSphereRoute = "http://127.0.0.1:5000/blochsphere.png";
-   export const defaultqasmCircuitRoute = "http://127.0.0.1:5000/circuit.png";
+   export const defaultQasmCircuitRoute = "http://127.0.0.1:5000/circuit.png";
 
 
