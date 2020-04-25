@@ -27,7 +27,7 @@
       </transition-group>
     </draggable>
 
-    <!-- ------------------- end built in gates and start custom gates ---------- -->
+    <!-- ----------------------- start custom gates --------------------------- -->
 
     <draggable
       v-if="customGates.length"
@@ -38,7 +38,7 @@
       @change="log"
       :style="w"
     >
-      <transition-group type="transition" name="flip-list">
+      <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
         <div
           class="toolbox-gates"
           v-for="element in customGates"
@@ -146,14 +146,13 @@ export default {
   align-items: flex-start;
   flex-wrap: wrap;
   padding: 0px;
-  border-radius: 10px;
+  margin: 0px;
 }
 .toolbox-labels {
   flex-basis: 100%;
 }
 
 .toolbox-gates-area {
-  margin: 0em;
   flex-basis: 100%;
   display: flex;
   flex-direction: row;
@@ -171,7 +170,7 @@ export default {
   text-align: center;
   border: 0.5px solid grey;
   border-radius: 0.5em;
-  margin: 0em 0.5em 0em 0.5em;
+  margin: 0em 0.5em 0.5em 0.5em;
   padding: 0px;
   width: 35px;
   height: 35px;
@@ -186,12 +185,15 @@ export default {
 
 .custom-gates {
   margin: 0em;
-  flex-basis: 10%;
+  flex-basis: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: baseline;
+}
+.custom-gates span{
+  display: flex;
 }
 
 #rx,
@@ -290,5 +292,8 @@ export default {
 }
 #hover-div:hover #hover-element {
   display: block;
+}
+button{
+  border:2px solid grey;
 }
 </style>

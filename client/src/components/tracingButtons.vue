@@ -65,5 +65,9 @@ export default {
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
   border-radius: 0.5em;
+
+  border:2px solid grey;
+
 }
+
 </style>
