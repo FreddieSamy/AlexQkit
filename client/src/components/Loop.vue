@@ -13,8 +13,8 @@
 <script>
 // eslint-disable-next-line no-undef
 export default {
-  name: "loop",
-  display: "loop",
+  name: "Loop",
+  display: "Loop",
   data() {
     return {
       from: "from",

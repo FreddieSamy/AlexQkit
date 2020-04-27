@@ -1,14 +1,14 @@
 <template>
   <div id="app">
-     <clone ref="clone"></clone>
+     <Clone ref="clone" />
   </div>
 </template>
 <script>
-import clone from "./components/clone.vue";
+import Clone from "./components/Clone.vue";
 export default {
   name: "app",
   components:{
-    clone,
+    Clone,
   }
 };
 </script>
@@ -25,7 +25,7 @@ body {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   color: #2c3e50;
   margin-top: 0px;
-  overflow: auto;
+  /*overflow: auto;*/
 }
 .cline{
   position:absolute;

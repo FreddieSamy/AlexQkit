@@ -4,13 +4,21 @@
     <button @click="cloneSendSystem">send</button>
     <button @click="cloneResetSystem">reset system</button>
     <tracingButtons></tracingButtons>
+    
+    <button
+      v-if="!this.$nextTick(() => {this.$parent.$refs.qasm.qasmIncludeIfFlag })"
+      class="exeBtn"
+      @click="this.$parent.elementaryGates"
+    >Elementary Gates
+    </button>
+    
+    
     <input
       class="save-circuit"
       type="text"
       placeholder="Save Circuit by Name"
       v-model="savedCirciutName"
     />
-
     <button @click="saveCircuit(savedCirciutName)">Save Circuit</button>
 
     <label class="select-algorithm">Select an Algorithm</label>
@@ -26,8 +34,8 @@
 import { mapState } from "vuex";
 import tracingButtons from "./tracingButtons.vue";
 export default {
-  name: "toolbox2",
-  display: "toolbox2",
+  name: "Toolbox2",
+  display: "Toolbox2",
   components: { tracingButtons },
   props: ["setAlgorithm"],
   data() {

@@ -37,8 +37,9 @@
 </template>
 <!-- =============================================================  -->
 <script>
-import { mapState } from "vuex";
 import { ibmLink } from "./../data/routes";
+import devices from "./../data/IBM_Devices";
+
 export default {
   name: "ibm",
   display: "ibm",
@@ -47,11 +48,9 @@ export default {
     return {
       anchor: ibmLink,
       link: "",
-      device: "ibmq_16_melbourne"
+      device: "ibmq_16_melbourne",
+      devices:devices
     };
-  },
-  computed: {
-    ...mapState(["devices"])
   },
   methods: {
     sendto() {
