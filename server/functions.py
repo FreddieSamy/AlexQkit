@@ -231,23 +231,22 @@ class Circuit():
                 state = str(
                     ("{0:0"+str(circuit.n_qubits).replace('.0000', '')+"b}").format(i))
                 dic[state] = round(abs(statevector[i])**2, 4)
-
-            return plot_histogram(dic, figsize=(max(10, 2**circuit.n_qubits), (6+2**circuit.n_qubits*0.1)))
+            return dic
+            #return plot_histogram(dic, figsize=(max(10, 2**circuit.n_qubits), (6+2**circuit.n_qubits*0.1)))
 
         simulator = Aer.get_backend('qasm_simulator')
-        result = execute(circuit, backend=simulator,
-                         shots=numberOfShots).result()
+        result = execute(circuit, backend=simulator,shots=numberOfShots).result()
         counts = result.get_counts(circuit)
         dic = {}
         for i in range(2**circuit.n_qubits):
-            state = str(
-                ("{0:0"+str(circuit.n_qubits).replace('.0000', '')+"b}").format(i))
+            state = str(("{0:0"+str(circuit.n_qubits).replace('.0000', '')+"b}").format(i))
             if state in counts:
                 dic[state] = counts[state]/numberOfShots
             else:
                 dic[state] = 0.0
-
-        return plot_histogram(dic, figsize=(max(10, 2**circuit.n_qubits), (6+2**circuit.n_qubits*0.1)))
+        print(dic)
+        return dic
+        #return plot_histogram(dic, figsize=(max(10, 2**circuit.n_qubits), (6+2**circuit.n_qubits*0.1)))
 
 ###############################################################################################################################
 
@@ -565,8 +564,7 @@ class Circuit():
                     resetExist = True
                 if "barrier" in cols[i]:
                     from more_itertools import locate
-                    barrierPos = list(
-                        locate(cols[i], lambda x: x == 'barrier'))
+                    barrierPos = list(locate(cols[i], lambda x: x == 'barrier'))
                     normalCircuit.barrier(barrierPos)
                     reversedCircuit.barrier(barrierPos)
                 elif "c" in cols[i] or "oc" in cols[i]:
@@ -574,8 +572,7 @@ class Circuit():
                         normalCircuit, reversedCircuit, cols[i], customGates, radian)
                 else:
 
-                    self.nonControlledColumns(
-                        normalCircuit, reversedCircuit, cols[i], customGates, radian)
+                    self.nonControlledColumns(normalCircuit, reversedCircuit, cols[i], customGates, radian)
 
         self.blochSphereGraph = self.blochSphere(normalCircuit)
         self.histoGramGraph = self.graph(reversedCircuit, shots)
@@ -583,39 +580,35 @@ class Circuit():
 
         if "API_TOKEN" in receivedDictionary:
             if receivedDictionary["API_TOKEN"] != "":
-                self.returnedDictionary["diracNotation"] = self.diracNotation(
-                    reversedCircuit)
+                self.returnedDictionary["diracNotation"] = self.diracNotation(reversedCircuit)
                 self.returnedDictionary["qasm"] = normalCircuit.qasm()
-                self.returnedDictionary["link"] = self.runOnIBMQ(
-                    receivedDictionary["API_TOKEN"], normalCircuit, shots, device)
+                self.returnedDictionary["link"] = self.runOnIBMQ(receivedDictionary["API_TOKEN"], normalCircuit, shots, device)
+                self.returnedDictionary['chart'] = self.graph(reversedCircuit, shots)
                 if not resetExist:
-                    self.returnedDictionary["matrixRepresentation"] = self.matrixRepresentation(
-                        reversedCircuit)  # self.matrixLatex(self.matrixRepresentation(circuit))
+                    self.returnedDictionary["matrixRepresentation"] = self.matrixRepresentation(reversedCircuit)  # self.matrixLatex(self.matrixRepresentation(circuit))
                 else:
                     self.returnedDictionary["matrixRepresentation"] = "you can't get matrixRepresentation while using reset gate"
             else:
-                self.returnedDictionary["diracNotation"] = self.diracNotation(
-                    reversedCircuit)
+                self.returnedDictionary["diracNotation"] = self.diracNotation(reversedCircuit)
                 self.returnedDictionary["qasm"] = normalCircuit.qasm()
                 self.returnedDictionary["link"] = ""
+                self.returnedDictionary['chart'] = self.graph(reversedCircuit, shots)
                 if not resetExist:
-                    self.returnedDictionary["matrixRepresentation"] = self.matrixRepresentation(
-                        reversedCircuit)  # self.matrixLatex(self.matrixRepresentation(circuit))
+                    self.returnedDictionary["matrixRepresentation"] = self.matrixRepresentation(reversedCircuit)  # self.matrixLatex(self.matrixRepresentation(circuit))
                 else:
                     self.returnedDictionary["matrixRepresentation"] = "you can't get matrixRepresentation while using reset gate"
 
         else:
-            self.returnedDictionary["diracNotation"] = self.diracNotation(
-                reversedCircuit)
+            self.returnedDictionary["diracNotation"] = self.diracNotation(reversedCircuit)
             self.returnedDictionary["qasm"] = normalCircuit.qasm()
             self.returnedDictionary["link"] = ""
+            self.returnedDictionary['chart'] = self.graph(reversedCircuit, shots)
             if not resetExist:
-                self.returnedDictionary["matrixRepresentation"] = self.matrixRepresentation(
-                    reversedCircuit)  # self.matrixLatex(self.matrixRepresentation(circuit))
+                self.returnedDictionary["matrixRepresentation"] = self.matrixRepresentation(reversedCircuit)  # self.matrixLatex(self.matrixRepresentation(circuit))
             else:
                 self.returnedDictionary["matrixRepresentation"] = "you can't get matrixRepresentation while using reset gate"
 
-        # return self.returnedDictionary
+        #return self.returnedDictionary
 ###############################################################################################################################
 
     def getGates(self, circuit):
@@ -664,28 +657,25 @@ class Circuit():
         # print(cols)
         if "API_TOKEN" in receivedDictionary:
             if receivedDictionary["API_TOKEN"] != "":
-                self.returnedDictionary["diracNotation"] = self.diracNotation(
-                    circuit)
+                self.returnedDictionary["diracNotation"] = self.diracNotation(circuit)
                 self.returnedDictionary["qasm"] = receivedDictionary["qasm"]
-                self.returnedDictionary["link"] = self.runOnIBMQ(
-                    receivedDictionary["API_TOKEN"], circuit, shots, device)
-                self.returnedDictionary["qasmRows"] = np.transpose(
-                    cols).tolist()
+                self.returnedDictionary["link"] = self.runOnIBMQ(receivedDictionary["API_TOKEN"], circuit, shots, device)
+                self.returnedDictionary["qasmRows"] = np.transpose(cols).tolist()
+                self.returnedDictionary['chart'] = self.graph(reversedCircuit, shots)
                 # self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
             else:
-                self.returnedDictionary["diracNotation"] = self.diracNotation(
-                    circuit)
+                self.returnedDictionary["diracNotation"] = self.diracNotation(circuit)
                 self.returnedDictionary["qasm"] = receivedDictionary["qasm"]
                 self.returnedDictionary["link"] = ""
-                self.returnedDictionary["qasmRows"] = np.transpose(
-                    cols).tolist()
+                self.returnedDictionary["qasmRows"] = np.transpose(cols).tolist()
+                self.returnedDictionary['chart'] = self.graph(reversedCircuit, shots)
                 # self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
         else:
-            self.returnedDictionary["diracNotation"] = self.diracNotation(
-                circuit)
+            self.returnedDictionary["diracNotation"] = self.diracNotation(circuit)
             self.returnedDictionary["qasm"] = receivedDictionary["qasm"]
             self.returnedDictionary["link"] = ""
             self.returnedDictionary["qasmRows"] = np.transpose(cols).tolist()
+            self.returnedDictionary['chart'] = self.graph(reversedCircuit, shots)
             # self.returnedDictionary["matrixRepresentation"]=self.matrixRepresentation(circuit) #self.matrixLatex(self.matrixRepresentation(circuit))
 
         # return self.returnedDictionary
