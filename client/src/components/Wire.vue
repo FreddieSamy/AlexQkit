@@ -8,6 +8,7 @@
     <div class="qubit">
       <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
     </div>
+
     <draggable
       class="wire-drop-area"
       :id="'list' + id"
@@ -25,12 +26,16 @@
         v-html="displayName(element.name)"
       ></div>
     </draggable>
+
+      <img src="../assets/b.png" alt="">
+
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import draggable from "vuedraggable";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import { states } from "./../data/gates_and_states";
 
 export default {
   name: "wire",
@@ -41,10 +46,9 @@ export default {
   props: ["id"],
   created: function() {
     this.setGatesIdentity();
-    let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
-    this.setWire(wire);
+    //let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
+    //this.setWire(wire);
   },
-
   updated() {
     let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
     this.setWire(wire);
@@ -52,10 +56,13 @@ export default {
   destroyed(){
     this.$parent.controlSystem()
   },  
+  computed :{
+    ...mapGetters(['wiresCount'])
+  },
   data() {
     return {
       list: [],
-      state: "0"
+      state: states[0]
     };
   },
   watch: {
@@ -63,15 +70,16 @@ export default {
       immediate: true,
       handler() {
         this.updateWireAttributes();
-        this.$nextTick(() => {
-          if (this.id == this.$parent.jsonObject.wires) {
-            //window.console.log("wire :"+this.id+" send the system");
-            this.$parent.controlSystem();
-            //this.$parent.sendSystem()
-            //window.console.log("hello watcher of "+this.id)
-          }
+        // //window.console.log("hello from wire "+this.id)
+        // this.$nextTick(() => {
+        //   if (this.id == this.$parent.jsonObject.wires) {
+        //     //window.console.log("wire :"+this.id+" send the system");
+        //     //this.$parent.controlSystem();
+        //     //this.$parent.sendSystem()
+        //     //window.console.log("hello watcher of "+this.id)
+        //   }
           
-        });
+        // });
       }
     },
   },
@@ -86,7 +94,6 @@ export default {
       }
       this.$parent.updateMaxWire();
       this.$parent.addIdentityToColumn(this.id);
-      this.$parent.updateMaxWire();
       this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
@@ -104,7 +111,6 @@ export default {
     updateGate: function(gate, row, col) {
       gate.setAttribute("row", "_" + row);
       gate.setAttribute("col", "_" + col);
-      this.$parent.updateMaxWire();
     },
     //-----------------------------------------------------------------------
     updateWireAttributes: function() { // replace it by javascript numpy alternative
@@ -120,13 +126,10 @@ export default {
     },
     //-----------------------------------------------------------------------
     qubitState: function(evt) {
-      window.console.log(evt.target.id)
       var i = (parseInt(evt.target.id.slice(-1)) + 1) % 6;
-      window.console.log(i)
       var id = evt.target.id.substring(0, evt.target.id.search("-") + 1);
-      window.console.log(id)
       evt.target.id = id + i;
-      this.state = this.$store.state.states[i];
+      this.state = states[i];
       evt.target.innerHTML = "|" + this.state + "⟩";
       this.$parent.jsonObject.init[id.slice(1, -1) - 1] = this.state;
       this.$parent.sendSystem();
@@ -139,7 +142,7 @@ export default {
     //-----------------------------------------------------------------------
     addIdentity: function() {
       // add identiy across the columns of same wire (row)
-      for (let i = this.list.length; i < this.$parent.maxWire; i++) {
+      for (let i = this.list.length; i < this.$parent.jsonObject.colsCount; i++) {
         this.list.push({ name: "i" });
       } 
     },
@@ -196,7 +199,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     setGatesIdentity: function() { // when add a ner wire
-      var maxWire = this.$parent.maxWire;
+      var maxWire = this.$parent.jsonObject.colsCount;
       let list = [...this.list];
       for (let colIdx = 0; colIdx < maxWire; colIdx++) {
         list.push({ name: "i" });
@@ -324,6 +327,11 @@ div[id^="rz"] {
   display: inline-flex;
   background-size: contain;
   background-image: url("../assets/wire.png");
+}
+
+img{
+  width: 40px;
+  height: 40px
 }
 
 #i {

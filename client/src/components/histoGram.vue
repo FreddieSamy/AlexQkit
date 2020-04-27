@@ -12,6 +12,8 @@
 <script>
 import {defaultHistogramRoute} from './../data/routes'
 export default {
+  name:'histoGram',
+  display:'histoGram',
   data() {
     return {
       defaultHistogramRoute : defaultHistogramRoute

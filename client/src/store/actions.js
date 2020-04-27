@@ -1,19 +1,25 @@
 
 export default {
-  setWire:({ commit }, wire) => {
+  setColsCount: ({commit},count)=>{
+    commit('setCols', count)
+  },
+  setExeCount: ({ commit }, count) => {
+    commit('setExe', count)
+  },
+  setWire: ({ commit }, wire) => {
     commit('setRow', wire)
   },
-  addWire:({commit}) => {
+  addWire: ({commit}) => {
      commit('appendInit')
      commit('appendWire')
   },
-  removeWire:({commit}) => {
+  removeWire: ({commit}) => {
     commit('popInit')
     commit('popWire')
   },
-  resetCircuit:({commit}) => {
+  resetCircuit: ({commit}) => {
     commit('reset')
-  }
+  },
 
 }
 

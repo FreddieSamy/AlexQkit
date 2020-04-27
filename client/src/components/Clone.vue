@@ -1,17 +1,16 @@
 <template>
   <div class="clone">
     <label class="app-title">Alexandria Quantum Computer Kit</label>
-    <hr>
-    <!-------------------------- upper circiut - tools -------------------- -->
+    <hr />
     <div class="circuit-tools">
-      <toolbox ref="toolbox"></toolbox>
-      <ibm class="ibm" ref="ibm"></ibm>
+      <Toolbox ref="toolbox" />
+      <IBM class="ibm" ref="ibm" />
     </div>
-    <!-- ------------------------ Circiut --------------------->
+
     <div class="circuit">
-      <qasm ref="qasm"></qasm>
+      <Qasm ref="qasm" />
       <tracingLine ref="tracingLine"></tracingLine>
-      <circuitDrawing v-if="this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })"></circuitDrawing>
+      <CircuitDrawing v-if="this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })" />
       <!-- ------------ circiutloops & wires ------------->
       <div v-if="!this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })" class="circuit-wires">
         <!-- ------------  wires ------------->
@@ -21,100 +20,84 @@
       </div>
     </div>
     <div class="toolbox-2">
-      <trash></trash>
+      <Trash></Trash>
 
       <div class="wires-buttons">
-        <toolbox2
+        <Toolbox2
           v-if="!this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })"
           class="toolbox2"
           :setAlgorithm="setAlgorithm"
         />
-        <button
-          v-if="!this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })"
-          class="exeBtn"
-          @click="elementaryGates"
-        >Elementary Gates</button>
       </div>
     </div>
-    <!--
-    <GChart style="width:500px" type="ColumnChart" :data="chartData" :options="chartOptions" />
-    -->
+
+    <!-- <Histogram /> -->
+
     <div class="visual-row">
-      <diracNotation ref="diracNotation"></diracNotation>
+      <DiracNotation ref="diracNotation" />
     </div>
 
+    <!--
     <div class="visual-row">
       <histoGram></histoGram>
       <blochSphere></blochSphere>
     </div>
-    <matrixRepresentation ref="matrixRepresentation"></matrixRepresentation>
+    -->
+    <div class="results">
+      <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
+      <Histogram class="histogram" />
+    </div>
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
-import toolbox from "./toolbox.vue";
-import toolbox2 from "./toolbox2.vue";
-import wire from "./wire.vue";
-import ibm from "./ibm.vue";
-import trash from "./trash.vue";
+import Toolbox from "./Toolbox.vue";
+import Toolbox2 from "./Toolbox2.vue";
+import Wire from "./Wire.vue";
+import IBM from "./IBM.vue";
+import Trash from "./Trash.vue";
 import axios from "axios";
-import blochSphere from "./blochSphere.vue";
-import histoGram from "./histoGram.vue";
-import diracNotation from "./diracNotation.vue";
-import circuitDrawing from "./circuitDrawing.vue";
-import matrixRepresentation from "./matrixRepresentation.vue";
+//import blochSphere from "./blochSphere.vue";
+//import histoGram from "./histoGram.vue";
+import Histogram from "./Histogram.vue";
+import DiracNotation from "./DiracNotation.vue";
+import CircuitDrawing from "./CircuitDrawing.vue";
+import MatrixRepresentation from "./MatrixRepresentation.vue";
 import tracingLine from "./tracingLine.vue";
-import qasm from "./qasm.vue";
-import { mapState , mapActions } from "vuex";
-import { appRoute, histogramRoute, blockSphereRoute, 
-         qasmCircuitRoute , elementaryGates} from "./../data/routes.js"
-
-//import { GChart } from "vue-google-charts";
+import Qasm from "./Qasm.vue";
+import { mapState, mapActions } from "vuex";
+import {
+  appRoute,
+  histogramRoute,
+  blockSphereRoute,
+  qasmCircuitRoute,
+  elementaryGates
+} from "./../data/routes.js";
 
 export default {
   name: "clone",
   display: "clone",
   components: {
-    toolbox,
-    ibm,
-    circuitDrawing,
-    wire,
-    trash,
-    toolbox2,
-    blochSphere,
-    histoGram,
-    diracNotation,
-    matrixRepresentation,
-    qasm,
-    tracingLine,
-    //GChart
+    Toolbox,
+    IBM,
+    CircuitDrawing,
+    Wire,
+    Trash,
+    Toolbox2,
+    //blochSphere,
+    //histoGram,
+    DiracNotation,
+    Histogram,
+    MatrixRepresentation,
+    Qasm,
+    tracingLine
   },
   mounted() {
-    //window.console.log("clone has been mounted");
-    //this.sendSystem();
+    this.sendSystem();
   },
   data() {
     return {
-      // chartData: [
-      //   ["Qbit", "state"],
-      //   ["000",  0.49267578125,],
-      //   ["001", 0.0],
-      //   ["010",  0.50732421875,],
-      //   ["011", 0],
-      //   ["100", 0],
-      //   ["101", 0.8],
-      //   ["110", 0],
-      //   ["111", 0]
-      // ],
-      // chartOptions: {
-      //   chart: {
-      //     title: "Company Performance",
-      //     subtitle: "Sales, Expenses, and Profit: 2014-2017"
-      //   },vAxis: {
-      //       maxValue: 1,
-      //     }
-      // },
-      maxWire: 0 // maximum number of gates in a wire
+      // maxWire: 0 // maximum number of gates in a wire
     };
   },
   computed: {
@@ -122,26 +105,29 @@ export default {
   },
 
   methods: {
-    ...mapActions(['resetCircuit']),
-    //-----------------------------------------------------------------------
-    showSystem: function() {
-      for (let i = 0; i < this.jsonObject.wires; i++) {
-        var wireCaller = this.$refs.wire[i];
-        window.console.log(JSON.stringify(wireCaller.list));
-      }
-    },
+    ...mapActions(["resetCircuit"]),
+    ...mapActions(["setColsCount"]),
+    ...mapActions(["setExeCount"]),
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
       let firstWire = this.$refs.wire[0];
-      this.maxWire = firstWire.list.length;
+      this.jsonObject.colsCount = firstWire.list.length;
+
       for (let i = 0; i < this.jsonObject.wires; i++) {
         let wireCaller = this.$refs.wire[i];
-        if (wireCaller.list.length > this.maxWire) {
-          this.maxWire = wireCaller.list.length;
+        if (wireCaller.list.length > this.jsonObject.colsCount) {
+          this.jsonObject.colsCount = wireCaller.list.length;
+          this.setColsCount(wireCaller.list.length);
         }
       }
-      this.jsonObject.exeCount = this.maxWire;
-      this.$refs.tracingLine.updateTracingLine(); //update the trasing line
+      this.setColsCount(this.jsonObject.colsCount);
+      this.setExeCount(this.jsonObject.colsCount);
+
+      this.$refs.tracingLine.updateTracingLine(); //update the tracing line
+      this.controlSystem();
+  
+      //window.console.log("max wire = ", this.jsonObject.colsCount);
+      //window.console.log("------------------- ");
     },
     //-----------------------------------------------------------------------
     resetSystem: function() {
@@ -150,9 +136,10 @@ export default {
         wireCaller.resetWire();
       }
       this.resetCircuit();
+      this.jsonObject.colsCount = 0;
       this.$refs.tracingLine.updateTracingLine();
       this.removeControlSystem();
-      //this.sendSystem();
+      this.sendSystem();
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -170,7 +157,7 @@ export default {
         wireCaller.removeGateByIndex(columnIndex);
       }
       this.updateMaxWire();
-      this.jsonObject.exeCount = this.maxWire;
+      this.jsonObject.exeCount = this.jsonObject.colsCount;
       this.$refs.tracingLine.updateTracingLine();
     },
     //-----------------------------------------------------------------------
@@ -186,15 +173,15 @@ export default {
     },
     //-----------------------------------------------------------------------
     removeIdentitySystem: function() {
-      for (let colIdx = this.maxWire - 1; colIdx >= 0; colIdx--) {
+      for (let colIdx = this.jsonObject.colsCount - 1; colIdx >= 0; colIdx--) {
         if (this.isAllColumnIdentity(colIdx)) {
           this.removeIdentityColumn(colIdx);
         }
       }
     },
     //-----------------------------------------------------------------------
-   // will be terminated
-   updateSystem: function() { 
+    // will be terminated
+    updateSystem: function() {
       // should be terminated
       var statesSystem = [];
       var gatesSystem = [];
@@ -214,7 +201,7 @@ export default {
       try {
         axios.post(route, jsonObject).then(
           res => {
-            this.draw();
+            //this.draw();
             this.$refs.diracNotation.value = res.data.diracNotation;
             this.$refs.matrixRepresentation.value =
               res.data.matrixRepresentation;
@@ -282,7 +269,7 @@ export default {
       this.removeControlSystem();
       this.$nextTick(() => {
         // wait to render the wire
-        for (let i = 0; i < this.maxWire; i++) {
+        for (let i = 0; i < this.jsonObject.colsCount; i++) {
           this.$nextTick(() => {
             // wait to render the added gate
             this.$nextTick(() => {
@@ -355,38 +342,36 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-   elementaryGates: function() {
+    elementaryGates: function() {
       if (this.jsonObject.exeCount) {
-        axios
-          .post(elementaryGates, this.jsonObject)
-          .then(res => {
-            this.jsonObject.custom = res.data.custom;
-            var dic = res.data.custom;
-            var custom = this.$refs.toolbox.customGates;
-            var flag = true;
-            for (let i in dic) {
-              if (custom.length == 0) {
-                this.$refs.toolbox.$refs.addcustomgate.addGate(i, i);
-              } else {
-                for (let j in custom) {
-                  if (i == this.$refs.toolbox.customGates[j].id) {
-                    flag = false;
-                    break;
-                  }
+        axios.post(elementaryGates, this.jsonObject).then(res => {
+          this.jsonObject.custom = res.data.custom;
+          var dic = res.data.custom;
+          var custom = this.$refs.toolbox.customGates;
+          var flag = true;
+          for (let i in dic) {
+            if (custom.length == 0) {
+              this.$refs.toolbox.$refs.addcustomgate.addGate(i, i);
+            } else {
+              for (let j in custom) {
+                if (i == this.$refs.toolbox.customGates[j].id) {
+                  flag = false;
+                  break;
                 }
-                if (flag) {
-                  this.$refs.toolbox.$refs.addcustomgate.addGate(i, i);
-                }
-                flag = true;
               }
+              if (flag) {
+                this.$refs.toolbox.$refs.addcustomgate.addGate(i, i);
+              }
+              flag = true;
             }
-            if (res.data.rows.length) {
-              this.jsonObject.wires = res.data.rows.length;
-              this.jsonObject.rows = res.data.rows;
-            }
+          }
+          if (res.data.rows.length) {
+            this.jsonObject.wires = res.data.rows.length;
+            this.jsonObject.rows = res.data.rows;
+          }
 
-            this.setAlgorithm(this.jsonObject);
-          });
+          this.setAlgorithm(this.jsonObject);
+        });
       }
     }
     //-----------------------------------------------------------------------
@@ -398,14 +383,14 @@ export default {
 .clone {
   white-space: nowrap;
 }
-.app-title{
+.app-title {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 20px;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
   font-weight: bolder;
-  margin:0px 0px -5px 0px;
+  margin: 0px 0px -5px 0px;
 }
 .circuit-tools {
   display: flex;
@@ -417,8 +402,15 @@ export default {
 .ibm {
   flex-basis: 37%;
 }
+.circuit{
+  
+  border:0px dashed grey;
+  /*
+  width: 150%;
+  overflow: auto
+  */
+}
 .wires {
-  /*border: 0.1em dashed blue;*/
   margin: 0em 0.1em 0em 0.1em;
 }
 .flip-list-move {
@@ -448,10 +440,24 @@ export default {
   height: 50%;
   margin: 0.2em 0.2em 0.2em 0.2em;
 }
-.visual-row {
+.results {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: stretch;
 }
-button{
-  border:2px solid grey;
+.matrix {
+  flex-basis: 40%;
+  border:1px solid black;
+
+}
+.histogram {
+ flex-basis: 55%;
+ border:1px solid black;
+}
+
+button {
+  border: 2px solid grey;
 }
 </style>

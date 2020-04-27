@@ -1,13 +1,15 @@
 <template>
-  <div id="matrixRepresentation" class="matrixRepresentation">
-    <center>
-      <h4>Matrix Representation</h4>
+  <div id="matrixRepresentation" class="matrix-box">
+
+      <label>Matrix Representation</label>
       <!--<katex-element  expression="\left(\begin{matrix}1 & 0 \\0 & 1\end{matrix}\right)"/>-->
 
-      <span id="elementRepresntation">
+
+        <ul>
         <li v-for="(i , row ) in this.value" :key="row">{{i}}</li>
-      </span>
-    </center>
+        </ul>
+  
+
   </div>
 </template>
 <!-- =============================================================  -->
@@ -25,8 +27,8 @@ Vue.use(VueKatex, {
 });
 
 export default {
-  name: "matrixRepresentation",
-  display: "matrixRepresentation",
+  name: "MatrixRepresentation",
+  display: "MatrixRepresentation",
   data() {
     return {
       value: []
@@ -37,31 +39,28 @@ export default {
 <!-- =============================================================  -->
 
 <style scoped>
-/*
-#elementRepresntation {
-  display: none;
-  position: absolute;
-  background-color: lightgray;
-  padding: 10px;
-  border: solid;
-  border-radius: 5px;
+
+ul {
+   list-style-type: none;
+   flex-basis: 100%;
+   align-self: center;
+   padding: 0px;
 }
-#matrixRepresentation:hover #elementRepresntation {
-  display: block;
+li {
+   padding: 10px;
 }
-.matrixRepresentation {
-  //border: 1px solid black;
-  border-radius: 0.5em;
+label{
+  flex-basis: 100%;
+  margin:10px 0px 0px 0px;
+  align-self: center;
 }
-.matrixRepresentation h4{
-    display: inline-block;
-    margin: 1em 1em 1em 1em;
-}*/
-.matrixRepresentation {
-  flex: 1;
-  border: 0.05em solid black;
-  padding: 0em 0em 0em 0.1em;
-  margin: 0em 0em 0em 0em;
+.matrix-box {
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items:stretch;
+  padding: 0px;
+  margin: 0px;
   border-radius: 0.5em;
 }
 </style>

@@ -36,7 +36,7 @@
       :group="{ name: 'gates', pull: 'clone', put: false }"
       :clone="cloneGate"
       @change="log"
-      :style="w"
+  
     >
       <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
         <div
@@ -92,26 +92,23 @@
 </template>
 <!-- =============================================================  -->
 <script>
-import { mapState } from "vuex";
 import draggable from "vuedraggable";
 import addcustomgate from "./addcustomgate";
 import Circiutloops from "./CircuitLoops.vue";
+import { gates } from "./../data/gates_and_states"
 
 export default {
-  name: "toolbox",
-  display: "toolbox",
+  name: "Toolbox",
+  display: "Toolbox",
   components: {
     draggable,
     addcustomgate,
     Circiutloops
   },
-  computed: {
-    ...mapState(["gates"])
-  },
   data() {
     return {
+      gates:gates,
       customGates: [],
-      w: "width:7.7em"
     };
   },
   methods: {

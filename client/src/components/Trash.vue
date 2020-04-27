@@ -26,8 +26,8 @@
 import draggable from "vuedraggable";
 import { mapState } from "vuex"
 export default {
-  name: "trash",
-  display: "trash",
+  name: "Trash",
+  display: "Trash",
   components: {
     draggable,
   },

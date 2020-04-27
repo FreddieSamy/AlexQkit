@@ -7,7 +7,7 @@
       <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
       <h1>Loops</h1>
       <div class="loops">
-        <loop v-for="count in loopCounts" :key="count" :ref="'loops'"></loop>
+        <Loop v-for="count in loopCounts" :key="count" :ref="'loops'" />
       </div>
       <div class="loops-btns">
         <button v-if="loopCounts" @click="loopCounts--" class="button_over">Remove Loop</button>
@@ -21,13 +21,13 @@
 </template>
 <!-- ================================================  -->
 <script>
-import loop from "./loop.vue";
+import Loop from "./Loop.vue";
 // eslint-disable-next-line no-undef
 export default {
   name: "CircuitLoops",
   display: "CircuitLoops",
   props: ["maxWire"],
-  components: { loop },
+  components: { Loop },
   data() {
     return {
       loopCounts: 1,
