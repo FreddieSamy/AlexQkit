@@ -15,7 +15,7 @@ export default {
     //-----------------------------------------------------------------------
     nextExe: function() {
       if (
-        this.$parent.$parent.jsonObject.exeCount < this.$parent.$parent.maxWire
+        this.$parent.$parent.jsonObject.exeCount < this.$parent.$parent.jsonObject.colsCount
       ) {
         this.$parent.$parent.jsonObject.exeCount++;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
@@ -41,9 +41,9 @@ export default {
     //-----------------------------------------------------------------------
     exeEnd: function() {
       if (
-        this.$parent.$parent.jsonObject.exeCount != this.$parent.$parent.maxWire
+        this.$parent.$parent.jsonObject.exeCount != this.$parent.$parent.jsonObject.colsCount
       ) {
-        this.$parent.$parent.jsonObject.exeCount = this.$parent.$parent.maxWire;
+        this.$parent.$parent.jsonObject.exeCount = this.$parent.$parent.jsonObject.colsCount;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
         this.$parent.$parent.sendSystem();
       }

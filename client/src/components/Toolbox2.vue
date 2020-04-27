@@ -68,7 +68,7 @@ export default {
     },
     saveCircuit(name) {
       if (name != "") {
-        if (this.$parent.maxWire) {
+        if (this.jsonObject.colsCount) {
           this.algorithms.push({
             name: name,
             circuit: {

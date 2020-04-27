@@ -37,11 +37,11 @@
         <h3>Columns</h3>
         <label class="from-to">From</label>
         <select id="fromColumn">
-          <option v-for="i in this.$parent.$parent.maxWire" :key="i" :value="i">{{i}}</option>
+          <option v-for="i in this.$parent.$parent.jsonObject.colsCount" :key="i" :value="i">{{i}}</option>
         </select>
         <label class="from-to">To</label>
         <select id="toColumn">
-          <option v-for="i in this.$parent.$parent.maxWire" :key="i" :value="i">{{i}}</option>
+          <option v-for="i in this.$parent.$parent.jsonObject.colsCount" :key="i" :value="i">{{i}}</option>
         </select>
         <br />
         <button
