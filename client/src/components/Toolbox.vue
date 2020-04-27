@@ -57,7 +57,7 @@
       </div>
 
       <div class="circiut-loop">
-        <Circiutloops :maxWire="this.$parent.maxWire" />
+        <Circiutloops :colsCount="this.$parent.jsonObject.colsCount" />
       </div>
 
       <div class="number-of-shots">
@@ -114,7 +114,7 @@ export default {
   methods: {
     log: function() {
       this.$parent.$refs.qasm.qasmIncludeIfFlag = false;
-      //this.$parent.maxWire = 0;
+      
     },
     // ----------------------------------------------------
     cloneGate({ name }) {

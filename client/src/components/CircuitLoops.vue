@@ -26,7 +26,7 @@ import Loop from "./Loop.vue";
 export default {
   name: "CircuitLoops",
   display: "CircuitLoops",
-  props: ["maxWire"],
+  props: ["colsCount"],
   components: { Loop },
   data() {
     return {

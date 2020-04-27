@@ -97,7 +97,6 @@ export default {
   },
   data() {
     return {
-      // maxWire: 0 // maximum number of gates in a wire
     };
   },
   computed: {
