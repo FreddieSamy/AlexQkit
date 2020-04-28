@@ -100,7 +100,7 @@ def run():
         c.returnedDictionary={}
     c.returnedDictionary["qasmError"]="";
     return  jsonify(c.returnedDictionary) 
-
+"""
 @app.route('/blochsphere.png',methods=['GET','POST'])
 def blochSphere():
     return graphDrawing(c.blochSphereGraph)
@@ -109,7 +109,7 @@ def blochSphere():
 def chart():
     return graphDrawing(c.histoGramGraph)
 
-
+"""
 @app.route('/circuit.png',methods=['GET','POST'])
 def circuitDraw():
     return  graphDrawing(c.circutDrawing)
@@ -126,3 +126,4 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 print(datetime.now() - startTime)
+print(c.returnedDictionary['chart'])
