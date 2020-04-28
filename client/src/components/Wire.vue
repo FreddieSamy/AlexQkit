@@ -75,7 +75,7 @@ export default {
         //   if (this.id == this.$parent.jsonObject.wires) {
         //     //window.console.log("wire :"+this.id+" send the system");
         //     //this.$parent.controlSystem();
-        //     //this.$parent.sendSystem()
+        //     //this.runCircuit();
         //     //window.console.log("hello watcher of "+this.id)
         //   }
           
@@ -86,6 +86,7 @@ export default {
 
   methods: {
     ...mapActions(["setWire"]),
+    ...mapActions(["runCircuit"]),
     //-----------------------------------------------------------------------
     add: function(evt) {
       if (evt.from.id[0] == "l") {
@@ -132,7 +133,8 @@ export default {
       this.state = states[i];
       evt.target.innerHTML = "|" + this.state + "⟩";
       this.$parent.jsonObject.init[id.slice(1, -1) - 1] = this.state;
-      this.$parent.sendSystem();
+      this.runCircuit();
+     
     },
     //-----------------------------------------------------------------------
     deleteWire: function(evt) {

@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="toolbox-2">
-      <!-- <Trash></Trash> -->
+    <Trash></Trash> 
 
       <div class="wires-buttons">
         <Toolbox2
@@ -55,7 +55,7 @@ import Toolbox from "./Toolbox.vue";
 import Toolbox2 from "./Toolbox2.vue";
 import Wire from "./Wire.vue";
 import IBM from "./IBM.vue";
-//import Trash from "./Trash.vue";
+import Trash from "./Trash.vue";
 import axios from "axios";
 //import blochSphere from "./blochSphere.vue";
 //import histoGram from "./histoGram.vue";
@@ -67,9 +67,9 @@ import tracingLine from "./tracingLine.vue";
 import Qasm from "./Qasm.vue";
 import { mapState, mapActions } from "vuex";
 import {
-  appRoute,
-  histogramRoute,
-  blockSphereRoute,
+  
+  histogramRoute, // delete
+  blockSphereRoute, // delete
   qasmCircuitRoute,
   elementaryGates
 } from "./../data/routes.js";
@@ -82,7 +82,7 @@ export default {
     IBM,
     CircuitDrawing,
     Wire,
-    //Trash,
+    Trash,
     Toolbox2,
     //blochSphere,
     //histoGram,
@@ -93,20 +93,22 @@ export default {
     tracingLine
   },
   mounted() {
-    this.sendSystem();
+    this.runCircuit();
   },
   data() {
     return {
     };
   },
   computed: {
-    ...mapState(["jsonObject"])
+    ...mapState(["jsonObject"]),
   },
 
   methods: {
     ...mapActions(["resetCircuit"]),
     ...mapActions(["setColsCount"]),
     ...mapActions(["setExeCount"]),
+    ...mapActions(["runCircuit"]),
+
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
       let firstWire = this.$refs.wire[0];
@@ -138,7 +140,8 @@ export default {
       this.jsonObject.colsCount = 0;
       this.$refs.tracingLine.updateTracingLine();
       this.removeControlSystem();
-      this.sendSystem();
+      this.runCircuit();
+
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -194,31 +197,7 @@ export default {
       // window.console.log("System Updated");
       // window.console.log(this.jsonObject);
     },
-    //-----------------------------------------------------------------------
-    // will be tarnsfared to Vuex
-    sendToServer: function(route, jsonObject) {
-      try {
-        axios.post(route, jsonObject).then(
-          res => {
-            //this.draw();
-            this.$refs.diracNotation.value = res.data.diracNotation;
-            this.$refs.matrixRepresentation.value =
-              res.data.matrixRepresentation;
-            this.$refs.ibm.link = res.data.link;
-            this.$refs.qasm.qasmCode = res.data.qasm;
-          },
-          error => {
-            window.console.log(error);
-          }
-        );
-      } catch (error) {
-        window.console.log("i think there is an error " + error);
-      }
-      //window.console.log(this.jsonObject);
-    },
-    sendSystem: function() {
-      this.sendToServer(appRoute, this.jsonObject);
-    },
+
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
       this.jsonObject.wires = systemObject["wires"];

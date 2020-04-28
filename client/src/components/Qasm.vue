@@ -30,7 +30,6 @@ export default {
     qasm: function() {
       this.qasmFlag = !this.qasmFlag;
       this.$parent.$refs.tracingLine.updateTracingLine();
-      // this.sendSystem();
       if (this.qasmFlag) {
         document.getElementById("qasmToolboxBtn").innerHTML = "⟨ qasm |";
       } else {
@@ -45,7 +44,7 @@ export default {
       };
       axios.post(this.$parent.route, json_object).then(res => {
         if (res.data.qasmError == "") {
-          this.$parent.draw();
+          //this.$parent.draw();
           this.$parent.diracNotationData = res.data.diracNotation;
           this.$parent.matrixRepresentation = res.data.matrixRepresentation;
           this.$parent.$refs.ibm.link = res.data.link;

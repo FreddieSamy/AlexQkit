@@ -8,47 +8,51 @@
 </template>
 <!-- ========================================================== -->
 <script>
+import { mapState ,mapActions } from "vuex"
 export default {
   name: "tracingButtons",
   display: "tracingButtons",
+  computed: {
+    ...mapState(['jsonObject'])
+  },
   methods: {
+    ...mapActions(["runCircuit"]),
     //-----------------------------------------------------------------------
     nextExe: function() {
       if (
-        this.$parent.$parent.jsonObject.exeCount < this.$parent.$parent.jsonObject.colsCount
+        this.jsonObject.exeCount < this.jsonObject.colsCount
       ) {
-        this.$parent.$parent.jsonObject.exeCount++;
+        this.jsonObject.exeCount++;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
-        this.$parent.$parent.sendSystem();
+        this.runCircuit();
       }
     },
     //-----------------------------------------------------------------------
     preExe: function() {
-      if (this.$parent.$parent.jsonObject.exeCount > 0) {
-        this.$parent.$parent.jsonObject.exeCount--;
+      if (this.jsonObject.exeCount > 0) {
+        this.jsonObject.exeCount--;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
-        this.$parent.$parent.sendSystem();
+        this.runCircuit();
       }
     },
     //-----------------------------------------------------------------------
     exeStart: function() {
-      if (this.$parent.$parent.jsonObject.exeCount != 0) {
-        this.$parent.$parent.jsonObject.exeCount = 0;
+      if (this.jsonObject.exeCount != 0) {
+        this.jsonObject.exeCount = 0;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
-        this.$parent.$parent.sendSystem();
+        this.runCircuit();
       }
     },
     //-----------------------------------------------------------------------
     exeEnd: function() {
       if (
-        this.$parent.$parent.jsonObject.exeCount != this.$parent.$parent.jsonObject.colsCount
+        this.jsonObject.exeCount != this.jsonObject.colsCount
       ) {
-        this.$parent.$parent.jsonObject.exeCount = this.$parent.$parent.jsonObject.colsCount;
+        this.jsonObject.exeCount = this.jsonObject.colsCount;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
-        this.$parent.$parent.sendSystem();
+        this.runCircuit();
       }
     }
-    //-----------------------------------------------------------------------
     //-----------------------------------------------------------------------
   }
 };

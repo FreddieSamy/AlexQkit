@@ -21,9 +21,10 @@ export default {
   resetCircuit: ({commit}) => {
     commit('reset')
   },
-  callServer: ({commit}, payload ) => {
-    commit('fetchData', payload)
-  }
+  runCircuit:({commit}) => {
+    commit('sendCircuit')
+  },
+
 
 }
   
