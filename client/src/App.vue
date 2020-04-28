@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-     <Clone ref="clone" />
+      <Clone ref="clone" /> 
   </div>
 </template>
 <script>
