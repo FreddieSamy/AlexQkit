@@ -1,4 +1,5 @@
 
+
 export default {
   setColsCount: ({commit},count)=>{
     commit('setCols', count)
@@ -20,7 +21,10 @@ export default {
   resetCircuit: ({commit}) => {
     commit('reset')
   },
+  callServer: ({commit}, payload ) => {
+    commit('fetchData', payload)
+  }
 
 }
-
+  
 
