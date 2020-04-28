@@ -1,7 +1,7 @@
 <template>
   <div class="toolbox-2">
 
-    <button @click="cloneSendSystem">send</button>
+    <button @click="runCircuit">send</button>
     <button @click="cloneResetSystem">reset system</button>
     <tracingButtons></tracingButtons>
     
@@ -31,7 +31,7 @@
 </template>
 <!-- =============================================================  -->
 <script>
-import { mapState } from "vuex";
+import { mapState , mapActions } from "vuex";
 import tracingButtons from "./tracingButtons.vue";
 export default {
   name: "Toolbox2",
@@ -58,10 +58,7 @@ export default {
     ...mapState(["jsonObject"])
   },
   methods: {
-
-    cloneSendSystem: function() {
-      this.$parent.sendSystem();
-    },
+    ...mapActions(['runCircuit']),
     cloneResetSystem: function() {
       this.selectedAlgorithm = null;
       this.$parent.resetSystem();

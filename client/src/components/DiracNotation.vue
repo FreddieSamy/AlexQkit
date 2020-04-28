@@ -1,19 +1,19 @@
 <template>
   <div class="DiracNotation" id="diracNotation">
     <p class="dirac-label">Dirac Notation :</p>
-    <p class="dirac-value">{{this.value}}</p> 
+    <p class="dirac-value">{{this.liveResults.diracNotation}}</p> 
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
+ import {mapGetters} from "vuex"
+
 export default {
   name: "DiracNotation",
   display: "DiracNotation",
-  data() {
-    return {
-      value: ""
-    };
-  }
+  computed: {
+    ...mapGetters(['liveResults'])
+  },
 };
 </script>
 <!-- =============================================================  -->

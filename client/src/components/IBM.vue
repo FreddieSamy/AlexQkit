@@ -61,7 +61,7 @@ export default {
         var sim = document.getElementById("simulater");
         this.device = sim.options[sim.selectedIndex].value;
         this.$parent.jsonObject.device = this.device;
-        this.$parent.sendSystem();
+        this.$parent.Run();
         document.getElementById("checkbox").checked = false;
       } else {
         alert("make sure to select the checkbox to run on IBMQ devices");
