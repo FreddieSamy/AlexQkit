@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="toolbox-2">
-      <Trash></Trash>
+      <!-- <Trash></Trash> -->
 
       <div class="wires-buttons">
         <Toolbox2
@@ -55,7 +55,7 @@ import Toolbox from "./Toolbox.vue";
 import Toolbox2 from "./Toolbox2.vue";
 import Wire from "./Wire.vue";
 import IBM from "./IBM.vue";
-import Trash from "./Trash.vue";
+//import Trash from "./Trash.vue";
 import axios from "axios";
 //import blochSphere from "./blochSphere.vue";
 //import histoGram from "./histoGram.vue";
@@ -82,7 +82,7 @@ export default {
     IBM,
     CircuitDrawing,
     Wire,
-    Trash,
+    //Trash,
     Toolbox2,
     //blochSphere,
     //histoGram,
