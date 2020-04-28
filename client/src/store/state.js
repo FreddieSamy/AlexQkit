@@ -1,12 +1,11 @@
-import jsonObject from './../data/jsonObject.js'
-import algorithms from './../data/algorithms.js'
-import {states, gates} from './../data/gates_and_states.js'
-import devices from './../data/IBM_Devices.js';
+import algorithms from "./../data/algorithms.js";
+import jsonObject from "./../data/jsonObject.js";
+import {states} from "./../data/gates_and_states.js";
+import results from "./../data/results.js";
 
 export default {
-jsonObject,
-algorithms,
-states,
-gates,
-devices
-}
+  algorithms,
+  jsonObject,
+  states,
+  results
+};

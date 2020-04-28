@@ -1,3 +1,6 @@
+
+import axios from "axios";
+
 export default {
 
   // Setters
@@ -28,5 +31,27 @@ export default {
     state.jsonObject.wires = 2 ;
     state.jsonObject.init = ['0','0'];
     state.jsonObject.rows = [[],[]];
+  },
+
+
+  // Server Functions
+  fetchData:  (state,{route,jsonObject}) => {
+
+
+    try {
+      axios.post(route, jsonObject).then(
+        res => {
+
+          var data = res.data;
+          window.console.log(data)
+          window.console.log(state.results)
+          state.results = data;
+          window.console.log(state.results)
+        },
+      )
+    } catch (error) {
+      window.console.log("i think there is an error " + error);
+    }
+
   }
 };
