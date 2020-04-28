@@ -222,30 +222,35 @@ class Circuit():
 
         temp = circuit.copy()
         temp.remove_final_measurements()
+        arr = []
         if temp == circuit:
             simulator = Aer.get_backend('statevector_simulator')
             result = execute(circuit, backend=simulator).result()
             statevector = result.get_statevector()
-            dic = {}
+            #dic = {}
             for i in range(len(statevector)):
-                state = str(
-                    ("{0:0"+str(circuit.n_qubits).replace('.0000', '')+"b}").format(i))
-                dic[state] = round(abs(statevector[i])**2, 4)
-            return dic
+                state = str(("{0:0"+str(circuit.n_qubits).replace('.0000', '')+"b}").format(i))
+                #dic[state] = round(abs(statevector[i])**2, 4)
+                arr.append([state,round(abs(statevector[i])**2, 4)])
+            print(arr)
+            return arr
             #return plot_histogram(dic, figsize=(max(10, 2**circuit.n_qubits), (6+2**circuit.n_qubits*0.1)))
 
         simulator = Aer.get_backend('qasm_simulator')
         result = execute(circuit, backend=simulator,shots=numberOfShots).result()
         counts = result.get_counts(circuit)
-        dic = {}
+        #dic = {}
         for i in range(2**circuit.n_qubits):
             state = str(("{0:0"+str(circuit.n_qubits).replace('.0000', '')+"b}").format(i))
+           
             if state in counts:
-                dic[state] = counts[state]/numberOfShots
+                #dic[state] = counts[state]/numberOfShots
+                arr.append([state,counts[state]/numberOfShots])
             else:
-                dic[state] = 0.0
-        print(dic)
-        return dic
+                #dic[state] = 0.0
+                arr.append([state,0.0])
+        print(arr)
+        return arr
         #return plot_histogram(dic, figsize=(max(10, 2**circuit.n_qubits), (6+2**circuit.n_qubits*0.1)))
 
 ###############################################################################################################################
