@@ -92,7 +92,7 @@ export default {
     tracingLine
   },
   mounted() {
-    this.runCircuit();
+    //this.runCircuit();
   },
   data() {
     return {
