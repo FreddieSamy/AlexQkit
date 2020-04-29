@@ -424,12 +424,13 @@ export default {
 }
 .matrix {
   flex-basis: 40%;
-  border:1px solid black;
+  
 
 }
 .histogram {
  flex-basis: 55%;
- border:1px solid black;
+ justify-self: center;
+ 
 }
 
 button {

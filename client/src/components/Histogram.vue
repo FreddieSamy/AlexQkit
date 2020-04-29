@@ -1,5 +1,5 @@
 <template>
-  <div class="histogram">
+  <div class="histogram-box">
     <GChart style="width:500px" type="ColumnChart" :data="chart" :options="chartOptions" />
   </div>
 </template>
@@ -35,5 +35,9 @@ export default {
 </script>
 <!-- ========================================================== -->
 <style scoped>
-
+.histogram-box{
+  display: flex;
+  align-self: center;
+  justify-content: center;
+}
 </style>
