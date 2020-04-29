@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <!-- <Histogram /> -->
+
 
     <div class="visual-row">
       <DiracNotation ref="diracNotation" />
@@ -39,7 +39,6 @@
 
     <!--
     <div class="visual-row">
-      <histoGram></histoGram>
       <blochSphere></blochSphere>
     </div>
     -->
@@ -58,7 +57,7 @@ import IBM from "./IBM.vue";
 import Trash from "./Trash.vue";
 import axios from "axios";
 //import blochSphere from "./blochSphere.vue";
-//import histoGram from "./histoGram.vue";
+
 import Histogram from "./Histogram.vue";
 import DiracNotation from "./DiracNotation.vue";
 import CircuitDrawing from "./CircuitDrawing.vue";
@@ -68,7 +67,7 @@ import Qasm from "./Qasm.vue";
 import { mapState, mapActions } from "vuex";
 import {
   
-  histogramRoute, // delete
+
   blockSphereRoute, // delete
   qasmCircuitRoute,
   elementaryGates
@@ -213,8 +212,6 @@ export default {
     //-----------------------------------------------------------------------
     // will be terminated
     draw: function() {
-      var imgOfHistoGram = document.getElementById("chart");
-      imgOfHistoGram.src = histogramRoute + new Date();
 
       var imgofblochSphere = document.getElementById("bloch");
       imgofblochSphere.src = blockSphereRoute + new Date();
