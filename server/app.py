@@ -81,6 +81,19 @@ def isUnitary():
         #print(matrix,is_unitary_matrix(matrix),jsonify({"isUnitary":is_unitary_matrix(matrix)}))
         return jsonify({"isUnitary":is_unitary_matrix(matrix)})
 
+@app.route('/matrixRepresentation',methods=['GET','POST'])
+def createMatrix():
+    if request.method=='POST':
+        recievedDic=request.get_json()
+        #print("recieved data from Vue : ",recievedDic[0])
+        #print(recievedDic)
+        c.createMatrix(recievedDic)
+        #print("retrived data from qiskit : ",c.returnedDictionary)
+    else:
+        c.returnedDictionary={}
+    #print(c.returnedDictionary)
+    return  jsonify(c.returnedDictionary) 
+
 @app.route('/qasm',methods=['GET','POST'])
 def qasm():
     if request.method=='POST':
@@ -104,7 +117,7 @@ def draggableCircuit():
         recievedDic=request.get_json()
         #print("recieved data from Vue : ",recievedDic[0])
         #print(recievedDic)
-        c.createCircuit(recievedDic)
+        c.draggable(recievedDic)
         #print("retrived data from qiskit : ",c.returnedDictionary)
     else:
         c.returnedDictionary={}

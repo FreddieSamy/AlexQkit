@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="toolbox-2">
-    <Trash></Trash> 
+      <Trash></Trash>
 
       <div class="wires-buttons">
         <Toolbox2
@@ -30,8 +30,6 @@
         />
       </div>
     </div>
-
-
 
     <div class="visual-row">
       <DiracNotation ref="diracNotation" />
@@ -66,8 +64,6 @@ import tracingLine from "./tracingLine.vue";
 import Qasm from "./Qasm.vue";
 import { mapState, mapActions } from "vuex";
 import {
-  
-
   blockSphereRoute, // delete
   qasmCircuitRoute,
   elementaryGates
@@ -95,11 +91,10 @@ export default {
     //this.runCircuit();
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
-    ...mapState(["jsonObject"]),
+    ...mapState(["jsonObject"])
   },
 
   methods: {
@@ -125,7 +120,7 @@ export default {
 
       this.$refs.tracingLine.updateTracingLine(); //update the tracing line
       this.controlSystem();
-  
+
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
     },
@@ -140,7 +135,6 @@ export default {
       this.$refs.tracingLine.updateTracingLine();
       this.removeControlSystem();
       this.runCircuit();
-
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -212,7 +206,6 @@ export default {
     //-----------------------------------------------------------------------
     // will be terminated
     draw: function() {
-
       var imgofblochSphere = document.getElementById("bloch");
       imgofblochSphere.src = blockSphereRoute + new Date();
 
@@ -377,9 +370,8 @@ export default {
 .ibm {
   flex-basis: 37%;
 }
-.circuit{
-  
-  border:0px dashed grey;
+.circuit {
+  border: 0px dashed grey;
   /*
   width: 150%;
   overflow: auto
@@ -424,13 +416,10 @@ export default {
 }
 .matrix {
   flex-basis: 40%;
-  
-
 }
 .histogram {
- flex-basis: 55%;
- justify-self: center;
- 
+  flex-basis: 55%;
+  justify-self: center;
 }
 
 button {
