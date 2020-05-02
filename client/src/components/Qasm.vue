@@ -13,6 +13,7 @@ import "prismjs/themes/prism.css";
 import "vue-prism-editor/dist/VuePrismEditor.css";
 import PrismEditor from "vue-prism-editor";
 import axios from "axios";
+import { qasmRoute } from "./../data/routes.js";
 
 export default {
   name: "qasm",
@@ -40,9 +41,10 @@ export default {
     sendQasm: function() {
       // window.console.log(this.qasmCode);
       let json_object = {
-        qasm: this.qasmCode
+        qasm: this.qasmCode,
+        shots: this.$parent.jsonObject.shots
       };
-      axios.post(this.$parent.route, json_object).then(res => {
+      axios.post(qasmRoute, json_object).then(res => {
         if (res.data.qasmError == "") {
           //this.$parent.draw();
           this.$parent.diracNotationData = res.data.diracNotation;
