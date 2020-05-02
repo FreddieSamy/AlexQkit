@@ -1,7 +1,12 @@
 <template>
   <div class="editor" v-if="qasmFlag">
     <div class="qasm">
-      <prism-editor :lineNumbers="true" :code="qasmCode" v-model="qasmCode" language="js"></prism-editor>
+      <prism-editor
+        :lineNumbers="true"
+        :code="liveResults.qasm"
+        v-model="liveResults.qasm"
+        language="js"
+      ></prism-editor>
     </div>
     <button class="qasmBtn" @click="sendQasm">Run</button>
   </div>
@@ -14,16 +19,19 @@ import "vue-prism-editor/dist/VuePrismEditor.css";
 import PrismEditor from "vue-prism-editor";
 import axios from "axios";
 import { qasmRoute } from "./../data/routes.js";
+import { mapGetters } from "vuex";
 
 export default {
   name: "qasm",
   display: "qasm",
   data() {
     return {
-      qasmCode: "",
       qasmFlag: false,
       qasmIncludeIfFlag: false
     };
+  },
+  computed: {
+    ...mapGetters(["liveResults"])
   },
   components: { PrismEditor },
   methods: {
@@ -41,7 +49,7 @@ export default {
     sendQasm: function() {
       // window.console.log(this.qasmCode);
       let json_object = {
-        qasm: this.qasmCode,
+        qasm: this.liveResults.qasm,
         shots: this.$parent.jsonObject.shots
       };
       axios.post(qasmRoute, json_object).then(res => {
