@@ -87,7 +87,7 @@ def run():
     if request.method=='POST':
         recievedDic=request.get_json()
         #print("recieved data from Vue : ",recievedDic[0])
-        print(recievedDic)
+        #print(recievedDic)
         if "qasm" in recievedDic:
             try:
                 c.qasm(recievedDic)
@@ -126,4 +126,4 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 print(datetime.now() - startTime)
-print(c.returnedDictionary['chart'])
+#print(c.returnedDictionary['chart'])
