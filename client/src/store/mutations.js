@@ -54,7 +54,9 @@ export default {
       )
     } catch (error) {
       window.console.log("i think there is an error " + error);
+      return false;
     }
+    return true;
 
   },
 };

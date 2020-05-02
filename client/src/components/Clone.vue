@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="toolbox-2">
-    <Trash></Trash> 
+      <Trash></Trash>
 
       <div class="wires-buttons">
         <Toolbox2
@@ -30,8 +30,6 @@
         />
       </div>
     </div>
-
-
 
     <div class="visual-row">
       <DiracNotation ref="diracNotation" />
@@ -46,6 +44,7 @@
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
       <Histogram class="histogram" />
     </div>
+    <button @click="test">Test</button>
   </div>
 </template>
 <!-- =============================================================  -->
@@ -64,14 +63,13 @@ import CircuitDrawing from "./CircuitDrawing.vue";
 import MatrixRepresentation from "./MatrixRepresentation.vue";
 import tracingLine from "./tracingLine.vue";
 import Qasm from "./Qasm.vue";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 import {
-  
-
   blockSphereRoute, // delete
   qasmCircuitRoute,
   elementaryGates
 } from "./../data/routes.js";
+// import { testCases } from "../test/test_circiut";
 
 export default {
   name: "clone",
@@ -95,11 +93,11 @@ export default {
     //this.runCircuit();
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     ...mapState(["jsonObject"]),
+    ...mapGetters(["liveResults"])
   },
 
   methods: {
@@ -125,7 +123,7 @@ export default {
 
       this.$refs.tracingLine.updateTracingLine(); //update the tracing line
       this.controlSystem();
-  
+
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
     },
@@ -140,7 +138,6 @@ export default {
       this.$refs.tracingLine.updateTracingLine();
       this.removeControlSystem();
       this.runCircuit();
-
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
@@ -199,6 +196,7 @@ export default {
 
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
+     
       this.jsonObject.wires = systemObject["wires"];
       this.$nextTick(() => {
         for (let row = 0; row < this.jsonObject.wires; row++) {
@@ -212,7 +210,6 @@ export default {
     //-----------------------------------------------------------------------
     // will be terminated
     draw: function() {
-
       var imgofblochSphere = document.getElementById("bloch");
       imgofblochSphere.src = blockSphereRoute + new Date();
 
@@ -348,8 +345,34 @@ export default {
           this.setAlgorithm(this.jsonObject);
         });
       }
-    }
+    },
     //-----------------------------------------------------------------------
+    test: function() {
+      //window.console.log("hello world")
+  
+
+
+      // for (let i = 0; i < testCases.length-3 ; i++) {
+      //   this.setAlgorithm(testCases[i].circuit);
+
+
+     
+  
+      //   //this.runCircuit();
+      //   // window.console.log("model  answer :" + testCases[i].result);
+      //   // window.console.log(
+      //   //       "output answer :" + this.liveResults.diracNotation)
+
+      //   // this.$nextTick(() => {
+      //   //   this.$nextTick(() => {
+      //   //     window.console.log("model  answer :" + testCases[i].result);
+      //   //     window.console.log(
+      //   //       "output answer :" + this.liveResults.diracNotation
+      //   //     );
+      //   //   });
+      //   // });
+      // }
+    }
   }
 };
 </script>
@@ -377,9 +400,8 @@ export default {
 .ibm {
   flex-basis: 37%;
 }
-.circuit{
-  
-  border:0px dashed grey;
+.circuit {
+  border: 0px dashed grey;
   /*
   width: 150%;
   overflow: auto
@@ -424,13 +446,10 @@ export default {
 }
 .matrix {
   flex-basis: 40%;
-  
-
 }
 .histogram {
- flex-basis: 55%;
- justify-self: center;
- 
+  flex-basis: 55%;
+  justify-self: center;
 }
 
 button {
