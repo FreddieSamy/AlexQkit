@@ -55,9 +55,13 @@ export default {
       axios.post(qasmRoute, json_object).then(res => {
         if (res.data.qasmError == "") {
           //this.$parent.draw();
-          this.$parent.diracNotationData = res.data.diracNotation;
-          this.$parent.matrixRepresentation = res.data.matrixRepresentation;
-          this.$parent.$refs.ibm.link = res.data.link;
+
+          this.liveResults.probabilities = res.data.probabilities;
+          this.liveResults.blochSpheres = res.data.blochSpheres;
+          this.liveResults.chart = res.data.chart;
+          this.liveResults.diracNotation = res.data.diracNotation;
+          this.liveResults.matrixRepresentation = res.data.matrixRepresentation;
+          // this.$parent.$refs.ibm.link = res.data.link;
           if (this.qasmFlag) {
             this.qasmCode = res.data.qasm;
             this.qasmIncludeIfFlag = this.qasmCode.includes("if");

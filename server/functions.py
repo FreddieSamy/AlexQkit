@@ -500,8 +500,7 @@ class Circuit():
         self.returnedDictionary["probabilities"] = self.separatedProbabilities(circuit,stateVector)
         self.returnedDictionary["blochSpheres"] = self.separatedBlochSpheres(circuit,stateVector)
         self.returnedDictionary["diracNotation"] = self.diracNotation(circuit,reversedStateVector)
-        self.returnedDictionary["qasm"] = receivedDictionary["qasm"]
-        self.returnedDictionary["link"] = ""
+        #self.returnedDictionary["link"] = ""
         self.returnedDictionary['chart'] = self.graph(circuit, shots,reversedStateVector)
         self.returnedDictionary["qasmRows"] = np.transpose(cols).tolist()
         
