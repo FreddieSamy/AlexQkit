@@ -101,23 +101,29 @@ class Circuit():
 ###############################################################################################################################
 
     def separatedProbabilities(self,circuit,statevector):
-        import numpy as np
         res=[]
         for j in range(circuit.num_qubits):
-            vector=[0,0] 
+            #vector=[0,0] 
+            val=0
             for i in range(len(statevector)):
                 pos=str(("{0:0"+str(circuit.num_qubits).replace('.0000','')+"b}").format(i))
-                if pos[j]=='0':
-                    vector[0]+=abs(statevector[i])**2
-                else:
-                    vector[1]+=abs(statevector[i])**2
-            vector[0]=np.around(vector[0], 8)
-            vector[1]=np.around(vector[1], 8)
-            res=[vector]+res
+                if pos[j]=='1':
+                    #vector[1]+=abs(statevector[i])**2        
+                    val+=abs(statevector[i])**2
+                #else:
+                    #vector[0]+=abs(statevector[i])**2
+                    
+            """vector[0]=round(vector[0], 4)
+            vector[1]=round(vector[1], 4)
+            res=[vector]+res"""
+            
+            val=round(val*100, 2)
+            res.insert(0,val)
             #separated state vectors
             """vector[0]=np.around(vector[0]**0.5, 8)
             vector[1]=np.around(vector[1]**0.5, 8)
             res=[vector]+res"""
+            #print(res)
         return res
     
 ###############################################################################################################################
@@ -641,6 +647,7 @@ class Circuit():
         return fractional_matrix_power(a, 0.5).tolist()
 
 ###############################################################################################################################
+    #kotta
     def repettion(self, circuitList, listOfPositions, listOfNumberOfRepetition):
         import numpy as np
         dic = self.dicOfBlockAndPosition(circuitList, listOfPositions, listOfNumberOfRepetition)
