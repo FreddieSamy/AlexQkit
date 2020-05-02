@@ -36,7 +36,6 @@
       :group="{ name: 'gates', pull: 'clone', put: false }"
       :clone="cloneGate"
       @change="log"
-  
     >
       <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
         <div
@@ -54,6 +53,11 @@
     <div class="user-tools">
       <div class="qasm-box">
         <button id="qasmToolboxBtn" class="qasm" @click="$parent.$refs.qasm.qasm()">| qasm ⟩</button>
+        <!-- to Mario .. freddie added this button !! -->
+        <button
+          class="qasm"
+          @click="$parent.$refs.matrixRepresentation.openNav()"
+        >Matrix Representation</button>
       </div>
 
       <div class="circiut-loop">
@@ -95,7 +99,7 @@
 import draggable from "vuedraggable";
 import addcustomgate from "./addcustomgate";
 import Circiutloops from "./CircuitLoops.vue";
-import { gates } from "./../data/gates_and_states"
+import { gates } from "./../data/gates_and_states";
 
 export default {
   name: "Toolbox",
@@ -107,14 +111,13 @@ export default {
   },
   data() {
     return {
-      gates:gates,
-      customGates: [],
+      gates: gates,
+      customGates: []
     };
   },
   methods: {
     log: function() {
       this.$parent.$refs.qasm.qasmIncludeIfFlag = false;
-      
     },
     // ----------------------------------------------------
     cloneGate({ name }) {
@@ -189,7 +192,7 @@ export default {
   justify-content: flex-start;
   align-items: baseline;
 }
-.custom-gates span{
+.custom-gates span {
   display: flex;
 }
 
@@ -290,7 +293,7 @@ export default {
 #hover-div:hover #hover-element {
   display: block;
 }
-button{
-  border:2px solid grey;
+button {
+  border: 2px solid grey;
 }
 </style>
