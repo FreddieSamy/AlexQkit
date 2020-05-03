@@ -101,23 +101,29 @@ class Circuit():
 ###############################################################################################################################
 
     def separatedProbabilities(self,circuit,statevector):
-        import numpy as np
         res=[]
         for j in range(circuit.num_qubits):
-            vector=[0,0] 
+            #vector=[0,0] 
+            val=0
             for i in range(len(statevector)):
                 pos=str(("{0:0"+str(circuit.num_qubits).replace('.0000','')+"b}").format(i))
-                if pos[j]=='0':
-                    vector[0]+=abs(statevector[i])**2
-                else:
-                    vector[1]+=abs(statevector[i])**2
-            vector[0]=np.around(vector[0], 8)
-            vector[1]=np.around(vector[1], 8)
-            res=[vector]+res
+                if pos[j]=='1':
+                    #vector[1]+=abs(statevector[i])**2        
+                    val+=abs(statevector[i])**2
+                #else:
+                    #vector[0]+=abs(statevector[i])**2
+                    
+            """vector[0]=round(vector[0], 4)
+            vector[1]=round(vector[1], 4)
+            res=[vector]+res"""
+            
+            val=round(val*100, 2)
+            res.insert(0,val)
             #separated state vectors
             """vector[0]=np.around(vector[0]**0.5, 8)
             vector[1]=np.around(vector[1]**0.5, 8)
             res=[vector]+res"""
+            #print(res)
         return res
     
 ###############################################################################################################################
@@ -379,6 +385,7 @@ class Circuit():
 ###############################################################################################################################
 
     def createCircuit(self, receivedDictionary):
+        print("createCircuit")
         from qiskit import QuantumCircuit
         import numpy as np
 
@@ -388,15 +395,7 @@ class Circuit():
         radian = True
         if "radian" in receivedDictionary:
             radian = receivedDictionary["radian"]
-        
-        device = 'ibmq_16_melbourne'
-        if "device" in receivedDictionary:
-            device = receivedDictionary["device"]
-            
-        shots = 1024
-        if "shots" in receivedDictionary:
-            shots = receivedDictionary["shots"]
-            
+                
         customGates = None
         if "custom" in receivedDictionary:
             customGates = receivedDictionary["custom"]
@@ -427,7 +426,22 @@ class Circuit():
                 circuit=self.controlledColumns(circuit, cols[i], customGates, radian)
             else:
                 circuit=self.nonControlledColumns(circuit, cols[i], customGates, radian)
+                
+        return circuit,resetExist
         
+###############################################################################################################################
+
+    def draggable(self, receivedDictionary):
+        
+        device = 'ibmq_16_melbourne'
+        if "device" in receivedDictionary:
+            device = receivedDictionary["device"]
+            
+        shots = 1024
+        if "shots" in receivedDictionary:
+            shots = receivedDictionary["shots"]
+        
+        circuit=self.createCircuit(receivedDictionary)[0]
         stateVector=self.stateVector(circuit)
         reversedStateVector=self.reversedStateVector(stateVector,circuit.num_qubits)
         
@@ -438,16 +452,20 @@ class Circuit():
         self.returnedDictionary["link"] = ""
         self.returnedDictionary['chart'] = self.graph(circuit, shots,reversedStateVector)
         
-        if not resetExist:
-            self.returnedDictionary["matrixRepresentation"] = self.matrixRepresentation(circuit)  #separated reversed circuit
-        else:
-            self.returnedDictionary["matrixRepresentation"] = "you can't get matrixRepresentation while using reset gate"
         
         if "API_TOKEN" in receivedDictionary:
             if receivedDictionary["API_TOKEN"] != "":
                 self.returnedDictionary["link"] = self.runOnIBMQ(receivedDictionary["API_TOKEN"], circuit, shots, device)
 
-
+###############################################################################################################################
+    def createMatrix(self,receivedDictionary):
+        print("createMatrix")
+        circuit,resetExist=self.createCircuit(receivedDictionary)
+    
+        if not resetExist:
+            self.returnedDictionary["matrixRepresentation"] = self.matrixRepresentation(circuit)  #separated reversed circuit
+        else:
+            self.returnedDictionary["matrixRepresentation"] = "you can't get matrixRepresentation while using reset gate"
 ###############################################################################################################################
 
     def getGates(self, circuit):
@@ -494,8 +512,7 @@ class Circuit():
         self.returnedDictionary["probabilities"] = self.separatedProbabilities(circuit,stateVector)
         self.returnedDictionary["blochSpheres"] = self.separatedBlochSpheres(circuit,stateVector)
         self.returnedDictionary["diracNotation"] = self.diracNotation(circuit,reversedStateVector)
-        self.returnedDictionary["qasm"] = receivedDictionary["qasm"]
-        self.returnedDictionary["link"] = ""
+        #self.returnedDictionary["link"] = ""
         self.returnedDictionary['chart'] = self.graph(circuit, shots,reversedStateVector)
         self.returnedDictionary["qasmRows"] = np.transpose(cols).tolist()
         
@@ -641,6 +658,7 @@ class Circuit():
         return fractional_matrix_power(a, 0.5).tolist()
 
 ###############################################################################################################################
+    #kotta
     def repettion(self, circuitList, listOfPositions, listOfNumberOfRepetition):
         import numpy as np
         dic = self.dicOfBlockAndPosition(circuitList, listOfPositions, listOfNumberOfRepetition)

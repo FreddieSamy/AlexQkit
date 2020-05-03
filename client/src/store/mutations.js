@@ -43,8 +43,6 @@ export default {
   },
 
 
-
-
   // Server Functions
   sendCircuit:  (state) => {
     try {
@@ -57,6 +55,5 @@ export default {
       return false;
     }
     return true;
-
   },
 };
