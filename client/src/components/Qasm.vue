@@ -1,7 +1,12 @@
 <template>
   <div class="editor" v-if="qasmFlag">
     <div class="qasm">
-      <prism-editor :lineNumbers="true" :code="qasmCode" v-model="qasmCode" language="js"></prism-editor>
+      <prism-editor
+        :lineNumbers="true"
+        :code="liveResults.qasm"
+        v-model="liveResults.qasm"
+        language="js"
+      ></prism-editor>
     </div>
     <button class="qasmBtn" @click="sendQasm">Run</button>
   </div>
@@ -13,16 +18,20 @@ import "prismjs/themes/prism.css";
 import "vue-prism-editor/dist/VuePrismEditor.css";
 import PrismEditor from "vue-prism-editor";
 import axios from "axios";
+import { qasmRoute } from "./../data/routes.js";
+import { mapGetters } from "vuex";
 
 export default {
   name: "qasm",
   display: "qasm",
   data() {
     return {
-      qasmCode: "",
       qasmFlag: false,
       qasmIncludeIfFlag: false
     };
+  },
+  computed: {
+    ...mapGetters(["liveResults"])
   },
   components: { PrismEditor },
   methods: {
@@ -40,14 +49,19 @@ export default {
     sendQasm: function() {
       // window.console.log(this.qasmCode);
       let json_object = {
-        qasm: this.qasmCode
+        qasm: this.liveResults.qasm,
+        shots: this.$parent.jsonObject.shots
       };
-      axios.post(this.$parent.route, json_object).then(res => {
+      axios.post(qasmRoute, json_object).then(res => {
         if (res.data.qasmError == "") {
           //this.$parent.draw();
-          this.$parent.diracNotationData = res.data.diracNotation;
-          this.$parent.matrixRepresentation = res.data.matrixRepresentation;
-          this.$parent.$refs.ibm.link = res.data.link;
+
+          this.liveResults.probabilities = res.data.probabilities;
+          this.liveResults.blochSpheres = res.data.blochSpheres;
+          this.liveResults.chart = res.data.chart;
+          this.liveResults.diracNotation = res.data.diracNotation;
+          this.liveResults.matrixRepresentation = res.data.matrixRepresentation;
+          // this.$parent.$refs.ibm.link = res.data.link;
           if (this.qasmFlag) {
             this.qasmCode = res.data.qasm;
             this.qasmIncludeIfFlag = this.qasmCode.includes("if");
