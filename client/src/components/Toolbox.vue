@@ -123,6 +123,9 @@ export default {
     log: function() {
       this.$parent.$refs.qasm.qasmIncludeIfFlag = false;
     },
+    setAlgo:function(circiut){
+      this.$parent.setAlgorithm(circiut);
+    },
     // ----------------------------------------------------
     cloneGate({ name }) {
       if (name == "rx") {

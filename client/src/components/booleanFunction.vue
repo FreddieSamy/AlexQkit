@@ -3,18 +3,15 @@
     <div id="myNav3" class="overlay" style="width:0%">
       <a href="javascript:void(0)"  class="closebtn" @click="closeNav()">&#10006;</a>
 
-      <div class="column">
+      <div class="boolean">
         <input type="text" id="variables" placeholder="x1,x2,x3" required /> 
         <input type="text" id="booleanfunction"  placeholder="not x1 or x2 and x3" required />
-        <br />
-        <button >create</button> 
+        <button @click="createBooleanCircuit()">create</button> 
         <!-- @click="createBooleanCircuit()" -->
       </div>
-
-    
     </div>
     <div> 
-        <button  @click="openNav()" class=""> Boolean</button>
+        <button  @click="openNav()" class=""> Boolean Function</button>
         
     </div>
   </div>
@@ -22,7 +19,7 @@
 
 <script>
 
-//import axios from "axios";
+import axios from "axios";
 export default {
   name: "createBoolean",
   display: "createBoolean",
@@ -35,12 +32,15 @@ export default {
     };
   },
   methods: {
-      // createBooleanCircuit(){
-      //       axios.post("http://127.0.0.1:5000/booleanExpression", json_object).then(res => {
-      //       /*window.console.log(res.data);*/
-           
-      //     });
-      // },
+       createBooleanCircuit(){
+         var variables = document.getElementById("variables").value;
+         var booleanfunction = document.getElementById("booleanfunction").value;
+            axios.post("http://127.0.0.1:5000/booleanExpression", {vars: variables ,fn:booleanfunction}).then(res => {
+            window.console.log(res.data);
+            this.$parent.setAlgo(res.data);
+           });
+           this.closeNav();
+       },
     openNav() {
       document.getElementById("myNav3").style.width = "100%";
      // document.getElementById("variables").value = null;
@@ -103,6 +103,7 @@ export default {
     right: 35px;
   }
 }
+
 
 
     </style>
