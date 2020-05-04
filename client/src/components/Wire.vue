@@ -70,17 +70,23 @@ export default {
       immediate: true,
       handler() {
         this.updateWireAttributes();
-        // //window.console.log("hello from wire "+this.id)
-        // this.$nextTick(() => {
-        //   if (this.id == this.$parent.jsonObject.wires) {
-        //     //window.console.log("wire :"+this.id+" send the system");
-        //     //this.$parent.controlSystem();
-        //     //this.runCircuit();
-        //     //window.console.log("hello watcher of "+this.id)
-        //   }
+        // window.console.log("hello from wire "+this.id)
+         this.$nextTick(() => {
+           if (this.id == this.$parent.jsonObject.wires) {
+             //window.console.log("wire :"+this.id+" send the system");
+             //this.$parent.controlSystem();
+             //this.runCircuit();
+             //window.console.log("hello watcher of "+this.id)
+
+
+           }
           
-        // });
-      }
+         });
+          
+  // To Mario    
+  //  this.findswap(); 
+
+    }
     },
   },
 
@@ -97,6 +103,39 @@ export default {
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
     },
+    //-----------------------------------------------------------------------
+    findswap:function(){
+      //window.console.log(this.$parent.jsonObject);
+      for (let rowsx = 0; rowsx < this.$parent.jsonObject.rows.length; rowsx++){
+        
+          
+          if(this.$parent.jsonObject.rows[rowsx][0]=="swap"){
+             window.console.log(this.$parent.jsonObject.rows[rowsx][0]);
+          
+             window.console.log("rows="+rowsx+"column 0");
+           //this.helperswapcols(rowsx,0);
+          }  
+        
+      }
+    },
+   //------------------------------------------------------------------------- 
+    // helperswapcols:function(rowindex,columnindex){
+    //  var countswaps=0;
+    //   for (let rowsx = 0; rowsx < this.$parent.jsonObject.rows.length; rowsx++){
+    //     if(rowindex==rowsx){
+    //       continue;
+    //     }
+    //     else{
+    //       if(this.$parent.jsonObject.rows[rowindex][columnindex]=="swap"){
+    //         countswaps=countswaps+1;
+
+    //       }
+    //     }
+
+    //   }
+    //   window.console.log(countswaps);
+
+    // },
     //-----------------------------------------------------------------------
     update: function() {
       this.$parent.updateMaxWire();
