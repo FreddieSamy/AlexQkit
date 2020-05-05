@@ -118,7 +118,7 @@ def draggableCircuit():
         recievedDic=request.get_json()
         #print("recieved data from Vue : ",recievedDic[0])
         #print(recievedDic)
-        c.draggable(recievedDic)
+        c.createCircuit(recievedDic)
         #print("retrived data from qiskit : ",c.returnedDictionary)
     else:
         c.returnedDictionary={}
