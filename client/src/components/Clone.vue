@@ -44,7 +44,9 @@
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
       <Histogram class="histogram" />
     </div>
+    <!--
     <button @click="test">Test</button>
+    -->
   </div>
 </template>
 <!-- =============================================================  -->
