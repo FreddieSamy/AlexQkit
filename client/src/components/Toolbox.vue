@@ -58,7 +58,9 @@
           class="qasm"
           @click="$parent.$refs.matrixRepresentation.openNav()"
         >Matrix Representation</button>
-      </div>
+      </div> 
+      <!-- to mario from hassan -->
+      <booleanFunction ref="createBoolean" class=""/> 
 
       <div class="circiut-loop">
         <Circiutloops :colsCount="this.$parent.jsonObject.colsCount" />
@@ -99,6 +101,7 @@
 import draggable from "vuedraggable";
 import addcustomgate from "./addcustomgate";
 import Circiutloops from "./CircuitLoops.vue";
+import booleanFunction from "./booleanFunction.vue";
 import { gates } from "./../data/gates_and_states";
 
 export default {
@@ -107,7 +110,8 @@ export default {
   components: {
     draggable,
     addcustomgate,
-    Circiutloops
+    Circiutloops,
+    booleanFunction
   },
   data() {
     return {
@@ -118,6 +122,9 @@ export default {
   methods: {
     log: function() {
       this.$parent.$refs.qasm.qasmIncludeIfFlag = false;
+    },
+    setAlgo:function(circiut){
+      this.$parent.setAlgorithm(circiut);
     },
     // ----------------------------------------------------
     cloneGate({ name }) {
@@ -296,4 +303,5 @@ export default {
 button {
   border: 2px solid grey;
 }
+
 </style>

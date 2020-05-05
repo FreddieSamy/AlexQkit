@@ -5,10 +5,14 @@
     <div class="circuit-tools">
       <Toolbox ref="toolbox" />
       <IBM class="ibm" ref="ibm" />
+     
     </div>
 
     <div class="circuit">
       <Qasm ref="qasm" />
+      
+
+      
       <tracingLine ref="tracingLine"></tracingLine>
       <CircuitDrawing v-if="this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })" />
       <!-- ------------ circiutloops & wires ------------->
@@ -42,11 +46,9 @@
     -->
     <div class="results">
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
-      <Histogram class="histogram" />
+        <Histogram class="histogram" />  
     </div>
-    <!--
-    <button @click="test">Test</button>
-    -->
+    
   </div>
 </template>
 <!-- =============================================================  -->
@@ -64,6 +66,7 @@ import DiracNotation from "./DiracNotation.vue";
 import CircuitDrawing from "./CircuitDrawing.vue";
 import MatrixRepresentation from "./MatrixRepresentation.vue";
 import tracingLine from "./tracingLine.vue";
+
 import Qasm from "./Qasm.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
 import {
@@ -86,10 +89,11 @@ export default {
     //blochSphere,
     //histoGram,
     DiracNotation,
-    Histogram,
+   Histogram,
     MatrixRepresentation,
     Qasm,
-    tracingLine
+    tracingLine,
+    
   },
   mounted() {
     //this.runCircuit();
