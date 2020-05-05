@@ -27,13 +27,17 @@
       ></div>
     </draggable>
 
-      <img src="../assets/b.png" alt="">
+    <Probability class="Probability"  :percent=this.liveResults.probabilities[id-1] />
+    <BlochSphere class="bloch-sphere" />
+
 
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import draggable from "vuedraggable";
+import Probability from "../components/Probability";
+import BlochSphere from "../components/BlochSphere"
 import { mapActions, mapGetters } from "vuex";
 import { states } from "./../data/gates_and_states";
 
@@ -41,7 +45,9 @@ export default {
   name: "wire",
   display: "wire",
   components: {
-    draggable
+    draggable,
+    Probability,
+    BlochSphere
   },
   props: ["id"],
   created: function() {
@@ -57,7 +63,7 @@ export default {
     this.$parent.controlSystem()
   },  
   computed :{
-    ...mapGetters(['wiresCount'])
+    ...mapGetters(['liveResults'])
   },
   data() {
     return {
@@ -232,6 +238,27 @@ export default {
   display: flex;
   align-items: flex-start;
   height: 45px;
+  background-size: contain;
+  background-image: url("../assets/wire.png");
+
+}
+.wire-drop-area {
+  height: 40px;
+  flex-basis: 40%;
+  margin: 0px 30px 0px 0px;
+  display: flex;
+  
+}
+.qubit {
+  float: left;
+  margin: 0px;
+  padding: 0px;
+  width: 3em;
+  height: 3em;
+  display: inline-table;
+}
+.Probability{
+  align-self: center;
 }
 .circuit-gate {
   color: white;
@@ -286,14 +313,7 @@ div[id^="rz"] {
 .lbl-wire {
   margin: 0.8em 0.5em 0.5em 0.5em;
 }
-.qubit {
-  float: left;
-  margin: 0em 0em 0em 0em;
-  padding: 0em 0em 0em 0em;
-  width: 3em;
-  height: 3em;
-  display: inline-table;
-}
+
 .qubitState {
   margin: 0.5em 0em 0em 0em;
   border-radius: 0.5em;
@@ -323,14 +343,6 @@ div[id^="rz"] {
   font-size: 0.6em;
   /*opacity:0.4;*/
 }
-.wire-drop-area {
-  height: 40px;
-  width: 100%;
-  display: inline-flex;
-  background-size: contain;
-  background-image: url("../assets/wire.png");
-}
-
 img{
   width: 40px;
   height: 40px
