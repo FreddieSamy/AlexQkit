@@ -144,7 +144,6 @@ class Circuit():
 ###############################################################################################################################
 
     def separatedBlochSpheres(self, circuit, statevector):
-        import cmath
         print("separatedBlochSpheres")
         from qiskit.quantum_info import partial_trace
         pos = list(range(circuit.num_qubits))
@@ -153,12 +152,9 @@ class Circuit():
             [[a, b], [c, d]] = partial_trace(
                 statevector, pos[:i]+pos[i+1:]).data
             x = 2*b.real
-            #y = 2*c.imag
+            y = 2*c.imag
             z = a.real-d.real
-            #res.append([x, y, z])
-            theta=cmath.acos(z)
-            phi=cmath.acos(x/cmath.sin(theta))
-            res.append([theta,phi])
+            res.append([x, y, z])
         return res
 
 ###############################################################################################################################
