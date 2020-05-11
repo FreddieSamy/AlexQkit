@@ -27,8 +27,7 @@
       ></div>
     </draggable>
 
-      <img src="../assets/b.png" alt="">
-
+    <img src="../assets/b.png" alt />
   </div>
 </template>
 <!-- =============================================================  -->
@@ -50,14 +49,18 @@ export default {
     //this.setWire(wire);
   },
   updated() {
-    let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
+    let wire = {
+      qstate: this.state,
+      list: this.getGates(this.id - 1),
+      idx: this.id - 1
+    };
     this.setWire(wire);
   },
-  destroyed(){
-    this.$parent.controlSystem()
-  },  
-  computed :{
-    ...mapGetters(['wiresCount'])
+  destroyed() {
+    this.$parent.controlSystem();
+  },
+  computed: {
+    ...mapGetters(["wiresCount"])
   },
   data() {
     return {
@@ -71,23 +74,19 @@ export default {
       handler() {
         this.updateWireAttributes();
         // window.console.log("hello from wire "+this.id)
-         this.$nextTick(() => {
-           if (this.id == this.$parent.jsonObject.wires) {
-             //window.console.log("wire :"+this.id+" send the system");
-             //this.$parent.controlSystem();
-             //this.runCircuit();
-             //window.console.log("hello watcher of "+this.id)
+        this.$nextTick(() => {
+          if (this.id == this.$parent.jsonObject.wires) {
+            //window.console.log("wire :"+this.id+" send the system");
+            //this.$parent.controlSystem();
+            //this.runCircuit();
+            //window.console.log("hello watcher of "+this.id)
+          }
+        });
 
-
-           }
-          
-         });
-          
-  // To Mario    
-  //  this.findswap(); 
-
+        // To Mario
+        //  this.findswap();
+      }
     }
-    },
   },
 
   methods: {
@@ -104,21 +103,22 @@ export default {
       this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
-    findswap:function(){
+    findswap: function() {
       //window.console.log(this.$parent.jsonObject);
-      for (let rowsx = 0; rowsx < this.$parent.jsonObject.rows.length; rowsx++){
-        
-          
-          if(this.$parent.jsonObject.rows[rowsx][0]=="swap"){
-             window.console.log(this.$parent.jsonObject.rows[rowsx][0]);
-          
-             window.console.log("rows="+rowsx+"column 0");
-           //this.helperswapcols(rowsx,0);
-          }  
-        
+      for (
+        let rowsx = 0;
+        rowsx < this.$parent.jsonObject.rows.length;
+        rowsx++
+      ) {
+        if (this.$parent.jsonObject.rows[rowsx][0] == "swap") {
+          window.console.log(this.$parent.jsonObject.rows[rowsx][0]);
+
+          window.console.log("rows=" + rowsx + "column 0");
+          //this.helperswapcols(rowsx,0);
+        }
       }
     },
-   //------------------------------------------------------------------------- 
+    //-------------------------------------------------------------------------
     // helperswapcols:function(rowindex,columnindex){
     //  var countswaps=0;
     //   for (let rowsx = 0; rowsx < this.$parent.jsonObject.rows.length; rowsx++){
@@ -153,7 +153,8 @@ export default {
       gate.setAttribute("col", "_" + col);
     },
     //-----------------------------------------------------------------------
-    updateWireAttributes: function() { // replace it by javascript numpy alternative
+    updateWireAttributes: function() {
+      // replace it by javascript numpy alternative
       let wire = document.querySelector("#list" + this.id + "");
       if (this.list.length) {
         let gates = wire.childNodes;
@@ -173,7 +174,6 @@ export default {
       evt.target.innerHTML = "|" + this.state + "⟩";
       this.$parent.jsonObject.init[id.slice(1, -1) - 1] = this.state;
       this.runCircuit();
-     
     },
     //-----------------------------------------------------------------------
     deleteWire: function(evt) {
@@ -183,9 +183,13 @@ export default {
     //-----------------------------------------------------------------------
     addIdentity: function() {
       // add identiy across the columns of same wire (row)
-      for (let i = this.list.length; i < this.$parent.jsonObject.colsCount; i++) {
+      for (
+        let i = this.list.length;
+        i < this.$parent.jsonObject.colsCount;
+        i++
+      ) {
         this.list.push({ name: "i" });
-      } 
+      }
     },
     //-----------------------------------------------------------------------
     getGateByIndex: function(gateIndex) {
@@ -239,7 +243,8 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    setGatesIdentity: function() { // when add a ner wire
+    setGatesIdentity: function() {
+      // when add a ner wire
       var maxWire = this.$parent.jsonObject.colsCount;
       let list = [...this.list];
       for (let colIdx = 0; colIdx < maxWire; colIdx++) {
@@ -339,7 +344,7 @@ div[id^="rz"] {
   width: 2.5em;
   height: 2em;
   background-color: white;
-  border:2px solid #306ba2;
+  border: 2px solid #306ba2;
 }
 .delete-wire {
   float: left;
@@ -370,9 +375,9 @@ div[id^="rz"] {
   background-image: url("../assets/wire.png");
 }
 
-img{
+img {
   width: 40px;
-  height: 40px
+  height: 40px;
 }
 
 #i {

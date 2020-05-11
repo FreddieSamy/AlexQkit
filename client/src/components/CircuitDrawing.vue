@@ -1,31 +1,22 @@
 <template>
   <div class="circuitDrawing">
-    <img
-      :src="defaultQasmCircuitRoute"
-      alt="circuitDrawing"
-      id="circuitDrawing"
-      class="circutDrawing-image responsive"
-    />
+    <img :src="defaultQasmCircuitRoute" alt="circuitDrawing" id="circuitDrawing" />
   </div>
 </template>
 <!-- ========================================================== -->
 <script>
-import {defaultQasmCircuitRoute} from './../data/routes'
+import { defaultQasmCircuitRoute } from "./../data/routes";
 export default {
   data() {
     return {
-      defaultQasmCircuitRoute:defaultQasmCircuitRoute
-    }
-  },
+      defaultQasmCircuitRoute: defaultQasmCircuitRoute
+    };
+  }
 };
 </script>
 <!-- ========================================================== -->
 <style scoped>
-
-.circuitDrawing-image {
-
-  height: auto;
-  width: auto;
-
+#circuitDrawing {
+  width: 100%;
 }
 </style>

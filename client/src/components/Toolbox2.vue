@@ -1,18 +1,11 @@
 <template>
   <div class="toolbox-2">
-
     <button @click="runCircuit">send</button>
     <button @click="cloneResetSystem">reset system</button>
     <tracingButtons></tracingButtons>
-    
-    <button
-      v-if="!this.$nextTick(() => {this.$parent.$refs.qasm.qasmIncludeIfFlag })"
-      class="exeBtn"
-      @click="this.$parent.elementaryGates"
-    >Elementary Gates
-    </button>
-    
-    
+
+    <button class="exeBtn" @click="this.$parent.elementaryGates">Elementary Gates</button>
+
     <input
       class="save-circuit"
       type="text"
@@ -25,13 +18,11 @@
     <select v-model="selectedAlgorithm">
       <option v-for="(item, index) in algorithms" :key="index" :value="item.circuit">{{ item.name }}</option>
     </select>
-
-    
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
-import { mapState , mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import tracingButtons from "./tracingButtons.vue";
 export default {
   name: "Toolbox2",
@@ -58,7 +49,7 @@ export default {
     ...mapState(["jsonObject"])
   },
   methods: {
-    ...mapActions(['runCircuit']),
+    ...mapActions(["runCircuit"]),
     cloneResetSystem: function() {
       this.selectedAlgorithm = null;
       this.$parent.resetSystem();
@@ -82,7 +73,7 @@ export default {
       } else {
         alert("Please, enter name for the algorithm");
       }
-    },
+    }
   }
 };
 </script>
@@ -97,7 +88,7 @@ button {
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
   border-radius: 0.5em;
-  border:2px solid grey;
+  border: 2px solid grey;
 }
 input {
   border-radius: 7px;
