@@ -255,11 +255,11 @@ class Circuit():
         oc = []
         
         for i in range(len(column)):
-            if str(column[i]) == "c":
+            if str(column[i]) == "●":
                 c.append(i)
                 column[i] = "i"
 
-            elif str(column[i]) == "oc":
+            elif str(column[i]) == "○":
                 self.circuit.x(i)                             #open control
                 oc.append(i)
                 c.append(i)
@@ -324,7 +324,7 @@ class Circuit():
         for i in range(self.exeCount):
             if "reset" in self.cols[i]:
                 self.resetExist = True
-            if "c" in self.cols[i] or "oc" in self.cols[i]:
+            if "●" in self.cols[i] or "○" in self.cols[i]:
                 self.controlledColumns(self.cols[i])
             else:
                 self.nonControlledColumns(self.cols[i])

@@ -239,7 +239,7 @@ export default {
     //-----------------------------------------------------------------------
     isControl: function(colElements) {
       for (let j = 0; j < colElements.length; j++) {
-        if (colElements[j].id == "c" || colElements[j].id == "oc") {
+        if (colElements[j].id == "●" || colElements[j].id == "○") {
           return true;
         }
       }
