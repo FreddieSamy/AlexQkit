@@ -64,10 +64,10 @@ class Circuit():
 
     # dirac notation doc - https://docs.microsoft.com/en-us/quantum/concepts/dirac-notation
 
-    def initState(self,reversedWires=False):
+    def initState(self):#,reversedWires=False):
         stateList=self.init
-        if reversedWires:
-            stateList=self.init[::-1]
+        #if reversedWires:
+        #    stateList=self.init[::-1]
         for i in range(len(stateList)):
             if str(stateList[i]) == "0":
                 continue
@@ -100,10 +100,10 @@ class Circuit():
     # so to correct the qiskit order we need to shift the custom matrix to the end (newPos=numOfQubits-pos-1 )
     # you can check that here - https://qiskit-staging.mybluemix.net/documentation/terra/summary_of_quantum_operations.html
 
-    def addCustomGate(self, gateMatrix, positions,reversedWires=False):
-        if reversedWires:
+    def addCustomGate(self, gateMatrix, positions):#,reversedWires=False):
+        """if reversedWires:
             for i in range(len(positions)):
-                positions[i]=self.num_qubits-positions[i]-1
+                positions[i]=self.num_qubits-positions[i]-1"""
         from qiskit.quantum_info.operators import Operator
         customGate = Operator(gateMatrix)
         self.circuit.unitary(customGate, positions)
@@ -131,7 +131,7 @@ class Circuit():
 
     # constructs a matrix to represent controlled gates 
     
-    def controlledGate(self,unitary, numOfControls=1,reversedWires=True):
+    def controlledGate(self,unitary, numOfControls=1):#,reversedWires=True):
         from math import log2
     
         old = len(unitary)
@@ -149,8 +149,8 @@ class Circuit():
                 else:
                     controlledGate[i].append(0)
     
-        if reversedWires:
-            controlledGate=self.reversedMatrix(controlledGate,wires)
+        #if reversedWires:
+        controlledGate=self.reversedMatrix(controlledGate,wires)
         return controlledGate
 
 ############################################################################################################################### 
