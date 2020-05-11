@@ -256,10 +256,6 @@ export default {
     displayName: function(name) {
       if (name.startsWith("custom_")) {
         return name.slice(7).toUpperCase();
-      } else if (name == "c") {
-        return "●";
-      } else if (name == "oc") {
-        return "○";
       } else {
         return name.toUpperCase();
       }
@@ -311,8 +307,8 @@ div[id^="rz"] {
   font-weight: bold;
   background: #ff8c61;
 }
-#c,
-#oc {
+#○,
+#● {
   color: black;
   line-height: 10px;
   margin: 0em 0.265em 0em 0.265em;
@@ -320,7 +316,7 @@ div[id^="rz"] {
   background: none;
   border: none;
 }
-#oc {
+#○ {
   background-image: url("../assets/whitedot.png");
   background-repeat: no-repeat;
   background-position: center;
