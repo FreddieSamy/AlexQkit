@@ -1,5 +1,5 @@
 <template>
-  <div class="editor" v-if="qasmFlag">
+  <div class="editor" v-if="this.qasmFlag">
     <div class="qasm">
       <prism-editor
         :lineNumbers="true"
@@ -18,17 +18,14 @@ import "prismjs/themes/prism.css";
 import "vue-prism-editor/dist/VuePrismEditor.css";
 import PrismEditor from "vue-prism-editor";
 import axios from "axios";
-import { qasmRoute } from "./../data/routes.js";
+import { qasmCircuitRoute, qasmRoute } from "./../data/routes.js";
 import { mapGetters } from "vuex";
 
 export default {
   name: "qasm",
   display: "qasm",
   data() {
-    return {
-      qasmFlag: false,
-      qasmIncludeIfFlag: false
-    };
+    return { qasmFlag: false };
   },
   computed: {
     ...mapGetters(["liveResults"])
@@ -38,54 +35,49 @@ export default {
     //-----------------------------------------------------------------------
     qasm: function() {
       this.qasmFlag = !this.qasmFlag;
-      this.$parent.$refs.tracingLine.updateTracingLine();
       if (this.qasmFlag) {
         document.getElementById("qasmToolboxBtn").innerHTML = "⟨ qasm |";
       } else {
         document.getElementById("qasmToolboxBtn").innerHTML = "| qasm ⟩";
+        this.liveResults.qasm =
+          'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[2];\ncreg c[2];';
+        this.$parent.circuitDrawingFlag = false;
+      }
+      if (!this.$parent.circuitDrawingFlag) {
+        this.$parent.$refs.tracingLine.updateTracingLine();
       }
     },
     //-----------------------------------------------------------------------
     sendQasm: function() {
       // window.console.log(this.qasmCode);
+      this.$parent.circuitDrawingFlag = true;
       let json_object = {
         qasm: this.liveResults.qasm,
         shots: this.$parent.jsonObject.shots
       };
       axios.post(qasmRoute, json_object).then(res => {
         if (res.data.qasmError == "") {
-          //this.$parent.draw();
-
+          this.draw();
           this.liveResults.probabilities = res.data.probabilities;
           this.liveResults.blochSpheres = res.data.blochSpheres;
           this.liveResults.chart = res.data.chart;
           this.liveResults.diracNotation = res.data.diracNotation;
-          this.liveResults.matrixRepresentation = res.data.matrixRepresentation;
-          // this.$parent.$refs.ibm.link = res.data.link;
+
           if (this.qasmFlag) {
             this.qasmCode = res.data.qasm;
-            this.qasmIncludeIfFlag = this.qasmCode.includes("if");
-          }
-
-          if (res.data.qasmRows && !this.qasmIncludeIfFlag) {
-            // undefined qasmRows leads to an error
-            if (res.data.qasmRows.length) {
-              this.$parent.jsonObject.wires = res.data.qasmRows.length;
-              this.$parent.jsonObject.rows = res.data.qasmRows;
-              this.$parent.jsonObject.init = Array(
-                res.data.qasmRows.length
-              ).fill("0");
-              this.$parent.setAlgorithm(this.$parent.jsonObject);
-            } else {
-              alert("empty circuit !");
-            }
           }
         } else {
           alert("qasm code error :\n" + res.data.qasmError);
         }
       });
-    }
+    },
     //-----------------------------------------------------------------------
+    draw: function() {
+      // var imgofblochSphere = document.getElementById("bloch");
+      // imgofblochSphere.src = blockSphereRoute + new Date();
+      var imgOfCircuit = document.getElementById("circuitDrawing");
+      imgOfCircuit.src = qasmCircuitRoute + new Date();
+    }
     //-----------------------------------------------------------------------
   }
 };

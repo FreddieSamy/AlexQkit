@@ -58,9 +58,9 @@
           class="qasm"
           @click="$parent.$refs.matrixRepresentation.openNav()"
         >Matrix Representation</button>
-      </div> 
+      </div>
       <!-- to mario from hassan -->
-      <booleanFunction ref="createBoolean" class=""/> 
+      <booleanFunction ref="createBoolean" class />
 
       <div class="circiut-loop">
         <Circiutloops :colsCount="this.$parent.jsonObject.colsCount" />
@@ -120,10 +120,8 @@ export default {
     };
   },
   methods: {
-    log: function() {
-      this.$parent.$refs.qasm.qasmIncludeIfFlag = false;
-    },
-    setAlgo:function(circiut){
+    log: function() {},
+    setAlgo: function(circiut) {
       this.$parent.setAlgorithm(circiut);
     },
     // ----------------------------------------------------
@@ -303,5 +301,4 @@ export default {
 button {
   border: 2px solid grey;
 }
-
 </style>

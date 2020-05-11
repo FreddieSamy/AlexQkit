@@ -1,88 +1,85 @@
 <template>
-<div class="trash">
-  <div class="add-remove-wire">
-    <button class="add-wire" @click="addWire">+</button> 
-    <button  class="remove-wire" @click="removeWire">-</button>
-  </div>
+  <div class="trash">
+    <div v-if="!this.$parent.circuitDrawingFlag" class="add-remove-wire">
+      <button class="add-wire" @click="addWire">+</button>
+      <button class="remove-wire" @click="removeWire">-</button>
+    </div>
 
-  <div class="trashArea">
-    <draggable :list="list" class="trash-drop-area" group="gates" @add="add">
-      Trash Drop Area
-      <div
-        class="circuit-gate"
-        v-for="element in list"
-        :key="element.id"
-        :id="element.name"
-      >
-        {{ element.name }}
-      </div>
-    </draggable>
-  </div>
-
+    <div class="trashArea">
+      <draggable :list="list" class="trash-drop-area" group="gates" @add="add">
+        Trash Drop Area
+        <div
+          class="circuit-gate"
+          v-for="element in list"
+          :key="element.id"
+          :id="element.name"
+        >{{ element.name }}</div>
+      </draggable>
+    </div>
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import draggable from "vuedraggable";
-import { mapState } from "vuex"
+import { mapState } from "vuex";
 export default {
   name: "Trash",
   display: "Trash",
   components: {
-    draggable,
+    draggable
   },
   data() {
     return {
-      list: [],
+      list: []
     };
   },
-    computed: {
+  computed: {
     ...mapState(["jsonObject"])
   },
 
   methods: {
     add: function(evt) {
-      if(evt.from.classList != 'toolbox-gates-area' ){
-      var wire = evt.from.id.replace("list","")
-      this.$parent.$refs.wire[wire-1].addGateByIndex(evt.oldIndex);
+      if (evt.from.classList != "toolbox-gates-area") {
+        var wire = evt.from.id.replace("list", "");
+        this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex);
       }
       this.list = [];
     },
     addWire: function() {
       this.jsonObject.wires++;
       this.$parent.$refs.tracingLine.updateTracingLine();
-      this.jsonObject.init.push("0")
+      this.jsonObject.init.push("0");
     },
     removeWire: function() {
       this.jsonObject.wires--;
       this.jsonObject.init.pop();
       this.jsonObject.rows.pop();
       this.$parent.$refs.tracingLine.updateTracingLine();
-    },
+    }
   }
 };
 </script>
 <!-- =============================================================  -->
 <style scoped>
-.trash{
+.trash {
   display: flex;
-  flex-wrap:nowrap;
+  flex-wrap: nowrap;
   margin: 0px 10px 0px 2px;
-  justify-content:flex-start;
-  align-items:flex-start;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
-.add-remove-wire{
+.add-remove-wire {
   display: flex;
-  flex-wrap: nowrap; 
+  flex-wrap: nowrap;
   flex-basis: 4%;
 }
 .add-remove-wire button {
-  background:white;
-  border-radius:7px;
-  padding:0px;
-  flex-basis:50%;
-  margin:2px 5px 0px 0px;
-  border:2px solid grey;
+  background: white;
+  border-radius: 7px;
+  padding: 0px;
+  flex-basis: 50%;
+  margin: 2px 5px 0px 0px;
+  border: 2px solid grey;
   font-weight: bolder;
 }
 .trashArea {
@@ -95,5 +92,4 @@ export default {
   text-align: center;
   flex-basis: 96%;
 }
-
 </style>
