@@ -2,10 +2,6 @@ from flask import Flask, request,jsonify
 #from datetime import datetime
 from flask_cors import CORS
 from qiskit import *
-<<<<<<< HEAD
-from functions import Circuit
-startTime = datetime.now()
-=======
 from circuit import Circuit
 from results import Results
 from features import Features
@@ -13,7 +9,6 @@ from booleanExpression import Booleanfunction
 
 #startTime = datetime.now()
 
->>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
 # configuration
 DEBUG = True
 
@@ -72,22 +67,6 @@ def qasm():
 def circuitDraw():
     return  r.circutDrawing
 
-<<<<<<< HEAD
-# sanity check route
-@app.route('/data',methods=['GET','POST'])
-def draggableCircuit():
-    if request.method=='POST':
-        recievedDic=request.get_json()
-        #print("recieved data from Vue : ",recievedDic[0])
-        #print(recievedDic)
-        c.draggable(recievedDic)
-        #print("retrived data from qiskit : ",c.returnedDictionary)
-    else:
-        c.returnedDictionary={}
-    #print(c.returnedDictionary)
-    return  jsonify(c.returnedDictionary) 
-=======
->>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
 """
 @app.route('/blochsphere.png',methods=['GET','POST'])
 def blochSphere():
@@ -103,12 +82,6 @@ def chart():
 @app.route('/matrixRepresentation',methods=['GET','POST'])
 def matrixRepresentation():
     if request.method=='POST':
-<<<<<<< HEAD
-        recievedDic=request.get_json()
-        c.createCircuit(recievedDic[0])
-        #print(c.returnedDictionary['diracNotation'])
-    return "success"
-=======
         r=Results(c.circuit)
         matrix=r.matrixRepresentation()
         matrix=c.reversedMatrix(matrix,c.num_qubits)
@@ -208,7 +181,6 @@ def booleanExpress():
         print(recievedData)
         booleanCircut = Booleanfunction.buildBooleanCircuit(recievedData["vars"],recievedData['fn'])
     return jsonify(booleanCircut)
->>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
 
 ###############################################################################################################################
     
