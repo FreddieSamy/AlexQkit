@@ -1,6 +1,6 @@
 <template>
   <hr
-    v-if="!this.$parent.$refs.qasm.qasmIncludeIfFlag"
+    v-if="!this.$parent.circuitDrawingFlag"
     id="tracingLine"
     :width="width"
     :size="updateTracingLine()"

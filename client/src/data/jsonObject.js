@@ -2,7 +2,7 @@ export default {
 
   API_TOKEN: "",    // IBM TOKEN
   colsCount: 0,     // Columns Counter
-  custom: {},       // Object of Custom Gates
+  // custom: {},    stored in backend
   device: "",       // IBM Device Used
   rows: [[], []],   // 2D array for wires -> gates in each wire
   exeCount: 0,      // Pointer for the Tracing Line Execution

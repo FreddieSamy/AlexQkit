@@ -1,7 +1,7 @@
 <template>
   <div class="add-custom-gate">
     <div id="myNav" class="overlay" style="width:0%">
-      <a href="javascript:void(0)"  class="closebtn" @click="closeNav()">&#10006;</a>
+      <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
 
       <div class="column">
         <h1>Add Matrix</h1>
@@ -10,9 +10,7 @@
         <h3>number of wires</h3>
         <CustomMx ref="matrixcu"></CustomMx>
         <br />
-        <button
-          @click="create_the_matrix()"
-        >create</button>
+        <button @click="create_the_matrix()">create</button>
       </div>
 
       <!--
@@ -22,12 +20,12 @@
        </div>
       -->
       <div class="column">
-        <h1 >sub-circuit</h1>
-        <h3 >name</h3>
+        <h1>sub-circuit</h1>
+        <h3>name</h3>
         <input type="text" id="subCircuitName" />
         <h3>Rows</h3>
         <label class="from-to">From</label>
-        <select id="fromRow" >
+        <select id="fromRow">
           <option v-for="i in this.$parent.$parent.jsonObject.wires" :key="i" :value="i">{{i}}</option>
         </select>
         <label class="from-to">To</label>
@@ -44,17 +42,17 @@
           <option v-for="i in this.$parent.$parent.jsonObject.colsCount" :key="i" :value="i">{{i}}</option>
         </select>
         <br />
-        <button
-          @click="subCircuitCustoGate()"
-        >create</button>
+        <button @click="subCircuitCustoGate()">create</button>
       </div>
 
       <div class="column">
-        <h1> n<sup>th</sup> root of gate</h1>
- 
-     
+        <h1>
+          n
+          <sup>th</sup> root of gate
+        </h1>
+
         <h3>select the gate</h3>
-        <select id="rootGate" >
+        <select id="rootGate">
           <optgroup label="Gates">
             <option value="x">X</option>
             <option value="y">Y</option>
@@ -74,11 +72,9 @@
           </optgroup>
         </select>
         <h3 style="color: black;">root</h3>
-        <input id="root" type="number" value="2"  />
+        <input id="root" type="number" value="2" />
         <br />
-        <button
-          @click="nthRoot()"
-        >create</button>
+        <button @click="nthRoot()">create</button>
       </div>
 
       <!-- <img class="capturedImage" :src="capturedImage" /> -->
@@ -93,10 +89,14 @@
 </template>
 <!-- =============================================================  -->
 <script>
-
 import axios from "axios";
 import CustomMx from "./custom_mx.vue";
-import { isUnitaryRoute, subCirciutRoute, nthRootRoute } from './../data/routes'
+import { mapState } from "vuex";
+import {
+  addCustomGates,
+  subCirciutRoute,
+  nthRootRoute
+} from "./../data/routes";
 export default {
   name: "addcustomgate",
   display: "addcustomgate",
@@ -108,6 +108,9 @@ export default {
     return {
       // capturedImage: ""
     };
+  },
+  computed: {
+    ...mapState(["jsonObject"])
   },
   methods: {
     openNav() {
@@ -133,18 +136,17 @@ export default {
         nameofgate
       );
       var isUnitary;
-      var json_object = {};
-      json_object["matrix"] = matrix;
+      var json_object = { matrix: matrix, gateName: nameofgate };
 
       if (matrix_validate) {
-        axios.post(isUnitaryRoute, json_object).then(res => {
+        axios.post(addCustomGates, json_object).then(res => {
           //window.console.log("the data success to returned be from the server");
           isUnitary = res.data.isUnitary;
           //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
           // window.console.log("new unitary:" + isUnitary);
           if (isUnitary) {
             this.addGate(nameofgate);
-            this.$parent.$parent.jsonObject.custom[nameofgate] = matrix;
+            // this.$parent.$parent.jsonObject.custom[nameofgate] = matrix;
             this.closeNav();
           } else {
             alert("please, enter unitary matrix");
@@ -200,29 +202,26 @@ export default {
     // ----------------------------------------------------
     nthRoot: function() {
       var select = document.getElementById("rootGate");
-      var backName = select.value;
+      // var backName = select.value;
       var name = select.options[select.selectedIndex].text;
-      // window.console.log(name);
+      window.console.log(name);
       var root = document.getElementById("root").value;
-      if (
-        name + "^(1/" + root + ")" in
-        this.$parent.$parent.jsonObject.custom
-      ) {
+      if (name + "^(1/" + root + ")" in this.$parent.customGates) {
         alert("sorry, " + name + "^(1/" + root + ")" + " is already exist");
       } else {
         var json_object = {
           root: root,
-          gate: backName,
-          custom: this.$parent.$parent.jsonObject.custom
+          gateName: name
+          // custom: this.$parent.$parent.jsonObject.custom
         };
         if (root >= 2) {
           axios.post(nthRootRoute, json_object).then(res => {
             /*window.console.log(res.data);*/
             if (res.data.isUnitary) {
               this.addGate(name + "^(1/" + root + ")");
-              this.$parent.$parent.jsonObject.custom[
-                name + "^(1/" + root + ")"
-              ] = res.data.matrix;
+              // this.$parent.$parent.jsonObject.custom[
+              //   name + "^(1/" + root + ")"
+              // ] = res.data.matrix;
               this.closeNav();
             } else {
               alert("sorry, " + name + "^(1/" + root + ")" + " isn't unitary");
@@ -259,7 +258,8 @@ export default {
                 fromRow,
                 toRow,
                 fromColumn,
-                toColumn
+                toColumn,
+                name
               );
             }
           }
@@ -269,7 +269,13 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    cloneSubCircuitCustoGate: function(fromRow, toRow, fromColumn, toColumn) {
+    cloneSubCircuitCustoGate: function(
+      fromRow,
+      toRow,
+      fromColumn,
+      toColumn,
+      name
+    ) {
       var gatesSystem = [];
       for (let i = fromRow - 1; i < toRow; i++) {
         gatesSystem.push(
@@ -280,22 +286,22 @@ export default {
         );
       }
       var json_object = {
+        gateName: name,
         wires: toRow - fromRow + 1,
-        rows: gatesSystem
+        rows: gatesSystem,
+        radian: this.jsonObject.radian
       };
-      axios
-        .post(subCirciutRoute, json_object)
-        .then(res => {
-          if (res.data.isUnitary) {
-            var name = document.getElementById("subCircuitName").value;
-            this.addGate(name);
-            this.$parent.$parent.jsonObject.custom[name] = res.data.matrix;
-            document.getElementById("subCircuitName").value = null;
-            this.closeNav();
-          } else {
-            alert("sorry, this subcircuit isn't unitary");
-          }
-        });
+      axios.post(subCirciutRoute, json_object).then(res => {
+        if (res.data.isUnitary) {
+          var name = document.getElementById("subCircuitName").value;
+          this.addGate(name);
+          // this.$parent.$parent.jsonObject.custom[name] = res.data.matrix;
+          document.getElementById("subCircuitName").value = null;
+          this.closeNav();
+        } else {
+          alert("sorry, this subcircuit isn't unitary");
+        }
+      });
     },
     // ----------------------------------------------------
     addGate(nameofgate) {
@@ -328,8 +334,8 @@ export default {
 </script>
 <!-- =============================================================  -->
 <style scoped>
-div{
-  color:white
+div {
+  color: white;
 }
 .overlay {
   height: 100%;
@@ -341,10 +347,9 @@ div{
   overflow-x: hidden;
   transition: 0.5s;
   display: flex;
-  justify-content:center;
-  align-items:stretch;
+  justify-content: center;
+  align-items: stretch;
   flex-wrap: wrap;
-
 }
 .overlay a {
   padding: 8px;
@@ -367,7 +372,6 @@ div{
   font-size: 30px;
 }
 
-
 @media screen and (max-height: 450px) {
   .overlay a {
     font-size: 20px;
@@ -379,12 +383,11 @@ div{
   }
 }
 
-.column{
+.column {
   background: rgb(47, 68, 85, 0.7);
   margin: 3em;
   padding: 1em;
   border-radius: 1em;
-
 }
 .create {
   padding: 10px 25px;
@@ -398,17 +401,17 @@ div{
   color: #fff;
   cursor: pointer;
 }
-button{
-  background:white;
+button {
+  background: white;
   border-radius: 10px;
-  border:3px solid grey;
-  margin:30px 0px 0px 100px;
+  border: 3px solid grey;
+  margin: 30px 0px 0px 100px;
 }
 .addGate {
   display: inline-block;
   margin: 0em 0em 0em 0.2em;
   background-color: white;
-  color:black;
+  color: black;
   border-radius: 0.5em;
 }
 .from-to {
@@ -416,18 +419,18 @@ button{
   margin-left: 0.4em;
   margin-right: 0.2em;
 }
-input{
+input {
   border-radius: 10px;
 }
-input[type="number"]{
-  padding:0px 0px 0px 5px;
-  width:50px;
+input[type="number"] {
+  padding: 0px 0px 0px 5px;
+  width: 50px;
 }
-select{
-  border-radius:10px;
-  width:100px;
+select {
+  border-radius: 10px;
+  width: 100px;
 }
-h3{
+h3 {
   margin: 20px 1px 10px 1px;
 }
 </style>

@@ -1,11 +1,19 @@
-from flask import Flask, request, Response,jsonify
-from datetime import datetime
+from flask import Flask, request,jsonify
+#from datetime import datetime
 from flask_cors import CORS
-import io
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from qiskit import *
+<<<<<<< HEAD
 from functions import Circuit
 startTime = datetime.now()
+=======
+from circuit import Circuit
+from results import Results
+from features import Features
+from booleanExpression import Booleanfunction
+
+#startTime = datetime.now()
+
+>>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
 # configuration
 DEBUG = True
 
@@ -17,99 +25,54 @@ app.config.from_object(__name__)
 CORS(app, resources={r'/*': {'origins': '*'}})
 CORS_DEBUG=1
 
-intialState = {'wires': 3, 'init': ['0', '0','0'], 'rows': [[], [],[]]}
-c=Circuit()
-c.createCircuit(intialState)
 
-def graphDrawing(fig):
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
+c=Circuit()
+f=Features()
+r=Results(c.circuit)
+
+###############################################################################################################################
 
 @app.route('/')
 def main():
     return "server is on fire"
 
-
-@app.route('/subCircuitCustomGate',methods=['GET','POST'])
-def subCircuitCustomGate():
-    from qiskit.quantum_info.operators.predicates import is_unitary_matrix
+###############################################################################################################################
+    
+@app.route('/draggableCircuit',methods=['GET','POST'])
+def draggableCircuit():
     if request.method=='POST':
-        recievedDic=request.get_json()
-        c.createCircuit(recievedDic)
-        matrix=c.returnedDictionary["matrixRepresentation"]
-    else:
-        c.returnedDictionary={}
-    return  jsonify({"isUnitary":is_unitary_matrix(c.strToComplex(matrix)),"matrix":c.complexToStr(matrix)}) 
-
-@app.route('/nthRoot',methods=['GET','POST'])
-def nthRoot():
-    import numpy as np
-    from qiskit.quantum_info.operators.predicates import is_unitary_matrix
-    from scipy.linalg import fractional_matrix_power
-    if request.method=='POST':
-        jsonObj=request.get_json()
-        gate=jsonObj["gate"]
-        root=jsonObj["root"]
-        if gate in jsonObj["custom"]:
-            customGtes=jsonObj["custom"]
-            a=np.matrix(c.strToComplex(customGtes[gate]))
-        else:
-            a=np.matrix(c.gateToMatrix(gate))
-        matrix=fractional_matrix_power(a,1/int(root)).tolist()
-        #print(is_unitary_matrix(matrix),matrix)
-        #print(matrix,is_unitary_matrix(matrix),jsonify({"isUnitary":is_unitary_matrix(matrix)}))
-        return jsonify({"isUnitary":is_unitary_matrix(matrix),"matrix":c.complexToStr(matrix)})
-
-@app.route('/elementaryGates',methods=['GET','POST'])
-def elementaryGates():
-    if request.method=='POST':
-        recievedDic=request.get_json()
-        returnedDictionary=c.elementaryGates(recievedDic["rows"],recievedDic["custom"])
-        #print("retrived data from qiskit : ",c.returnedDictionary)
+        receivedDictionary=request.get_json()
+        c.setter(receivedDictionary)
+        circuit=c.createDraggableCircuit()
+        r.setter(receivedDictionary["shots"],receivedDictionary["API_TOKEN"],receivedDictionary["device"],circuit)
+        returnedDictionary=r.draggableCircuitResults()
     else:
         returnedDictionary={}
     return  jsonify(returnedDictionary) 
 
-@app.route('/isUnitary',methods=['GET','POST'])
-def isUnitary():
-    if request.method=='POST':
-        jsonObj=request.get_json()
-        matrix=jsonObj["matrix"]
-        c.strToComplex(matrix)
-        from qiskit.quantum_info.operators.predicates import is_unitary_matrix
-        #print(matrix,is_unitary_matrix(matrix),jsonify({"isUnitary":is_unitary_matrix(matrix)}))
-        return jsonify({"isUnitary":is_unitary_matrix(matrix)})
-
-@app.route('/matrixRepresentation',methods=['GET','POST'])
-def createMatrix():
-    if request.method=='POST':
-        recievedDic=request.get_json()
-        #print("recieved data from Vue : ",recievedDic[0])
-        #print(recievedDic)
-        c.createMatrix(recievedDic)
-        #print("retrived data from qiskit : ",c.returnedDictionary)
-    else:
-        c.returnedDictionary={}
-    #print(c.returnedDictionary)
-    return  jsonify(c.returnedDictionary) 
-
+###############################################################################################################################
+    
 @app.route('/qasm',methods=['GET','POST'])
 def qasm():
     if request.method=='POST':
-        recievedDic=request.get_json()
-        #print("recieved data from Vue : ",recievedDic[0])
-        #print(recievedDic)
+        receivedDictionary=request.get_json()
         try:
-            c.qasm(recievedDic)
+            c.shots=receivedDictionary["shots"]
+            circuit=c.createQasmCircuit(receivedDictionary["qasm"])
+            r.setCircuit(circuit)
+            returnedDictionary=r.qasmCircuitResults()
         except Exception as e:
             return jsonify({"qasmError":str(e)})
     else:
-        c.returnedDictionary={}
-    c.returnedDictionary["qasmError"]=""
-    #print(c.returnedDictionary)
-    return  jsonify(c.returnedDictionary) 
+        returnedDictionary={}
+    returnedDictionary["qasmError"]=""
+    return  jsonify(returnedDictionary) 
+###############################################################################################################################
+@app.route('/circuit.png',methods=['GET','POST'])
+def circuitDraw():
+    return  r.circutDrawing
 
+<<<<<<< HEAD
 # sanity check route
 @app.route('/data',methods=['GET','POST'])
 def draggableCircuit():
@@ -123,6 +86,8 @@ def draggableCircuit():
         c.returnedDictionary={}
     #print(c.returnedDictionary)
     return  jsonify(c.returnedDictionary) 
+=======
+>>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
 """
 @app.route('/blochsphere.png',methods=['GET','POST'])
 def blochSphere():
@@ -133,20 +98,121 @@ def chart():
     return graphDrawing(c.histoGramGraph)
 
 """
-@app.route('/circuit.png',methods=['GET','POST'])
-def circuitDraw():
-    return  graphDrawing(c.circutDrawing)
+###############################################################################################################################
 
-@app.route('/reset',methods=['GET','POST'])
-def reset():
+@app.route('/matrixRepresentation',methods=['GET','POST'])
+def matrixRepresentation():
     if request.method=='POST':
+<<<<<<< HEAD
         recievedDic=request.get_json()
         c.createCircuit(recievedDic[0])
         #print(c.returnedDictionary['diracNotation'])
     return "success"
+=======
+        r=Results(c.circuit)
+        matrix=r.matrixRepresentation()
+        matrix=c.reversedMatrix(matrix,c.num_qubits)
+        returnedDictionary={"matrixRepresentation":matrix}
+    else:
+        returnedDictionary={}
+    return  jsonify(returnedDictionary) 
 
+###############################################################################################################################
+    
+@app.route('/addCustomGates',methods=['GET','POST'])
+def addCustomGates():
+    from qiskit.quantum_info.operators.predicates import is_unitary_matrix
+    from math import log2
+    receivedDictionary=request.get_json()
+    matrix=receivedDictionary["matrix"]
+    matrix=f.strToComplex(matrix)
+    isUnitary=is_unitary_matrix(matrix)
+    if isUnitary:
+        matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
+        c.customGates[receivedDictionary["gateName"]]=matrix
+    return jsonify({"isUnitary":isUnitary})
+
+###############################################################################################################################
+    
+@app.route('/subCircuitCustomGate',methods=['GET','POST'])
+def subCircuitCustomGate():
+    from qiskit.quantum_info.operators.predicates import is_unitary_matrix
+    from math import log2
+    if request.method=='POST':
+        receivedDictionary=request.get_json()
+        c2=Circuit()
+        c2.subCircuitSetter(receivedDictionary)
+        circuit=c2.createDraggableCircuit()
+        r=Results(circuit)
+        matrix=r.matrixRepresentation()
+        isUnitary=is_unitary_matrix(f.strToComplex(matrix))
+        if isUnitary:
+            c.customGates[receivedDictionary["gateName"]]=matrix
+            matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
+            return  jsonify({"isUnitary":isUnitary,"matrix":f.complexToStr(matrix)}) 
+        else:
+            return  jsonify({"isUnitary":isUnitary})
+    return  jsonify({})
+
+###############################################################################################################################
+    
+@app.route('/nthRoot',methods=['GET','POST'])
+def nthRoot():
+    import numpy as np
+    from qiskit.quantum_info.operators.predicates import is_unitary_matrix
+    from scipy.linalg import fractional_matrix_power
+    from math import log2
+    if request.method=='POST':
+        receivedDictionary=request.get_json()
+        root=receivedDictionary["root"]
+        gate=receivedDictionary["gateName"]
+        if gate in c.customGates:
+            a=np.matrix(c.customGates[gate])
+        else:
+            a=np.matrix(c.gateToMatrix(gate.lower()))
+            gate=gate.upper()
+        matrix=fractional_matrix_power(a,1/int(root)).tolist()
+        isUnitary=is_unitary_matrix(matrix)
+        if isUnitary:
+            c.customGates[gate+"^(1/"+root+")"]=matrix
+            matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
+            return  jsonify({"isUnitary":isUnitary,"matrix":f.complexToStr(matrix)}) 
+        else:
+            return  jsonify({"isUnitary":isUnitary})
+    return  jsonify({})
+
+###############################################################################################################################
+    
+@app.route('/elementaryGates',methods=['GET','POST'])
+def elementaryGates():
+    from math import log2
+    if request.method=='POST':
+        receivedDictionary=request.get_json()
+        rows,newGates=f.elementaryGates(receivedDictionary["rows"],c)
+        gates={}
+        for (name,matrix) in newGates.items():
+            gates[name]=c.reversedMatrix(matrix.copy(),int(log2(len(matrix))))
+            gates[name]=f.complexToStr(matrix.copy())
+        returnedDictionary={"rows":rows,"custom":gates}
+        
+    else:
+        returnedDictionary={}
+    return  jsonify(returnedDictionary) 
+
+###############################################################################################################################
+    
+@app.route('/booleanExpression',methods=['GET','POST'])
+def booleanExpress():
+    if request.method=='POST':
+        recievedData = request.get_json()
+        print(recievedData)
+        booleanCircut = Booleanfunction.buildBooleanCircuit(recievedData["vars"],recievedData['fn'])
+    return jsonify(booleanCircut)
+>>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
+
+###############################################################################################################################
+    
 if __name__ == "__main__":
     app.run(debug=True)
 
-print(datetime.now() - startTime)
-#print(c.returnedDictionary['chart'])
+#print(datetime.now() - startTime)

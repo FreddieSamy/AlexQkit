@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!this.$parent.$parent.$refs.qasm.qasmIncludeIfFlag" class="exe">
+  <div class="exe">
     <button class="exeBtn" @click="exeStart">start</button>
     <button class="exeBtn" @click="preExe">⟨exe|</button>
     <button class="exeBtn" @click="nextExe">|exe⟩</button>
@@ -8,20 +8,18 @@
 </template>
 <!-- ========================================================== -->
 <script>
-import { mapState ,mapActions } from "vuex"
+import { mapState, mapActions } from "vuex";
 export default {
   name: "tracingButtons",
   display: "tracingButtons",
   computed: {
-    ...mapState(['jsonObject'])
+    ...mapState(["jsonObject"])
   },
   methods: {
     ...mapActions(["runCircuit"]),
     //-----------------------------------------------------------------------
     nextExe: function() {
-      if (
-        this.jsonObject.exeCount < this.jsonObject.colsCount
-      ) {
+      if (this.jsonObject.exeCount < this.jsonObject.colsCount) {
         this.jsonObject.exeCount++;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
         this.runCircuit();
@@ -45,9 +43,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     exeEnd: function() {
-      if (
-        this.jsonObject.exeCount != this.jsonObject.colsCount
-      ) {
+      if (this.jsonObject.exeCount != this.jsonObject.colsCount) {
         this.jsonObject.exeCount = this.jsonObject.colsCount;
         this.$parent.$parent.$refs.tracingLine.updateTracingLine();
         this.runCircuit();
@@ -59,7 +55,7 @@ export default {
 </script>
 <!-- ========================================================== -->
 <style scoped>
-.exe{
+.exe {
   display: inline-block;
   margin: 0em 0em 0em 3em;
 }
@@ -70,8 +66,6 @@ export default {
   background-color: white;
   border-radius: 0.5em;
 
-  border:2px solid grey;
-
+  border: 2px solid grey;
 }
-
 </style>
