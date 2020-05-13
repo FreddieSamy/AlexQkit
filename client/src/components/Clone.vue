@@ -42,11 +42,8 @@
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
       <Histogram class="histogram" />
     </div>
-<<<<<<< HEAD
 
     
-=======
->>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
   </div>
 </template>
 <!-- =============================================================  -->
@@ -86,13 +83,7 @@ export default {
     Histogram,
     MatrixRepresentation,
     Qasm,
-<<<<<<< HEAD
     tracingLine,
-
-    
-=======
-    tracingLine
->>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
   },
   mounted() {
     //this.runCircuit();
