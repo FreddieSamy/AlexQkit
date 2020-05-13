@@ -67,11 +67,11 @@ def qasm():
 def circuitDraw():
     return  r.circutDrawing
 
-"""
-@app.route('/blochsphere.png',methods=['GET','POST'])
-def blochSphere():
-    return graphDrawing(c.blochSphereGraph)
 
+@app.route('/blochsphere.png/<i>',methods=['GET','POST'])
+def blochSphere(i):
+    return r.blochSpheres[int(i)-1]
+"""
 @app.route('/chart.png',methods=['GET','POST'])
 def chart():
     return graphDrawing(c.histoGramGraph)

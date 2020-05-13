@@ -42,8 +42,6 @@
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
       <Histogram class="histogram" />
     </div>
-
-    
   </div>
 </template>
 <!-- =============================================================  -->
@@ -54,8 +52,6 @@ import Toolbox2 from "./Toolbox2.vue";
 import Wire from "./Wire.vue";
 import IBM from "./IBM.vue";
 import Trash from "./Trash.vue";
-
-
 
 import Histogram from "./Histogram.vue";
 import DiracNotation from "./DiracNotation.vue";
@@ -83,7 +79,7 @@ export default {
     Histogram,
     MatrixRepresentation,
     Qasm,
-    tracingLine,
+    tracingLine
   },
   mounted() {
     //this.runCircuit();
@@ -412,5 +408,4 @@ export default {
 button {
   border: 2px solid grey;
 }
-
 </style>

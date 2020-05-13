@@ -5,6 +5,7 @@ class Results():
         self.circuit=circuit
         self.num_qubits=self.circuit.num_qubits
         self.circutDrawing=self.draw()
+        self.blochSpheres=self.separatedBlochSpheres()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
         
@@ -17,6 +18,7 @@ class Results():
         self.circuit=circuit
         self.num_qubits=self.circuit.num_qubits
         self.circutDrawing=self.draw()
+        self.blochSpheres=self.separatedBlochSpheres()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
         
@@ -26,6 +28,7 @@ class Results():
         self.circuit=circuit
         self.num_qubits=self.circuit.num_qubits
         self.circutDrawing=self.draw()
+        self.blochSpheres=self.separatedBlochSpheres()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
         
@@ -145,23 +148,6 @@ class Results():
 
 ###############################################################################################################################
 
-    # returns polar coordinates for every wire to be represented on bloch spheres
-
-    def separatedBlochSpheres(self):
-        from qiskit.quantum_info import partial_trace
-    
-        pos=list(range(self.num_qubits))
-        res=[]
-        for i in range(self.num_qubits):
-            [[a, b], [c, d]] = partial_trace(self.statevector, pos[:i]+pos[i+1:]).data
-            x = 2*b.real
-            y = 2*c.imag
-            z = a.real-d.real
-            res.append([x,y,z])
-        return res
-
-###############################################################################################################################
-
     # returns the probability of every state to be presented on the chart
     # if the circuit is measured the returned data will be the exact data according to the result of every shot
     # else the returned data will be the expected probabilities
@@ -190,23 +176,47 @@ class Results():
         return graphData
 
 ###############################################################################################################################       
-        
+   
+    def figToResponse(self,fig):
+        import io
+        from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+        from flask import Response
+        output = io.BytesIO()
+        FigureCanvas(fig).print_png(output)
+        return Response(output.getvalue(), mimetype='image/png')
+ 
+############################################################################################################################### 
+    
     # drawing of the circuit
     
     def draw(self):
         from qiskit import Aer
         from qiskit import execute
-        import io
-        from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-        from flask import Response
-    
+        
         simulator = Aer.get_backend('qasm_simulator')
         execute(self.circuit, backend=simulator).result()
         fig=self.circuit.draw(output='mpl')
-        output = io.BytesIO()
-        FigureCanvas(fig).print_png(output)
-        return Response(output.getvalue(), mimetype='image/png')
+        return self.figToResponse(fig)
     
+###############################################################################################################################
+        
+    # returns polar coordinates for every wire to be represented on bloch spheres
+
+    def separatedBlochSpheres(self):
+        from qiskit.quantum_info import partial_trace
+        from qiskit.visualization import plot_bloch_vector
+    
+        pos=list(range(self.num_qubits))
+        res={}
+        for i in range(self.num_qubits):
+            [[a, b], [c, d]] = partial_trace(self.stateVector(), pos[:i]+pos[i+1:]).data
+            x = 2*b.real
+            y = 2*c.imag
+            z = a.real-d.real
+            fig=plot_bloch_vector([x,y,z],title="qubit "+str(i))
+            res[i]=self.figToResponse(fig)
+        return res
+
 ###############################################################################################################################
 
     # runs a circuit on a real quantum computer (IBM Q devices) and returns a link of the results
@@ -224,8 +234,9 @@ class Results():
         
     def draggableCircuitResults(self):
         returnedDictionary={}
+        self.blochSpheres=self.separatedBlochSpheres()
         returnedDictionary["probabilities"] = self.separatedProbabilities()
-        returnedDictionary["blochSpheres"] = self.separatedBlochSpheres()
+        #returnedDictionary["blochSpheres"] = self.separatedBlochSpheres()
         returnedDictionary["diracNotation"] = self.diracNotation()
         returnedDictionary["link"] = ""
         returnedDictionary['chart'] = self.graph()
@@ -245,8 +256,9 @@ class Results():
     def qasmCircuitResults(self):
         returnedDictionary={}
         self.circutDrawing = self.draw()
+        self.blochSpheres=self.separatedBlochSpheres()
         returnedDictionary["probabilities"] = self.separatedProbabilities()
-        returnedDictionary["blochSpheres"] = self.separatedBlochSpheres()
+        #returnedDictionary["blochSpheres"] = self.separatedBlochSpheres()
         returnedDictionary["diracNotation"] = self.diracNotation()
         returnedDictionary['chart'] = self.graph()
         #self.returnedDictionary["link"] = ""
