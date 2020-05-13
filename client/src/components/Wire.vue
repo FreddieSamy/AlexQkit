@@ -27,13 +27,8 @@
       ></div>
     </draggable>
 
-  
-   <Percent :probability=this.liveResults.probabilities[id-1] /> 
-     <BlochSphere />
-   
-
-  
-
+    <Percent :probability="this.liveResults.probabilities[id-1]" />
+    <BlochSphere />
   </div>
 </template>
 <!-- =============================================================  -->
@@ -284,7 +279,7 @@ export default {
   display: flex;
   align-items: flex-start;
   height: 45px;
-  background-size: 20px 38px;;
+  background-size: 20px 38px;
   background-image: url("../assets/wire.png");
   /* border: 0.5px dashed black; */
 }
