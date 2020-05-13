@@ -1,48 +1,21 @@
+export const testCircuit = () => {};
 
-export const testCases = [
+export const unitTest = [
   {
-    name: "test0",
-    circuit: {
-      wires: 1,
-      init: ["0"],
-      rows: [["x"]]
-    },
-    result : '|1⟩'
+    wires: 2,
+    rows: [[], []],
+    dirac: "00",
   },
   {
-    name: "test1",
-    circuit: {
-      wires: 2,
-      init: ["0", "0"],
-      rows: [[],[]],
-    },
-    result : '|00⟩'
+    wires: 2,
+    rows: [[], []],
+    dirac: "00",
   },
   {
-    name: "test2",
-    circuit: {
-      wires: 2,
-      init: ["0", "0"],
-      rows: [
-        ["x"],
-        ["i"],
-      ],
-    },
-    result : '|10⟩'
+    wires: 2,
+    rows: [[], []],
+    dirac: "00",
   },
-  {
-    name: "test3",
-    circuit: {
-      wires: 2,
-      init: ["0", "0"],
-      rows: [
-        ["i"],
-        ["x"],
-      ],
-    },
-    result : '|01⟩'
-  },
-
 ];
 
 

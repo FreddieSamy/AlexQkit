@@ -5,7 +5,6 @@ import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from qiskit import *
 from functions import Circuit
-from booleanExpression import Booleanfunction
 startTime = datetime.now()
 # configuration
 DEBUG = True
@@ -118,7 +117,7 @@ def draggableCircuit():
         recievedDic=request.get_json()
         #print("recieved data from Vue : ",recievedDic[0])
         #print(recievedDic)
-        c.createCircuit(recievedDic)
+        c.draggable(recievedDic)
         #print("retrived data from qiskit : ",c.returnedDictionary)
     else:
         c.returnedDictionary={}
@@ -145,13 +144,6 @@ def reset():
         c.createCircuit(recievedDic[0])
         #print(c.returnedDictionary['diracNotation'])
     return "success"
-@app.route('/booleanExpression',methods=['GET','POST'])
-def booleanExpress():
-    if request.method=='POST':
-        recievedData = request.get_json()
-        print(recievedData)
-        booleanCircut = Booleanfunction.buildBooleanCircuit(recievedData["vars"],recievedData['fn'])
-    return jsonify(booleanCircut)
 
 if __name__ == "__main__":
     app.run(debug=True)
