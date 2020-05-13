@@ -5,18 +5,15 @@
     <div class="circuit-tools">
       <Toolbox ref="toolbox" />
       <IBM class="ibm" ref="ibm" />
-     
     </div>
 
     <div class="circuit">
       <Qasm ref="qasm" />
-      
 
-      
       <tracingLine ref="tracingLine"></tracingLine>
-      <CircuitDrawing v-if="this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })" />
+      <CircuitDrawing v-if="this.circuitDrawingFlag" />
       <!-- ------------ circiutloops & wires ------------->
-      <div v-if="!this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })" class="circuit-wires">
+      <div v-if="!this.circuitDrawingFlag" class="circuit-wires">
         <!-- ------------  wires ------------->
         <div class="wires">
           <wire v-for="row in jsonObject.wires" :key="row" :id="row" :ref="'wire'"></wire>
@@ -27,11 +24,7 @@
       <Trash></Trash>
 
       <div class="wires-buttons">
-        <Toolbox2
-          v-if="!this.$nextTick(() => {this.$refs.qasm.qasmIncludeIfFlag })"
-          class="toolbox2"
-          :setAlgorithm="setAlgorithm"
-        />
+        <Toolbox2 v-if="!this.circuitDrawingFlag" class="toolbox2" :setAlgorithm="setAlgorithm" />
       </div>
     </div>
 
@@ -47,10 +40,13 @@
 
     <div class="results">
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
-        <Histogram class="histogram" />  
+      <Histogram class="histogram" />
     </div>
+<<<<<<< HEAD
 
     
+=======
+>>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
   </div>
 </template>
 <!-- =============================================================  -->
@@ -72,11 +68,7 @@ import tracingLine from "./tracingLine.vue";
 
 import Qasm from "./Qasm.vue";
 import { mapState, mapActions } from "vuex";
-import {
-  blockSphereRoute, // delete
-  qasmCircuitRoute,
-  elementaryGates
-} from "./../data/routes.js";
+import { elementaryGates } from "./../data/routes.js";
 
 export default {
   name: "clone",
@@ -91,18 +83,22 @@ export default {
     //BlochSphere,
     //histoGram,
     DiracNotation,
-   Histogram,
+    Histogram,
     MatrixRepresentation,
     Qasm,
+<<<<<<< HEAD
     tracingLine,
 
     
+=======
+    tracingLine
+>>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
   },
   mounted() {
     //this.runCircuit();
   },
   data() {
-    return {};
+    return { circuitDrawingFlag: false };
   },
   computed: {
     ...mapState(["jsonObject"])
@@ -215,17 +211,6 @@ export default {
       });
     },
     //-----------------------------------------------------------------------
-    // will be terminated
-    draw: function() {
-      var imgofblochSphere = document.getElementById("bloch");
-      imgofblochSphere.src = blockSphereRoute + new Date();
-
-      if (this.$refs.qasm.qasmIncludeIfFlag) {
-        var imgOfCircuit = document.getElementById("circuitDrawing");
-        imgOfCircuit.src = qasmCircuitRoute + new Date();
-      }
-    },
-    //-----------------------------------------------------------------------
     applyControl: function(el1, el2) {
       if (el1 != null && el2 != null) {
         let x = el1.offsetLeft + el1.offsetWidth / 2;
@@ -267,7 +252,7 @@ export default {
     //-----------------------------------------------------------------------
     isControl: function(colElements) {
       for (let j = 0; j < colElements.length; j++) {
-        if (colElements[j].id == "c" || colElements[j].id == "oc") {
+        if (colElements[j].id == "●" || colElements[j].id == "○") {
           return true;
         }
       }
@@ -324,7 +309,7 @@ export default {
     elementaryGates: function() {
       if (this.jsonObject.exeCount) {
         axios.post(elementaryGates, this.jsonObject).then(res => {
-          this.jsonObject.custom = res.data.custom;
+          // this.jsonObject.custom = res.data.custom;
           var dic = res.data.custom;
           var custom = this.$refs.toolbox.customGates;
           var flag = true;

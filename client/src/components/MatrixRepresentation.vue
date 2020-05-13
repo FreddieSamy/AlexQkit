@@ -49,7 +49,7 @@ export default {
         repeated: this.jsonObject.repeated,
         wires: this.jsonObject.wires
       };
-      window.console.log(this.jsonObject.rows.reverse());
+      // window.console.log(this.jsonObject.rows.reverse());
       axios.post(matrixRepresentationRoute, json_object).then(res => {
         this.liveResults.matrixRepresentation = res.data.matrixRepresentation;
         this.expression = this.matrixLatex();

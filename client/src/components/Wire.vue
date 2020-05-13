@@ -27,6 +27,7 @@
       ></div>
     </draggable>
 
+<<<<<<< HEAD
   
    <Percent :probability=this.liveResults.probabilities[id-1] /> 
      <BlochSphere />
@@ -34,6 +35,9 @@
 
   
 
+=======
+    <img src="../assets/b.png" alt />
+>>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
   </div>
 </template>
 <!-- =============================================================  -->
@@ -60,15 +64,23 @@ export default {
     //this.setWire(wire);
   },
   updated() {
-    let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
+    let wire = {
+      qstate: this.state,
+      list: this.getGates(this.id - 1),
+      idx: this.id - 1
+    };
     this.setWire(wire);
   },
   destroyed() {
     this.$parent.controlSystem();
   },
   computed: {
+<<<<<<< HEAD
     ...mapGetters(["wiresCount"]),
     ...mapGetters(["liveResults"])
+=======
+    ...mapGetters(["wiresCount"])
+>>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
   },
   data() {
     return {
@@ -264,10 +276,6 @@ export default {
     displayName: function(name) {
       if (name.startsWith("custom_")) {
         return name.slice(7).toUpperCase();
-      } else if (name == "c") {
-        return "●";
-      } else if (name == "oc") {
-        return "○";
       } else {
         return name.toUpperCase();
       }
@@ -335,8 +343,8 @@ div[id^="rz"] {
   font-weight: bold;
   background: #ff8c61;
 }
-#c,
-#oc {
+#○,
+#● {
   color: black;
   line-height: 10px;
   margin: 0em 0.265em 0em 0.265em;
@@ -344,7 +352,7 @@ div[id^="rz"] {
   background: none;
   border: none;
 }
-#oc {
+#○ {
   background-image: url("../assets/whitedot.png");
   background-repeat: no-repeat;
   background-position: center;
@@ -384,6 +392,17 @@ div[id^="rz"] {
   font-size: 0.6em;
   /*opacity:0.4;*/
 }
+<<<<<<< HEAD
+=======
+.wire-drop-area {
+  height: 40px;
+  width: 100%;
+  display: inline-flex;
+  background-size: contain;
+  background-image: url("../assets/wire.png");
+}
+
+>>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
 img {
   width: 40px;
   height: 40px;
