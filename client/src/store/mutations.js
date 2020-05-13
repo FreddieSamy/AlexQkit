@@ -43,6 +43,8 @@ export default {
   },
 
 
+
+
   // Server Functions
   sendCircuit:  (state) => {
     try {
@@ -52,8 +54,7 @@ export default {
       )
     } catch (error) {
       window.console.log("i think there is an error " + error);
-      return false;
     }
-    return true;
+
   },
 };

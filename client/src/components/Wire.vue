@@ -27,17 +27,21 @@
       ></div>
     </draggable>
 
-    <Probability class="Probability"  :percent=this.liveResults.probabilities[id-1] />
-    <BlochSphere class="bloch-sphere" />
+  
+   <Percent :probability=this.liveResults.probabilities[id-1] /> 
+     <BlochSphere />
+   
 
+  
 
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import draggable from "vuedraggable";
-import Probability from "../components/Probability";
-import BlochSphere from "../components/BlochSphere"
+import Percent from "./Percent";
+import BlochSphere from "./BlochSphere";
+
 import { mapActions, mapGetters } from "vuex";
 import { states } from "./../data/gates_and_states";
 
@@ -46,7 +50,7 @@ export default {
   display: "wire",
   components: {
     draggable,
-    Probability,
+    Percent,
     BlochSphere
   },
   props: ["id"],
@@ -59,11 +63,12 @@ export default {
     let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
     this.setWire(wire);
   },
-  destroyed(){
-    this.$parent.controlSystem()
-  },  
-  computed :{
-    ...mapGetters(['liveResults'])
+  destroyed() {
+    this.$parent.controlSystem();
+  },
+  computed: {
+    ...mapGetters(["wiresCount"]),
+    ...mapGetters(["liveResults"])
   },
   data() {
     return {
@@ -77,23 +82,19 @@ export default {
       handler() {
         this.updateWireAttributes();
         // window.console.log("hello from wire "+this.id)
-         this.$nextTick(() => {
-           if (this.id == this.$parent.jsonObject.wires) {
-             //window.console.log("wire :"+this.id+" send the system");
-             //this.$parent.controlSystem();
-             //this.runCircuit();
-             //window.console.log("hello watcher of "+this.id)
+        this.$nextTick(() => {
+          if (this.id == this.$parent.jsonObject.wires) {
+            //window.console.log("wire :"+this.id+" send the system");
+            //this.$parent.controlSystem();
+            //this.runCircuit();
+            //window.console.log("hello watcher of "+this.id)
+          }
+        });
 
-
-           }
-          
-         });
-          
-  // To Mario    
-  //  this.findswap(); 
-
+        // To Mario
+        //  this.findswap();
+      }
     }
-    },
   },
 
   methods: {
@@ -110,21 +111,22 @@ export default {
       this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
-    findswap:function(){
+    findswap: function() {
       //window.console.log(this.$parent.jsonObject);
-      for (let rowsx = 0; rowsx < this.$parent.jsonObject.rows.length; rowsx++){
-        
-          
-          if(this.$parent.jsonObject.rows[rowsx][0]=="swap"){
-             window.console.log(this.$parent.jsonObject.rows[rowsx][0]);
-          
-             window.console.log("rows="+rowsx+"column 0");
-           //this.helperswapcols(rowsx,0);
-          }  
-        
+      for (
+        let rowsx = 0;
+        rowsx < this.$parent.jsonObject.rows.length;
+        rowsx++
+      ) {
+        if (this.$parent.jsonObject.rows[rowsx][0] == "swap") {
+          window.console.log(this.$parent.jsonObject.rows[rowsx][0]);
+
+          window.console.log("rows=" + rowsx + "column 0");
+          //this.helperswapcols(rowsx,0);
+        }
       }
     },
-   //------------------------------------------------------------------------- 
+    //-------------------------------------------------------------------------
     // helperswapcols:function(rowindex,columnindex){
     //  var countswaps=0;
     //   for (let rowsx = 0; rowsx < this.$parent.jsonObject.rows.length; rowsx++){
@@ -159,7 +161,8 @@ export default {
       gate.setAttribute("col", "_" + col);
     },
     //-----------------------------------------------------------------------
-    updateWireAttributes: function() { // replace it by javascript numpy alternative
+    updateWireAttributes: function() {
+      // replace it by javascript numpy alternative
       let wire = document.querySelector("#list" + this.id + "");
       if (this.list.length) {
         let gates = wire.childNodes;
@@ -179,7 +182,6 @@ export default {
       evt.target.innerHTML = "|" + this.state + "⟩";
       this.$parent.jsonObject.init[id.slice(1, -1) - 1] = this.state;
       this.runCircuit();
-     
     },
     //-----------------------------------------------------------------------
     deleteWire: function(evt) {
@@ -189,9 +191,13 @@ export default {
     //-----------------------------------------------------------------------
     addIdentity: function() {
       // add identiy across the columns of same wire (row)
-      for (let i = this.list.length; i < this.$parent.jsonObject.colsCount; i++) {
+      for (
+        let i = this.list.length;
+        i < this.$parent.jsonObject.colsCount;
+        i++
+      ) {
         this.list.push({ name: "i" });
-      } 
+      }
     },
     //-----------------------------------------------------------------------
     getGateByIndex: function(gateIndex) {
@@ -245,7 +251,8 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    setGatesIdentity: function() { // when add a ner wire
+    setGatesIdentity: function() {
+      // when add a ner wire
       var maxWire = this.$parent.jsonObject.colsCount;
       let list = [...this.list];
       for (let colIdx = 0; colIdx < maxWire; colIdx++) {
@@ -272,32 +279,14 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .wire {
-  margin: 0em;
+  margin: 0px;
   z-index: -1;
   display: flex;
   align-items: flex-start;
   height: 45px;
-  background-size: contain;
+  background-size: 20px 38px;;
   background-image: url("../assets/wire.png");
-
-}
-.wire-drop-area {
-  height: 40px;
-  flex-basis: 40%;
-  margin: 0px 30px 0px 0px;
-  display: flex;
-  
-}
-.qubit {
-  float: left;
-  margin: 0px;
-  padding: 0px;
-  width: 3em;
-  height: 3em;
-  display: inline-table;
-}
-.Probability{
-  align-self: center;
+  /* border: 0.5px dashed black; */
 }
 .circuit-gate {
   color: white;
@@ -315,6 +304,19 @@ export default {
   background-color: #5d6d7e;
   z-index: 0;
 }
+.wire-drop-area {
+  height: 40px;
+  display: flex;
+  flex-basis: 80%;
+}
+.qubit {
+  margin: -1px 0px 0px 0px;
+  padding: 0px;
+  width: 3em;
+  height: 3em;
+  display: flex;
+}
+
 #rx,
 #ry,
 #rz {
@@ -359,7 +361,7 @@ div[id^="rz"] {
   width: 2.5em;
   height: 2em;
   background-color: white;
-  border:2px solid #306ba2;
+  border: 2px solid #306ba2;
 }
 .delete-wire {
   float: left;
@@ -382,12 +384,11 @@ div[id^="rz"] {
   font-size: 0.6em;
   /*opacity:0.4;*/
 }
-img{
+img {
   width: 40px;
-  height: 40px
+  height: 40px;
 }
-
 #i {
-  opacity: 0.91;
+  opacity: 0.01;
 }
 </style>

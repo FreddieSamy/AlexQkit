@@ -44,22 +44,25 @@
       <blochSphere></blochSphere>
     </div>
     -->
+
     <div class="results">
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
         <Histogram class="histogram" />  
     </div>
+
     
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
+import axios from "axios";
 import Toolbox from "./Toolbox.vue";
 import Toolbox2 from "./Toolbox2.vue";
 import Wire from "./Wire.vue";
 import IBM from "./IBM.vue";
 import Trash from "./Trash.vue";
-import axios from "axios";
-//import blochSphere from "./blochSphere.vue";
+
+
 
 import Histogram from "./Histogram.vue";
 import DiracNotation from "./DiracNotation.vue";
@@ -68,13 +71,12 @@ import MatrixRepresentation from "./MatrixRepresentation.vue";
 import tracingLine from "./tracingLine.vue";
 
 import Qasm from "./Qasm.vue";
-import { mapState, mapActions, mapGetters } from "vuex";
+import { mapState, mapActions } from "vuex";
 import {
   blockSphereRoute, // delete
   qasmCircuitRoute,
   elementaryGates
 } from "./../data/routes.js";
-// import { testCases } from "../test/test_circiut";
 
 export default {
   name: "clone",
@@ -86,13 +88,14 @@ export default {
     Wire,
     Trash,
     Toolbox2,
-    //blochSphere,
+    //BlochSphere,
     //histoGram,
     DiracNotation,
    Histogram,
     MatrixRepresentation,
     Qasm,
     tracingLine,
+
     
   },
   mounted() {
@@ -102,8 +105,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["jsonObject"]),
-    ...mapGetters(["liveResults"])
+    ...mapState(["jsonObject"])
   },
 
   methods: {
@@ -202,7 +204,6 @@ export default {
 
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
-     
       this.jsonObject.wires = systemObject["wires"];
       this.$nextTick(() => {
         for (let row = 0; row < this.jsonObject.wires; row++) {
@@ -351,34 +352,8 @@ export default {
           this.setAlgorithm(this.jsonObject);
         });
       }
-    },
-    //-----------------------------------------------------------------------
-    test: function() {
-      //window.console.log("hello world")
-  
-
-
-      // for (let i = 0; i < testCases.length-3 ; i++) {
-      //   this.setAlgorithm(testCases[i].circuit);
-
-
-     
-  
-      //   //this.runCircuit();
-      //   // window.console.log("model  answer :" + testCases[i].result);
-      //   // window.console.log(
-      //   //       "output answer :" + this.liveResults.diracNotation)
-
-      //   // this.$nextTick(() => {
-      //   //   this.$nextTick(() => {
-      //   //     window.console.log("model  answer :" + testCases[i].result);
-      //   //     window.console.log(
-      //   //       "output answer :" + this.liveResults.diracNotation
-      //   //     );
-      //   //   });
-      //   // });
-      // }
     }
+    //-----------------------------------------------------------------------
   }
 };
 </script>
@@ -461,4 +436,5 @@ export default {
 button {
   border: 2px solid grey;
 }
+
 </style>

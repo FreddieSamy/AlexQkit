@@ -1,43 +1,24 @@
 <template>
-  <div>
-    <img src="../assets/b.png" alt="">
+  <div class="bloch-sphere">
+      <img src="" alt="">
   </div>
 </template>
 <!-- =============================================================  -->
-<script>
 
+<script>
 export default {
   name: "BlochSphere",
   display: "BlochSphere",
-  components: {},
-  //props: ["percent"],
-  data(){
-     return {   
-         
-     }
+  data() {
+    return {
+    };
   },
-  computed:{
+  mounted() {
   }
 };
 </script>
 <!-- =============================================================  -->
+
 <style scoped>
-div {
 
-
-  display: flex;
-  transition: transform .2s;
-  z-index: 0;
-}
-img {
-  width:50px;
-}
-
-div:hover{
-  transform: scale(3);
-  z-index: 2;
-}
-svg{
-    text-align: center;
-}
 </style>

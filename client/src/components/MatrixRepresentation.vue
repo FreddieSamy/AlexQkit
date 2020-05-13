@@ -3,7 +3,7 @@
     <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
     <div id="matrixRepresentation" class="matrix-box">
       <label class="matrix-label">Matrix Representation</label>
-      <katex-element class="matrix" :expression="expression" />-
+      <katex-element class="matrix" :expression="expression" />
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@
 //\left(\begin{matrix}1 &0 \\0 & 1\\0&1\end{matrix}\right)
 //\left(\begin{matrix}1&0&0&0\\0&1&0&0\\0&0&1&0\\0&0&0&1\\end{matrix}\right)
 import Vue from "vue";
-import "katex/dist/katex.min.css"; // eh dah .... ?
+import "katex/dist/katex.min.css"; 
 import VueKatex from "vue-katex";
 import axios from "axios";
 import { mapState, mapGetters } from "vuex";
@@ -90,16 +90,18 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0px;
-  margin: 0px;
+  padding: 10px;
+  margin: 10px;
   border-radius: 0.5em;
+  background: black;
+
 }
 .matrix-label {
   margin: 0px 0px 20px 0px;
 }
-
 div {
   color: white;
+
 }
 .overlay {
   height: 100%;
