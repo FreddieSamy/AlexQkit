@@ -27,7 +27,6 @@
       ></div>
     </draggable>
 
-<<<<<<< HEAD
   
    <Percent :probability=this.liveResults.probabilities[id-1] /> 
      <BlochSphere />
@@ -35,9 +34,6 @@
 
   
 
-=======
-    <img src="../assets/b.png" alt />
->>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
   </div>
 </template>
 <!-- =============================================================  -->
@@ -75,12 +71,8 @@ export default {
     this.$parent.controlSystem();
   },
   computed: {
-<<<<<<< HEAD
     ...mapGetters(["wiresCount"]),
     ...mapGetters(["liveResults"])
-=======
-    ...mapGetters(["wiresCount"])
->>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
   },
   data() {
     return {
@@ -392,17 +384,6 @@ div[id^="rz"] {
   font-size: 0.6em;
   /*opacity:0.4;*/
 }
-<<<<<<< HEAD
-=======
-.wire-drop-area {
-  height: 40px;
-  width: 100%;
-  display: inline-flex;
-  background-size: contain;
-  background-image: url("../assets/wire.png");
-}
-
->>>>>>> f0feed54ee796ce5a9c06f378d4d6e76ed1535ec
 img {
   width: 40px;
   height: 40px;
