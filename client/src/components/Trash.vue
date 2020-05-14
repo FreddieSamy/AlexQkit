@@ -21,7 +21,8 @@
 <!-- =============================================================  -->
 <script>
 import draggable from "vuedraggable";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
+
 export default {
   name: "Trash",
   display: "Trash",
@@ -34,7 +35,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["jsonObject"])
+    ...mapState(["jsonObject"]),
+    ...mapGetters(["liveResults"])
   },
 
   methods: {
@@ -49,11 +51,13 @@ export default {
       this.jsonObject.wires++;
       this.$parent.$refs.tracingLine.updateTracingLine();
       this.jsonObject.init.push("0");
+      this.liveResults.probabilities.push(0);
     },
     removeWire: function() {
       this.jsonObject.wires--;
       this.jsonObject.init.pop();
       this.jsonObject.rows.pop();
+      this.liveResults.probabilities.pop();
       this.$parent.$refs.tracingLine.updateTracingLine();
     }
   }

@@ -28,6 +28,7 @@
     </draggable>
 
     <Percent :probability="this.liveResults.probabilities[id-1]" />
+
     <BlochSphere />
   </div>
 </template>
@@ -36,7 +37,6 @@
 import draggable from "vuedraggable";
 import Percent from "./Percent";
 import BlochSphere from "./BlochSphere";
-
 import { mapActions, mapGetters } from "vuex";
 import { states } from "./../data/gates_and_states";
 
@@ -266,8 +266,15 @@ export default {
       } else {
         return name.toUpperCase();
       }
-    }
+    },
     //-----------------------------------------------------------------------
+    renderBlochSphere: function() {
+      this.renderComponent = false;
+      this.$nextTick(() => {
+        // Add the component back in
+        this.renderComponent = true;
+      });
+    }
   }
 };
 </script>

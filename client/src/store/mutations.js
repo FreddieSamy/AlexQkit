@@ -1,6 +1,7 @@
 
 import axios from "axios";
-import { appRoute } from "../data/routes"
+import { appRoute, defaultBlochSphereRoute } from "../data/routes"
+
 
 export default {
 
@@ -44,13 +45,21 @@ export default {
 
 
 
-
   // Server Functions
   sendCircuit: (state) => {
     try {
       window.console.log(state.jsonObject)
       axios.post(appRoute, state.jsonObject).then(
-        res => { state.results = res.data; },
+        res => {
+          state.results = res.data;
+          //update blochSphere images
+          var i;
+          for (i = 1; i <= state.jsonObject.wires; i++) {
+            var imgofblochSphere = document.getElementById("bloch-sphere-" + i);
+            imgofblochSphere.src =
+              defaultBlochSphereRoute + "/" + i + "?time=" + new Date();
+          }
+        },
         error => { window.console.log(error) }
       )
     } catch (error) {

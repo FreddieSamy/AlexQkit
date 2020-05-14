@@ -1,11 +1,11 @@
 class Results():
 
     def __init__(self,circuit):
-        
+        from qiskit.visualization import plot_bloch_vector
+        self.defaultBlochSphere=self.figToResponse(plot_bloch_vector([0,0,1]))
         self.circuit=circuit
         self.num_qubits=self.circuit.num_qubits
         self.circutDrawing=self.draw()
-        self.blochSpheres=self.separatedBlochSpheres()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
         
@@ -18,7 +18,6 @@ class Results():
         self.circuit=circuit
         self.num_qubits=self.circuit.num_qubits
         self.circutDrawing=self.draw()
-        self.blochSpheres=self.separatedBlochSpheres()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
         
@@ -28,7 +27,6 @@ class Results():
         self.circuit=circuit
         self.num_qubits=self.circuit.num_qubits
         self.circutDrawing=self.draw()
-        self.blochSpheres=self.separatedBlochSpheres()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
         
@@ -209,11 +207,11 @@ class Results():
         pos=list(range(self.num_qubits))
         res={}
         for i in range(self.num_qubits):
-            [[a, b], [c, d]] = partial_trace(self.stateVector(), pos[:i]+pos[i+1:]).data
+            [[a, b], [c, d]] = partial_trace(self.statevector, pos[:i]+pos[i+1:]).data
             x = 2*b.real
             y = 2*c.imag
             z = a.real-d.real
-            fig=plot_bloch_vector([x,y,z],title="qubit "+str(i))
+            fig=plot_bloch_vector([x,y,z])#,title="qubit "+str(i)
             res[i]=self.figToResponse(fig)
         return res
 
