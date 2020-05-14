@@ -37,7 +37,7 @@
 import draggable from "vuedraggable";
 import Percent from "./Percent";
 import BlochSphere from "./BlochSphere";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import { states } from "./../data/gates_and_states";
 
 export default {
@@ -67,7 +67,8 @@ export default {
   },
   computed: {
     ...mapGetters(["wiresCount"]),
-    ...mapGetters(["liveResults"])
+    ...mapGetters(["liveResults"]),
+    ...mapState(["jsonObject"])
   },
   data() {
     return {
@@ -82,7 +83,7 @@ export default {
         this.updateWireAttributes();
         // window.console.log("hello from wire "+this.id)
         this.$nextTick(() => {
-          if (this.id == this.$parent.jsonObject.wires) {
+          if (this.id == this.jsonObject.wires) {
             //window.console.log("wire :"+this.id+" send the system");
             //this.$parent.controlSystem();
             //this.runCircuit();
@@ -112,13 +113,9 @@ export default {
     //-----------------------------------------------------------------------
     findswap: function() {
       //window.console.log(this.$parent.jsonObject);
-      for (
-        let rowsx = 0;
-        rowsx < this.$parent.jsonObject.rows.length;
-        rowsx++
-      ) {
-        if (this.$parent.jsonObject.rows[rowsx][0] == "swap") {
-          window.console.log(this.$parent.jsonObject.rows[rowsx][0]);
+      for (let rowsx = 0; rowsx < this.jsonObject.rows.length; rowsx++) {
+        if (this.jsonObject.rows[rowsx][0] == "swap") {
+          window.console.log(this.jsonObject.rows[rowsx][0]);
 
           window.console.log("rows=" + rowsx + "column 0");
           //this.helperswapcols(rowsx,0);
@@ -179,7 +176,7 @@ export default {
       evt.target.id = id + i;
       this.state = states[i];
       evt.target.innerHTML = "|" + this.state + "⟩";
-      this.$parent.jsonObject.init[id.slice(1, -1) - 1] = this.state;
+      this.jsonObject.init[id.slice(1, -1) - 1] = this.state;
       this.runCircuit();
     },
     //-----------------------------------------------------------------------
@@ -190,11 +187,7 @@ export default {
     //-----------------------------------------------------------------------
     addIdentity: function() {
       // add identiy across the columns of same wire (row)
-      for (
-        let i = this.list.length;
-        i < this.$parent.jsonObject.colsCount;
-        i++
-      ) {
+      for (let i = this.list.length; i < this.jsonObject.colsCount; i++) {
         this.list.push({ name: "i" });
       }
     },
@@ -252,7 +245,7 @@ export default {
     //-----------------------------------------------------------------------
     setGatesIdentity: function() {
       // when add a ner wire
-      var maxWire = this.$parent.jsonObject.colsCount;
+      var maxWire = this.jsonObject.colsCount;
       let list = [...this.list];
       for (let colIdx = 0; colIdx < maxWire; colIdx++) {
         list.push({ name: "i" });

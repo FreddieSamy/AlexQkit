@@ -22,6 +22,8 @@
 <!-- ================================================  -->
 <script>
 import Loop from "./Loop.vue";
+import { mapState } from "vuex";
+
 // eslint-disable-next-line no-undef
 export default {
   name: "CircuitLoops",
@@ -36,9 +38,11 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    ...mapState(["jsonObject"])
+  },
   methods: {
-       applyLoop() {
+    applyLoop() {
       this.ListOfPositions = [];
       this.Repeats = [];
       for (let i = 0; i < this.loopCounts; i++) {
@@ -51,7 +55,7 @@ export default {
       let listOfPos = this.ListOfPositions;
       let listOfRep = this.Repeats;
       let repeated = { listOfPos, listOfRep };
-      this.$parent.$parent.jsonObject["repeated"] = repeated;
+      this.jsonObject["repeated"] = repeated;
       //window.console.log(this.$parent.$parent.jsonObject)
     },
     openNav() {
@@ -122,8 +126,8 @@ button {
   right: 45px;
   font-size: 30px;
 }
-div{
-  color:white
+div {
+  color: white;
 }
 </style>
 

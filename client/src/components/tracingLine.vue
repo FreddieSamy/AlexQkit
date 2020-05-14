@@ -8,6 +8,8 @@
 </template>
 <!-- ========================================================== -->
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "tracingLine",
   display: "tracingLine",
@@ -15,6 +17,9 @@ export default {
     return {
       width: 2
     };
+  },
+  computed: {
+    ...mapState(["jsonObject"])
   },
   methods: {
     //-----------------------------------------------------------------------
@@ -47,7 +52,7 @@ export default {
         }
 
         document.getElementById("tracingLine").style.marginLeft =
-          gateMargin * this.$parent.jsonObject.exeCount +
+          gateMargin * this.jsonObject.exeCount +
           stateBtnMargin +
           qasmMargin +
           this.width +
