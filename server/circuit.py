@@ -117,11 +117,13 @@ class Circuit():
     # we corrected that by passing using reversedMatrix() function
 
     def reversedMatrix(self,matrix,wires):
+        import copy
+        matrixCopy=copy.deepcopy(matrix)
         reversedMatrix=[]
-        for i in range(len(matrix)):
+        for i in range(len(matrixCopy)):
             reversedMatrix.append([])
             pos=int(''.join(reversed(str(("{0:0"+str(wires).replace('.0000','')+"b}").format(i)))),2)
-            tempList=matrix[pos]
+            tempList=matrixCopy[pos]
             for j in range(len(tempList)):
                 pos=int(''.join(reversed(str(("{0:0"+str(wires).replace('.0000','')+"b}").format(j)))),2)
                 reversedMatrix[i].append(tempList[pos])
