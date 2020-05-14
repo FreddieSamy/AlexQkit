@@ -26,20 +26,20 @@
         <h3>Rows</h3>
         <label class="from-to">From</label>
         <select id="fromRow">
-          <option v-for="i in this.$parent.$parent.jsonObject.wires" :key="i" :value="i">{{i}}</option>
+          <option v-for="i in this.jsonObject.wires" :key="i" :value="i">{{i}}</option>
         </select>
         <label class="from-to">To</label>
         <select id="toRow">
-          <option v-for="i in this.$parent.$parent.jsonObject.wires" :key="i" :value="i">{{i}}</option>
+          <option v-for="i in this.jsonObject.wires" :key="i" :value="i">{{i}}</option>
         </select>
         <h3>Columns</h3>
         <label class="from-to">From</label>
         <select id="fromColumn">
-          <option v-for="i in this.$parent.$parent.jsonObject.colsCount" :key="i" :value="i">{{i}}</option>
+          <option v-for="i in this.jsonObject.colsCount" :key="i" :value="i">{{i}}</option>
         </select>
         <label class="from-to">To</label>
         <select id="toColumn">
-          <option v-for="i in this.$parent.$parent.jsonObject.colsCount" :key="i" :value="i">{{i}}</option>
+          <option v-for="i in this.jsonObject.colsCount" :key="i" :value="i">{{i}}</option>
         </select>
         <br />
         <button @click="subCircuitCustoGate()">create</button>
@@ -279,10 +279,7 @@ export default {
       var gatesSystem = [];
       for (let i = fromRow - 1; i < toRow; i++) {
         gatesSystem.push(
-          this.$parent.$parent.jsonObject.rows[i].slice(
-            fromColumn - 1,
-            toColumn
-          )
+          this.jsonObject.rows[i].slice(fromColumn - 1, toColumn)
         );
       }
       var json_object = {

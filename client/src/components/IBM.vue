@@ -21,7 +21,7 @@
             :key="device"
             :value="device"
             :selected=" device =='ibmq_16_melbourne' ? true : false "
-            :disabled="parseInt(index.slice(0,2))<$parent.jsonObject.wires"
+            :disabled="parseInt(index.slice(0,2))<jsonObject.wires"
           >{{device}}</option>
         </optgroup>
       </select>
@@ -39,6 +39,7 @@
 <script>
 import { ibmLink } from "./../data/routes";
 import devices from "./../data/IBM_Devices";
+import { mapState } from "vuex";
 
 export default {
   name: "ibm",
@@ -49,18 +50,21 @@ export default {
       anchor: ibmLink,
       link: "",
       device: "ibmq_16_melbourne",
-      devices:devices
+      devices: devices
     };
+  },
+  computed: {
+    ...mapState(["jsonObject"])
   },
   methods: {
     sendto() {
       if (document.getElementById("checkbox").checked) {
-        this.$parent.jsonObject.API_TOKEN = document.getElementById(
+        this.jsonObject.API_TOKEN = document.getElementById(
           "ibmtextfield"
         ).value;
         var sim = document.getElementById("simulater");
         this.device = sim.options[sim.selectedIndex].value;
-        this.$parent.jsonObject.device = this.device;
+        this.jsonObject.device = this.device;
         this.$parent.Run();
         document.getElementById("checkbox").checked = false;
       } else {

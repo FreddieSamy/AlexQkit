@@ -63,12 +63,12 @@
       <booleanFunction ref="createBoolean" class />
 
       <div class="circiut-loop">
-        <Circiutloops :colsCount="this.$parent.jsonObject.colsCount" />
+        <Circiutloops :colsCount="this.jsonObject.colsCount" />
       </div>
 
       <div class="number-of-shots">
         <label class="lbl1">Number of Shots</label>
-        <input class="ibmToken" type="number" placeholder="1024" v-model="$parent.jsonObject.shots" />
+        <input class="ibmToken" type="number" placeholder="1024" v-model="jsonObject.shots" />
       </div>
 
       <div class="degree-or-radian">
@@ -77,17 +77,11 @@
           id="degree"
           name="angleType"
           :value="false"
-          v-model="$parent.jsonObject.radian"
+          v-model="jsonObject.radian"
           checked
         />
         <label for="degree" style="font-size: 15px;">degree</label>
-        <input
-          type="radio"
-          id="radian"
-          name="angleType"
-          :value="true"
-          v-model="$parent.jsonObject.radian"
-        />
+        <input type="radio" id="radian" name="angleType" :value="true" v-model="jsonObject.radian" />
         <label for="radian" style="font-size: 15px;">radian</label>
       </div>
       <div>
@@ -103,6 +97,7 @@ import addcustomgate from "./addcustomgate";
 import Circiutloops from "./CircuitLoops.vue";
 import booleanFunction from "./booleanFunction.vue";
 import { gates } from "./../data/gates_and_states";
+import { mapState } from "vuex";
 
 export default {
   name: "Toolbox",
@@ -118,6 +113,9 @@ export default {
       gates: gates,
       customGates: []
     };
+  },
+  computed: {
+    ...mapState(["jsonObject"])
   },
   methods: {
     log: function() {},
