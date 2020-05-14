@@ -106,7 +106,7 @@ table[i].append(flag)
         optmiziedEqn = cls().optmizationCancelation(productNormalForm)
         dicOfVariabels = {}
         target = "x"
-        closedControll = "c"
+        closedControll = "●"
         dicOfVariabels = cls().assignOrderOfVaribles(vars)
         lenRow = len(vars.split(","))
         lenColumn = len(dicOfVariabels)

@@ -1,19 +1,24 @@
 <template>
-  <div class="bloch-sphere">
-    <img :src="defaultBlockSphereRoute" :id="'bloch-sphere-'+this.$parent.id" style="width:2.5em;" />
+  <div>
+    <img
+      class="bloch-sphere"
+      :src="defaultBlochSphereRoute"
+      alt
+      :id="'bloch-sphere-'+this.$parent.id"
+    />
   </div>
 </template>
 <!-- =============================================================  -->
 
 <script>
-import { defaultBlockSphereRoute } from "./../data/routes";
+import { defaultBlochSphereRoute } from "./../data/routes";
 
 export default {
   name: "BlochSphere",
   display: "BlochSphere",
   data() {
     return {
-      defaultBlockSphereRoute: defaultBlockSphereRoute + "/" + this.$parent.id
+      defaultBlochSphereRoute: defaultBlochSphereRoute
     };
   },
   mounted() {}
@@ -22,4 +27,11 @@ export default {
 <!-- =============================================================  -->
 
 <style scoped>
+.bloch-sphere {
+  width: 2.5em;
+}
+
+.bloch-sphere:hover {
+  transform: scale(2.5);
+}
 </style>

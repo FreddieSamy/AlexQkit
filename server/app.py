@@ -67,6 +67,9 @@ def qasm():
 def circuitDraw():
     return  r.circutDrawing
 
+@app.route('/blochsphere.png',methods=['GET','POST'])
+def defaultBlochSphere():
+    return  r.defaultBlochSphere
 
 @app.route('/blochsphere.png/<i>',methods=['GET','POST'])
 def blochSphere(i):
