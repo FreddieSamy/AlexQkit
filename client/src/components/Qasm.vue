@@ -19,7 +19,7 @@ import "vue-prism-editor/dist/VuePrismEditor.css";
 import PrismEditor from "vue-prism-editor";
 import axios from "axios";
 import { qasmCircuitRoute, qasmRoute } from "./../data/routes.js";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "qasm",
@@ -28,13 +28,15 @@ export default {
     return { qasmFlag: false };
   },
   computed: {
-    ...mapGetters(["liveResults"])
+    ...mapGetters(["liveResults"]),
+    ...mapState(["jsonObject"])
   },
   components: { PrismEditor },
   methods: {
     //-----------------------------------------------------------------------
     qasm: function() {
       this.qasmFlag = !this.qasmFlag;
+      this.$parent.controlSystem();
       if (this.qasmFlag) {
         document.getElementById("qasmToolboxBtn").innerHTML = "⟨ qasm |";
       } else {
@@ -45,6 +47,8 @@ export default {
       }
       if (!this.$parent.circuitDrawingFlag) {
         this.$parent.$refs.tracingLine.updateTracingLine();
+      } else {
+        this.$parent.resetSystem();
       }
     },
     //-----------------------------------------------------------------------
@@ -53,7 +57,7 @@ export default {
       this.$parent.circuitDrawingFlag = true;
       let json_object = {
         qasm: this.liveResults.qasm,
-        shots: this.$parent.jsonObject.shots
+        shots: this.jsonObject.shots
       };
       axios.post(qasmRoute, json_object).then(res => {
         if (res.data.qasmError == "") {
