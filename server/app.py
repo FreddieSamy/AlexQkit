@@ -35,6 +35,7 @@ def main():
     
 @app.route('/draggableCircuit',methods=['GET','POST'])
 def draggableCircuit():
+    print(c.customGates)
     if request.method=='POST':
         receivedDictionary=request.get_json()
         c.setter(receivedDictionary)
@@ -106,6 +107,7 @@ def addCustomGates():
     if isUnitary:
         matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
         c.customGates[receivedDictionary["gateName"]]=matrix
+        print(c.customGates)
     return jsonify({"isUnitary":isUnitary})
 
 ###############################################################################################################################
@@ -115,15 +117,18 @@ def subCircuitCustomGate():
     from qiskit.quantum_info.operators.predicates import is_unitary_matrix
     from math import log2
     if request.method=='POST':
+        print(c.customGates)
         receivedDictionary=request.get_json()
         c2=Circuit()
+        c2.customGates=c.customGates
         c2.subCircuitSetter(receivedDictionary)
         circuit=c2.createDraggableCircuit()
         r=Results(circuit)
         matrix=r.matrixRepresentation()
-        isUnitary=is_unitary_matrix(f.strToComplex(matrix))
+        complexMatrix=f.strToComplex(matrix)
+        isUnitary=is_unitary_matrix(complexMatrix)
         if isUnitary:
-            c.customGates[receivedDictionary["gateName"]]=matrix
+            c.customGates[receivedDictionary["gateName"]]=complexMatrix
             matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
             return  jsonify({"isUnitary":isUnitary,"matrix":f.complexToStr(matrix)}) 
         else:
@@ -167,8 +172,8 @@ def elementaryGates():
         rows,newGates=f.elementaryGates(receivedDictionary["rows"],c)
         gates={}
         for (name,matrix) in newGates.items():
-            gates[name]=c.reversedMatrix(matrix.copy(),int(log2(len(matrix))))
-            gates[name]=f.complexToStr(matrix.copy())
+            gates[name]=c.reversedMatrix(matrix,int(log2(len(matrix))))
+            gates[name]=f.complexToStr(matrix)
         returnedDictionary={"rows":rows,"custom":gates}
         
     else:

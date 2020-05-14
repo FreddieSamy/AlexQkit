@@ -97,22 +97,26 @@ class Features():
 ###############################################################################################################################
 
     def strToComplex(self, matrix):
-        for i in range(len(matrix)):
-            for j in range(len(matrix[i])):
-                if(type(matrix[i][j]) == type("")):
-                    matrix[i][j] = matrix[i][j].replace("i", "j")
-                    matrix[i][j] = complex(matrix[i][j])
-        return matrix
+        import copy
+        matrixCopy=copy.deepcopy(matrix)
+        for i in range(len(matrixCopy)):
+            for j in range(len(matrixCopy[i])):
+                if(type(matrixCopy[i][j]) == type("")):
+                    matrixCopy[i][j] = matrixCopy[i][j].replace("i", "j")
+                    matrixCopy[i][j] = complex(matrixCopy[i][j])
+        return matrixCopy
 
 ###############################################################################################################################
 
     def complexToStr(self, matrix):
         import numpy as np
-        for i in range(len(matrix)):
-            for j in range(len(matrix[i])):
-                if(type(matrix[i][j]) == type(0j)):
-                    matrix[i][j] = str(np.around(matrix[i][j],4))
-        return matrix
+        import copy
+        matrixCopy=copy.deepcopy(matrix)
+        for i in range(len(matrixCopy)):
+            for j in range(len(matrixCopy[i])):
+                if(type(matrixCopy[i][j]) == type(0j)):
+                    matrixCopy[i][j] = str(np.around(matrixCopy[i][j],4))
+        return matrixCopy
 
 ###############################################################################################################################
 
