@@ -5,7 +5,7 @@ from qiskit import *
 from circuit import Circuit
 from results import Results
 from features import Features
-from booleanExpression import Booleanfunction
+from booleanExpression import BooleanFunction
 
 #startTime = datetime.now()
 
@@ -187,7 +187,7 @@ def booleanExpress():
     if request.method=='POST':
         recievedData = request.get_json()
         print(recievedData)
-        booleanCircut = Booleanfunction.buildBooleanCircuit(recievedData["vars"],recievedData['fn'])
+        booleanCircut = BooleanFunction.buildBooleanCircuit(recievedData["vars"],recievedData['fn'])
     return jsonify(booleanCircut)
 
 ###############################################################################################################################
