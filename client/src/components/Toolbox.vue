@@ -59,15 +59,15 @@
           @click="$parent.$refs.matrixRepresentation.openNav()"
         >Matrix Representation</button>
       </div>
-      <!-- to mario from hassan -->
-      <booleanFunction ref="createBoolean" class />
+   
+
 
       <div class="circiut-loop">
         <Circiutloops :colsCount="this.jsonObject.colsCount" />
       </div>
 
       <div class="number-of-shots">
-        <label class="lbl1">Number of Shots</label>
+        <label class="lbl1">Shots</label>
         <input class="ibmToken" type="number" placeholder="1024" v-model="jsonObject.shots" />
       </div>
 
@@ -95,7 +95,7 @@
 import draggable from "vuedraggable";
 import addcustomgate from "./addcustomgate";
 import Circiutloops from "./CircuitLoops.vue";
-import booleanFunction from "./booleanFunction.vue";
+
 import { gates } from "./../data/gates_and_states";
 import { mapState } from "vuex";
 
@@ -106,7 +106,7 @@ export default {
     draggable,
     addcustomgate,
     Circiutloops,
-    booleanFunction
+
   },
   data() {
     return {
@@ -142,7 +142,6 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .toolbox {
-  background: white;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -251,7 +250,7 @@ export default {
   flex-basis: 12%;
 }
 .number-of-shots {
-  flex-basis: 30%;
+  flex-basis: 10%;
 }
 .number-of-shots input {
   margin: 0em 0em 0em 1em;

@@ -20,11 +20,11 @@
         </div>
       </div>
     </div>
-    <div class="toolbox-2">
+    <div >
       <Trash></Trash>
 
       <div class="wires-buttons">
-        <Toolbox2 v-if="!this.circuitDrawingFlag" class="toolbox2" :setAlgorithm="setAlgorithm" />
+        <Toolbox2 v-if="!this.circuitDrawingFlag" :setAlgorithm="setAlgorithm" />
       </div>
     </div>
 
@@ -96,6 +96,7 @@ export default {
     ...mapActions(["setColsCount"]),
     ...mapActions(["setExeCount"]),
     ...mapActions(["runCircuit"]),
+    ...mapActions(["checkSwapSystem"]),
 
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
@@ -114,6 +115,7 @@ export default {
 
       this.$refs.tracingLine.updateTracingLine(); //update the tracing line
       this.controlSystem();
+      this.checkSwapSystem();
 
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
@@ -213,6 +215,7 @@ export default {
         hr.style.margin = "" + y1 + "px 0px 0px " + (x - 2) + "px";
         var parent = this.$el;
         parent.appendChild(hr);
+    
       }
     },
     //-----------------------------------------------------------------------
@@ -235,6 +238,7 @@ export default {
           }); // added gate has been rendered
         } // end for loop
       }); // wire has been rendered
+
     },
     //-----------------------------------------------------------------------
     isControl: function(colElements) {

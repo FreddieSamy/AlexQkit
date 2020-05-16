@@ -1,33 +1,48 @@
 <template>
   <div class="toolbox-2">
-    <button @click="runCircuit">send</button>
-    <button @click="cloneResetSystem">reset system</button>
-    <tracingButtons></tracingButtons>
+    <div class="run-reset-buttons">
+      <button @click="runCircuit">Run</button>
+      <button @click="cloneResetSystem">Reset</button>
+    </div>
 
-    <button class="exeBtn" @click="this.$parent.elementaryGates">Elementary Gates</button>
+    <tracingButtons class="tracing-buttons"></tracingButtons>
 
-    <input
-      class="save-circuit"
-      type="text"
-      placeholder="Save Circuit by Name"
-      v-model="savedCirciutName"
-    />
-    <button @click="saveCircuit(savedCirciutName)">Save Circuit</button>
+    <div class="elementary-gates">
+      <button class="exeBtn" @click="this.$parent.elementaryGates">Elementary Gates</button>
+    </div>
 
-    <label class="select-algorithm">Select an Algorithm</label>
-    <select v-model="selectedAlgorithm">
-      <option v-for="(item, index) in algorithms" :key="index" :value="item.circuit">{{ item.name }}</option>
-    </select>
+    <booleanFunction ref="createBoolean" class="boolean-function" />
+
+    <div class="save-circuit">
+      <input
+        type="text"
+        placeholder="Save Circuit by Name"
+        v-model="savedCirciutName"
+      />
+      <button @click="saveCircuit(savedCirciutName)">Save Circuit</button>
+    </div>
+    <div class="select-algorithm">
+      <label>Select an Algorithm</label>
+      <select v-model="selectedAlgorithm">
+        <option
+          v-for="(item, index) in algorithms"
+          :key="index"
+          :value="item.circuit"
+        >{{ item.name }}</option>
+      </select>
+    </div>
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import { mapState, mapActions } from "vuex";
 import tracingButtons from "./tracingButtons.vue";
+import booleanFunction from "./booleanFunction.vue";
+
 export default {
   name: "Toolbox2",
   display: "Toolbox2",
-  components: { tracingButtons },
+  components: { tracingButtons, booleanFunction },
   props: ["setAlgorithm"],
   data() {
     return {
@@ -79,12 +94,18 @@ export default {
 </script>
 <!-- =============================================================  -->
 <style scoped>
-toolbox-2 {
+.toolbox-2 {
   display: flex;
+  flex-direction: row;
+  justify-content:flex-start;
+  align-items:center;
+  flex-wrap: wrap;
+  padding: 0px 50px 0px 5px;
+  margin: 0px;
 }
 button {
   display: inline-block;
-  margin: 0em 0.2em 0em 0.2em;
+  margin: 0em 0em 0em 0em;
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
   border-radius: 0.5em;
@@ -97,14 +118,28 @@ select {
   border-radius: 7px;
   background: white;
 }
-.save-circuit {
-  margin: 0em 0.5em 0em 5em;
+.run-reset-buttons{
+  flex-basis: 5%;
 }
+.tracing-buttons{
+  flex-basis:  5%;
+  margin: 0px 10px 0px 10px;
+}
+.boolean-function {
+   flex-basis: 5%;
+   margin: 0px 15px 0px 0px;
+}
+.elementary-gates{
+ flex-basis: 5%;
+}
+.save-circuit {
+ flex-basis: 5%;
+  margin: 0px 10px 0px 10px;
+} 
 .select-algorithm {
-  margin: 0em 0.5em 0em 2em;
+ flex-basis: 5%;
+ margin: 0px 10px 0px 10px;
 }
 
-.toolbox2-buttons {
-  margin: 1em;
-}
+
 </style>

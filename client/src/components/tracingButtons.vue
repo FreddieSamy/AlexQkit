@@ -56,16 +56,13 @@ export default {
 <!-- ========================================================== -->
 <style scoped>
 .exe {
-  display: inline-block;
-  margin: 0em 0em 0em 3em;
+  display: flex;
 }
 .exeBtn {
-  display: inline-block;
   margin: 0.2em;
   padding: 0.1em 0.5em 0.1em 0.5em;
   background-color: white;
   border-radius: 0.5em;
-
   border: 2px solid grey;
 }
 </style>
