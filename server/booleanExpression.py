@@ -1,5 +1,5 @@
 from itertools import product
-class Booleanfunction:
+class BooleanFunction:
     def __init__(self):
         pass
     def buildTruthTable(self,vars,fn) :
@@ -41,7 +41,7 @@ table[i].append(flag)
         return normalformEqns
     
     def productOfNormalFn(self,normalFnEqns):
-        def helpOptmizatioProudct(product):
+        def helpOptmizationProudct(product):
             tempStr = ""
             productOptmize = []
             for i in product:
@@ -56,10 +56,11 @@ table[i].append(flag)
                     productOptmize.append(tempStr)
                     tempStr = ""
             return productOptmize
+        
         pEqns = []
         for i in normalFnEqns :
             pEqns.append(product(*i))
-        return helpOptmizatioProudct(pEqns)
+        return helpOptmizationProudct(pEqns)
     
     def optmizationCancelation(self,collectedProduct):
         n = len(collectedProduct) 
@@ -81,11 +82,16 @@ table[i].append(flag)
                 index = prevStart + 1
         return collectedProduct
 
-    def assignBooleanCircuit(self,booleanCircuit,optmiziedEqn,dicOfVariabels,closedControll):
+    def assignBooleanCircuit(self,booleanCircuit,optmiziedEqn,dicOfVariabels,closedControll,openControll):
         for row in range(len(optmiziedEqn)) :
             for element in optmiziedEqn[row].split('.') :
-                indexele = dicOfVariabels[element]
-                booleanCircuit[indexele][row] = closedControll
+                
+                if "not" in element :
+                    indexele = dicOfVariabels[element.split(" ")[1]]
+                    booleanCircuit[indexele][row] = openControll
+                else:
+                    indexele =  dicOfVariabels[element]
+                    booleanCircuit[indexele][row] = closedControll
         return booleanCircuit
 
     def intalize2Darray(self,rows,columns):
@@ -104,13 +110,47 @@ table[i].append(flag)
         normalFormEqn = cls().normalForm(truthTable,vars)
         productNormalForm = cls().productOfNormalFn(normalFormEqn)
         optmiziedEqn = cls().optmizationCancelation(productNormalForm)
+        optmiziedEqn = cls().term_XOR_one(optmiziedEqn)
         dicOfVariabels = {}
         target = "x"
         closedControll = "●"
+        openControll = "○"
         dicOfVariabels = cls().assignOrderOfVaribles(vars)
         lenRow = len(vars.split(","))
-        lenColumn = len(dicOfVariabels)
+        lenColumn = len(optmiziedEqn)
         booleanCircuit = cls().intalize2Darray(lenRow,lenColumn)
         booleanCircuit.append([target]*lenColumn)
-        booleanCircuit = cls().assignBooleanCircuit(booleanCircuit,optmiziedEqn,dicOfVariabels,closedControll)
+        booleanCircuit = cls().assignBooleanCircuit(booleanCircuit,optmiziedEqn,dicOfVariabels,closedControll,openControll)
+        #return booleanCircuit
         return {'wires' : lenRow+1 ,'init' : ['0']*(lenRow+1), 'rows': booleanCircuit}
+
+    def isOne(self,optmiziedEqn):
+        for termIndex in range(len(optmiziedEqn)) :
+            if optmiziedEqn[termIndex] == "1" :
+                optmiziedEqn.pop(termIndex)
+                return True
+        return False
+    def smallestTermLength(self,optmiziedEqn):
+        indexOfTerm = 0
+        term = optmiziedEqn[0].split('.')
+        lestTermLength = len(term)
+
+        for termIndex in range(1,len(optmiziedEqn)) :
+            tempTerm = optmiziedEqn[termIndex].split('.')
+            if len(tempTerm) < lestTermLength and optmiziedEqn[termIndex] != "1" :
+                lestTermLength = len(tempTerm)
+                indexOfTerm = termIndex
+                term = tempTerm
+                if lestTermLength == 1 :
+                    break
+        return {'term' : term ,'index' : indexOfTerm }
+    def term_XOR_one(self,optmiziedEqn):
+        if self.isOne(optmiziedEqn) :
+            dicOfTerm = self.smallestTermLength(optmiziedEqn)
+            tempStrTerm = ""
+            for element in dicOfTerm["term"] :
+                tempStrTerm += "not " + element+"."
+            tempStrTerm = tempStrTerm.strip('.')
+            optmiziedEqn[dicOfTerm['index']] = tempStrTerm
+
+        return optmiziedEqn
