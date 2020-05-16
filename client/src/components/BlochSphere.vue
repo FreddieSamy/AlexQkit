@@ -29,10 +29,10 @@ export default {
 <style scoped>
 .bloch-sphere {
   width: 2.5em;
-  transition: transform 0.2s;
+  transition: transform 0.3s;
 }
 
 .bloch-sphere:hover {
-  transform: scale(2.5);
+  transform: scale(5.5);
 }
 </style>
