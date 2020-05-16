@@ -24,7 +24,9 @@ export default {
   runCircuit:({commit}) => {
     commit('sendCircuit')
   },
-
+  checkSwapSystem:({commit})=>{
+    commit('swapConstrains')
+  }
 
 }
   

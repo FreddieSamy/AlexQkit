@@ -44,6 +44,19 @@ export default {
   },
 
 
+  //Check for in every Column there is an even numbers of swaps
+  swapConstrains:(state)=>{
+        for( let col = 0 ; col < state.jsonObject.exeCount ; col++ ){
+          let count = 0;
+          for( let row = 0 ; row < state.jsonObject.wires ; row++ ){
+            if(state.jsonObject.rows[row][col] === 'swap'){count++}
+          }
+          if(count%2 != 0 ){window.console.log("odd number of swaps at col "+col)}
+        }
+  },
+
+
+
 
   // Server Functions
   sendCircuit: (state) => {

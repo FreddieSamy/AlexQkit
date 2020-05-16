@@ -1,5 +1,5 @@
   <template>
-  <div>
+  <div class="boolean-function">
     <div id="myNav3" class="overlay" style="width:0%">
       <a href="javascript:void(0)"  class="closebtn" @click="closeNav()">&#10006;</a>
 
@@ -56,9 +56,9 @@ export default {
     },
   }
 };
-    </script>
-    <style scoped>
- 
+</script>
+<style scoped>
+
 .overlay {
   height: 100%;
   top: 0;
@@ -106,5 +106,12 @@ export default {
     right: 35px;
   }
 }
-
+button {
+  display: inline-block;
+  margin: 0em 0.2em 0em 0.2em;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+  background-color: white;
+  border-radius: 0.5em;
+  border: 2px solid grey;
+}
     </style>
