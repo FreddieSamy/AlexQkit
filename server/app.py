@@ -35,7 +35,7 @@ def main():
     
 @app.route('/draggableCircuit',methods=['GET','POST'])
 def draggableCircuit():
-    print(c.customGates)
+    #print(c.customGates)
     if request.method=='POST':
         receivedDictionary=request.get_json()
         c.setter(receivedDictionary)
@@ -107,7 +107,7 @@ def addCustomGates():
     if isUnitary:
         matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
         c.customGates[receivedDictionary["gateName"]]=matrix
-        print(c.customGates)
+        #print(c.customGates)
     return jsonify({"isUnitary":isUnitary})
 
 ###############################################################################################################################
@@ -117,7 +117,7 @@ def subCircuitCustomGate():
     from qiskit.quantum_info.operators.predicates import is_unitary_matrix
     from math import log2
     if request.method=='POST':
-        print(c.customGates)
+        #print(c.customGates)
         receivedDictionary=request.get_json()
         c2=Circuit()
         c2.customGates=c.customGates
