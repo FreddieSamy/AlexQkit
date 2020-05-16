@@ -20,7 +20,7 @@ class Features():
             for j in range(len(columns[i])):
                 if columns[i][j] == "i":
                     continue
-                if columns[i][j] == "c" or columns[i][j] == "oc":
+                if columns[i][j] == "●" or columns[i][j] == "○":
                     c.append(j)
                 else:
                     gatePos = j
@@ -115,7 +115,7 @@ class Features():
         for i in range(len(matrixCopy)):
             for j in range(len(matrixCopy[i])):
                 if(type(matrixCopy[i][j]) == type(0j)):
-                    matrixCopy[i][j] = str(np.around(matrixCopy[i][j],4))
+                    matrixCopy[i][j] = str(np.around(matrixCopy[i][j],4)).replace("j","i")
         return matrixCopy
 
 ###############################################################################################################################
