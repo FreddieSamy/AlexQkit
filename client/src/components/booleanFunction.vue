@@ -36,7 +36,10 @@ export default {
          var variables = document.getElementById("variables").value;
          var booleanfunction = document.getElementById("booleanfunction").value;
             axios.post("http://127.0.0.1:5000/booleanExpression", {vars: variables ,fn:booleanfunction}).then(res => {
-            window.console.log(res.data);
+            //window.console.log(res.data);
+            window.console.log(this.$parent.jsonObject);
+            this.$parent.jsonObject.init = res.data.init
+            this.$parent.jsonObject.wires = res.data.wires
             this.$parent.setAlgo(res.data);
            });
            this.closeNav();
@@ -103,7 +106,5 @@ export default {
     right: 35px;
   }
 }
-
-
 
     </style>
