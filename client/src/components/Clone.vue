@@ -9,18 +9,15 @@
 
     <div class="circuit">
       <Qasm ref="qasm" />
-
       <tracingLine ref="tracingLine"></tracingLine>
       <CircuitDrawing v-if="this.circuitDrawingFlag" />
-      <!-- ------------ circiutloops & wires ------------->
       <div v-if="!this.circuitDrawingFlag" class="circuit-wires">
-        <!-- ------------  wires ------------->
         <div class="wires">
           <wire v-for="row in jsonObject.wires" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
       </div>
     </div>
-    <div >
+    <div>
       <Trash></Trash>
 
       <div class="wires-buttons">
@@ -31,12 +28,6 @@
     <div class="visual-row">
       <DiracNotation ref="diracNotation" />
     </div>
-
-    <!--
-    <div class="visual-row">
-      <blochSphere></blochSphere>
-    </div>
-    -->
 
     <div class="results">
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
@@ -52,13 +43,11 @@ import Toolbox2 from "./Toolbox2.vue";
 import Wire from "./Wire.vue";
 import IBM from "./IBM.vue";
 import Trash from "./Trash.vue";
-
 import Histogram from "./Histogram.vue";
 import DiracNotation from "./DiracNotation.vue";
 import CircuitDrawing from "./CircuitDrawing.vue";
 import MatrixRepresentation from "./MatrixRepresentation.vue";
 import tracingLine from "./tracingLine.vue";
-
 import Qasm from "./Qasm.vue";
 import { mapState, mapActions } from "vuex";
 import { elementaryGates } from "./../data/routes.js";
@@ -73,8 +62,6 @@ export default {
     Wire,
     Trash,
     Toolbox2,
-    //BlochSphere,
-    //histoGram,
     DiracNotation,
     Histogram,
     MatrixRepresentation,
@@ -215,7 +202,6 @@ export default {
         hr.style.margin = "" + y1 + "px 0px 0px " + (x - 2) + "px";
         var parent = this.$el;
         parent.appendChild(hr);
-    
       }
     },
     //-----------------------------------------------------------------------
@@ -238,7 +224,6 @@ export default {
           }); // added gate has been rendered
         } // end for loop
       }); // wire has been rendered
-
     },
     //-----------------------------------------------------------------------
     isControl: function(colElements) {
@@ -352,20 +337,32 @@ export default {
   margin: 0.2em;
 }
 .toolbox {
-  flex-basis: 63%;
+  flex-basis: 65%;
 }
 .ibm {
-  flex-basis: 37%;
+  flex-basis: 30%;
 }
 .circuit {
-  border: 0px dashed grey;
-  /*
-  width: 150%;
-  overflow: auto
-  */
+  display: inline-flex;
+  width: 99%;
+  height: 50%;
+  margin: 0.2em 0.2em 0.2em 0.2em;
+}
+.circuit-wires {
+  margin: 0em 0.2em 0em 0.2em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 .wires {
   margin: 0em 0.1em 0em 0.1em;
+  flex-basis: 100%;
+}
+.histogram {
+  flex-basis: 95%;
+  justify-self: center;
 }
 .flip-list-move {
   transition: transform 10.9s;
@@ -382,18 +379,6 @@ export default {
   background-color: white;
   border-radius: 0.5em;
 }
-.circuit-wires {
-  width: 99%;
-  height: 99%;
-  margin: 0em 0.2em 0em 0.2em;
-}
-.circuit {
-  /*border: dashed firebrick;*/
-  display: inline-flex;
-  width: 99%;
-  height: 50%;
-  margin: 0.2em 0.2em 0.2em 0.2em;
-}
 .results {
   display: flex;
   flex-direction: row;
@@ -404,11 +389,6 @@ export default {
 .matrix {
   flex-basis: 40%;
 }
-.histogram {
-  flex-basis: 55%;
-  justify-self: center;
-}
-
 button {
   border: 2px solid grey;
 }

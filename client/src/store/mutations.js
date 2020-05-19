@@ -56,8 +56,6 @@ export default {
   },
 
 
-
-
   // Server Functions
   sendCircuit: (state) => {
     try {
