@@ -1,6 +1,6 @@
 <template>
-  <div class="histogram-box">
-    <GChart style="width:500px" type="ColumnChart" :data="chart" :options="chartOptions" />
+  <div>
+    <GChart type="ColumnChart" :data="chart" :options="chartOptions" />
   </div>
 </template>
 <!-- ========================================================== -->
@@ -22,10 +22,8 @@ export default {
   data() {
     return {
       chartOptions: {
-        chart: {
-          title: "",
-          subtitle: ""
-        },vAxis: {
+        title:"Circuit Histogram",
+      vAxis: {
             maxValue: 1,
           }
       },
@@ -35,9 +33,5 @@ export default {
 </script>
 <!-- ========================================================== -->
 <style scoped>
-.histogram-box{
-  display: flex;
-  align-self: center;
-  justify-content: center;
-}
+
 </style>

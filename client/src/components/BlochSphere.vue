@@ -34,5 +34,6 @@ export default {
 
 .bloch-sphere:hover {
   transform: scale(5.5);
+  
 }
 </style>
