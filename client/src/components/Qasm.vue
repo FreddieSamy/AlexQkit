@@ -57,7 +57,9 @@ export default {
       this.$parent.circuitDrawingFlag = true;
       let json_object = {
         qasm: this.liveResults.qasm,
-        shots: this.jsonObject.shots
+        shots: this.jsonObject.shots,
+        API_TOKEN: this.jsonObject.API_TOKEN,
+        device: this.jsonObject.device
       };
       axios.post(qasmRoute, json_object).then(res => {
         if (res.data.qasmError == "") {
@@ -66,6 +68,8 @@ export default {
           this.liveResults.blochSpheres = res.data.blochSpheres;
           this.liveResults.chart = res.data.chart;
           this.liveResults.diracNotation = res.data.diracNotation;
+          this.liveResults.link = res.data.link;
+          this.jsonObject.wires = res.data.wires;
 
           if (this.qasmFlag) {
             this.qasmCode = res.data.qasm;

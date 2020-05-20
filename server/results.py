@@ -256,12 +256,16 @@ class Results():
         returnedDictionary={}
         self.circutDrawing = self.draw()
         self.blochSpheres=self.separatedBlochSpheres()
+        returnedDictionary["wires"]=self.num_qubits
         returnedDictionary["probabilities"] = self.separatedProbabilities()
         #returnedDictionary["blochSpheres"] = self.separatedBlochSpheres()
         returnedDictionary["diracNotation"] = self.diracNotation()
         returnedDictionary['chart'] = self.graph()
-        #self.returnedDictionary["link"] = ""
-        #self.returnedDictionary["qasmRows"] = np.transpose(cols).tolist()
+        returnedDictionary["link"] = ""
+        #returnedDictionary["qasmRows"] = np.transpose(cols).tolist()
+        
+        if self.API_TOKEN != "":
+            returnedDictionary["link"] = self.runOnIBMQ()
         
         return returnedDictionary
     

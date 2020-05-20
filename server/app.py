@@ -53,9 +53,10 @@ def qasm():
     if request.method=='POST':
         receivedDictionary=request.get_json()
         try:
-            c.shots=receivedDictionary["shots"]
+            #c.shots=receivedDictionary["shots"]
+            #c.API_TOKEN=receivedDictionary["API_TOKEN"]
             circuit=c.createQasmCircuit(receivedDictionary["qasm"])
-            r.setCircuit(circuit)
+            r.setter(receivedDictionary["shots"],receivedDictionary["API_TOKEN"],receivedDictionary["device"],circuit)
             returnedDictionary=r.qasmCircuitResults()
         except Exception as e:
             return jsonify({"qasmError":str(e)})
