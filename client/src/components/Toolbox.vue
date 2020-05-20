@@ -12,7 +12,7 @@
           <!-- in case of angle-gates -->
           <div class="gate-name" id="hover-div">
             {{ gate.name.toUpperCase() }}
-            <span id="hover-element">{{ gate.info }}</span>
+            <!-- <span id="hover-element">{{ gate.info }}</span> -->
 
             <input
               v-if="gate.name == 'rx' || gate.name == 'ry' || gate.name == 'rz' "
@@ -291,6 +291,7 @@ export default {
   padding: 10px;
   border: solid;
   border-radius: 5px;
+  opacity:0.001;
 }
 #hover-div:hover #hover-element {
   display: block;
