@@ -222,7 +222,8 @@ class Results():
     def runOnIBMQ(self):
         from qiskit import IBMQ
         from qiskit import execute
-        IBMQ.enable_account(self.API_TOKEN)
+        IBMQ.save_account(self.API_TOKEN)
+        IBMQ.load_account()
         provider = IBMQ.get_provider('ibm-q')
         qcomp = provider.get_backend(self.device)
         job = execute(self.circuit, backend=qcomp, shots=self.shots)
