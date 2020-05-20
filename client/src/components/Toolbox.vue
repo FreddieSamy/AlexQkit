@@ -119,9 +119,9 @@ export default {
   },
   methods: {
     log: function() {},
-    setAlgo: function(circiut) {
-      this.$parent.setAlgorithm(circiut);
-    },
+    // setAlgo: function(circiut) {
+    //   this.$parent.setAlgorithm(circiut);
+    // },
     // ----------------------------------------------------
     cloneGate({ name }) {
       if (name == "rx") {
