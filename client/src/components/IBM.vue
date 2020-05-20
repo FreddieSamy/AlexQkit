@@ -32,14 +32,14 @@
       <label for="checkbox">Run on IBMQ</label>
       <button @click="sendto()">RUN</button>
     </div>
-    <a id="link" target="_blank" :href="link">{{ link }}</a>
+    <a id="link" target="_blank" :href="this.liveResults.link">{{ this.liveResults.link }}</a>
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import { ibmLink } from "./../data/routes";
 import devices from "./../data/IBM_Devices";
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "ibm",
@@ -48,13 +48,13 @@ export default {
   data() {
     return {
       anchor: ibmLink,
-      link: "",
       device: "ibmq_16_melbourne",
       devices: devices
     };
   },
   computed: {
-    ...mapState(["jsonObject"])
+    ...mapState(["jsonObject"]),
+    ...mapGetters(["liveResults"])
   },
   methods: {
     sendto() {
@@ -65,7 +65,7 @@ export default {
         var sim = document.getElementById("simulater");
         this.device = sim.options[sim.selectedIndex].value;
         this.jsonObject.device = this.device;
-        this.$parent.Run();
+        this.$parent.runCircuit();
         document.getElementById("checkbox").checked = false;
       } else {
         alert("make sure to select the checkbox to run on IBMQ devices");
