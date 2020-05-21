@@ -49,7 +49,7 @@ import CircuitDrawing from "./CircuitDrawing.vue";
 import MatrixRepresentation from "./MatrixRepresentation.vue";
 import tracingLine from "./tracingLine.vue";
 import Qasm from "./Qasm.vue";
-import { mapState, mapActions } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 import { elementaryGates } from "./../data/routes.js";
 
 export default {
@@ -75,7 +75,8 @@ export default {
     return { circuitDrawingFlag: false };
   },
   computed: {
-    ...mapState(["jsonObject"])
+    ...mapState(["jsonObject"]),
+    ...mapGetters(["liveResults"])
   },
 
   methods: {
@@ -177,6 +178,8 @@ export default {
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
       this.jsonObject.wires = systemObject["wires"];
+      this.liveResults.probabilities = Array(systemObject["wires"]).fill(0);
+      // this.jsonObject.init = systemObject["init"];
       this.$nextTick(() => {
         for (let row = 0; row < this.jsonObject.wires; row++) {
           var wireCaller = this.$refs.wire[row];
