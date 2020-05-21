@@ -28,14 +28,13 @@ class Circuit():
         if receivedDictionary["repeated"] != {}:
             oldSize=len(receivedDictionary["rows"][0])
             self.cols = self.repettion(receivedDictionary["rows"], receivedDictionary["repeated"]['listOfPos'], receivedDictionary["repeated"]['listOfRep'])
+            self.cols = np.transpose(self.cols).tolist()
             newSize=len(self.cols)
             self.exeCount+=(newSize-oldSize)
-            self.cols = np.transpose(self.cols).tolist()
-            
         else:
             self.cols = np.transpose(receivedDictionary["rows"]).tolist()
             
-        print("cols: ",self.cols)
+        #print("cols: ",self.cols)
  
 ###############################################################################################################################
        
