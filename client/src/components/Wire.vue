@@ -27,7 +27,7 @@
       ></div>
     </draggable>
 
-    <Percent :probability="this.liveResults.probabilities[id-1]" />
+    <Percent :probability="this.liveResults.probabilities[id-1]||0" />
 
     <BlochSphere />
   </div>
