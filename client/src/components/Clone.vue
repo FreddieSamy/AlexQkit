@@ -103,8 +103,9 @@ export default {
 
       this.$refs.tracingLine.updateTracingLine(); //update the tracing line
       this.controlSystem();
-      this.checkSwapSystem();
-
+       this.$nextTick(() => {
+          this.checkSwapSystem();
+       });
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
     },
@@ -177,16 +178,21 @@ export default {
 
     //-----------------------------------------------------------------------
     setAlgorithm: function(systemObject) {
-      this.jsonObject.wires = systemObject["wires"];
-      this.liveResults.probabilities = Array(systemObject["wires"]).fill(0);
-      // this.jsonObject.init = systemObject["init"];
+      this.jsonObject.wires =
+        this.jsonObject.wires > systemObject["wires"]
+          ? this.jsonObject.wires
+          : systemObject["wires"];
+      // this.liveResults.probabilities = Array(systemObject["wires"]).fill(0);
+      this.jsonObject.init = systemObject["init"];
       this.$nextTick(() => {
-        for (let row = 0; row < this.jsonObject.wires; row++) {
-          var wireCaller = this.$refs.wire[row];
+        for (let row = 0; row < systemObject["wires"] ; row++) {
+          let wireCaller = this.$refs.wire[row];
           wireCaller.setState(systemObject["init"][row]);
           wireCaller.setGates(systemObject["rows"][row]);
+          this.$nextTick(() => {
+          this.updateMaxWire();
+          });
         }
-        this.updateMaxWire();
       });
     },
     //-----------------------------------------------------------------------
@@ -312,7 +318,7 @@ export default {
             this.jsonObject.wires = res.data.rows.length;
             this.jsonObject.rows = res.data.rows;
           }
-
+          
           this.setAlgorithm(this.jsonObject);
         });
       }
@@ -363,8 +369,17 @@ export default {
   margin: 0em 0.1em 0em 0.1em;
   flex-basis: 100%;
 }
+.results {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  /* border:1px solid black; */
+}
 .histogram {
-  flex-basis: 95%;
+  flex-basis: 100%;
+  align-self: center;
   justify-self: center;
 }
 .flip-list-move {
@@ -382,13 +397,7 @@ export default {
   background-color: white;
   border-radius: 0.5em;
 }
-.results {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: stretch;
-}
+
 .matrix {
   flex-basis: 40%;
 }

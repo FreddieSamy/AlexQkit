@@ -27,8 +27,11 @@ export default {
   computed: {
     ...mapGetters(["liveResults"]),
     yAxis() {
+      // if (this.propabilty !== undefined){
+      //   return 100 - this.probability;
+      // }
       return 100 - this.probability;
-    }
+   }
   },
 
   methods: {}

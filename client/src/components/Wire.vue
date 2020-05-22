@@ -252,6 +252,9 @@ export default {
       }
       this.list = list;
     },
+    // setProbability:function(){
+    //   this.probability=0;
+    // },
     //-----------------------------------------------------------------------
     displayName: function(name) {
       if (name.startsWith("custom_")) {
@@ -384,7 +387,7 @@ img {
   height: 40px;
 }
 #i {
-  opacity: 0.01;
+  opacity: 0.9;
 }
 #m .circuit-gate text {
   opacity: 0.01;
