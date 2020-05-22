@@ -237,7 +237,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     setGates: function(gatesList) {
-      this.list = [];
+      //this.list = [];  disabled to push on the wire 
       for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
         this.list.push({ name: gatesList[colIdx] });
       }
