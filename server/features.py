@@ -25,18 +25,13 @@ class Features():
                 else:
                     gatePos = j
             if len(c) > 1:
-                if columns[i][gatePos][7:] in customGates:
-                    gateMatrix = customGates[columns[i][gatePos][7:]]
-                else:
-                    gateMatrix = circuitObj.gateToMatrix(columns[i][gatePos])
                 if columns[i][gatePos][:7] == "custom_":
                     end = columns[i][gatePos].find(".")
-                    if end == -1:
-                        name = "√("+columns[i][gatePos][7:]+")"
-                    else:
-                        name = "√("+columns[i][gatePos][7:end]+")"
+                    name = "√("+columns[i][gatePos][7:end]+")"
+                    gateMatrix = customGates[columns[i][gatePos][7:end]]
                 else:
                     name = "√("+columns[i][gatePos]+")"
+                    gateMatrix = circuitObj.gateToMatrix(columns[i][gatePos])
                 if name not in customGates:
                     gate=self.sqrt(np.array(gateMatrix))
                     gateCopy=copy.deepcopy(gate)
