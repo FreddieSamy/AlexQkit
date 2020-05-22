@@ -177,22 +177,34 @@ export default {
     },
 
     //-----------------------------------------------------------------------
-    setAlgorithm: function(systemObject) {
-      this.jsonObject.wires =
-        this.jsonObject.wires > systemObject["wires"]
-          ? this.jsonObject.wires
-          : systemObject["wires"];
-      // this.liveResults.probabilities = Array(systemObject["wires"]).fill(0);
-      this.jsonObject.init = systemObject["init"];
+    setAlgorithm: function(algorithmObject, append = true) {
+      this.jsonObject.wires = Math.max(
+        algorithmObject.wires,
+        this.jsonObject.wires
+      );
+      this.jsonObject.init = [
+        ...algorithmObject.init,
+        ...this.jsonObject.init.slice(algorithmObject.init.length)
+      ];
+      var row = 0;
       this.$nextTick(() => {
-        for (let row = 0; row < systemObject["wires"] ; row++) {
+        for (; row < algorithmObject.wires; row++) {
           let wireCaller = this.$refs.wire[row];
-          wireCaller.setState(systemObject["init"][row]);
-          wireCaller.setGates(systemObject["rows"][row]);
+          wireCaller.setState(algorithmObject["init"][row]);
+          wireCaller.setGates(algorithmObject["rows"][row], append);
           this.$nextTick(() => {
-          this.updateMaxWire();
+            this.updateMaxWire();
           });
         }
+      });
+      this.$nextTick(() => {
+         this.$nextTick(() => {
+          for (; row < this.jsonObject.wires; row++) {
+            let wireCaller = this.$refs.wire[row];
+            wireCaller.addIdentity();
+          }
+          this.updateMaxWire();
+         });
       });
     },
     //-----------------------------------------------------------------------
@@ -318,8 +330,8 @@ export default {
             this.jsonObject.wires = res.data.rows.length;
             this.jsonObject.rows = res.data.rows;
           }
-          
-          this.setAlgorithm(this.jsonObject);
+
+          this.setAlgorithm(this.jsonObject, false);
         });
       }
     }
