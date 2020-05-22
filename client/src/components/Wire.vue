@@ -91,8 +91,6 @@ export default {
           }
         });
 
-        // To Mario
-        //  this.findswap();
       }
     }
   },
@@ -236,15 +234,17 @@ export default {
       this.state = state;
     },
     //-----------------------------------------------------------------------
-    setGates: function(gatesList) {
-      //this.list = [];  disabled to push on the wire 
+    setGates: function(gatesList,append=true) {
+      if(append == false){
+        this.list = [];  // disabled to push on the wire 
+      }
       for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
         this.list.push({ name: gatesList[colIdx] });
       }
     },
     //-----------------------------------------------------------------------
     setGatesIdentity: function() {
-      // when add a ner wire
+      // when add a new wire
       var maxWire = this.jsonObject.colsCount;
       let list = [...this.list];
       for (let colIdx = 0; colIdx < maxWire; colIdx++) {
@@ -252,9 +252,6 @@ export default {
       }
       this.list = list;
     },
-    // setProbability:function(){
-    //   this.probability=0;
-    // },
     //-----------------------------------------------------------------------
     displayName: function(name) {
       if (name.startsWith("custom_")) {
