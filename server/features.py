@@ -17,36 +17,41 @@ class Features():
         i = 0
         while i < len(columns):
             c = []
+            gatePositions=[]
             for j in range(len(columns[i])):
                 if columns[i][j] == "i":
                     continue
                 if columns[i][j] == "●" or columns[i][j] == "○":
                     c.append(j)
                 else:
-                    gatePos = j
+                    gatePositions.append(j)
             if len(c) > 1:
-                if columns[i][gatePos][:7] == "custom_":
-                    end = columns[i][gatePos].find(".")
-                    name = "√("+columns[i][gatePos][7:end]+")"
-                    gateMatrix = customGates[columns[i][gatePos][7:end]]
-                else:
-                    name = "√("+columns[i][gatePos]+")"
-                    gateMatrix = circuitObj.gateToMatrix(columns[i][gatePos])
-                if name not in customGates:
-                    gate=self.sqrt(np.array(gateMatrix))
-                    gateCopy=copy.deepcopy(gate)
-                    customGates[name] = gate
-                    newGates[name]=gateCopy
-                name2 = name+"†"
-                if name2 not in customGates:
-                    gate=np.matrix(customGates[name]).getH().tolist()
-                    gateCopy=copy.deepcopy(gate)
-                    customGates[name2] = gate
-                    newGates[name2]= gateCopy
+                allNames=[]
+                for gatePos in gatePositions:
+                    if columns[i][gatePos][:7] == "custom_":
+                        end = columns[i][gatePos].find(".")
+                        name = "√("+columns[i][gatePos][7:end]+")"
+                        gateMatrix = customGates[columns[i][gatePos][7:end]]
+                    else:
+                        name = "√("+columns[i][gatePos]+")"
+                        gateMatrix = circuitObj.gateToMatrix(columns[i][gatePos])
+                    if name not in customGates:
+                        gate=self.sqrt(np.array(gateMatrix))
+                        gateCopy=copy.deepcopy(gate)
+                        customGates[name] = gate
+                        newGates[name]=gateCopy
+                    name2 = name+"†"
+                    if name2 not in customGates:
+                        gate=np.matrix(customGates[name]).getH().tolist()
+                        gateCopy=copy.deepcopy(gate)
+                        customGates[name2] = gate
+                        newGates[name2]= gateCopy
+                    allNames.append(name)
 
                 col = ["i"]*len(columns[i])
                 col[c[1]] = columns[i][c[1]]
-                col[gatePos] = "custom_"+name
+                for l in range(len(gatePositions)):
+                    col[gatePositions[l]] = "custom_"+allNames[l]
                 for k in range(len(c)-2):
                     col[c[k+2]] = columns[i][c[k+2]]
                 columns.insert(i+1, col)
@@ -60,7 +65,8 @@ class Features():
 
                 col = ["i"]*len(columns[i])
                 col[c[1]] = columns[i][c[1]]
-                col[gatePos] = "custom_"+name2
+                for l in range(len(gatePositions)):
+                    col[gatePositions[l]] = "custom_"+allNames[l]+"†"
                 for k in range(len(c)-2):
                     col[c[k+2]] = columns[i][c[k+2]]
                 columns.insert(i+1, col)
@@ -74,7 +80,8 @@ class Features():
 
                 col = ["i"]*len(columns[i])
                 col[c[0]] = columns[i][c[0]]
-                col[gatePos] = "custom_"+name
+                for l in range(len(gatePositions)):
+                    col[gatePositions[l]] = "custom_"+allNames[l]
                 for k in range(len(c)-2):
                     col[c[k+2]] = columns[i][c[k+2]]
                 columns.insert(i+1, col)
