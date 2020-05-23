@@ -91,7 +91,7 @@
 <script>
 import axios from "axios";
 import CustomMx from "./custom_mx.vue";
-import { mapState } from "vuex";
+import { mapState , mapActions } from "vuex";
 import {
   addCustomGates,
   subCirciutRoute,
@@ -113,6 +113,7 @@ export default {
     ...mapState(["jsonObject"])
   },
   methods: {
+    ...mapActions(['addCustomGate']),
     openNav() {
       document.getElementById("myNav").style.width = "100%";
       document.getElementById("subCircuitName").value = null;
@@ -302,10 +303,11 @@ export default {
     },
     // ----------------------------------------------------
     addGate(nameofgate) {
-      this.$parent.customGates.push({
-        name: "custom_" + nameofgate,
-        id: nameofgate
-      });
+      // this.$parent.customGates.push({
+      //   name: "custom_" + nameofgate,
+      //   id: nameofgate
+      // });
+      this.addCustomGate( {name:"custom_" + nameofgate , id: nameofgate}) 
       if (this.$parent.customGates.length < 9) {
         this.$parent.w =
           "width:" +

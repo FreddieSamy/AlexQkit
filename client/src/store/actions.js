@@ -15,6 +15,9 @@ export default {
     commit("appendInit");
     commit("appendWire");
   },
+  addCustomGate({commit},customGate){
+    commit("appendCustomGate",customGate);
+  },
   removeWire: ({ commit }) => {
     commit("popInit");
     commit("popWire");

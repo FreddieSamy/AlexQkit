@@ -8,12 +8,12 @@
       @change="log"
     >
       <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
-        <div class="toolbox-gates" v-for="gate in gates" :key="gate.id" :id="gate.name">
+        <div class="toolbox-gates" v-for="gate in this.gates" :key="gate.id" :id="gate.name">
           <!-- in case of angle-gates -->
-          <div class="gate-name" id="hover-div">
+          <div class="gate-name" id="hover-div" v-if="gate.name[0]!='c'">
             {{ gate.name.toUpperCase() }}
             <!-- <span id="hover-element">{{ gate.info }}</span> -->
-
+          
             <input
               v-if="gate.name == 'rx' || gate.name == 'ry' || gate.name == 'rz' "
               class="angle-input"
@@ -23,13 +23,14 @@
               value="90"
             />
           </div>
+          <div v-else>{{ gate.id }}</div>
         </div>
       </transition-group>
     </draggable>
 
     <!-- ----------------------- start custom gates --------------------------- -->
 
-    <draggable
+    <!-- <draggable
       v-if="customGates.length"
       class="custom-gates"
       :list="customGates"
@@ -47,7 +48,7 @@
           <div class="gate-name">{{ element.id }}</div>
         </div>
       </transition-group>
-    </draggable>
+    </draggable> -->
 
     <!--------------------   end of custom gates  ----------------------- -->
     <div class="user-tools">
@@ -94,8 +95,8 @@ import draggable from "vuedraggable";
 import addcustomgate from "./addcustomgate";
 import Circiutloops from "./CircuitLoops.vue";
 
-import { gates } from "./../data/gates_and_states";
-import { mapState } from "vuex";
+// import { gates } from "./../data/gates_and_states";
+import { mapState , mapGetters } from "vuex";
 
 export default {
   name: "Toolbox",
@@ -107,12 +108,13 @@ export default {
   },
   data() {
     return {
-      gates: gates,
+      //  gates: this.gates(),
       customGates: []
     };
   },
   computed: {
-    ...mapState(["jsonObject"])
+    ...mapState(["jsonObject"]),
+    ...mapGetters(['gates'])
   },
   methods: {
     log: function() {},
