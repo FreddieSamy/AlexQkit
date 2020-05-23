@@ -1,31 +1,34 @@
 export default {
-  setColsCount: ({commit},count)=>{
-    commit('setCols', count)
+  setColsCount: ({ commit }, count) => {
+    commit("setCols", count);
   },
   setExeCount: ({ commit }, count) => {
-    commit('setExe', count)
+    commit("setExe", count);
   },
   setWire: ({ commit }, wire) => {
-    commit('setRow', wire)
+    commit("setRow", wire);
   },
-  addWire: ({commit}) => {
-     commit('appendInit')
-     commit('appendWire')
+  addMessage: ({ commit }, message) => {
+    commit("appendMessage", message);
   },
-  removeWire: ({commit}) => {
-    commit('popInit')
-    commit('popWire')
+  addWire: ({ commit }) => {
+    commit("appendInit");
+    commit("appendWire");
   },
-  resetCircuit: ({commit}) => {
-    commit('reset')
+  removeWire: ({ commit }) => {
+    commit("popInit");
+    commit("popWire");
   },
-  runCircuit:({commit}) => {
-    commit('sendCircuit')
+  resetCircuit: ({ commit }) => {
+    commit("reset");
   },
-  checkSwapSystem:({commit})=>{
-    commit('swapConstrains')
-  }
-
-}
-  
-
+  removeMessages:({commit}) => {
+    commit("removeMessages")
+  },
+  runCircuit: ({ commit }) => {
+    commit("sendCircuit");
+  },
+  checkSwapSystem: ({ commit }) => {
+    commit("swapConstrains");
+  },
+};

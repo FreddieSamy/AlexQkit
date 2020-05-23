@@ -14,3 +14,5 @@ Optimization
 
 
 
+
+functions that need to be called when an event happens
