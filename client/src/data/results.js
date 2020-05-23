@@ -17,6 +17,7 @@ export default {
   probabilities: [0, 0],
   qasm: 'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[2];\ncreg c[2];',
   qasmError: "",
+  
 
 
 }

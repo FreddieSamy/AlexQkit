@@ -1,5 +1,3 @@
-
-
 export default {
   setColsCount: ({commit},count)=>{
     commit('setCols', count)
