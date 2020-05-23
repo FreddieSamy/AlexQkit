@@ -1,16 +1,17 @@
+import copy
+import numpy as np
+from scipy.linalg import fractional_matrix_power
+
+
 class Features():
-    
+        
     def sqrt(self, gate):
-        import numpy as np
-        from scipy.linalg import fractional_matrix_power
         a = np.matrix(gate)
         return fractional_matrix_power(a, 0.5).tolist()
 
 ###############################################################################################################################
 
     def elementaryGates(self, rows, circuitObj):
-        import numpy as np
-        import copy
         newGates={}
         customGates=circuitObj.customGates
         columns = np.transpose(rows).tolist()
@@ -99,7 +100,6 @@ class Features():
 ###############################################################################################################################
 
     def strToComplex(self, matrix):
-        import copy
         matrixCopy=copy.deepcopy(matrix)
         for i in range(len(matrixCopy)):
             for j in range(len(matrixCopy[i])):
@@ -111,8 +111,6 @@ class Features():
 ###############################################################################################################################
 
     def complexToStr(self, matrix):
-        import numpy as np
-        import copy
         matrixCopy=copy.deepcopy(matrix)
         for i in range(len(matrixCopy)):
             for j in range(len(matrixCopy[i])):

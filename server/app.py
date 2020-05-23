@@ -1,11 +1,19 @@
-from flask import Flask, request,jsonify
 #from datetime import datetime
+
+from flask import Flask, request,jsonify
 from flask_cors import CORS
-from qiskit import *
+
 from circuit import Circuit
 from results import Results
 from features import Features
 from booleanExpression import BooleanFunction
+
+#from qiskit import *
+from qiskit.quantum_info.operators.predicates import is_unitary_matrix
+
+from scipy.linalg import fractional_matrix_power
+from math import log2
+import numpy as np
 
 #startTime = datetime.now()
 
@@ -99,8 +107,6 @@ def matrixRepresentation():
     
 @app.route('/addCustomGates',methods=['GET','POST'])
 def addCustomGates():
-    from qiskit.quantum_info.operators.predicates import is_unitary_matrix
-    from math import log2
     receivedDictionary=request.get_json()
     matrix=receivedDictionary["matrix"]
     matrix=f.strToComplex(matrix)
@@ -115,8 +121,6 @@ def addCustomGates():
     
 @app.route('/subCircuitCustomGate',methods=['GET','POST'])
 def subCircuitCustomGate():
-    from qiskit.quantum_info.operators.predicates import is_unitary_matrix
-    from math import log2
     if request.method=='POST':
         #print(c.customGates)
         receivedDictionary=request.get_json()
@@ -140,10 +144,6 @@ def subCircuitCustomGate():
     
 @app.route('/nthRoot',methods=['GET','POST'])
 def nthRoot():
-    import numpy as np
-    from qiskit.quantum_info.operators.predicates import is_unitary_matrix
-    from scipy.linalg import fractional_matrix_power
-    from math import log2
     if request.method=='POST':
         receivedDictionary=request.get_json()
         root=receivedDictionary["root"]
@@ -167,7 +167,6 @@ def nthRoot():
     
 @app.route('/elementaryGates',methods=['GET','POST'])
 def elementaryGates():
-    from math import log2
     if request.method=='POST':
         receivedDictionary=request.get_json()
         rows,newGates=f.elementaryGates(receivedDictionary["rows"],c)

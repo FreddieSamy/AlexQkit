@@ -1,7 +1,17 @@
+from qiskit import Aer
+from qiskit import IBMQ
+from qiskit import execute
+from qiskit.quantum_info import partial_trace
+from qiskit.visualization import plot_bloch_vector
+        
+import io
+from flask import Response
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
+
 class Results():
 
     def __init__(self,circuit):
-        from qiskit.visualization import plot_bloch_vector
         self.defaultBlochSphere=self.figToResponse(plot_bloch_vector([0,0,1]))
         self.circuit=circuit
         self.num_qubits=self.circuit.num_qubits
@@ -39,10 +49,7 @@ class Results():
     # so we can correct that by by using reversedStateVector() function
     # you can check that here - https://qiskit-staging.mybluemix.net/documentation/terra/summary_of_quantum_operations.html
 
-    def stateVector(self):
-        from qiskit import Aer
-        from qiskit import execute
-    
+    def stateVector(self):    
         simulator=Aer.get_backend('statevector_simulator')
         result=execute(self.circuit,backend=simulator).result()
         statevector=result.get_statevector(decimals=4)
@@ -108,9 +115,6 @@ class Results():
     # including the initialization gates (need to check)
 
     def matrixRepresentation(self,decimals=8):
-        from qiskit import Aer
-        from qiskit import execute
-    
         temp = self.circuit.copy()
         temp.remove_final_measurements()
     
@@ -151,9 +155,6 @@ class Results():
     # else the returned data will be the expected probabilities
 
     def graph(self):
-        from qiskit import Aer
-        from qiskit import execute
-            
         temp = self.circuit.copy()
         temp.remove_final_measurements()
         graphData = []
@@ -176,9 +177,6 @@ class Results():
 ###############################################################################################################################       
    
     def figToResponse(self,fig):
-        import io
-        from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-        from flask import Response
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
         return Response(output.getvalue(), mimetype='image/png')
@@ -188,9 +186,6 @@ class Results():
     # drawing of the circuit
     
     def draw(self):
-        from qiskit import Aer
-        from qiskit import execute
-        
         simulator = Aer.get_backend('qasm_simulator')
         execute(self.circuit, backend=simulator).result()
         fig=self.circuit.draw(output='mpl')
@@ -201,8 +196,6 @@ class Results():
     # returns polar coordinates for every wire to be represented on bloch spheres
 
     def separatedBlochSpheres(self):
-        from qiskit.quantum_info import partial_trace
-        from qiskit.visualization import plot_bloch_vector
     
         pos=list(range(self.num_qubits))
         res={}
@@ -220,8 +213,6 @@ class Results():
     # runs a circuit on a real quantum computer (IBM Q devices) and returns a link of the results
 
     def runOnIBMQ(self):
-        from qiskit import IBMQ
-        from qiskit import execute
         IBMQ.save_account(self.API_TOKEN)
         IBMQ.load_account()
         provider = IBMQ.get_provider('ibm-q')

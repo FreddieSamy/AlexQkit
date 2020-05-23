@@ -1,8 +1,16 @@
+from qiskit import Aer
+from qiskit import execute
+from qiskit import QuantumCircuit
+from qiskit.quantum_info.operators import Operator
+
+import copy
+import numpy as np
+from math import log2
+    
+
 class Circuit():
     
     def __init__(self):
-        from qiskit import QuantumCircuit
-        
         self.radian = False
         self.exeCount = 0
         self.num_qubits =2
@@ -15,10 +23,7 @@ class Circuit():
 
 ###############################################################################################################################
 
-    def setter(self,receivedDictionary):
-        from qiskit import QuantumCircuit
-        import numpy as np
-        
+    def setter(self,receivedDictionary):        
         self.radian = receivedDictionary["radian"]
         self.exeCount = receivedDictionary["exeCount"]
         self.num_qubits = int(receivedDictionary["wires"])
@@ -39,9 +44,6 @@ class Circuit():
 ###############################################################################################################################
        
     def subCircuitSetter(self,receivedDictionary):
-        from qiskit import QuantumCircuit
-        import numpy as np
-        
         self.radian = receivedDictionary["radian"]
         self.num_qubits = int(receivedDictionary["wires"])
         self.circuit = QuantumCircuit(self.num_qubits, self.num_qubits)
@@ -110,7 +112,7 @@ class Circuit():
         """if reversedWires:
             for i in range(len(positions)):
                 positions[i]=self.num_qubits-positions[i]-1"""
-        from qiskit.quantum_info.operators import Operator
+        
         customGate = Operator(gateMatrix)
         self.circuit.unitary(customGate, positions)
     
@@ -123,7 +125,6 @@ class Circuit():
     # we corrected that by passing using reversedMatrix() function
 
     def reversedMatrix(self,matrix,wires):
-        import copy
         matrixCopy=copy.deepcopy(matrix)
         reversedMatrix=[]
         for i in range(len(matrixCopy)):
@@ -140,8 +141,6 @@ class Circuit():
     # constructs a matrix to represent controlled gates 
     
     def controlledGate(self,unitary, numOfControls=1):#,reversedWires=True):
-        from math import log2
-    
         old = len(unitary)
         wires=int(log2(old)+numOfControls)
         new = 2**wires
@@ -167,9 +166,6 @@ class Circuit():
     # and returns the matrix of the gate
 
     def gateToMatrix(self,gate):
-        from qiskit import QuantumCircuit
-        from qiskit import Aer
-        from qiskit import execute
         if gate == "swap":
             tempCircuit = QuantumCircuit(2)
             tempCircuit.swap(0, 1)
@@ -193,20 +189,15 @@ class Circuit():
     # remove the other gates to prevent applying the gate multiple times
     
     def multiQubitCustomGate(self,column,firstAppear):
-        #from math import log2
         pointPos=column[firstAppear].find(".")
         index=int(column[firstAppear][pointPos+1:])
         gateName=column[firstAppear][7:pointPos]
-        #size = log2(len(self.customGates[gateName]))
-        #pos = [None]*int(size)
         pos=[]
         pos.insert(index,firstAppear)
-        #print(pos,size,index)
         for i in range(firstAppear+1, len(column)):
             if "custom_"+gateName == column[i][:pointPos]:
                 index=int(column[i][pointPos+1:])
                 pos.insert(index,i)
-                #print(pos,size,index)
                 column[i] = "i"
         return column, pos
     
@@ -345,7 +336,6 @@ class Circuit():
 ###############################################################################################################################
     
     def createQasmCircuit(self,qasmText):
-        from qiskit import QuantumCircuit
         tempCircuit = QuantumCircuit(1)
         self.circuit = tempCircuit.from_qasm_str(qasmText)
         
@@ -354,7 +344,6 @@ class Circuit():
 ############################################################################################################################### 
     # kotta
     def repettion(self, circuitList, listOfPositions, listOfNumberOfRepetition):
-        import numpy as np
         dic = self.dicOfBlockAndPosition(
             circuitList, listOfPositions, listOfNumberOfRepetition)
         circuitList = np.array(circuitList)
@@ -369,7 +358,6 @@ class Circuit():
 ###############################################################################################################################
 
     def blockToRepet(self, circutList, position):
-        import numpy as np
         circutList = np.array(circutList)
         repetBlock = circutList[:, position[0]: position[1] + 1].transpose()
         return repetBlock, position[0], position[1]
