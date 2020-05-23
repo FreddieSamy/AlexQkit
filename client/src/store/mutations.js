@@ -22,6 +22,9 @@ export default {
   appendMessage: (state , {messageType,messageBody})=>{
     state.messages[messageType].push(messageBody)
   },
+  appendCustomGate:(state,customGate)=>{
+      state.gates.push(customGate)
+  },
 
   /* ================================================================= */
 
