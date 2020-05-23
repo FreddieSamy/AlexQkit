@@ -3,8 +3,11 @@
     <div id="myNav3" class="overlay" style="width:0%">
       <a href="javascript:void(0)"  class="closebtn" @click="closeNav()">&#10006;</a>
 
-      <div class="boolean">
+      <div class="column">
+          <h1>Boolean function</h1>
+        <h3>variable</h3>
         <input type="text" id="variables" placeholder="x1,x2,x3" required /> 
+        <h3>conditions</h3>
         <input type="text" id="booleanfunction"  placeholder="not x1 or x2 and x3" required />
         <button @click="createBooleanCircuit()">create</button> 
         <!-- @click="createBooleanCircuit()" -->
@@ -113,5 +116,20 @@ button {
   background-color: white;
   border-radius: 0.5em;
   border: 2px solid grey;
+}
+input {
+  display: block;
+  margin-top: 25px;
+}
+.column {
+  background: rgb(47, 68, 85, 0.7);
+  margin: 3em;
+  padding: 1em;
+  border-radius: 1em;
+  display: table-column;
+}
+
+div {
+  color: white;
 }
     </style>

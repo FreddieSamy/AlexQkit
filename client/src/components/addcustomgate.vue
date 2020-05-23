@@ -74,6 +74,10 @@
         <h3 style="color: black;">root</h3>
         <input id="root" type="number" value="2" />
         <br />
+         <div> 
+          <input type="checkbox" id="checkboxAdjcent" />
+          <label for="checkbox">check</label>
+        </div>
         <button @click="nthRoot()">create</button>
       </div>
 
@@ -164,7 +168,7 @@ export default {
       var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
       var count1, count2, check;
-      var regex = /^(-)?\d+$|^(-)?i$|^(-)?\d+(-|\+)(\d+)?i$|^(-)?\d+i$|^(-)?(\d+)?i(-|\+)\d$/;
+       var regex = /^(-)?([0-9][.])?[0-9]+$|^(-)?(([0-9][.])?[0-9]+)?i$|^(-)?([0-9][.])?[0-9]+(-|\+)(([0-9][.])?[0-9]+)?i$/;
 
       for (let i in this.customGates) {
         for (let k in this.customGates[i]) {
@@ -212,7 +216,8 @@ export default {
       } else {
         var json_object = {
           root: root,
-          gateName: name
+          gateName: name,
+          adjcent:document.getElementById("checkboxAdjcent").checked
           // custom: this.$parent.$parent.jsonObject.custom
         };
         if (root >= 2) {
@@ -232,6 +237,7 @@ export default {
           alert("please, choose number more than one !!");
         }
       }
+      document.getElementById("checkboxAdjcent").checked = false;
     },
     // ----------------------------------------------------
     subCircuitCustoGate: function() {
