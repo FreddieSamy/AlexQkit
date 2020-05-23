@@ -193,17 +193,20 @@ class Circuit():
     # remove the other gates to prevent applying the gate multiple times
     
     def multiQubitCustomGate(self,column,firstAppear):
-        from math import log2
+        #from math import log2
         pointPos=column[firstAppear].find(".")
         index=int(column[firstAppear][pointPos+1:])
         gateName=column[firstAppear][7:pointPos]
-        size = log2(len(self.customGates[gateName]))
-        pos = [None]*int(size)
-        pos[index]=firstAppear
+        #size = log2(len(self.customGates[gateName]))
+        #pos = [None]*int(size)
+        pos=[]
+        pos.insert(index,firstAppear)
+        #print(pos,size,index)
         for i in range(firstAppear+1, len(column)):
             if "custom_"+gateName == column[i][:pointPos]:
                 index=int(column[i][pointPos+1:])
-                pos[index]=i
+                pos.insert(index,i)
+                #print(pos,size,index)
                 column[i] = "i"
         return column, pos
     
