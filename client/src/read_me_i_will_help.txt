@@ -13,6 +13,8 @@ Optimization
 9 - Merge Qasm by  Circuit Drawing
 
 
-
+validation of loops 
+number must be in range of colsCount 
+no inerchange between columns of loops
 
 functions that need to be called when an event happens

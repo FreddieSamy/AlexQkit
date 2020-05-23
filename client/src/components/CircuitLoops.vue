@@ -22,7 +22,7 @@
 <!-- ================================================  -->
 <script>
 import Loop from "./Loop.vue";
-import { mapState } from "vuex";
+import { mapState , mapActions } from "vuex";
 
 // eslint-disable-next-line no-undef
 export default {
@@ -39,9 +39,11 @@ export default {
   },
 
   computed: {
-    ...mapState(["jsonObject"])
+    ...mapState(["jsonObject"]),
+   
   },
   methods: {
+     ...mapActions(['addMessage']),
     applyLoop() {
       this.ListOfPositions = [];
       this.Repeats = [];
@@ -55,7 +57,9 @@ export default {
       let listOfPos = this.ListOfPositions;
       let listOfRep = this.Repeats;
       let repeated = { listOfPos, listOfRep };
-      this.jsonObject["repeated"] = repeated;
+      this.jsonObject["repeated"] = repeated; // should be setter
+      // let message = {messageType:'advanced',messageBody:repeated}
+       this.addMessage({messageType:'advanced',messageBody:repeated})
       //window.console.log(this.$parent.$parent.jsonObject)
     },
     openNav() {

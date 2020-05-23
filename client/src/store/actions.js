@@ -9,7 +9,8 @@ export default {
     commit("setRow", wire);
   },
   addMessage: ({ commit }, message) => {
-    commit("appendMessage", message);
+    //window.console.log("hello message")
+   commit("appendMessage", message);
   },
   addWire: ({ commit }) => {
     commit("appendInit");
