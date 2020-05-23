@@ -37,8 +37,8 @@
 import draggable from "vuedraggable";
 import Percent from "./Percent";
 import BlochSphere from "./BlochSphere";
-import { mapActions, mapGetters, mapState } from "vuex";
 import { states } from "./../data/gates_and_states";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {
   name: "wire",
@@ -51,8 +51,6 @@ export default {
   props: ["id"],
   created: function() {
     this.setGatesIdentity();
-    //let wire = { qstate: this.state, list: this.getGates(), idx: this.id - 1 };
-    //this.setWire(wire);
   },
   updated() {
     let wire = {

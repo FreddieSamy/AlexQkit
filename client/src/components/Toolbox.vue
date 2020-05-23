@@ -59,8 +59,6 @@
           @click="$parent.$refs.matrixRepresentation.openNav()"
         >Matrix Representation</button>
       </div>
-   
-
 
       <div class="circiut-loop">
         <Circiutloops :colsCount="this.jsonObject.colsCount" />
@@ -105,8 +103,7 @@ export default {
   components: {
     draggable,
     addcustomgate,
-    Circiutloops,
-
+    Circiutloops
   },
   data() {
     return {
@@ -291,7 +288,7 @@ export default {
   padding: 10px;
   border: solid;
   border-radius: 5px;
-  opacity:0.001;
+  opacity: 0.001;
 }
 #hover-div:hover #hover-element {
   display: block;
