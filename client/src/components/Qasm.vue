@@ -38,8 +38,10 @@ export default {
       this.qasmFlag = !this.qasmFlag;
       this.$parent.controlSystem();
       if (this.qasmFlag) {
+        // Me7tag a3adel deh 
         document.getElementById("qasmToolboxBtn").innerHTML = "⟨ qasm |";
       } else {
+        // Me7tag a3del deh
         document.getElementById("qasmToolboxBtn").innerHTML = "| qasm ⟩";
         this.liveResults.qasm =
           'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[2];\ncreg c[2];';
@@ -64,6 +66,7 @@ export default {
       axios.post(qasmRoute, json_object).then(res => {
         if (res.data.qasmError == "") {
           this.draw();
+          // me7tag a7ot setter hena 
           this.liveResults.probabilities = res.data.probabilities;
           this.liveResults.blochSpheres = res.data.blochSpheres;
           this.liveResults.chart = res.data.chart;
@@ -83,6 +86,8 @@ export default {
     draw: function() {
       // var imgofblochSphere = document.getElementById("bloch");
       // imgofblochSphere.src = blockSphereRoute + new Date();
+      
+      // me7tag a3adel deh 
       var imgOfCircuit = document.getElementById("circuitDrawing");
       imgOfCircuit.src = qasmCircuitRoute + new Date();
     }

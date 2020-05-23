@@ -36,11 +36,18 @@ export default {
 
   // Reset System
   reset: (state) => {
-    state.jsonObject.maxWire = 0;
-    state.jsonObject.exeCount = 0;
-    state.jsonObject.wires = 2;
-    state.jsonObject.init = ['0', '0'];
-    state.jsonObject.rows = [[], []];
+    state.jsonObject = {
+      API_TOKEN: "",    
+      colsCount: 0,     
+      device: "",       
+      rows: [[], []],  
+      exeCount: 0,      
+      init: ["0", "0"], 
+      radian: false,    
+      repeated: {},     
+      shots: 1024,      
+      wires: 2,         
+    }
   },
 
 
@@ -59,14 +66,13 @@ export default {
   // Server Functions
   sendCircuit: (state) => {
     try {
-      window.console.log(state.jsonObject)
+      //window.console.log(state.jsonObject)
       axios.post(appRoute, state.jsonObject).then(
         res => {
           state.results = res.data;
-          window.console.log(res.data)
-          //update blochSphere images
-          var i;
-          for (i = 1; i <= state.jsonObject.wires; i++) {
+          //window.console.log(res.data)
+          // 3ak fe 3ak lazem yet8ayer 
+          for (let i = 1; i <= state.jsonObject.wires; i++) {
             var imgofblochSphere = document.getElementById("bloch-sphere-" + i);
             imgofblochSphere.src =
               defaultBlochSphereRoute + "/" + i + "?time=" + new Date();
@@ -77,6 +83,5 @@ export default {
     } catch (error) {
       window.console.log("i think there is an error " + error);
     }
-
   },
 };

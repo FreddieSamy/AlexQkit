@@ -384,7 +384,7 @@ img {
   height: 40px;
 }
 #i {
-  opacity: 0.9;
+  opacity: 0.01;
 }
 #m .circuit-gate text {
   opacity: 0.01;

@@ -31,6 +31,7 @@
 
     <div class="results">
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
+      <MessageBox />
       <Histogram class="histogram" />
     </div>
   </div>
@@ -39,16 +40,17 @@
 <script>
 import axios from "axios";
 import Toolbox from "./Toolbox.vue";
-import Toolbox2 from "./Toolbox2.vue";
-import Wire from "./Wire.vue";
 import IBM from "./IBM.vue";
-import Trash from "./Trash.vue";
-import Histogram from "./Histogram.vue";
-import DiracNotation from "./DiracNotation.vue";
-import CircuitDrawing from "./CircuitDrawing.vue";
-import MatrixRepresentation from "./MatrixRepresentation.vue";
-import tracingLine from "./tracingLine.vue";
 import Qasm from "./Qasm.vue";
+import CircuitDrawing from "./CircuitDrawing.vue";
+import tracingLine from "./tracingLine.vue";
+import Wire from "./Wire.vue";
+import Trash from "./Trash.vue";
+import Toolbox2 from "./Toolbox2.vue";
+import DiracNotation from "./DiracNotation.vue";
+import MatrixRepresentation from "./MatrixRepresentation.vue";
+import MessageBox from "./MessageBox.vue";
+import Histogram from "./Histogram.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
 import { elementaryGates } from "./../data/routes.js";
 
@@ -63,6 +65,7 @@ export default {
     Trash,
     Toolbox2,
     DiracNotation,
+    MessageBox,
     Histogram,
     MatrixRepresentation,
     Qasm,
@@ -383,8 +386,8 @@ export default {
 }
 .results {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-direction:row;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   /* border:1px solid black; */
