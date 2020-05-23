@@ -72,9 +72,11 @@ export default {
           count++;
         }
       }
-      if (count % 2 != 0) {
-        window.console.log("odd number of swaps at col " + col);
-        state.messages.violation.push('"odd number of swaps at columns')
+      if (count == 1) {
+        state.messages.violation.push('on column('+(col+1)+') : you need to put more swap');
+      }
+      else if(count>2){
+        state.messages.violation.push('on column ('+(col+1)+') : you can put only two swaps in one column');
       }
     }
   },
