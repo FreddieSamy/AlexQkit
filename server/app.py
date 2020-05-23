@@ -88,7 +88,7 @@ def chart():
 def matrixRepresentation():
     if request.method=='POST':
         r=Results(c.circuit)
-        matrix=r.matrixRepresentation()
+        matrix=r.matrixRepresentation(decimals=4)
         matrix=c.reversedMatrix(matrix,c.num_qubits)
         returnedDictionary={"matrixRepresentation":matrix}
     else:
@@ -104,7 +104,7 @@ def addCustomGates():
     receivedDictionary=request.get_json()
     matrix=receivedDictionary["matrix"]
     matrix=f.strToComplex(matrix)
-    isUnitary=is_unitary_matrix(matrix)
+    isUnitary=is_unitary_matrix(matrix,1e-4,1e-4)
     if isUnitary:
         matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
         c.customGates[receivedDictionary["gateName"]]=matrix
@@ -127,7 +127,7 @@ def subCircuitCustomGate():
         r=Results(circuit)
         matrix=r.matrixRepresentation()
         complexMatrix=f.strToComplex(matrix)
-        isUnitary=is_unitary_matrix(complexMatrix)
+        isUnitary=is_unitary_matrix(complexMatrix,1e-4,1e-4)
         if isUnitary:
             c.customGates[receivedDictionary["gateName"]]=complexMatrix
             matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
@@ -154,7 +154,7 @@ def nthRoot():
             a=np.matrix(c.gateToMatrix(gate.lower()))
             gate=gate.upper()
         matrix=fractional_matrix_power(a,1/int(root)).tolist()
-        isUnitary=is_unitary_matrix(matrix)
+        isUnitary=is_unitary_matrix(matrix,1e-4,1e-4)
         if isUnitary:
             c.customGates[gate+"^(1/"+root+")"]=matrix
             matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))

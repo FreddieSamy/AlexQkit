@@ -107,7 +107,7 @@ class Results():
     # measurements between gates leed to an error (we cann't get matrix representation for these circuits) (need to check)
     # including the initialization gates (need to check)
 
-    def matrixRepresentation(self):
+    def matrixRepresentation(self,decimals=8):
         from qiskit import Aer
         from qiskit import execute
     
@@ -116,7 +116,7 @@ class Results():
     
         simulator = Aer.get_backend('unitary_simulator')
         result = execute(temp, backend=simulator).result()
-        unitary = result.get_unitary(decimals=4).tolist()
+        unitary = result.get_unitary(decimals=decimals).tolist()
         for i in range(len(unitary)):
             for j in range(len(unitary[i])):
                 if unitary[i][j]==0:
