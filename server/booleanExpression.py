@@ -1,4 +1,6 @@
 from itertools import product
+
+
 class BooleanFunction:
     def __init__(self):
         pass
