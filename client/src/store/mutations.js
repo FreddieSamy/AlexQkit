@@ -33,10 +33,10 @@ export default {
   },
   removeMessages: (state) => {
     state.messages = {
-      advanced: "",
-      alert: "",
-      violation: "",
-      errors: "",
+      advanced:[],
+      alert:[],
+      violation:[],
+      errors:[],
     };
   },
 

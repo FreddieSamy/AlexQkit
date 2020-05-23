@@ -88,9 +88,11 @@ export default {
     ...mapActions(["setExeCount"]),
     ...mapActions(["runCircuit"]),
     ...mapActions(["checkSwapSystem"]),
+    ...mapActions(["removeMessages"]),
 
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
+   
       let firstWire = this.$refs.wire[0];
       this.jsonObject.colsCount = firstWire.list.length;
 
@@ -105,8 +107,10 @@ export default {
       this.setExeCount(this.jsonObject.colsCount);
 
       this.$refs.tracingLine.updateTracingLine(); //update the tracing line
+      //this.removeMessages();
       this.controlSystem();
        this.$nextTick(() => {
+          this.removeMessages();
           this.checkSwapSystem();
        });
       //window.console.log("max wire = ", this.jsonObject.colsCount);
@@ -388,7 +392,7 @@ export default {
   display: flex;
   flex-direction:row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   /* border:1px solid black; */
 }
