@@ -28,6 +28,7 @@ export default {
       var qasmMargin = 0;
       var stateBtnMargin = 0;
       var gateMargin = 0;
+      var wireNameMargin = 0;
 
       this.$nextTick(() => {
         if (this.$parent.$refs.qasm.qasmFlag) {
@@ -50,11 +51,20 @@ export default {
             parseFloat(style.marginLeft) +
             parseFloat(style.marginRight);
         }
+        if (document.getElementsByClassName("qubitNames")[0] != undefined) {
+          ele = document.getElementsByClassName("qubitNames")[0];
+          style = ele.currentStyle || window.getComputedStyle(ele);
+          wireNameMargin =
+            document.getElementsByClassName("qubitNames")[0].offsetWidth +
+            parseFloat(style.marginLeft) +
+            parseFloat(style.marginRight);
+        }
 
         document.getElementById("tracingLine").style.marginLeft =
           gateMargin * this.jsonObject.exeCount +
           stateBtnMargin +
           qasmMargin +
+          wireNameMargin +
           this.width +
           "px";
         document.getElementById(

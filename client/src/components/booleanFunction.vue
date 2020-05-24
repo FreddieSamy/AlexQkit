@@ -6,9 +6,9 @@
       <div class="column">
         <h1>Boolean function</h1>
         <h3>variables</h3>
-        <input type="text" id="variables" placeholder="x1,x2,x3" required />
+        <input type="text" id="variables" placeholder="x,y,z" required />
         <h3>expression</h3>
-        <input type="text" id="booleanfunction" placeholder="not x1 or x2 and x3" required />
+        <input type="text" id="booleanfunction" placeholder="(x or y) and not z" required />
         <h3>wires indices</h3>
         <input type="text" id="indices" placeholder="0,1,4" />
         <button @click="createBooleanCircuit()">create</button>
