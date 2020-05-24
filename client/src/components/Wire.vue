@@ -5,6 +5,10 @@
       <button class="delete" @click="deleteWire">x</button>
     </div>
     -->
+    <div>
+      <h3 class="qubitNames">{{name}}</h3>
+    </div>
+
     <div class="qubit">
       <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
     </div>
@@ -71,7 +75,8 @@ export default {
   data() {
     return {
       list: [],
-      state: states[0]
+      state: states[0],
+      name: "q".concat(this.id - 1)
     };
   },
   watch: {
@@ -88,7 +93,6 @@ export default {
             //window.console.log("hello watcher of "+this.id)
           }
         });
-
       }
     }
   },
@@ -232,9 +236,9 @@ export default {
       this.state = state;
     },
     //-----------------------------------------------------------------------
-    setGates: function(gatesList,append=true) {
-      if(append == false){
-        this.list = [];  // disabled to push on the wire 
+    setGates: function(gatesList, append = true) {
+      if (append == false) {
+        this.list = []; // disabled to push on the wire
       }
       for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
         this.list.push({ name: gatesList[colIdx] });
@@ -386,5 +390,10 @@ img {
 }
 #m .circuit-gate text {
   opacity: 0.01;
+}
+.qubitNames {
+  margin: 0.4em 0.5em 0.5em 0em;
+  padding: 0.2em 0.2em 0.2em 0em;
+  background: white;
 }
 </style>
