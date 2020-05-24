@@ -5,13 +5,12 @@
       <button class="delete" @click="deleteWire">x</button>
     </div>
     -->
-    <div>
-      <h3 class="qubitNames">{{name}}</h3>
-    </div>
 
-    <div class="qubit">
-      <button class="qubitState" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
-    </div>
+    <label class="qubitNames">q<sub>{{id-1}}</sub></label>
+
+    <!-- <div class="qubit"> -->
+    <button class="qubit-state" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
+    <!-- </div> -->
 
     <draggable
       class="wire-drop-area"
@@ -76,7 +75,6 @@ export default {
     return {
       list: [],
       state: states[0],
-      name: "q".concat(this.id - 1)
     };
   },
   watch: {
@@ -276,14 +274,35 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .wire {
-  margin: 0px;
-  z-index: -1;
   display: flex;
-  align-items: flex-start;
-  height: 45px;
-  background-size: 20px 38px;
+  justify-content: flex-start;
+  align-items: center;
+  background-size: 20px 40px;
+  background-position: center;
   background-image: url("../assets/wire.png");
-  /* border: 0.5px dashed black; */
+  z-index: -1;
+}
+.wire-drop-area {
+  height: 37px;
+  display: flex;
+  flex-basis: 80%;
+  /* border: 1px solid black; */
+}
+
+.qubitNames {
+  margin:0px 5px 0px -5px;
+  padding:0px 5px 0px 0px;
+  background: white;
+  justify-self: center;
+  align-self: center;
+  /* border:1px solid black; */
+}
+.qubit-state {
+  border-radius: 0.5em;
+  width: 2.5em;
+  height: 2em;
+  background-color: white;
+  border: 2px solid #306ba2;
 }
 .circuit-gate {
   color: white;
@@ -301,19 +320,6 @@ export default {
   background-color: #5d6d7e;
   z-index: 0;
 }
-.wire-drop-area {
-  height: 40px;
-  display: flex;
-  flex-basis: 80%;
-}
-.qubit {
-  margin: -1px 0px 0px 0px;
-  padding: 0px;
-  width: 3em;
-  height: 3em;
-  display: flex;
-}
-
 #rx,
 #ry,
 #rz {
@@ -334,6 +340,7 @@ div[id^="rz"] {
 }
 #○,
 #● {
+  /* hena fe moshkela  */
   color: black;
   line-height: 10px;
   margin: 0em 0.265em 0em 0.265em;
@@ -342,25 +349,14 @@ div[id^="rz"] {
   border: none;
 }
 #○ {
+  /* need to edit this over engineering*/
   background-image: url("../assets/whitedot.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 11px 11px;
 }
 
-.lbl-wire {
-  margin: 0.8em 0.5em 0.5em 0.5em;
-}
-
-.qubitState {
-  margin: 0.5em 0em 0em 0em;
-  border-radius: 0.5em;
-  width: 2.5em;
-  height: 2em;
-  background-color: white;
-  border: 2px solid #306ba2;
-}
-.delete-wire {
+/* .delete-wire {
   float: left;
   margin: 0.7em 0em 0em 0em;
   padding: 0.5em 0em 0em 0em;
@@ -379,21 +375,16 @@ div[id^="rz"] {
   color: white;
   border-color: transparent;
   font-size: 0.6em;
-  /*opacity:0.4;*/
-}
+} 
+*/
 img {
   width: 40px;
   height: 40px;
 }
 #i {
-  opacity: 0.01;
+  opacity: 0.91;
 }
 #m .circuit-gate text {
   opacity: 0.01;
-}
-.qubitNames {
-  margin: 0.4em 0.5em 0.5em 0em;
-  padding: 0.2em 0.2em 0.2em 0em;
-  background: white;
 }
 </style>
