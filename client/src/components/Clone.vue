@@ -92,7 +92,6 @@ export default {
 
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
-   
       let firstWire = this.$refs.wire[0];
       this.jsonObject.colsCount = firstWire.list.length;
 
@@ -109,10 +108,10 @@ export default {
       this.$refs.tracingLine.updateTracingLine(); //update the tracing line
       //this.removeMessages();
       this.controlSystem();
-       this.$nextTick(() => {
-          this.removeMessages();
-          this.checkSwapSystem();
-       });
+      this.$nextTick(() => {
+        this.removeMessages();
+        this.checkSwapSystem();
+      });
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
     },
@@ -184,7 +183,11 @@ export default {
     },
 
     //-----------------------------------------------------------------------
-    setAlgorithm: function(algorithmObject, append = true) {
+    setAlgorithm: function(
+      algorithmObject,
+      append = true,
+      qubitNames = undefined
+    ) {
       this.jsonObject.wires = Math.max(
         algorithmObject.wires,
         this.jsonObject.wires
@@ -205,14 +208,33 @@ export default {
         }
       });
       this.$nextTick(() => {
-         this.$nextTick(() => {
+        this.$nextTick(() => {
           for (; row < this.jsonObject.wires; row++) {
             let wireCaller = this.$refs.wire[row];
             wireCaller.addIdentity();
           }
           this.updateMaxWire();
-         });
+        });
       });
+      if (qubitNames) {
+        this.$nextTick(() => {
+          var variables = qubitNames.names;
+
+          var indices = qubitNames.positions;
+          if (indices == "") {
+            indices = [...Array(variables.length + 1).keys()];
+          }
+          // window.console.log(indices);
+          window.console.log(
+            "max length: ",
+            Math.max(3, ...variables.map(el => el.length))
+          );
+          for (let i = 0; i < variables.length; i++) {
+            this.$refs.wire[parseInt(indices[i])].name = variables[i];
+            this.$refs.wire[parseInt(indices[indices.length - 1])].name = "out";
+          }
+        });
+      }
     },
     //-----------------------------------------------------------------------
     applyControl: function(el1, el2) {
@@ -390,7 +412,7 @@ export default {
 }
 .results {
   display: flex;
-  flex-direction:row;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
