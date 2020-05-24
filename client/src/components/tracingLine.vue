@@ -82,9 +82,8 @@ export default {
 <style scoped>
 #tracingLine {
   position: absolute;
-  width: 10;
   margin-top: 0em;
-  /* margin-left: 3.2em; */
+  left:50px;
   z-index: -1;
   background-color: #5b758b;
 }

@@ -1,3 +1,4 @@
+<!-- all this compnent should be terminated and set functions in vuex actions -->
 <template>
   <div class="exe">
     <button class="exeBtn" @click="exeStart">start</button>
