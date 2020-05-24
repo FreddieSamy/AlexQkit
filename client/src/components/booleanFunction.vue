@@ -5,10 +5,12 @@
 
       <div class="column">
         <h1>Boolean function</h1>
-        <h3>variable</h3>
+        <h3>variables</h3>
         <input type="text" id="variables" placeholder="x1,x2,x3" required />
-        <h3>conditions</h3>
+        <h3>expression</h3>
         <input type="text" id="booleanfunction" placeholder="not x1 or x2 and x3" required />
+        <h3>wires indices</h3>
+        <input type="text" id="indices" placeholder="0,1,4" />
         <button @click="createBooleanCircuit()">create</button>
         <!-- @click="createBooleanCircuit()" -->
       </div>
@@ -34,16 +36,17 @@ export default {
     createBooleanCircuit() {
       var variables = document.getElementById("variables").value;
       var booleanfunction = document.getElementById("booleanfunction").value;
+      var indices = document.getElementById("indices").value;
+
       axios
         .post("http://127.0.0.1:5000/booleanExpression", {
           vars: variables,
-          fn: booleanfunction
+          fn: booleanfunction,
+          indices: indices
         })
         .then(res => {
           //window.console.log(res.data);
           // window.console.log(this.$parent.$parent.jsonObject);
-          // this.$parent.$parent.jsonObject.init = res.data.init;
-          // this.$parent.$parent.jsonObject.wires = res.data.wires
           this.$parent.$parent.setAlgorithm(res.data);
         });
       this.closeNav();
