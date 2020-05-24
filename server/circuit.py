@@ -108,13 +108,13 @@ class Circuit():
     # so to correct the qiskit order we need to shift the custom matrix to the end (newPos=numOfQubits-pos-1 )
     # you can check that here - https://qiskit-staging.mybluemix.net/documentation/terra/summary_of_quantum_operations.html
 
-    def addCustomGate(self, gateMatrix, positions):#,reversedWires=False):
+    def addCustomGate(self, gateMatrix, positions,gateName):#,reversedWires=False):
         """if reversedWires:
             for i in range(len(positions)):
                 positions[i]=self.num_qubits-positions[i]-1"""
         
         customGate = Operator(gateMatrix)
-        self.circuit.unitary(customGate, positions)
+        self.circuit.unitary(customGate, positions,label=gateName)
     
 ###############################################################################################################################
 
@@ -221,11 +221,11 @@ class Circuit():
                     end = len(column[i])
                 gateName = str(column[i])[7:end]
                 if len(self.customGates[gateName]) == 2:
-                    self.addCustomGate(self.customGates[gateName], [i])
+                    self.addCustomGate(self.customGates[gateName], [i],gateName)
                     continue
                 else:
                     column, pos = self.multiQubitCustomGate(column, i)
-                    self.addCustomGate(self.customGates[gateName], pos)
+                    self.addCustomGate(self.customGates[gateName], pos,gateName)
                     continue
             if str(column[i]) == "swap":
                 p1 = i
@@ -282,7 +282,7 @@ class Circuit():
                 else:
                     column, pos = self.multiQubitCustomGate(column, i)
                     pos = c+pos
-                self.addCustomGate(self.controlledGate(self.customGates[gateName], numOfControls), pos)
+                self.addCustomGate(self.controlledGate(self.customGates[gateName], numOfControls), pos,gateName)
                 continue
             if str(column[i]) == "swap":
                 p1 = i
@@ -295,7 +295,7 @@ class Circuit():
                     self.circuit.cswap(c[0],p1, p2)
                     continue
                 pos = c+[p1]+[p2]
-                self.addCustomGate(self.controlledGate(self.swapMatrix,numOfControls),pos)
+                self.addCustomGate(self.controlledGate(self.swapMatrix,numOfControls),pos,gateName)
                 continue
             if numOfControls==1 and str(column[i]) not in self.nonControlledGates:
                 if "(" in str(column[i]):
@@ -312,7 +312,7 @@ class Circuit():
                 self.circuit.ccx(c[0],c[1],i)
                 continue
             pos = c+[i]
-            self.addCustomGate(self.controlledGate(self.gateToMatrix(column[i]), numOfControls), pos)
+            self.addCustomGate(self.controlledGate(self.gateToMatrix(column[i]), numOfControls), pos,gateName)
 
         for i in oc:                                     # open control
             self.circuit.x(i)
