@@ -83,7 +83,7 @@ export default {
 #tracingLine {
   position: absolute;
   margin-top: 0em;
-  left:50px;
+  left:70px;
   z-index: -1;
   background-color: #5b758b;
 }

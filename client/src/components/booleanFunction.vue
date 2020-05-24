@@ -47,10 +47,9 @@ export default {
         .then(res => {
           //window.console.log(res.data);
           // window.console.log(this.$parent.$parent.jsonObject);
-          this.$parent.$parent.setAlgorithm(res.data, true, {
-            names: variables.split(","),
-            positions: indices
-          });
+          this.$parent.$parent.setAlgorithm(res.data
+            //  ,true, {names: variables.split(","),positions: indices}
+          );
         });
       this.closeNav();
     },

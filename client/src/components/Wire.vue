@@ -6,7 +6,7 @@
     </div>
     -->
 
-    <label class="qubitNames">q<sub>{{id-1}}</sub></label>
+    <label class="qubit-name">q<sub>{{id-1}}</sub></label>
 
     <!-- <div class="qubit"> -->
     <button class="qubit-state" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
@@ -82,15 +82,6 @@ export default {
       immediate: true,
       handler() {
         this.updateWireAttributes();
-        // window.console.log("hello from wire "+this.id)
-        this.$nextTick(() => {
-          if (this.id == this.jsonObject.wires) {
-            //window.console.log("wire :"+this.id+" send the system");
-            //this.$parent.controlSystem();
-            //this.runCircuit();
-            //window.console.log("hello watcher of "+this.id)
-          }
-        });
       }
     }
   },
@@ -98,7 +89,8 @@ export default {
   methods: {
     ...mapActions(["setWire"]),
     ...mapActions(["runCircuit"]),
-    //-----------------------------------------------------------------------
+
+    //== Events Handling Functions ===============================================
     add: function(evt) {
       if (evt.from.id[0] == "l") {
         var wire = evt.from.id.replace("list", "");
@@ -108,36 +100,6 @@ export default {
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
     },
-    //-----------------------------------------------------------------------
-    findswap: function() {
-      //window.console.log(this.$parent.jsonObject);
-      for (let rowsx = 0; rowsx < this.jsonObject.rows.length; rowsx++) {
-        if (this.jsonObject.rows[rowsx][0] == "swap") {
-          window.console.log(this.jsonObject.rows[rowsx][0]);
-
-          window.console.log("rows=" + rowsx + "column 0");
-          //this.helperswapcols(rowsx,0);
-        }
-      }
-    },
-    //-------------------------------------------------------------------------
-    // helperswapcols:function(rowindex,columnindex){
-    //  var countswaps=0;
-    //   for (let rowsx = 0; rowsx < this.$parent.jsonObject.rows.length; rowsx++){
-    //     if(rowindex==rowsx){
-    //       continue;
-    //     }
-    //     else{
-    //       if(this.$parent.jsonObject.rows[rowindex][columnindex]=="swap"){
-    //         countswaps=countswaps+1;
-
-    //       }
-    //     }
-
-    //   }
-    //   window.console.log(countswaps);
-
-    // },
     //-----------------------------------------------------------------------
     update: function() {
       this.$parent.updateMaxWire();
@@ -149,20 +111,21 @@ export default {
       this.$parent.updateMaxWire();
       this.$parent.removeIdentitySystem();
     },
-    //-----------------------------------------------------------------------
-    updateGate: function(gate, row, col) {
+    //=============================================================================
+    updateGateAtrributes: function(gate, row, col) {
       gate.setAttribute("row", "_" + row);
       gate.setAttribute("col", "_" + col);
     },
     //-----------------------------------------------------------------------
     updateWireAttributes: function() {
-      // replace it by javascript numpy alternative
+      // should be optimzed more
+      window.console.log("update Wire "+this.id+" Attributes");
       let wire = document.querySelector("#list" + this.id + "");
       if (this.list.length) {
         let gates = wire.childNodes;
         for (let i = 0; i < this.list.length; i++) {
           this.$nextTick(() => {
-            this.updateGate(gates[i], this.id, i + 1);
+            this.updateGateAtrributes(gates[i], this.id, i + 1);
           });
         }
       }
@@ -253,7 +216,8 @@ export default {
       this.list = list;
     },
     //-----------------------------------------------------------------------
-    displayName: function(name) {
+    //should be put in vuex because we need it in toolbox (or could be terminated)
+    displayName: function(name) {    
       if (name.startsWith("custom_")) {
         return name.slice(7).toUpperCase();
       } else {
@@ -261,13 +225,6 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    renderBlochSphere: function() {
-      this.renderComponent = false;
-      this.$nextTick(() => {
-        // Add the component back in
-        this.renderComponent = true;
-      });
-    }
   }
 };
 </script>
@@ -289,7 +246,7 @@ export default {
   /* border: 1px solid black; */
 }
 
-.qubitNames {
+.qubit-name {
   margin:0px 5px 0px -5px;
   padding:0px 5px 0px 0px;
   background: white;
