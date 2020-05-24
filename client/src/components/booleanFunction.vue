@@ -36,7 +36,7 @@ export default {
     createBooleanCircuit() {
       var variables = document.getElementById("variables").value;
       var booleanfunction = document.getElementById("booleanfunction").value;
-      var indices = document.getElementById("indices").value;
+      var indices = document.getElementById("indices").value.split(",");
 
       axios
         .post("http://127.0.0.1:5000/booleanExpression", {
@@ -47,7 +47,10 @@ export default {
         .then(res => {
           //window.console.log(res.data);
           // window.console.log(this.$parent.$parent.jsonObject);
-          this.$parent.$parent.setAlgorithm(res.data);
+          this.$parent.$parent.setAlgorithm(res.data, true, {
+            names: variables.split(","),
+            positions: indices
+          });
         });
       this.closeNav();
     },
