@@ -1,12 +1,12 @@
 
-Optimization 
+what we need for more GUI Optimization 
 
-0 - Loop Functions
+0 - Loop Functions -> need to be in vuex 
 1 - All Server Functions  goes to the mutations with dynamic routes 
 2 - error and warning and advanced options area ( Message area )
 3 - Blochsphere update  
 4 - Swap hovering
-5 - S Dagar , T dagar
+5 - S Dagar , T dagar gates images
 6 - update max wire
 7 - test 
 8 - qasm image
@@ -18,3 +18,7 @@ number must be in range of colsCount
 no inerchange between columns of loops
 
 functions that need to be called when an event happens
+
+function that validate controls 
+
+function that collect all validate functions (swap and controls and so on )

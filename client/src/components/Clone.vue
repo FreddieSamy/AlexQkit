@@ -31,7 +31,7 @@
 
     <div class="results">
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
-      <MessageBox />
+      <MessageBox class="message-box"/>
       <Histogram class="histogram" />
     </div>
   </div>
@@ -92,6 +92,7 @@ export default {
 
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
+      window.console.log("updateMaxWire")
       let firstWire = this.$refs.wire[0];
       this.jsonObject.colsCount = firstWire.list.length;
 
@@ -166,27 +167,10 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    // will be terminated
-    updateSystem: function() {
-      // should be terminated
-      var statesSystem = [];
-      var gatesSystem = [];
-      for (let i = 0; i < this.jsonObject.wires; i++) {
-        var wireCaller = this.$refs.wire[i];
-        statesSystem.push(wireCaller.getState());
-        gatesSystem.push(wireCaller.getGates(i));
-      }
-      this.jsonObject.init = statesSystem;
-      this.jsonObject.rows = gatesSystem;
-      // window.console.log("System Updated");
-      // window.console.log(this.jsonObject);
-    },
-
-    //-----------------------------------------------------------------------
     setAlgorithm: function(
       algorithmObject,
       append = true,
-      qubitNames = undefined
+      // qubitNames = undefined
     ) {
       this.jsonObject.wires = Math.max(
         algorithmObject.wires,
@@ -216,25 +200,25 @@ export default {
           this.updateMaxWire();
         });
       });
-      if (qubitNames) {
-        this.$nextTick(() => {
-          var variables = qubitNames.names;
+      // if (qubitNames) {
+      //   this.$nextTick(() => {
+      //     var variables = qubitNames.names;
 
-          var indices = qubitNames.positions;
-          if (indices == "") {
-            indices = [...Array(variables.length + 1).keys()];
-          }
-          // window.console.log(indices);
-          window.console.log(
-            "max length: ",
-            Math.max(3, ...variables.map(el => el.length))
-          );
-          for (let i = 0; i < variables.length; i++) {
-            this.$refs.wire[parseInt(indices[i])].name = variables[i];
-            this.$refs.wire[parseInt(indices[indices.length - 1])].name = "out";
-          }
-        });
-      }
+      //     var indices = qubitNames.positions;
+      //     if (indices == "") {
+      //       indices = [...Array(variables.length + 1).keys()];
+      //     }
+      //     // window.console.log(indices);
+      //     window.console.log(
+      //       "max length: ",
+      //       Math.max(3, ...variables.map(el => el.length))
+      //     );
+      //     for (let i = 0; i < variables.length; i++) {
+      //       this.$refs.wire[parseInt(indices[i])].name = variables[i];
+      //       this.$refs.wire[parseInt(indices[indices.length - 1])].name = "out";
+      //     }
+      //   });
+      // }
     },
     //-----------------------------------------------------------------------
     applyControl: function(el1, el2) {

@@ -73,7 +73,7 @@ export default {
         }
       }
       if (count == 1) {
-        state.messages.violation.push('on column('+(col+1)+') : you need to put more swap');
+        state.messages.violation.push('on column('+(col+1)+') : you need to put more swap gate at same column');
       }
       else if(count>2){
         state.messages.violation.push('on column ('+(col+1)+') : you can put only two swaps in one column');
