@@ -1,12 +1,13 @@
 <template>
   <div class="wire" :id="'wire-' + id">
-    <!--
     <div class="delete-wire" :id="'d-' + id">
       <button class="delete" @click="deleteWire">x</button>
     </div>
-    -->
 
-    <label class="qubit-name">q<sub>{{id-1}}</sub></label>
+    <label class="qubit-name">
+      q
+      <sub>{{id-1}}</sub>
+    </label>
 
     <!-- <div class="qubit"> -->
     <button class="qubit-state" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
@@ -74,7 +75,7 @@ export default {
   data() {
     return {
       list: [],
-      state: states[0],
+      state: states[0]
     };
   },
   watch: {
@@ -119,7 +120,7 @@ export default {
     //-----------------------------------------------------------------------
     updateWireAttributes: function() {
       // should be optimzed more
-      window.console.log("update Wire "+this.id+" Attributes");
+      window.console.log("update Wire " + this.id + " Attributes");
       let wire = document.querySelector("#list" + this.id + "");
       if (this.list.length) {
         let gates = wire.childNodes;
@@ -141,9 +142,12 @@ export default {
       this.runCircuit();
     },
     //-----------------------------------------------------------------------
-    deleteWire: function(evt) {
-      var el = evt.target.parentNode.parentNode;
-      el.parentNode.removeChild(el);
+    deleteWire: function() {
+      this.jsonObject.rows.splice(this.id - 1, 1);
+      this.jsonObject.init.splice(this.id - 1, 1);
+      this.jsonObject.wires--;
+      window.console.log(this.jsonObject);
+      this.$parent.setAlgorithm(this.jsonObject, false);
     },
     //-----------------------------------------------------------------------
     addIdentity: function() {
@@ -217,13 +221,13 @@ export default {
     },
     //-----------------------------------------------------------------------
     //should be put in vuex because we need it in toolbox (or could be terminated)
-    displayName: function(name) {    
+    displayName: function(name) {
       if (name.startsWith("custom_")) {
         return name.slice(7).toUpperCase();
       } else {
         return name.toUpperCase();
       }
-    },
+    }
     //-----------------------------------------------------------------------
   }
 };
@@ -247,8 +251,8 @@ export default {
 }
 
 .qubit-name {
-  margin:0px 5px 0px -5px;
-  padding:0px 5px 0px 0px;
+  margin: 0px 5px 0px -5px;
+  padding: 0px 5px 0px 0px;
   background: white;
   justify-self: center;
   align-self: center;
@@ -258,6 +262,7 @@ export default {
   border-radius: 0.5em;
   width: 2.5em;
   height: 2em;
+  margin-right: 0.6em;
   background-color: white;
   border: 2px solid #306ba2;
 }

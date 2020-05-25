@@ -31,7 +31,7 @@
 
     <div class="results">
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
-      <MessageBox class="message-box"/>
+      <MessageBox class="message-box" />
       <Histogram class="histogram" />
     </div>
   </div>
@@ -92,7 +92,7 @@ export default {
 
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
-      window.console.log("updateMaxWire")
+      window.console.log("updateMaxWire");
       let firstWire = this.$refs.wire[0];
       this.jsonObject.colsCount = firstWire.list.length;
 
@@ -169,7 +169,7 @@ export default {
     //-----------------------------------------------------------------------
     setAlgorithm: function(
       algorithmObject,
-      append = true,
+      append = true
       // qubitNames = undefined
     ) {
       this.jsonObject.wires = Math.max(
