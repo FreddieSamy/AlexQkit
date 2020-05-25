@@ -148,6 +148,7 @@ export default {
       this.jsonObject.wires--;
       window.console.log(this.jsonObject);
       this.$parent.setAlgorithm(this.jsonObject, false);
+      this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
     addIdentity: function() {
