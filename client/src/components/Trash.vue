@@ -54,7 +54,7 @@ export default {
       this.liveResults.probabilities.push(0);
     },
     removeWire: function() {
-      this.jsonObject.wires--;
+      this.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
       this.jsonObject.init.pop();
       this.jsonObject.rows.pop();
       this.liveResults.probabilities.pop();
