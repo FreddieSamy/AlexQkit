@@ -1,7 +1,7 @@
 <template>
   <div class="wire" :id="'wire-' + id">
     <div class="delete-wire" :id="'d-' + id">
-      <button class="delete" @click="deleteWire">x</button>
+      <button class="delete-btn" @click="deleteWire">x</button>
     </div>
 
     <label class="qubit-name">
@@ -143,9 +143,9 @@ export default {
     },
     //-----------------------------------------------------------------------
     deleteWire: function() {
-      this.jsonObject.rows.splice(this.id - 1, 1);
-      this.jsonObject.init.splice(this.id - 1, 1);
-      this.jsonObject.wires--;
+      this.jsonObject.rows.splice(this.id - 1, 1);      // vuex it 
+      this.jsonObject.init.splice(this.id - 1, 1);      // vuex it
+      this.jsonObject.wires--;                          // vuex it
       window.console.log(this.jsonObject);
       this.$parent.setAlgorithm(this.jsonObject, false);
       this.$parent.removeIdentitySystem();
@@ -251,9 +251,27 @@ export default {
   /* border: 1px solid black; */
 }
 
+.delete-wire {
+  margin: 0px;
+  padding: 0px 5px 0px 5px;
+  background: white;
+  /* border:1px solid black; */
+}
+.delete-btn {
+  color:white;
+  background: #FF9890 ;
+  border-radius: 100%;
+  padding: 0px 3px 0px 3px ;
+  border:transparent;
+  opacity: 0.5;
+} 
+.delete-btn:hover{
+  opacity: 1;
+  transform: scale(1.5);
+} 
 .qubit-name {
-  margin: 0px 5px 0px -5px;
-  padding: 0px 5px 0px 0px;
+  margin: 0;
+  padding: 0px 7px 0px 7px;
   background: white;
   justify-self: center;
   align-self: center;
@@ -266,6 +284,7 @@ export default {
   margin-right: 0.6em;
   background-color: white;
   border: 2px solid #306ba2;
+  
 }
 .circuit-gate {
   color: white;
@@ -319,27 +338,8 @@ div[id^="rz"] {
   background-size: 11px 11px;
 }
 
-/* .delete-wire {
-  float: left;
-  margin: 0.7em 0em 0em 0em;
-  padding: 0.5em 0em 0em 0em;
-  width: 1.5em;
-  height: 1em;
-  display: inline-table;
-}
-.delete {
-  opacity: 0.9;
-  margin: 0.9em 0em 0em 0em;
-  padding: 0em 0em 0em 0em;
-  border-radius: 10em;
-  width: 1.5em;
-  height: 2em;
-  background-color: #ef9494;
-  color: white;
-  border-color: transparent;
-  font-size: 0.6em;
-} 
-*/
+
+
 img {
   width: 40px;
   height: 40px;
