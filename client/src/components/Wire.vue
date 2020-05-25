@@ -56,6 +56,7 @@ export default {
     this.setGatesIdentity();
   },
   updated() {
+    // why this
     let wire = {
       qstate: this.state,
       list: this.getGates(this.id - 1),
@@ -141,7 +142,7 @@ export default {
       this.runCircuit();
     },
     //-----------------------------------------------------------------------
-    deleteWire: function(evt) {
+    deleteWire: function(evt) { // not used yet 
       var el = evt.target.parentNode.parentNode;
       el.parentNode.removeChild(el);
     },
@@ -201,7 +202,7 @@ export default {
       if (append == false) {
         this.list = []; // disabled to push on the wire
       }
-      for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
+      for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {  // can be optimized more
         this.list.push({ name: gatesList[colIdx] });
       }
     },

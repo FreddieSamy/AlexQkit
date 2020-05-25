@@ -10,6 +10,7 @@ export default {
   },
   addMessage: ({ commit }, message) => {
     //window.console.log("hello message")
+
    commit("appendMessage", message);
   },
   addWire: ({ commit }) => {
