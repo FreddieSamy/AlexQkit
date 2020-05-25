@@ -70,6 +70,6 @@ export default {
   margin-top: 0em;
   z-index: -1;
   background-color: #5b758b;
-  left:30px
+  left:33px
 }
 </style>
