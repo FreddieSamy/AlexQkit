@@ -222,6 +222,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     applyControl: function(el1, el2) {
+      window.console.log('draaw')
       if (el1 != null && el2 != null) {
         let x = el1.offsetLeft + el1.offsetWidth / 2;
         let y1 = el1.offsetTop + el1.offsetHeight / 2;

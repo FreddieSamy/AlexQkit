@@ -51,7 +51,7 @@ export default {
       this.jsonObject.wires++;
       this.$parent.$refs.tracingLine.updateTracingLine();
       this.jsonObject.init.push("0");
-      this.liveResults.probabilities.push(0);
+
     },
     removeWire: function() {
       this.jsonObject.wires--;

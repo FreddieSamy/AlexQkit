@@ -18,7 +18,7 @@ export default {
 
   // Appenders Functions
   appendInit: (state) => state.jsonObject.init.push("0"),
-  appendWire: (state) => state.jsonObject.wire++,
+  appendWire: (state) => {state.jsonObject.wire++},
   appendMessage: (state , {messageType,messageBody})=>{
     state.messages[messageType].push(messageBody)
   },

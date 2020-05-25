@@ -11,7 +11,7 @@ what we need for more GUI Optimization
 7 - test 
 8 - qasm image
 9 - Merge Qasm by  Circuit Drawing
-
+10- add wire not affect the jsonobject
 
 validation of loops 
 number must be in range of colsCount 
