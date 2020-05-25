@@ -74,7 +74,7 @@
         <h3 style="color: black;">root</h3>
         <input id="root" type="number" value="2" />
         <br />
-         <div> 
+        <div>
           <input type="checkbox" id="checkboxAdjcent" />
           <label for="checkbox">check</label>
         </div>
@@ -95,7 +95,7 @@
 <script>
 import axios from "axios";
 import CustomMx from "./custom_mx.vue";
-import { mapState , mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import {
   addCustomGates,
   subCirciutRoute,
@@ -117,7 +117,7 @@ export default {
     ...mapState(["jsonObject"])
   },
   methods: {
-    ...mapActions(['addCustomGate']),
+    ...mapActions(["addCustomGate"]),
     openNav() {
       document.getElementById("myNav").style.width = "100%";
       document.getElementById("subCircuitName").value = null;
@@ -154,7 +154,9 @@ export default {
             // this.$parent.$parent.jsonObject.custom[nameofgate] = matrix;
             this.closeNav();
           } else {
-            alert("please, enter unitary matrix");
+            alert(
+              "please, enter unitary matrix.\nenter data with \nabsolute tolerance : 1e-5 \nrelative tolerance : 1e-8  "
+            );
           }
         });
       } else {
@@ -168,7 +170,7 @@ export default {
       var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
       var count1, count2, check;
-       var regex = /^(-)?([0-9][.])?[0-9]+$|^(-)?(([0-9][.])?[0-9]+)?i$|^(-)?([0-9][.])?[0-9]+(-|\+)(([0-9][.])?[0-9]+)?i$/;
+      var regex = /^(-)?([0-9][.])?[0-9]+$|^(-)?(([0-9][.])?[0-9]+)?i$|^(-)?([0-9][.])?[0-9]+(-|\+)(([0-9][.])?[0-9]+)?i$/;
 
       for (let i in this.customGates) {
         for (let k in this.customGates[i]) {
@@ -217,7 +219,7 @@ export default {
         var json_object = {
           root: root,
           gateName: name,
-          adjcent:document.getElementById("checkboxAdjcent").checked
+          adjcent: document.getElementById("checkboxAdjcent").checked
           // custom: this.$parent.$parent.jsonObject.custom
         };
         if (root >= 2) {
@@ -313,7 +315,7 @@ export default {
       //   name: "custom_" + nameofgate,
       //   id: nameofgate
       // });
-      this.addCustomGate( {name:"custom_" + nameofgate , id: nameofgate}) 
+      this.addCustomGate({ name: "custom_" + nameofgate, id: nameofgate });
       if (this.$parent.customGates.length < 9) {
         this.$parent.w =
           "width:" +
