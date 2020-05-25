@@ -83,6 +83,42 @@ export default {
 
   /* ================================================================= */
 
+  wirescustom: (state) => {
+  
+    for (let col = 0; col < state.jsonObject.colsCount; col++) {
+      let dicCount = {};
+    //  window.console.log(dicCount);
+      for (let row = 0; row < state.jsonObject.wires; row++) {
+        if (state.jsonObject.rows[row][col].startsWith("custom_")) {
+          var nameofgate = state.jsonObject.rows[row][col];  //custom_q.0
+          nameofgate = nameofgate.substring(0, nameofgate.indexOf(".")); //custom_q
+          if (!(nameofgate in dicCount)) {
+            dicCount[nameofgate] = 1;
+          }
+          else {
+
+            dicCount[nameofgate] += 1;
+          }
+          for (let i in state.gates) { 
+                if(nameofgate === state.gates[i]["name"]){
+                   var wire =  state.gates[i]["wires"];
+                 //  window.console.log(state.gates)
+                   var realname= state.gates[i]["id"];}
+              }
+        }
+       // window.console.log(wire);
+        //window.console.log(dicCount[nameofgate]);
+        if (wire != dicCount[nameofgate] && dicCount[nameofgate] != undefined) {
+         window.console.log("gate"+realname+"can be put only for  "+wire+ "wires"+"not "+ dicCount[nameofgate] );
+         
+          state.messages.violation.push("gate "+realname+" at column "+ (col+1)+ " can be put only for "+wire+ " wires"+" not "+ dicCount[nameofgate])
+        }
+      }
+
+    }
+  },
+  /* ================================================================= */
+
   // Server Functions
   sendCircuit: (state) => {
     try {

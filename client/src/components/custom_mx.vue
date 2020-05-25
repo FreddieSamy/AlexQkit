@@ -72,8 +72,9 @@ export default {
       }
     },
     pulldata() {
-      var wire = document.getElementById("wires").value;
-      wire = Math.pow(2, wire);
+      
+      var numwires = document.getElementById("wires").value;
+      var wire = Math.pow(2, numwires);
       var myArr = document.forms.inputField;
       var name_value_array = [];
       for (var i = 0; i < myArr.length; i++) {
@@ -83,7 +84,7 @@ export default {
       }
       var matrix = this.split(myArr, wire);
 
-      return matrix;
+      return {matrix,numwires};
     },
 
     clear() {
