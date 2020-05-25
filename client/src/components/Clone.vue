@@ -88,6 +88,7 @@ export default {
     ...mapActions(["setExeCount"]),
     ...mapActions(["runCircuit"]),
     ...mapActions(["checkSwapSystem"]),
+    ...mapActions(["checkWiresCustomGates"]),
     ...mapActions(["removeMessages"]),
 
     //-----------------------------------------------------------------------
@@ -112,6 +113,7 @@ export default {
       this.$nextTick(() => {
         this.removeMessages();
         this.checkSwapSystem();
+        this.checkWiresCustomGates();
       });
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
