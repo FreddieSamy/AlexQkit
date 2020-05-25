@@ -322,7 +322,7 @@ export default {
           Math.ceil(this.$parent.customGates.length / 2) * 3.85 +
           "em";
       } else {
-        this.$parent.w = "width:15.9em";
+        this.$parent.w = "width:15.9em"; // what is this ?
       }
     },
     // ----------------------------------------------------

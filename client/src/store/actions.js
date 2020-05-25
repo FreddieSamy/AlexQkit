@@ -9,8 +9,6 @@ export default {
     commit("setRow", wire);
   },
   addMessage: ({ commit }, message) => {
-    //window.console.log("hello message")
-
    commit("appendMessage", message);
   },
   addWire: ({ commit }) => {
@@ -26,6 +24,7 @@ export default {
   },
   resetCircuit: ({ commit }) => {
     commit("reset");
+    commit("removeMessages");
   },
   removeMessages:({commit}) => {
     commit("removeMessages")

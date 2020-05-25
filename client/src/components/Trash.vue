@@ -40,6 +40,7 @@ export default {
   },
 
   methods: {
+    // Event handling on gates dropped in the wire
     add: function(evt) {
       if (evt.from.classList != "toolbox-gates-area") {
         var wire = evt.from.id.replace("list", "");
@@ -47,13 +48,13 @@ export default {
       }
       this.list = [];
     },
-    addWire: function() {
+    addWire: function() { // must be an action
       this.jsonObject.wires++;
       this.$parent.$refs.tracingLine.updateTracingLine();
       this.jsonObject.init.push("0");
 
     },
-    removeWire: function() {
+    removeWire: function() { // must be an action
       this.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
       this.jsonObject.init.pop();
       this.jsonObject.rows.pop();

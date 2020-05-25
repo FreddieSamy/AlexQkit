@@ -22,3 +22,19 @@ functions that need to be called when an event happens
 function that validate controls 
 
 function that collect all validate functions (swap and controls and so on )
+
+
+circiut drawing compnenet should be terminated and merged to Qasm
+circuit loops and loop are a complete mess should be enhanced
+tracing buttons all should be terminated and merged
+in toolbox2 and functions be an action
+revise custom mx
+
+functions need to be in actions                |  thier  place 
+----------------------------------------------------------
+add , remove wire          (specific indices)  |  wire and trash
+create matrix axios        (call the server)   |  add custom gate
+nthRoot  get               (call the server)   |  add custom gate
+cloneSubCircuitCustoGate   (call the server)   |  add custom gate
+create boolean function    (call the server)   |  boolean function
+sendQasm                   (call the server)   |  Qasm
