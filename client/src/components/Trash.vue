@@ -59,6 +59,7 @@ export default {
       this.jsonObject.rows.pop();
       this.liveResults.probabilities.pop();
       this.$parent.$refs.tracingLine.updateTracingLine();
+      this.$parent.removeIdentitySystem();
     }
   }
 };
