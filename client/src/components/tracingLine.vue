@@ -23,49 +23,34 @@ export default {
   },
   methods: {
     //-----------------------------------------------------------------------
-
+    getElementWidth: function(className) {
+      if (document.getElementsByClassName(className)[0] != undefined) {
+        var ele = document.getElementsByClassName(className)[0];
+        var style = ele.currentStyle || window.getComputedStyle(ele);
+        return (
+          document.getElementsByClassName(className)[0].offsetWidth +
+          parseFloat(style.marginLeft) +
+          parseFloat(style.marginRight)
+        );
+      }
+      return 0;
+    },
     updateTracingLine: function() {
-      var qasmMargin = 0;
-      var stateBtnMargin = 0;
-      var gateMargin = 0;
-      var wireNameMargin = 0;
-
       this.$nextTick(() => {
-        if (this.$parent.$refs.qasm.qasmFlag) {
-          qasmMargin = document.getElementsByClassName("editor")[0].offsetWidth;
-        }
-        if (document.getElementsByClassName("qubit")[0] != undefined) {
-          var ele = document.getElementsByClassName("qubit")[0];
-          var style = ele.currentStyle || window.getComputedStyle(ele);
-          stateBtnMargin =
-            document.getElementsByClassName("qubit")[0].offsetWidth +
-            parseFloat(style.marginLeft) +
-            parseFloat(style.marginRight);
-        }
-        if (document.getElementsByClassName("circuit-gate")[0] != undefined) {
-          ele = document.getElementsByClassName("circuit-gate")[0];
-          style = ele.currentStyle || window.getComputedStyle(ele);
-          // window.console.log(style.marginLeft);
-          gateMargin =
-            document.getElementsByClassName("circuit-gate")[0].offsetWidth +
-            parseFloat(style.marginLeft) +
-            parseFloat(style.marginRight);
-        }
-        if (document.getElementsByClassName("qubitNames")[0] != undefined) {
-          ele = document.getElementsByClassName("qubitNames")[0];
-          style = ele.currentStyle || window.getComputedStyle(ele);
-          wireNameMargin =
-            document.getElementsByClassName("qubitNames")[0].offsetWidth +
-            parseFloat(style.marginLeft) +
-            parseFloat(style.marginRight);
-        }
+        var qasmMargin = this.getElementWidth("editor");
+        var stateBtnMargin = this.getElementWidth("qubit-state");
+        var gateMargin = this.getElementWidth("circuit-gate");
+        var wireNameMargin = this.getElementWidth("qubit-name");
+        var deleteBtnMaargin = this.getElementWidth("delete");
 
         document.getElementById("tracingLine").style.marginLeft =
           gateMargin * this.jsonObject.exeCount +
           stateBtnMargin +
           qasmMargin +
           wireNameMargin +
+          deleteBtnMaargin +
           this.width +
+          1 +
           "px";
         document.getElementById(
           "tracingLine"
@@ -83,7 +68,6 @@ export default {
 #tracingLine {
   position: absolute;
   margin-top: 0em;
-  left:70px;
   z-index: -1;
   background-color: #5b758b;
 }
