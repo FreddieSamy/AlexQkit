@@ -110,7 +110,7 @@ def addCustomGates():
     receivedDictionary=request.get_json()
     matrix=receivedDictionary["matrix"]
     matrix=f.strToComplex(matrix)
-    isUnitary=is_unitary_matrix(matrix,1e-4,1e-4)
+    isUnitary=is_unitary_matrix(matrix)
     if isUnitary:
         matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
         c.customGates[receivedDictionary["gateName"]]=matrix
