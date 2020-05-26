@@ -22,7 +22,7 @@ class Results():
 ###############################################################################################################################   
         
     def setter(self,shots,API_TOKEN,device,circuit):
-        self.shots=shots
+        self.shots=int(shots)
         self.API_TOKEN=API_TOKEN
         self.device=device
         self.circuit=circuit
@@ -155,21 +155,17 @@ class Results():
     # else the returned data will be the expected probabilities
 
     def graph(self):
-        temp = self.circuit.copy()
-        temp.remove_final_measurements()
         graphData = []
-        if temp == self.circuit:
-            for i in range(len(self.reversedStatevector)):
-                state = str(("{0:0"+str(self.num_qubits).replace('.0000', '')+"b}").format(i))
-                graphData.append([state,round(abs(self.reversedStatevector[i])**2, 4)])
-            return graphData
+        temp = self.circuit.copy()
+        temp.measure(list(range(self.num_qubits)),list(range(self.num_qubits)))
         simulator = Aer.get_backend('qasm_simulator')
-        result = execute(self.circuit, backend=simulator,shots=self.shots).result()
-        counts = result.get_counts(self.circuit)
+        result = execute(temp, backend=simulator,shots=self.shots).result()
+        counts = result.get_counts(temp)
         for i in range(2**self.num_qubits):
             state = str(("{0:0"+str(self.num_qubits).replace('.0000', '')+"b}").format(i))
-            if state in counts:
-                graphData.append([state,counts[state]/self.shots])
+            reversedState=state[::-1]
+            if reversedState in counts:
+                graphData.append([state,counts[reversedState]/self.shots])
             else:
                 graphData.append([state,0.0])
         return graphData
