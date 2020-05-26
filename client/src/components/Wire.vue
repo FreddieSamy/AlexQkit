@@ -57,6 +57,7 @@ export default {
     this.setGatesIdentity();
   },
   updated() {
+    // why this
     let wire = {
       qstate: this.state,
       list: this.getGates(this.id - 1),
@@ -90,13 +91,24 @@ export default {
   methods: {
     ...mapActions(["setWire"]),
     ...mapActions(["runCircuit"]),
+    ...mapActions(["setCountControls"]),
+    ...mapActions(["setCountSwaps"]),
+    ...mapActions(["setCountCustoms"]),
 
     //== Events Handling Functions ===============================================
     add: function(evt) {
+      // in case gate draged from wire droped to another wire
       if (evt.from.id[0] == "l") {
+        window.console.log("hey");
         var wire = evt.from.id.replace("list", "");
         this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex);
+      } else if (evt.clone.id === "●" || evt.clone.id === "○") {
+        this.setCountControls(1);
+      } else if (evt.clone.id == "swap") {
+        this.setCountSwaps(1);
       }
+      // else if(evt.clone.id == "swap"){}
+
       this.$parent.updateMaxWire();
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
@@ -120,7 +132,7 @@ export default {
     //-----------------------------------------------------------------------
     updateWireAttributes: function() {
       // should be optimzed more
-      window.console.log("update Wire " + this.id + " Attributes");
+      //window.console.log("update Wire " + this.id + " Attributes");
       let wire = document.querySelector("#list" + this.id + "");
       if (this.list.length) {
         let gates = wire.childNodes;
@@ -143,10 +155,10 @@ export default {
     },
     //-----------------------------------------------------------------------
     deleteWire: function() {
-      this.jsonObject.rows.splice(this.id - 1, 1);      // vuex it 
-      this.jsonObject.init.splice(this.id - 1, 1);      // vuex it
-      this.jsonObject.wires--;                          // vuex it
-      window.console.log(this.jsonObject);
+      this.jsonObject.rows.splice(this.id - 1, 1); // vuex it
+      this.jsonObject.init.splice(this.id - 1, 1); // vuex it
+      this.jsonObject.wires--; // vuex it
+      //window.console.log(this.jsonObject);
       this.$parent.setAlgorithm(this.jsonObject, false);
       this.$parent.removeIdentitySystem();
     },
@@ -207,6 +219,7 @@ export default {
         this.list = []; // disabled to push on the wire
       }
       for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
+        // can be optimized more
         this.list.push({ name: gatesList[colIdx] });
       }
     },
@@ -258,17 +271,17 @@ export default {
   /* border:1px solid black; */
 }
 .delete-btn {
-  color:white;
-  background: #FF9890 ;
+  color: white;
+  background: #ff9890;
   border-radius: 100%;
-  padding: 0px 3px 0px 3px ;
-  border:transparent;
+  padding: 0px 3px 0px 3px;
+  border: transparent;
   opacity: 0.5;
-} 
-.delete-btn:hover{
+}
+.delete-btn:hover {
   opacity: 1;
   transform: scale(1.5);
-} 
+}
 .qubit-name {
   margin: 0;
   padding: 0px 7px 0px 7px;
@@ -284,7 +297,6 @@ export default {
   margin-right: 0.6em;
   background-color: white;
   border: 2px solid #306ba2;
-  
 }
 .circuit-gate {
   color: white;
@@ -293,10 +305,10 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  border: 0.5px solid grey;
-  border-radius: 0.5em;
-  margin: 0em 0.5em 0em 0.5em;
-  padding: 0px;
+  /* border: 0.5px solid grey;*/
+  border-radius: 20%;
+  margin: 0 5px;
+  padding: 0;
   width: 35px;
   height: 35px;
   background-color: #5d6d7e;
@@ -322,30 +334,29 @@ div[id^="rz"] {
 }
 #○,
 #● {
-  /* hena fe moshkela  */
   color: black;
   line-height: 10px;
-  margin: 0em 0.265em 0em 0.265em;
-  font-size: 30px;
+  margin: -2px 5px 0px 5px;
+  /* margin: 0px 7.5px 0px 7.5px; */
+  /* font-size: 20px; */
+  transform: scale(1.7);
   background: none;
   border: none;
 }
 #○ {
-  /* need to edit this over engineering*/
   background-image: url("../assets/whitedot.png");
+
   background-repeat: no-repeat;
   background-position: center;
   background-size: 11px 11px;
 }
-
-
 
 img {
   width: 40px;
   height: 40px;
 }
 #i {
-  opacity: 0.91;
+  opacity: 0;
 }
 #m .circuit-gate text {
   opacity: 0.01;

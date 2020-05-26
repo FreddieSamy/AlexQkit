@@ -1,4 +1,5 @@
 export default {
+  // Setters Functions
   setColsCount: ({ commit }, count) => {
     commit("setCols", count);
   },
@@ -8,35 +9,58 @@ export default {
   setWire: ({ commit }, wire) => {
     commit("setRow", wire);
   },
-  addMessage: ({ commit }, message) => {
-    //window.console.log("hello message")
+  setCountControls({ commit },val) {
+    commit("setContorls",val);
+  },
+  setCountSwaps({ commit },val) {
+    commit("setSwaps",val);
+  },
+  setCountCustoms({ commit },val) {
+    commit("setCustoms",val);
+  },
 
-   commit("appendMessage", message);
+
+  // Adders Functions
+  addMessage: ({ commit }, message) => {
+    commit("appendMessage", message);
   },
   addWire: ({ commit }) => {
     commit("appendInit");
     commit("appendWire");
   },
-  addCustomGate({commit},customGate){
-    commit("appendCustomGate",customGate);
+  addCustomGate({ commit }, customGate) {
+    commit("appendCustomGate", customGate);
   },
+
+  // Counters Functions  
+  // if val +1 increment count , if -1 decrement count
+
+  
+
+  // Removers Functions
   removeWire: ({ commit }) => {
     commit("popInit");
     commit("popWire");
   },
+  removeMessages: ({ commit }) => {
+    commit("removeMessages");
+  },
+
+  // Reset Functions
   resetCircuit: ({ commit }) => {
     commit("reset");
   },
-  removeMessages:({commit}) => {
-    commit("removeMessages")
-  },
-  runCircuit: ({ commit }) => {
-    commit("sendCircuit");
-  },
+
+  // Checkers Functions
   checkSwapSystem: ({ commit }) => {
     commit("swapConstrains");
   },
   checkWiresCustomGates: ({ commit }) => {
     commit("wirescustom");
+  },
+
+  // Run Functions
+  runCircuit: ({ commit }) => {
+    commit("sendCircuit");
   },
 };

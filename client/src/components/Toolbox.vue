@@ -28,29 +28,7 @@
       </transition-group>
     </draggable>
 
-    <!-- ----------------------- start custom gates --------------------------- -->
 
-    <!-- <draggable
-      v-if="customGates.length"
-      class="custom-gates"
-      :list="customGates"
-      :group="{ name: 'gates', pull: 'clone', put: false }"
-      :clone="cloneGate"
-      @change="log"
-    >
-      <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
-        <div
-          class="toolbox-gates"
-          v-for="element in customGates"
-          :key="element.id"
-          :id="element.name"
-        >
-          <div class="gate-name">{{ element.id }}</div>
-        </div>
-      </transition-group>
-    </draggable> -->
-
-    <!--------------------   end of custom gates  ----------------------- -->
     <div class="user-tools">
       <div class="qasm-box">
         <button id="qasmToolboxBtn" class="qasm" @click="$parent.$refs.qasm.qasm()">| qasm ⟩</button>
@@ -109,7 +87,7 @@ export default {
   data() {
     return {
       //  gates: this.gates(),
-      customGates: []
+      customGates: [] // terminated
     };
   },
   computed: {
