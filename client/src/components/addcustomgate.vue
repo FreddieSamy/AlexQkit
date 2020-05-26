@@ -95,7 +95,7 @@
 <script>
 import axios from "axios";
 import CustomMx from "./custom_mx.vue";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions , mapGetters } from "vuex";
 import {
   addCustomGates,
   subCirciutRoute,
@@ -114,7 +114,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["jsonObject"])
+    ...mapState(["jsonObject"]),
+     ...mapGetters(['gates'])
   },
   methods: {
     ...mapActions(["addCustomGate"]),
@@ -135,7 +136,7 @@ export default {
       var nameofgate = document.getElementById("nameofgate").value;
       //var valofgate = document.getElementById("valueofgate");
       var conmatrixcu = this.$refs.matrixcu;
-      var matrix = conmatrixcu.pulldata();
+      var {matrix,numwires} = conmatrixcu.pulldata(matrix,numwires);
       var { matrix_validate, msg } = this.validate_of_matrix(
         matrix,
         nameofgate
@@ -150,7 +151,7 @@ export default {
           //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
           // window.console.log("new unitary:" + isUnitary);
           if (isUnitary) {
-            this.addGate(nameofgate);
+            this.addGate(nameofgate,numwires);
             // this.$parent.$parent.jsonObject.custom[nameofgate] = matrix;
             this.closeNav();
           } else {
@@ -172,13 +173,20 @@ export default {
       var count1, count2, check;
       var regex = /^(-)?([0-9][.])?[0-9]+$|^(-)?(([0-9][.])?[0-9]+)?i$|^(-)?([0-9][.])?[0-9]+(-|\+)(([0-9][.])?[0-9]+)?i$/;
 
-      for (let i in this.customGates) {
-        for (let k in this.customGates[i]) {
-          if (this.customGates[i][k] === nameofgate) {
-            matrix_validate = false;
+      // for (let i in this.customGates) {
+      //   for (let k in this.customGates[i]) {
+      //     if (this.customGates[i][k] === nameofgate) {
+      //       matrix_validate = false;
+      //       msg = "this name is already exist,please choose different name";
+      //       return { matrix_validate, msg };
+      //     }
+      //   }
+      // }
+         for(let i in this.gates){
+        if(this.gates[i]["id"]=== nameofgate){
+           matrix_validate = false;
             msg = "this name is already exist,please choose different name";
-            return { matrix_validate, msg };
-          }
+             return { matrix_validate, msg };
         }
       }
 
@@ -310,19 +318,19 @@ export default {
       });
     },
     // ----------------------------------------------------
-    addGate(nameofgate) {
+    addGate(nameofgate,numwires) {
       // this.$parent.customGates.push({
       //   name: "custom_" + nameofgate,
       //   id: nameofgate
       // });
-      this.addCustomGate({ name: "custom_" + nameofgate, id: nameofgate });
+      this.addCustomGate({ name: "custom_" + nameofgate, id: nameofgate, wires : numwires });
       if (this.$parent.customGates.length < 9) {
         this.$parent.w =
           "width:" +
           Math.ceil(this.$parent.customGates.length / 2) * 3.85 +
           "em";
       } else {
-        this.$parent.w = "width:15.9em"; // what is this ?
+        this.$parent.w = "width:15.9em";
       }
     },
     // ----------------------------------------------------
