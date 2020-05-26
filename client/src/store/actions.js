@@ -9,16 +9,17 @@ export default {
   setWire: ({ commit }, wire) => {
     commit("setRow", wire);
   },
-  setCountControls({ commit },val) {
-    commit("setContorls",val);
+  // in the next 3 counters function
+  //  if val +1 increment count , if -1 decrement count
+  setCountControls({ commit }, val) {
+    commit("setContorls", val);
   },
-  setCountSwaps({ commit },val) {
-    commit("setSwaps",val);
+  setCountSwaps({ commit }, val) {
+    commit("setSwaps", val);
   },
-  setCountCustoms({ commit },val) {
-    commit("setCustoms",val);
+  setCountCustoms({ commit }, val) {
+    commit("setCustoms", val);
   },
-
 
   // Adders Functions
   addMessage: ({ commit }, message) => {
@@ -32,23 +33,20 @@ export default {
     commit("appendCustomGate", customGate);
   },
 
-  // Counters Functions  
-  // if val +1 increment count , if -1 decrement count
-
-  
-
   // Removers Functions
   removeWire: ({ commit }) => {
     commit("popInit");
     commit("popWire");
   },
   removeMessages: ({ commit }) => {
-    commit("removeMessages");
+    commit("resetMessages");
   },
 
   // Reset Functions
   resetCircuit: ({ commit }) => {
-    commit("reset");
+    commit("resetJsonObject");
+    commit("resetMessages");
+    commit("resetSpecialGates");
   },
 
   // Checkers Functions

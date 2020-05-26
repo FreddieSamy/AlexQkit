@@ -1,8 +1,8 @@
 <template>
   <div class="trash">
     <div v-if="!this.$parent.circuitDrawingFlag" class="add-remove-wire">
-      <button class="add-wire" @click="addWire">+</button>
-      <button class="remove-wire" @click="removeWire">-</button>
+      <button class="add-wire" @click="wireAdd">+</button>
+      <button class="remove-wire" @click="wireRemove">-</button>
     </div>
 
     <div class="trashArea">
@@ -40,9 +40,12 @@ export default {
   },
 
   methods: {
+    ...mapActions(["addWire"]),
+    ...mapActions(["removeWire"]),
     ...mapActions(["setCountControls"]),
     ...mapActions(["setCountSwaps"]),
     ...mapActions(["setCountCustoms"]),
+
     // Event handling on gates dropped in the wire
     add: function(evt) {
       if (evt.from.classList != "toolbox-gates-area") {
@@ -53,25 +56,27 @@ export default {
         // check for gates need for validations as (control , swaps , custom)
         if (evt.clone.id === "●" || evt.clone.id === "○") {
           this.setCountControls(-1);
+          this.$parent.controlSystem();
         } else if (evt.clone.id == "swap") {
           this.setCountSwaps(-1);
         }
-
       }
       this.list = [];
     },
-    addWire: function() {
+    wireAdd: function() {
       // must be an action
-      this.jsonObject.wires++;
+      this.addWire();
+      //this.jsonObject.wires++;
+      //this.jsonObject.init.push("0");
       this.$parent.$refs.tracingLine.updateTracingLine();
-      this.jsonObject.init.push("0");
     },
-    removeWire: function() {
+    wireRemove: function() {
       // must be an action
-      this.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
-      this.jsonObject.init.pop();
-      this.jsonObject.rows.pop();
-      this.liveResults.probabilities.pop();
+      //this.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
+      //this.jsonObject.init.pop();
+      //this.jsonObject.rows.pop();
+      //this.liveResults.probabilities.pop();
+      this.removeWire();
       this.$parent.$refs.tracingLine.updateTracingLine();
       this.$parent.removeIdentitySystem();
     }

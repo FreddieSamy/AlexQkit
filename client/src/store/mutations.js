@@ -8,19 +8,19 @@ export default {
     state.jsonObject.colsCount = count;
   },
   setExe: (state, count) => {
-     // counter
+    // counter
     state.jsonObject.exeCount = count;
   },
   setContorls: (state, val) => {
-     // counter
+    // counter
     state.specialGatesCounter.controls += val;
   },
   setSwaps: (state, val) => {
-     // counter
+    // counter
     state.specialGatesCounter.swaps += val;
   },
   setCustoms: (state, val) => {
-     // counter
+    // counter
     state.specialGatesCounter.customs += val;
   },
   setRow: (state, { qstate, list, idx }) => {
@@ -32,7 +32,11 @@ export default {
   // Appenders Functions
   appendInit: (state) => state.jsonObject.init.push("0"),
   appendWire: (state) => {
-    state.jsonObject.wire++;
+    window.console.log("append wire");
+    state.jsonObject.wires++;
+    state.jsonObject["rows"].push(
+      new Array(state.jsonObject.colsCount).fill("i"),
+    );
   },
   appendMessage: (state, { messageType, messageBody }) => {
     state.messages[messageType].push(messageBody);
@@ -44,22 +48,15 @@ export default {
   /* ================================================================= */
 
   // Remove Functions
-  removeInit: (state) => state.jsonObject.init.pop(),
-  removeWire: (state) => {
-    state.jsonObject.wire--;
+  popInit: (state) => state.jsonObject.init.pop(),
+  popWire: (state) => {
+    state.jsonObject.wires--;
+    //state.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
     state.jsonObject.rows.pop();
-  },
-  removeMessages: (state) => {
-    state.messages = {
-      advanced: [],
-      alert: [],
-      violation: [],
-      errors: [],
-    };
   },
 
   // Reset System
-  reset: (state) => {
+  resetJsonObject: (state) => {
     state.jsonObject = {
       API_TOKEN: "",
       colsCount: 0,
@@ -73,12 +70,28 @@ export default {
       wires: 2,
     };
   },
+  resetMessages: (state) => {
+    state.messages = {
+      advanced: [],
+      alert: [],
+      violation: [],
+      errors: [],
+    };
+  },
+  resetSpecialGates: (state) => {
+    state.specialGatesCounter = {
+      controls: 0,
+      swaps: 0,
+      customs: 0,
+    };
+  },
 
   /* ================================================================= */
   // Validation Functions
 
   //Check for in every Column there is an even numbers of swaps
   swapConstrains: (state) => {
+    //window.console.log("check swap")
     for (let col = 0; col < state.jsonObject.exeCount; col++) {
       let count = 0;
       for (let row = 0; row < state.jsonObject.wires; row++) {
