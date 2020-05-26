@@ -9,6 +9,8 @@ export default [
         ["i", "h", "●", "x", "●", "i"],
         ["i", "i", "x", "i", "h", "●"],
       ],
+      controls:4,
+      swaps:0,
     },
   },
   {
@@ -21,6 +23,8 @@ export default [
         ["x", "h", "●", "x", "●", "i"],
         ["x", "i", "x", "x", "h", "●"],
       ],
+      controls:4,
+      swaps:0,
     },
   },
   {
@@ -33,6 +37,8 @@ export default [
         ["i", "x", "●", "x", "x", "i"],
         ["i", "i", "x", "i", "x", "●"],
       ],
+      controls:3,
+      swaps:0,
     },
   },
   {
@@ -45,6 +51,8 @@ export default [
         ["i", "h", "●", "x", "●", "x"],
         ["i", "i", "x", "i", "h", "x"],
       ],
+      controls:2,
+      swaps:0,
     },
   },
 ];
