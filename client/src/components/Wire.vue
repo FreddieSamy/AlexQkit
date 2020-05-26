@@ -4,10 +4,7 @@
       <button class="delete-btn" @click="deleteWire">x</button>
     </div>
 
-    <label class="qubit-name">
-      q
-      <sub>{{id-1}}</sub>
-    </label>
+    <label class="qubit-name">q<sub>{{id-1}}</sub></label>
 
     <!-- <div class="qubit"> -->
     <button class="qubit-state" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
@@ -345,7 +342,6 @@ div[id^="rz"] {
 }
 #○ {
   background-image: url("../assets/whitedot.png");
-
   background-repeat: no-repeat;
   background-position: center;
   background-size: 11px 11px;
@@ -356,7 +352,7 @@ img {
   height: 40px;
 }
 #i {
-  opacity: 0;
+  opacity: 1;
 }
 #m .circuit-gate text {
   opacity: 0.01;

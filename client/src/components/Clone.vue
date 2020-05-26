@@ -81,9 +81,7 @@ export default {
   computed: {
     ...mapState(["jsonObject"]),
     ...mapGetters(["liveResults"]),
-    ...mapGetters(["swapsCount"]),
-    ...mapGetters(["controlsCount"]),
-    ...mapGetters(["customsCount"])
+    ...mapGetters(["specialGatesCounter"])
   },
 
   methods: {
@@ -94,6 +92,9 @@ export default {
     ...mapActions(["checkSwapSystem"]),
     ...mapActions(["checkWiresCustomGates"]),
     ...mapActions(["removeMessages"]),
+    ...mapActions(["setCountControls"]),
+    ...mapActions(["setCountSwaps"]),
+    ...mapActions(["setCountCustoms"]),
 
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
@@ -112,13 +113,22 @@ export default {
       this.setExeCount(this.jsonObject.colsCount);
 
       this.$refs.tracingLine.updateTracingLine(); //update the tracing line
-      //this.removeMessages();
-      this.controlSystem();
+
+      // validate circuit
+
+      // apply the control circuit if the circiut contains contorls
+      if (this.specialGatesCounter.controls) {
+        this.controlSystem();
+      } // O(n^3)
+
       this.$nextTick(() => {
         // really need to optimize the validation
-        this.removeMessages();
-        this.checkSwapSystem();
-        this.checkWiresCustomGates();
+        this.removeMessages(); // O(1)
+        if (this.specialGatesCounter.swaps) {
+          this.checkSwapSystem();
+        } // O(n^2)  only call of there is swaps in circuit
+
+        //   this.checkWiresCustomGates();     // O(n^2)
       });
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
@@ -187,6 +197,10 @@ export default {
         ...algorithmObject.init,
         ...this.jsonObject.init.slice(algorithmObject.init.length)
       ];
+
+      this.setCountControls(algorithmObject.controls)
+      this.setCountSwaps(algorithmObject.swaps)
+      
       var row = 0;
       this.$nextTick(() => {
         for (; row < algorithmObject.wires; row++) {
@@ -228,28 +242,9 @@ export default {
       // }
     },
     //-----------------------------------------------------------------------
-    applyControl: function(el1, el2) {
-      // sould be in vuex
-      //window.console.log('draaw')
-      if (el1 != null && el2 != null) {
-        let x = el1.offsetLeft + el1.offsetWidth / 2;
-        let y1 = 5 + el1.offsetTop + el1.offsetHeight / 2;
-        let y2 = 5 + el2.offsetTop + el1.offsetHeight / 2;
-        let size = Math.abs(y2 - y1);
-        var hr = document.createElement("hr");
-        hr.setAttribute("class", "cline");
-        hr.setAttribute("width", "2");
-        hr.setAttribute("size", size);
-        hr.style.left = 0;
-        hr.style.top = 0;
-        hr.style.margin = "" + y1 + "px 0px 0px " + (x - 2) + "px";
-        var parent = this.$el;
-        parent.appendChild(hr);
-      }
-    },
-    //-----------------------------------------------------------------------
     controlSystem: function() {
-      window.console.log("controlSystem");
+      // O(n^3)
+      window.console.log("controlSystem O(n^3)");
       this.removeControlSystem();
       this.$nextTick(() => {
         // wait to render the wire
@@ -271,7 +266,6 @@ export default {
     },
     //-----------------------------------------------------------------------
     isControl: function(colElements) {
-      window.console.log("is Control");
       for (let j = 0; j < colElements.length; j++) {
         if (colElements[j].id == "●" || colElements[j].id == "○") {
           return true;
@@ -281,6 +275,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     controlColumn: function(colElements) {
+      // O(n) can be enhanced
       let flag1 = true;
       let flag2 = true;
       var el1 = null;
@@ -310,8 +305,35 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
+    applyControl: function(el1, el2) {
+      // sould be in vuex
+      if (el1 != null && el2 != null) {
+        let x = el1.offsetLeft + el1.offsetWidth / 2;
+        let y1 = 5 + el1.offsetTop + el1.offsetHeight / 2;
+        let y2 = 5 + el2.offsetTop + el1.offsetHeight / 2;
+        let size = Math.abs(y2 - y1);
+        var hr = document.createElement("hr");
+        hr.setAttribute("class", "cline");
+        hr.setAttribute("width", "2");
+        hr.setAttribute("size", size);
+        hr.style.left = 0;
+        hr.style.top = 0;
+        hr.style.margin = "" + y1 + "px 0px 0px " + (x - 2) + "px";
+        var parent = this.$el;
+        parent.appendChild(hr);
+      }
+    },
+    //-----------------------------------------------------------------------
+    removeControlSystem: function() {
+      window.console.log("remove control system O(n)");
+      var flag = true;
+      while (flag) {
+        flag = this.removeControl();
+      }
+    },
+    //-----------------------------------------------------------------------
     removeControl: function() {
-      window.console.log("remove control");
+      // O(1)
       var cline = document.querySelector(".cline");
       if (cline != null) {
         var parent = this.$el;
@@ -319,14 +341,6 @@ export default {
         return true;
       }
       return false; // already cline = null (there is no control)
-    },
-    //-----------------------------------------------------------------------
-    removeControlSystem: function() {
-      window.console.log("remove control system");
-      var flag = true;
-      while (flag) {
-        flag = this.removeControl();
-      }
     },
     //-----------------------------------------------------------------------
     elementaryGates: function() {
