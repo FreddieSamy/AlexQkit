@@ -35,23 +35,25 @@ export default {
       }
       return 0;
     },
+    //-----------------------------------------------------------------------
     updateTracingLine: function() {
       this.$nextTick(() => {
         var qasmMargin = this.getElementWidth("editor");
         var stateBtnMargin = this.getElementWidth("qubit-state");
         var gateMargin = this.getElementWidth("circuit-gate");
         var wireNameMargin = this.getElementWidth("qubit-name");
-        var deleteBtnMaargin = this.getElementWidth("delete");
+        var deleteBtnMaargin = this.getElementWidth("delete-wire");
 
         document.getElementById("tracingLine").style.marginLeft =
-          gateMargin * this.jsonObject.exeCount +
-          stateBtnMargin +
           qasmMargin +
-          wireNameMargin +
           deleteBtnMaargin +
+          wireNameMargin +
+          stateBtnMargin +
+          gateMargin * this.jsonObject.exeCount +
           this.width +
           1 +
           "px";
+
         document.getElementById(
           "tracingLine"
         ).size = document.getElementsByClassName(
@@ -70,6 +72,5 @@ export default {
   margin-top: 0em;
   z-index: -1;
   background-color: #5b758b;
-  left:33px
 }
 </style>
