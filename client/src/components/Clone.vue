@@ -77,9 +77,13 @@ export default {
   data() {
     return { circuitDrawingFlag: false };
   },
+
   computed: {
     ...mapState(["jsonObject"]),
-    ...mapGetters(["liveResults"])
+    ...mapGetters(["liveResults"]),
+    ...mapGetters(["swapsCount"]),
+    ...mapGetters(["controlsCount"]),
+    ...mapGetters(["customsCount"])
   },
 
   methods: {
@@ -93,7 +97,7 @@ export default {
 
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
-      window.console.log("updateMaxWire");
+      //window.console.log("updateMaxWire");
       let firstWire = this.$refs.wire[0];
       this.jsonObject.colsCount = firstWire.list.length;
 
@@ -111,6 +115,7 @@ export default {
       //this.removeMessages();
       this.controlSystem();
       this.$nextTick(() => {
+        // really need to optimize the validation
         this.removeMessages();
         this.checkSwapSystem();
         this.checkWiresCustomGates();
@@ -224,11 +229,12 @@ export default {
     },
     //-----------------------------------------------------------------------
     applyControl: function(el1, el2) {
-      window.console.log('draaw')
+      // sould be in vuex
+      //window.console.log('draaw')
       if (el1 != null && el2 != null) {
         let x = el1.offsetLeft + el1.offsetWidth / 2;
-        let y1 = el1.offsetTop + el1.offsetHeight / 2;
-        let y2 = el2.offsetTop + el1.offsetHeight / 2;
+        let y1 = 5 + el1.offsetTop + el1.offsetHeight / 2;
+        let y2 = 5 + el2.offsetTop + el1.offsetHeight / 2;
         let size = Math.abs(y2 - y1);
         var hr = document.createElement("hr");
         hr.setAttribute("class", "cline");
@@ -243,6 +249,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     controlSystem: function() {
+      window.console.log("controlSystem");
       this.removeControlSystem();
       this.$nextTick(() => {
         // wait to render the wire
@@ -264,6 +271,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     isControl: function(colElements) {
+      window.console.log("is Control");
       for (let j = 0; j < colElements.length; j++) {
         if (colElements[j].id == "●" || colElements[j].id == "○") {
           return true;
@@ -303,6 +311,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     removeControl: function() {
+      window.console.log("remove control");
       var cline = document.querySelector(".cline");
       if (cline != null) {
         var parent = this.$el;
@@ -313,6 +322,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     removeControlSystem: function() {
+      window.console.log("remove control system");
       var flag = true;
       while (flag) {
         flag = this.removeControl();

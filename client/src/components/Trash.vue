@@ -21,7 +21,7 @@
 <!-- =============================================================  -->
 <script>
 import draggable from "vuedraggable";
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Trash",
@@ -40,21 +40,34 @@ export default {
   },
 
   methods: {
+    ...mapActions(["setCountControls"]),
+    ...mapActions(["setCountSwaps"]),
+    ...mapActions(["setCountCustoms"]),
     // Event handling on gates dropped in the wire
     add: function(evt) {
       if (evt.from.classList != "toolbox-gates-area") {
+        // Put i (identity) gate in the same position
         var wire = evt.from.id.replace("list", "");
         this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex);
+
+        // check for gates need for validations as (control , swaps , custom)
+        if (evt.clone.id === "●" || evt.clone.id === "○") {
+          this.setCountControls(-1);
+        } else if (evt.clone.id == "swap") {
+          this.setCountSwaps(-1);
+        }
+
       }
       this.list = [];
     },
-    addWire: function() { // must be an action
+    addWire: function() {
+      // must be an action
       this.jsonObject.wires++;
       this.$parent.$refs.tracingLine.updateTracingLine();
       this.jsonObject.init.push("0");
-
     },
-    removeWire: function() { // must be an action
+    removeWire: function() {
+      // must be an action
       this.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
       this.jsonObject.init.pop();
       this.jsonObject.rows.pop();

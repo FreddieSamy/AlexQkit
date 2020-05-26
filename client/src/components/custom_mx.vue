@@ -60,6 +60,7 @@ export default {
           var input = document.createElement("input");
           input.type = "text";
           input.setAttribute("size", "4");
+          // input.setAttribute("value", "0");
           input.setAttribute("placeholder", "1.0+3.5i");
           input.style.padding = '3px';
           input.style.margin = '3px';
