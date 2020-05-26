@@ -295,7 +295,7 @@ class Circuit():
                     self.circuit.cswap(c[0],p1, p2)
                     continue
                 pos = c+[p1]+[p2]
-                self.addCustomGate(self.controlledGate(self.swapMatrix,numOfControls),pos,gateName)
+                self.addCustomGate(self.controlledGate(self.swapMatrix,numOfControls),pos,"mc-swap")
                 continue
             if numOfControls==1 and str(column[i]) not in self.nonControlledGates:
                 if "(" in str(column[i]):
@@ -312,7 +312,7 @@ class Circuit():
                 self.circuit.ccx(c[0],c[1],i)
                 continue
             pos = c+[i]
-            self.addCustomGate(self.controlledGate(self.gateToMatrix(column[i]), numOfControls), pos,gateName)
+            self.addCustomGate(self.controlledGate(self.gateToMatrix(column[i]), numOfControls), pos,"mc-"+column[i])
 
         for i in oc:                                     # open control
             self.circuit.x(i)
