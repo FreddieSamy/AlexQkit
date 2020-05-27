@@ -1,3 +1,6 @@
+from stateVectorNormalization import Normalization
+from results import Results
+
 from qiskit import Aer
 from qiskit import execute
 from qiskit import QuantumCircuit
@@ -326,7 +329,16 @@ class Circuit():
         for i in range(self.exeCount):
             if "reset" in self.cols[i]:
                 self.resetExist = True
-            if "●" in self.cols[i] or "○" in self.cols[i]:
+              
+            if "cLoop(" in self.cols[i]:
+                r=Results(self.circuit)
+                newInitialization=Normalization.buildLoopCond(self.num_qubits,self.cols[i],r.stateVector)
+                if all(ele == 0 for ele in newInitialization):
+                    return "condition at column i will never be satisfied"
+                self.circuit=QuantumCircuit(self.num_qubits, self.num_qubits)
+                self.circuit.initialize(newInitialization,list(range(self.num_qubits)))
+                
+            elif "●" in self.cols[i] or "○" in self.cols[i]:
                 self.controlledColumns(self.cols[i])
             else:
                 self.nonControlledColumns(self.cols[i])
