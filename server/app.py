@@ -48,6 +48,8 @@ def draggableCircuit():
         receivedDictionary=request.get_json()
         c.setter(receivedDictionary)
         circuit=c.createDraggableCircuit()
+        if type(circuit)==type(""):
+            return jsonify({"cloopError":circuit})
         r.setter(receivedDictionary["shots"],receivedDictionary["API_TOKEN"],receivedDictionary["device"],circuit)
         returnedDictionary=r.draggableCircuitResults()
     else:
