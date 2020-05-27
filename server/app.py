@@ -188,8 +188,11 @@ def elementaryGates():
 def booleanExpress():
     if request.method=='POST':
         recievedData = request.get_json()
-        #print(recievedData)
-        booleanCircut = BooleanFunction.buildBooleanCircuit(recievedData["vars"],recievedData['fn'])
+        print(recievedData)
+        if recievedData['indices'] != [''] :
+            booleanCircut = BooleanFunction.buildBooleanCircuit_indecies(recievedData["vars"],recievedData['fn'],recievedData['indices'])
+        else  :
+            booleanCircut = BooleanFunction.buildBooleanCircuit(recievedData["vars"],recievedData['fn'])
     return jsonify(booleanCircut)
 
 ###############################################################################################################################

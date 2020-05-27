@@ -1,6 +1,5 @@
 from itertools import product
 
-
 class BooleanFunction:
     def __init__(self):
         pass
@@ -23,7 +22,6 @@ table[i].append(flag)
             exec(toExec)           
             u = ''
         return table
-
 
     def normalForm(self,table,vars):
         vars = vars.split(',')
@@ -49,7 +47,7 @@ table[i].append(flag)
             for i in product:
                 for j in list(i):
                     for k in j :
-                        if k != '1':
+                        if k != '1':        #return booleanCircuit
                             tempStr+=k+"."
                         
                     if tempStr == "" :
@@ -106,25 +104,6 @@ table[i].append(flag)
             dicOfVariabels[var] = count
             count+=1
         return dicOfVariabels
-    @classmethod
-    def buildBooleanCircuit(cls,vars,boolFunc):
-        truthTable = cls().buildTruthTable(vars,boolFunc)
-        normalFormEqn = cls().normalForm(truthTable,vars)
-        productNormalForm = cls().productOfNormalFn(normalFormEqn)
-        optmiziedEqn = cls().optmizationCancelation(productNormalForm)
-        optmiziedEqn = cls().term_XOR_one(optmiziedEqn)
-        dicOfVariabels = {}
-        target = "x"
-        closedControll = "●"
-        openControll = "○"
-        dicOfVariabels = cls().assignOrderOfVaribles(vars)
-        lenRow = len(vars.split(","))
-        lenColumn = len(optmiziedEqn)
-        booleanCircuit = cls().intalize2Darray(lenRow,lenColumn)
-        booleanCircuit.append([target]*lenColumn)
-        booleanCircuit = cls().assignBooleanCircuit(booleanCircuit,optmiziedEqn,dicOfVariabels,closedControll,openControll)
-        #return booleanCircuit
-        return {'wires' : lenRow+1 ,'init' : ['0']*(lenRow+1), 'rows': booleanCircuit}
 
     def isOne(self,optmiziedEqn):
         for termIndex in range(len(optmiziedEqn)) :
@@ -132,11 +111,11 @@ table[i].append(flag)
                 optmiziedEqn.pop(termIndex)
                 return True
         return False
+
     def smallestTermLength(self,optmiziedEqn):
         indexOfTerm = 0
         term = optmiziedEqn[0].split('.')
         lestTermLength = len(term)
-
         for termIndex in range(1,len(optmiziedEqn)) :
             tempTerm = optmiziedEqn[termIndex].split('.')
             if len(tempTerm) < lestTermLength and optmiziedEqn[termIndex] != "1" :
@@ -146,6 +125,7 @@ table[i].append(flag)
                 if lestTermLength == 1 :
                     break
         return {'term' : term ,'index' : indexOfTerm }
+
     def term_XOR_one(self,optmiziedEqn):
         if self.isOne(optmiziedEqn) :
             dicOfTerm = self.smallestTermLength(optmiziedEqn)
@@ -154,5 +134,58 @@ table[i].append(flag)
                 tempStrTerm += "not " + element+"."
             tempStrTerm = tempStrTerm.strip('.')
             optmiziedEqn[dicOfTerm['index']] = tempStrTerm
-
         return optmiziedEqn
+
+    def castInt_max(self,arr):
+        maxi = 0
+        for ind in range(len(arr))  :
+            arr[ind] = int(arr[ind])
+            if maxi < arr[ind]:
+                maxi = arr[ind]
+        return maxi
+
+    @classmethod
+    def buildBooleanCircuit(cls,variables,boolFunc):
+        truthTable = cls().buildTruthTable(variables,boolFunc)
+        normalFormEqn = cls().normalForm(truthTable,variables)
+        productNormalForm = cls().productOfNormalFn(normalFormEqn)
+        optmiziedEqn = cls().optmizationCancelation(productNormalForm)
+        optmiziedEqn = cls().term_XOR_one(optmiziedEqn)
+        dicOfVariabels = {}
+        target = "x"
+        closedControll = "●"
+        openControll = "○"
+        dicOfVariabels = cls().assignOrderOfVaribles(variables)
+        lenRow = len(variables.split(","))
+        lenColumn = len(optmiziedEqn)
+        booleanCircuit = cls().intalize2Darray(lenRow,lenColumn)
+        booleanCircuit.append([target]*lenColumn)
+        booleanCircuit = cls().assignBooleanCircuit(booleanCircuit,optmiziedEqn,dicOfVariabels,closedControll,openControll)
+        return {'wires' : lenRow+1 ,'init' : ['0']*(lenRow+1), 'rows': booleanCircuit}
+
+    @classmethod
+    def buildBooleanCircuit_indecies(cls,variables,boolFunc,indecies):
+        circuit = cls().buildBooleanCircuit(variables,boolFunc) 
+        columns = len(circuit['rows'][0])
+        rows = cls().castInt_max(indecies) + 1
+        booleanCircuit = []
+        booleanCircuit = cls().intalize2Darray(rows,columns)
+        indexOfVariable = 0
+        for index in indecies :
+            booleanCircuit[index] = circuit['rows'][indexOfVariable]
+            indexOfVariable+=1
+        circuit['wires'] = rows
+        circuit['init'] = ['0']*rows
+        circuit['rows'] = booleanCircuit 
+        
+        print(circuit['rows']) 
+        return circuit
+
+# v = "x,y,z"
+# fn = "x or y and z"
+# indecies = ['2', '4', '1','3']
+# print(BooleanFunction.buildBooleanCircuit(v,fn)['rows'])
+#print(BooleanFunction.buildBooleanCircuit_indecies(v,fn,indecies)['rows'])
+#for i in BooleanFunction.buildBooleanCircuit_indecies(v,fn,indecies)['rows']:
+#for i in BooleanFunction.buildBooleanCircuit(v,fn)['rows']:
+#    print(i)
