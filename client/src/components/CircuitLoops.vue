@@ -4,17 +4,21 @@
       <button @click="openNav();">Add Loop</button>
     </div>
     <div id="myNav1" class="overlay">
-      <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
-      <h1>Loops</h1>
-      <div class="loops">
-        <Loop v-for="count in loopCounts" :key="count" :ref="'loops'" />
-      </div>
-      <div class="loops-btns">
-        <button v-if="loopCounts" @click="loopCounts--" class="button_over">Remove Loop</button>
-        <button @click="loopCounts++;" class="button_over">Add Loop</button>
-        <div>
-          <button v-if="loopCounts" @click="applyLoop" class="button_over">Apply Loops</button>
+      <div class="overlay-body">
+        <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
+        <h1>Loops</h1>
+        <div class="loops">
+          <Loop v-for="count in loopCounts" :key="count" :ref="'loops'" />
         </div>
+        <div class="loops-btns">
+          <button class="add" @click="loopCounts++;">Add</button>
+          <button class="remove" v-if="loopCounts" @click="loopCounts--">Remove</button>
+          <button class="apply" v-if="loopCounts" @click="applyLoop">Apply the loops</button>
+        </div>
+
+
+        <ConditionalLoop />
+
       </div>
     </div>
   </div>
@@ -22,14 +26,15 @@
 <!-- ================================================  -->
 <script>
 import Loop from "./Loop.vue";
-import { mapState , mapActions } from "vuex";
+import ConditionalLoop from "./ConditionalLoop.vue";
+import { mapState, mapActions } from "vuex";
 
 // eslint-disable-next-line no-undef
 export default {
   name: "CircuitLoops",
   display: "CircuitLoops",
   props: ["colsCount"],
-  components: { Loop },
+  components: { Loop , ConditionalLoop },
   data() {
     return {
       loopCounts: 1,
@@ -39,19 +44,20 @@ export default {
   },
 
   computed: {
-    ...mapState(["jsonObject"]),
-   
+    ...mapState(["jsonObject"])
   },
   methods: {
-     ...mapActions(['addMessage']),
+    ...mapActions(["addMessage"]),
+    ...mapActions(["removeMessages"]),
     applyLoop() {
+      this.removeMessages();
       this.ListOfPositions = [];
       this.Repeats = [];
       for (let i = 0; i < this.loopCounts; i++) {
         let loopCaller = this.$refs.loops[i];
-        let arr = [parseInt(loopCaller.from), parseInt(loopCaller.to)];
+        let arr = [(parseInt(loopCaller.from)-1), (parseInt(loopCaller.to)-1)];
         this.ListOfPositions.push(arr);
-        this.Repeats.push(parseInt(loopCaller.repeat));
+        this.Repeats.push((parseInt(loopCaller.repeat)+1));
         this.closeNav();
       }
       let listOfPos = this.ListOfPositions;
@@ -59,35 +65,34 @@ export default {
       let repeated = { listOfPos, listOfRep };
       this.jsonObject["repeated"] = repeated; // should be setter
       // let message = {messageType:'advanced',messageBody:repeated}
-       this.addMessage({messageType:'advanced',messageBody:repeated})
+      this.addMessage({ messageType: "advanced", messageBody: repeated });
       //window.console.log(this.$parent.$parent.jsonObject)
     },
     openNav() {
-      document.getElementById("myNav1").style.width = "30%";
+      document.getElementById("myNav1").style.width = "25%";
     },
     // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav1").style.width = "0%";
     },
-    hey() {
-      window.console.log("hey");
-    }
   }
 };
 </script>
 <!-- ================================================  -->
 <style scoped>
-.loops {
-  margin: 100px 0px 0px 0px;
-}
 .loops-btns {
-  margin: 5px 10px 10px -50px;
-  text-align: center;
+  margin: 20px 0px 0px 0px;
 }
 button {
-  border-radius: 7px;
+  border-radius: 50px;
   background-color: white;
-  margin: 0em;
+}
+.remove{
+  margin:0px 50px 0px 10px;
+}
+.overlay-body {
+  margin-left: 15px;
+  /* border:3px double red; */
 }
 .overlay {
   height: 100%;
@@ -102,12 +107,9 @@ button {
 }
 
 .button_over {
-  margin-left: 30px;
   background: none;
   color: white;
   border: 1px solid white;
-  font-size: 15px;
-  margin-top: 10px;
 }
 
 .overlay a {

@@ -65,6 +65,7 @@ export default {
   },
   methods: {
     ...mapActions(["runCircuit"]),
+    ...mapActions(["countGate"]),
     cloneResetSystem: function() {
       this.selectedAlgorithm = null;
       this.$parent.resetSystem();
@@ -77,7 +78,9 @@ export default {
             circuit: {
               wires: this.jsonObject.wires,
               init: [...this.jsonObject.init],
-              rows: [...this.jsonObject.rows]
+              rows: [...this.jsonObject.rows],
+              controls:this.countGate("●")+this.countGate("○"),
+              swaps:this.countGate("swap")
             }
           });
           //window.console.log(this.algorithms);

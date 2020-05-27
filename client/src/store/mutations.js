@@ -87,6 +87,21 @@ export default {
   },
 
   /* ================================================================= */
+
+  countGate:(state,gateName)=>{
+    let count = 0;
+    for (let i = 0; i < state.jsonObject.rows; i++) {
+       for (let j = 0; j <state.jsonObject.colsCount; j++) {
+         count = state.jsonObject.rows[i][j]===gateName ? count+=1:count
+       }
+    }
+    window.console.log(count)
+    return count
+  },
+
+
+
+  /* ================================================================= */
   // Validation Functions
 
   //Check for in every Column there is an even numbers of swaps

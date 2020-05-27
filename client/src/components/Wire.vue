@@ -320,7 +320,7 @@ export default {
 div[id^="r"],
 #swap {
   font-size: 10px;
-  margin: 0em 0.75em 0em 0.75em;
+  margin: 0em 5px 0em 5px;
 }
 
 div[id^="rx"],
@@ -344,7 +344,7 @@ div[id^="rz"] {
   background-image: url("../assets/whitedot.png");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 11px 11px;
+  background-size: 7px 6px;
 }
 
 img {
@@ -352,7 +352,7 @@ img {
   height: 40px;
 }
 #i {
-  opacity: 1;
+  opacity: 0;
 }
 #m .circuit-gate text {
   opacity: 0.01;
