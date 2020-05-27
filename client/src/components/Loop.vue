@@ -1,11 +1,9 @@
 <template>
   <div>
     <div>
-      <input type="number" min="1" v-model="from" placeholder="from " />
-      <label>:</label>
-      <input type="number" min="1" v-model="to" placeholder="to " />
-      <label>-></label>
-      <input type="number" min="1" v-model="repeat" placeholder="Repeat" />
+      <input class="from" type="number" min="1" v-model="from" placeholder="from " /> :
+      <input class="to" type="number" min="1" v-model="to" placeholder="to " />
+      <input class="repeat" type="number" min="1" v-model="repeat" placeholder="Repeat" />
     </div>
   </div>
 </template>
@@ -28,9 +26,12 @@ export default {
 <style scoped>
 input {
   padding: 0em 0em 0em 0.5em;
-  width: 60px;
+  width: 40px;
   border-radius: 5px;
-  margin:1em;
+}
+.repeat{
+  margin:0px 0px 0px 50px;
+  width:60px;
 }
 </style>
 

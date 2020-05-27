@@ -309,8 +309,8 @@ export default {
       // sould be in vuex
       if (el1 != null && el2 != null) {
         let x = el1.offsetLeft + el1.offsetWidth / 2;
-        let y1 = 5 + el1.offsetTop + el1.offsetHeight / 2;
-        let y2 = 5 + el2.offsetTop + el1.offsetHeight / 2;
+        let y1 =  el1.offsetTop + el1.offsetHeight / 2;
+        let y2 =  el2.offsetTop + el1.offsetHeight / 2;
         let size = Math.abs(y2 - y1);
         var hr = document.createElement("hr");
         hr.setAttribute("class", "cline");

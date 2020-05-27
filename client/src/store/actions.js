@@ -57,6 +57,10 @@ export default {
     commit("wirescustom");
   },
 
+  countGate: ({ commit }, gateName) => {
+    commit("countGate", gateName);
+  },
+
   // Run Functions
   runCircuit: ({ commit }) => {
     commit("sendCircuit");
