@@ -84,9 +84,12 @@ export default {
   margin: 20px 0px 0px 0px;
 }
 button {
-  border-radius: 50px;
-  background-color: white;
+  border: 2px solid grey;
+  margin: 0;
+  background: white;
+  border-radius: 0.5em;
 }
+
 .remove{
   margin:0px 50px 0px 10px;
 }
