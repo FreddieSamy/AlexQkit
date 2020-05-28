@@ -150,8 +150,9 @@ export default {
       window.console.log("add Identity to Column")
       for (let i = 0; i < this.jsonObject.wires; i++) {
         if (i + 1 != wireId) {
-          var wireCaller = this.$refs.wire[i];
-          wireCaller.addIdentity();
+           var wireCaller = this.$refs.wire[i];
+           wireCaller.addIdentity();
+          // wireCaller.list.splice(,0,{name:i})
         }
       }
     },
@@ -190,7 +191,6 @@ export default {
     setAlgorithm: function(
       algorithmObject,
       append = true
-      // qubitNames = undefined
     ) {
       this.jsonObject.wires = Math.max(
         algorithmObject.wires,
@@ -308,23 +308,9 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    removeControlSystem: function() {
-      window.console.log("remove control system O(n)");
-      var flag = true;
-      while (flag) {
-        flag = this.removeControl();
-      }
-    },
-    //-----------------------------------------------------------------------
-    removeControl: function() {
-      // O(1)
-      var cline = document.querySelector(".cline");
-      if (cline != null) {
-        var parent = this.$el;
-        parent.removeChild(cline);
-        return true;
-      }
-      return false; // already cline = null (there is no control)
+    removeControlSystem: function() { 
+     var clines = document.querySelectorAll(".cline");
+     clines.forEach(cline => cline.parentNode.removeChild(cline));
     },
     //-----------------------------------------------------------------------
     elementaryGates: function() {

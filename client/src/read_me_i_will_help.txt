@@ -23,6 +23,7 @@ function that validate controls
 
 function that collect all validate functions (swap and controls and so on )
 
+get the matrix by a file
 
 save to local storage  (custom gates , saved algorithms )
 
