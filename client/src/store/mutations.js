@@ -185,4 +185,17 @@ export default {
       window.console.log("i think there is an error " + error);
     }
   },
-};
+
+
+
+/* ================================================================= */
+// browser localStorage functions 
+store:(state,objectName)=>{
+    localStorage.setItem(objectName,JSON.stringify(state[objectName]))
+},
+
+  getStorage:(state,objectName)=>{
+    state[objectName] = JSON.parse(localStorage.getItem(objectName))
+    return state[objectName]
+}
+}
