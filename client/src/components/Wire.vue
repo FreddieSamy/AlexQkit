@@ -158,7 +158,7 @@ export default {
       this.state = states[i];
       evt.target.innerHTML = "|" + this.state + "⟩";
       this.jsonObject.init[id.slice(1, -1) - 1] = this.state;
-      this.runCircuit();
+      // this.runCircuit();
     },
     //-----------------------------------------------------------------------
     deleteWire: function() {

@@ -1,6 +1,6 @@
 from itertools import product
 from math import sqrt
-class CertainLoop:
+class Normalization:
 
     def __init__(self):
         pass
@@ -47,7 +47,8 @@ class CertainLoop:
 #stateVector = [(0.5-0j), (-0.5+0j), 0j, 0j, (0.5-0j), (-0.5+0j), 0j, 0j]
 #wiresep = "0*1"
 #print(CertainLoop.buildLoopCond(numWires,wiresep,stateVector))
-wiresep = "**01"
-numWires = 4
-stateVector = [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j, (0.7071+0j), 0j, (0.7071+0j), 0j, 0j, 0j, 0j] 
-print(CertainLoop.buildLoopCond(numWires,wiresep,stateVector))
+
+#wiresep = "**01"
+#numWires = 4
+#stateVector = [0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j, 0j, (0.7071+0j), 0j, (0.7071+0j), 0j, 0j, 0j, 0j] 
+#print(Normalization.buildLoopCond(numWires,wiresep,stateVector))
