@@ -147,18 +147,27 @@ export default {
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
-      window.console.log("add Identity to Column")
+      //window.console.log("add Identity to Column");
       for (let i = 0; i < this.jsonObject.wires; i++) {
         if (i + 1 != wireId) {
-           var wireCaller = this.$refs.wire[i];
-           wireCaller.addIdentity();
+          var wireCaller = this.$refs.wire[i];
+          wireCaller.addIdentity();
           // wireCaller.list.splice(,0,{name:i})
+        }
+      }
+    }, // 3andena 7owar hena
+    addIdentityColumn: function(wireId, columnId) {
+      //window.console.log("add Identity to Column "+columnId);
+      for (let i = 0; i < this.jsonObject.wires; i++) {
+        if (i + 1 != wireId) {
+          var wireCaller = this.$refs.wire[i];
+          wireCaller.Identity(columnId);
         }
       }
     },
     //-----------------------------------------------------------------------
     removeIdentityColumn: function(columnIndex) {
-      window.console.log("remove Identity")
+      //window.console.log("remove Identity");
       for (let row = 0; row < this.jsonObject.wires; row++) {
         var wireCaller = this.$refs.wire[row];
         wireCaller.removeGateByIndex(columnIndex);
@@ -169,7 +178,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
-      window.console.log("is all column identity")
+     // window.console.log("is all column identity");
       for (let i = 0; i < this.jsonObject.wires; i++) {
         var wireList = this.$refs.wire[i].list;
         var gateName = wireList[columnIndex]["name"];
@@ -188,10 +197,7 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    setAlgorithm: function(
-      algorithmObject,
-      append = true
-    ) {
+    setAlgorithm: function(algorithmObject, append = true) {
       this.jsonObject.wires = Math.max(
         algorithmObject.wires,
         this.jsonObject.wires
@@ -201,9 +207,9 @@ export default {
         ...this.jsonObject.init.slice(algorithmObject.init.length)
       ];
 
-      this.setCountControls(algorithmObject.controls)
-      this.setCountSwaps(algorithmObject.swaps)
-      
+      this.setCountControls(algorithmObject.controls);
+      this.setCountSwaps(algorithmObject.swaps);
+
       var row = 0;
       this.$nextTick(() => {
         for (; row < algorithmObject.wires; row++) {
@@ -228,7 +234,7 @@ export default {
     //-----------------------------------------------------------------------
     controlSystem: function() {
       // O(n^3)
-      window.console.log("controlSystem O(n^3)");
+      //window.console.log("controlSystem O(n^3)");
       this.removeControlSystem();
       this.$nextTick(() => {
         // wait to render the wire
@@ -293,8 +299,8 @@ export default {
       // sould be in vuex
       if (el1 != null && el2 != null) {
         let x = el1.offsetLeft + el1.offsetWidth / 2;
-        let y1 =  el1.offsetTop + el1.offsetHeight / 2;
-        let y2 =  el2.offsetTop + el1.offsetHeight / 2;
+        let y1 = el1.offsetTop + el1.offsetHeight / 2;
+        let y2 = el2.offsetTop + el1.offsetHeight / 2;
         let size = Math.abs(y2 - y1);
         var hr = document.createElement("hr");
         hr.setAttribute("class", "cline");
@@ -308,9 +314,9 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    removeControlSystem: function() { 
-     var clines = document.querySelectorAll(".cline");
-     clines.forEach(cline => cline.parentNode.removeChild(cline));
+    removeControlSystem: function() {
+      var clines = document.querySelectorAll(".cline");
+      clines.forEach(cline => cline.parentNode.removeChild(cline));
     },
     //-----------------------------------------------------------------------
     elementaryGates: function() {
