@@ -103,8 +103,13 @@ export default {
         evt.newIndex < this.jsonObject.colsCount &&
         this.list[evt.newIndex + 1]["name"] == "i"
       ) {
-        window.console.log("my neighbor is i");
+        window.console.log(evt.clone.id+" applied this if")
         this.list.splice(evt.newIndex + 1, 1);
+      }
+   
+      else{
+          window.console.log(evt.clone.id+" applied this else")
+          this.$parent.addIdentityColumn(this.id,evt.newIndex)
       }
 
       // in case gate draged from wire droped to another wire : evt.from.id = list(n)
@@ -120,8 +125,8 @@ export default {
       // else if(evt.clone.id == "swap"){}
      
       this.$parent.updateMaxWire();
-      this.$parent.addIdentityToColumn(this.id);
-      this.$parent.removeIdentitySystem();
+      //this.$parent.addIdentityToColumn(this.id);
+      //this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
     update: function() {
@@ -178,6 +183,9 @@ export default {
       for (let i = this.list.length; i < this.jsonObject.colsCount; i++) {
         this.list.push({ name: "i" });
       }
+    },
+    Identity:function(columnId){
+      this.list.splice(columnId,0,{ name: "i" });
     },
     //-----------------------------------------------------------------------
     getGateByIndex: function(gateIndex) {
@@ -266,7 +274,7 @@ export default {
   background-position: center;
   background-image: url("../assets/wire.png");
   z-index: -1;
-  /* margin:10px 0px 10px 0px; */
+  margin:10px 0px 10px 0px;
 }
 .wire-drop-area {
   height: 37px;
@@ -392,7 +400,7 @@ img {
 
 
 #i {
-  opacity: 1;
+  opacity: 0;
 }
 #m .circuit-gate text {
   opacity: 0.01;
