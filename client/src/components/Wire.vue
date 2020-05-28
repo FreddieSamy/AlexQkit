@@ -4,7 +4,10 @@
       <button class="delete-btn" @click="deleteWire">x</button>
     </div>
 
-    <label class="qubit-name">q<sub>{{id-1}}</sub></label>
+    <label class="qubit-name">
+      q
+      <sub>{{id-1}}</sub>
+    </label>
 
     <!-- <div class="qubit"> -->
     <button class="qubit-state" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
@@ -19,13 +22,14 @@
       @remove="remove"
       @update="update"
     >
-      <div
-        class="circuit-gate"
-        v-for="element in list"
-        :key="element.id"
-        :id="element.name"
-        v-html="displayName(element.name)"
-      ></div>
+      <div class="circuit-gate" v-for="element in list" :key="element.id" :id="element.name">
+        {{displayName(element.name)}}
+        <select  v-if="element.name[0]=='c'" class="custom-gate-order">
+          <!-- we will put a v-for here -->
+          <option value="0">0</option>
+          <option value="1">1</option>
+      </select>
+      </div>
     </draggable>
 
     <Percent :probability="this.liveResults.probabilities[id-1]||0" />
@@ -94,17 +98,17 @@ export default {
 
     //== Events Handling Functions ===============================================
     add: function(evt) {
-
       //window.console.log(evt.newIndex)
-      if(evt.newIndex < this.jsonObject.colsCount && this.list[(evt.newIndex+1)]['name']=="i"){
-        window.console.log("my neighbor is i")
-        this.list.splice(evt.newIndex+1, 1)
-       }
-
-
+      if (
+        evt.newIndex < this.jsonObject.colsCount &&
+        this.list[evt.newIndex + 1]["name"] == "i"
+      ) {
+        window.console.log("my neighbor is i");
+        this.list.splice(evt.newIndex + 1, 1);
+      }
 
       // in case gate draged from wire droped to another wire : evt.from.id = list(n)
-      if (evt.from.id[0] == "l") { 
+      if (evt.from.id[0] == "l") {
         var wire = evt.from.id.replace("list", "");
         this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex);
       } else if (evt.clone.id === "●" || evt.clone.id === "○") {
@@ -113,9 +117,8 @@ export default {
         this.setCountSwaps(1);
       }
 
-     
       // else if(evt.clone.id == "swap"){}
-      this.$parent.addIdentityToColumn(this.id);
+     
       this.$parent.updateMaxWire();
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
@@ -310,10 +313,10 @@ export default {
   color: white;
   font-size: 15px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   text-align: center;
-  /* border: 0.5px solid grey;*/
   border-radius: 20%;
   margin: 0 5px;
   padding: 0;
@@ -321,7 +324,31 @@ export default {
   height: 35px;
   background-color: #5d6d7e;
   z-index: 0;
+
 }
+
+.custom-gate-order{
+  
+  display: flex;
+  flex-basis: 100%;
+  height: 15px;
+  max-width:30px;
+  padding: 0;
+  margin: -5px 0px 0px 0px;
+  font-size:10px;
+  border-radius: 10px;
+}
+.angle-input {
+  display: flex;
+  flex-basis: 100%;
+  margin: 0px auto;
+  text-align: center;
+  padding: 2px 0px 2px 0px;
+  width: 75%;
+  
+  border-radius: 8px;
+}
+
 #rx,
 #ry,
 #rz {
@@ -362,10 +389,28 @@ img {
   width: 40px;
   height: 40px;
 }
+
+
 #i {
   opacity: 1;
 }
 #m .circuit-gate text {
   opacity: 0.01;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+option:focus, select:focus,  textarea:focus, input:focus{
+    outline: none;
+}
+
 </style>

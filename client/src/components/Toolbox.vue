@@ -1,6 +1,6 @@
 <template>
   <div class="toolbox">
-    <!-- ---------------------- build in gates  -------------------------- -->
+ 
     <draggable
       :list="gates"
       :group="{ name: 'gates', pull: 'clone', put: false }"
@@ -8,12 +8,12 @@
       @change="log"
     >
       <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
+
+      <!--------------------- Gates ----------------should be a component------------->
         <div class="toolbox-gates" v-for="gate in this.gates" :key="gate.id" :id="gate.name">
-          <!-- in case of angle-gates -->
           <div class="gate-name" id="hover-div" v-if="gate.name[0]!='c'">
             {{ gate.name.toUpperCase() }}
             <!-- <span id="hover-element">{{ gate.info }}</span> -->
-          
             <input
               v-if="gate.name == 'rx' || gate.name == 'ry' || gate.name == 'rz' "
               class="angle-input"
@@ -23,8 +23,9 @@
               value="90"
             />
           </div>
-          <div v-else>{{ gate.id }}</div>
+          <div v-else>{{ gate.id }}</div>  <!-- in case of custom gates -->
         </div>
+        <!---------------------end of Gates --------------------------------------->
       </transition-group>
     </draggable>
 
@@ -32,9 +33,8 @@
     <div class="user-tools">
       <div class="qasm-box">
         <button id="qasmToolboxBtn" class="qasm" @click="$parent.$refs.qasm.qasm()">| qasm ⟩</button>
-        <!-- to Mario .. freddie added this button !! -->
         <button
-          class="qasm"
+          class="matrix-btn"
           @click="$parent.$refs.matrixRepresentation.openNav()"
         >Matrix Representation</button>
       </div>
@@ -147,8 +147,7 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  border: 0.5px solid grey;
-  border-radius: 0.5em;
+  border-radius: 6px;
   margin: 0em 0.5em 0.5em 0.5em;
   padding: 0px;
   width: 35px;
@@ -203,10 +202,10 @@ export default {
 .angle-input {
   display: flex;
   flex-basis: 100%;
+  margin: 0px auto;
   text-align: center;
-  margin: 0px;
   padding: 2px 0px 2px 0px;
-  width: 90%;
+  width: 75%;
   font-size: 10px;
   border-radius: 8px;
 }
@@ -275,5 +274,23 @@ export default {
 }
 button {
   border: 2px solid grey;
+  margin: 0px 10px;
+  background-color: white;
+  border-radius: 0.5em;
+  display: inline-block;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+textarea:focus, input:focus{
+    outline: none;
 }
 </style>
