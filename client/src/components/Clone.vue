@@ -147,6 +147,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     addIdentityToColumn: function(wireId) {
+      window.console.log("add Identity to Column")
       for (let i = 0; i < this.jsonObject.wires; i++) {
         if (i + 1 != wireId) {
           var wireCaller = this.$refs.wire[i];
@@ -156,6 +157,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     removeIdentityColumn: function(columnIndex) {
+      window.console.log("remove Identity")
       for (let row = 0; row < this.jsonObject.wires; row++) {
         var wireCaller = this.$refs.wire[row];
         wireCaller.removeGateByIndex(columnIndex);
@@ -166,6 +168,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
+      window.console.log("is all column identity")
       for (let i = 0; i < this.jsonObject.wires; i++) {
         var wireList = this.$refs.wire[i].list;
         var gateName = wireList[columnIndex]["name"];
@@ -221,25 +224,6 @@ export default {
           this.updateMaxWire();
         });
       });
-      // if (qubitNames) {
-      //   this.$nextTick(() => {
-      //     var variables = qubitNames.names;
-
-      //     var indices = qubitNames.positions;
-      //     if (indices == "") {
-      //       indices = [...Array(variables.length + 1).keys()];
-      //     }
-      //     // window.console.log(indices);
-      //     window.console.log(
-      //       "max length: ",
-      //       Math.max(3, ...variables.map(el => el.length))
-      //     );
-      //     for (let i = 0; i < variables.length; i++) {
-      //       this.$refs.wire[parseInt(indices[i])].name = variables[i];
-      //       this.$refs.wire[parseInt(indices[indices.length - 1])].name = "out";
-      //     }
-      //   });
-      // }
     },
     //-----------------------------------------------------------------------
     controlSystem: function() {
