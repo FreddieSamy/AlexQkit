@@ -24,11 +24,11 @@
     >
       <div class="circuit-gate" v-for="element in list" :key="element.id" :id="element.name">
         {{displayName(element.name)}}
-        <select  v-if="element.name[0]=='c'" class="custom-gate-order">
+        <select v-if="element.name[0]=='c'" class="custom-gate-order">
           <!-- we will put a v-for here -->
           <option value="0">0</option>
           <option value="1">1</option>
-      </select>
+        </select>
       </div>
     </draggable>
 
@@ -98,19 +98,16 @@ export default {
 
     //== Events Handling Functions ===============================================
     add: function(evt) {
-      //window.console.log(evt.newIndex)
+      // in case droped between 2 gates
       if (
         evt.newIndex < this.jsonObject.colsCount &&
         this.list[evt.newIndex + 1]["name"] == "i"
       ) {
-        window.console.log(evt.clone.id+" applied this if")
         this.list.splice(evt.newIndex + 1, 1);
+      } else {
+        this.$parent.addIdentityColumn(this.id, evt.newIndex);
       }
-   
-      else{
-          window.console.log(evt.clone.id+" applied this else")
-          this.$parent.addIdentityColumn(this.id,evt.newIndex)
-      }
+
 
       // in case gate draged from wire droped to another wire : evt.from.id = list(n)
       if (evt.from.id[0] == "l") {
@@ -122,16 +119,17 @@ export default {
         this.setCountSwaps(1);
       }
 
-      // else if(evt.clone.id == "swap"){}
-     
+   
+
       this.$parent.updateMaxWire();
       //this.$parent.addIdentityToColumn(this.id);
       //this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
     update: function() {
+      window.console.log("update wire" + this.id);
       this.$parent.updateMaxWire();
-      this.$parent.addIdentityToColumn(this.id);
+      //this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
@@ -184,8 +182,8 @@ export default {
         this.list.push({ name: "i" });
       }
     },
-    Identity:function(columnId){
-      this.list.splice(columnId,0,{ name: "i" });
+    Identity: function(columnId) {
+      this.list.splice(columnId, 0, { name: "i" });
     },
     //-----------------------------------------------------------------------
     getGateByIndex: function(gateIndex) {
@@ -274,7 +272,7 @@ export default {
   background-position: center;
   background-image: url("../assets/wire.png");
   z-index: -1;
-  margin:10px 0px 10px 0px;
+  margin: 10px 0px 10px 0px;
 }
 .wire-drop-area {
   height: 37px;
@@ -332,18 +330,16 @@ export default {
   height: 35px;
   background-color: #5d6d7e;
   z-index: 0;
-
 }
 
-.custom-gate-order{
-  
+.custom-gate-order {
   display: flex;
   flex-basis: 100%;
   height: 15px;
-  max-width:30px;
+  max-width: 30px;
   padding: 0;
   margin: -5px 0px 0px 0px;
-  font-size:10px;
+  font-size: 10px;
   border-radius: 10px;
 }
 .angle-input {
@@ -353,7 +349,7 @@ export default {
   text-align: center;
   padding: 2px 0px 2px 0px;
   width: 75%;
-  
+
   border-radius: 8px;
 }
 
@@ -398,7 +394,6 @@ img {
   height: 40px;
 }
 
-
 #i {
   opacity: 0;
 }
@@ -413,12 +408,14 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
-option:focus, select:focus,  textarea:focus, input:focus{
-    outline: none;
+option:focus,
+select:focus,
+textarea:focus,
+input:focus {
+  outline: none;
 }
-
 </style>
