@@ -115,7 +115,7 @@ export default {
 
      
       // else if(evt.clone.id == "swap"){}
-
+      this.$parent.addIdentityToColumn(this.id);
       this.$parent.updateMaxWire();
       this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
@@ -263,7 +263,7 @@ export default {
   background-position: center;
   background-image: url("../assets/wire.png");
   z-index: -1;
-  margin:10px 0px 10px 0px;
+  /* margin:10px 0px 10px 0px; */
 }
 .wire-drop-area {
   height: 37px;
@@ -363,7 +363,7 @@ img {
   height: 40px;
 }
 #i {
-  opacity: 0;
+  opacity: 1;
 }
 #m .circuit-gate text {
   opacity: 0.01;
