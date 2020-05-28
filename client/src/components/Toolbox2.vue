@@ -59,6 +59,9 @@ export default {
       }
     }
   },
+  mounted(){
+    this.getLocal('algorithms');
+  },
   computed: {
     ...mapState(["algorithms"]),
     ...mapState(["jsonObject"])
@@ -66,6 +69,8 @@ export default {
   methods: {
     ...mapActions(["runCircuit"]),
     ...mapActions(["countGate"]),
+    ...mapActions(['storeLocal']),
+    ...mapActions(['getLocal']),
     cloneResetSystem: function() {
       this.selectedAlgorithm = null;
       this.$parent.resetSystem();
@@ -84,6 +89,8 @@ export default {
             }
           });
           //window.console.log(this.algorithms);
+          this.storeLocal('algorithms')
+          
           this.savedCirciutName = "";
         } else {
           alert("empty circuit !!");

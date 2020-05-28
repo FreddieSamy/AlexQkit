@@ -65,4 +65,15 @@ export default {
   runCircuit: ({ commit }) => {
     commit("sendCircuit");
   },
+
+
+  // Store at Local Store of the browser
+  storeLocal:({ commit },objectName)=>{
+    commit('store',objectName); 
+  } ,
+  getLocal:({commit},objectName)=>{
+    commit('getStorage',objectName); 
+  }
+
+
 };

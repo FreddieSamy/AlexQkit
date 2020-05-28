@@ -118,16 +118,13 @@ export default {
       } else if (evt.clone.id == "swap") {
         this.setCountSwaps(1);
       }
-
-   
-
+      
       this.$parent.updateMaxWire();
       //this.$parent.addIdentityToColumn(this.id);
       //this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
     update: function() {
-      window.console.log("update wire" + this.id);
       this.$parent.updateMaxWire();
       //this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
