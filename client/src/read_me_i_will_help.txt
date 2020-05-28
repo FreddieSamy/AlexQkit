@@ -24,6 +24,8 @@ function that validate controls
 function that collect all validate functions (swap and controls and so on )
 
 
+save to local storage  (custom gates , saved algorithms )
+
 circiut drawing compnenet should be terminated and merged to Qasm
 circuit loops and loop are a complete mess should be enhanced
 tracing buttons all should be terminated and merged
@@ -38,3 +40,9 @@ nthRoot  get               (call the server)   |  add custom gate
 cloneSubCircuitCustoGate   (call the server)   |  add custom gate
 create boolean function    (call the server)   |  boolean function
 sendQasm                   (call the server)   |  Qasm
+
+
+
+2 features if applied will boost the performance 
+-> make the gate is a component 
+-> make list of every wire list of names not list of objects {name:'gateName'}

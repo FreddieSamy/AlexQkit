@@ -94,9 +94,17 @@ export default {
 
     //== Events Handling Functions ===============================================
     add: function(evt) {
-      // in case gate draged from wire droped to another wire
-      if (evt.from.id[0] == "l") {
-        window.console.log("hey");
+
+      //window.console.log(evt.newIndex)
+      if(evt.newIndex < this.jsonObject.colsCount && this.list[(evt.newIndex+1)]['name']=="i"){
+        window.console.log("my neighbor is i")
+        this.list.splice(evt.newIndex+1, 1)
+       }
+
+
+
+      // in case gate draged from wire droped to another wire : evt.from.id = list(n)
+      if (evt.from.id[0] == "l") { 
         var wire = evt.from.id.replace("list", "");
         this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex);
       } else if (evt.clone.id === "●" || evt.clone.id === "○") {
@@ -104,6 +112,8 @@ export default {
       } else if (evt.clone.id == "swap") {
         this.setCountSwaps(1);
       }
+
+     
       // else if(evt.clone.id == "swap"){}
 
       this.$parent.updateMaxWire();
@@ -253,6 +263,7 @@ export default {
   background-position: center;
   background-image: url("../assets/wire.png");
   z-index: -1;
+  margin:10px 0px 10px 0px;
 }
 .wire-drop-area {
   height: 37px;
