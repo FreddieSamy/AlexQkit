@@ -178,12 +178,11 @@ class Results():
         return Response(output.getvalue(), mimetype='image/png')
  
 ############################################################################################################################### 
-    
-    # drawing of the circuit
-    
+        
     def draw(self):
-        simulator = Aer.get_backend('qasm_simulator')
-        execute(self.circuit, backend=simulator).result()
+        """
+        returns image of the circuit as response object
+        """
         fig=self.circuit.draw(output='mpl')
         return self.figToResponse(fig)
     
