@@ -71,8 +71,6 @@
 import draggable from "vuedraggable";
 import addcustomgate from "./addcustomgate";
 import Circiutloops from "./CircuitLoops.vue";
-
-// import { gates } from "./../data/gates_and_states";
 import { mapState , mapGetters } from "vuex";
 
 export default {

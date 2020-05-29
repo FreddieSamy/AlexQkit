@@ -51,7 +51,7 @@ export default {
       if (evt.from.classList != "toolbox-gates-area") {
         // Put i (identity) gate in the same position
         var wire = evt.from.id.replace("list", "");
-        this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex);
+        this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex,"i");
 
         // check for gates need for validations as (control , swaps , custom)
         if (evt.clone.id === "●" || evt.clone.id === "○") {

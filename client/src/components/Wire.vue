@@ -55,7 +55,7 @@ export default {
   },
   props: ["id"],
   created: function() {
-    this.setGatesIdentity();
+    this.addIdentityRow(this.jsonObject.colsCount);
   },
   updated() {
     // why this
@@ -112,7 +112,7 @@ export default {
       // in case gate draged from wire droped to another wire : evt.from.id = list(n)
       if (evt.from.id[0] == "l") {
         var wire = evt.from.id.replace("list", "");
-        this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex);
+        this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex,"i");
       } else if (evt.clone.id === "●" || evt.clone.id === "○") {
         this.setCountControls(1);
       } else if (evt.clone.id == "swap") {
@@ -120,13 +120,10 @@ export default {
       }
       
       this.$parent.updateMaxWire();
-      //this.$parent.addIdentityToColumn(this.id);
-      //this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
     update: function() {
       this.$parent.updateMaxWire();
-      //this.$parent.addIdentityToColumn(this.id);
       this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
@@ -168,27 +165,16 @@ export default {
       this.jsonObject.rows.splice(this.id - 1, 1); // vuex it
       this.jsonObject.init.splice(this.id - 1, 1); // vuex it
       this.jsonObject.wires--; // vuex it
-      //window.console.log(this.jsonObject);
       this.$parent.setAlgorithm(this.jsonObject, false);
       this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
-    addIdentity: function() {
-      // add identiy across the columns of same wire (row)
-      for (let i = this.list.length; i < this.jsonObject.colsCount; i++) {
-        this.list.push({ name: "i" });
-      }
-    },
-    Identity: function(columnId) {
-      this.list.splice(columnId, 0, { name: "i" });
+    addIdentityRow: function(length) {
+      this.list.push(...new Array(length).fill({name:"i"}))
     },
     //-----------------------------------------------------------------------
-    getGateByIndex: function(gateIndex) {
-      return this.list[gateIndex];
-    },
-    //-----------------------------------------------------------------------
-    addGateByIndex: function(gateIndex) {
-      this.list.splice(gateIndex, 0, { name: "i" });
+    addGateByIndex: function(columnIndex,gateName) {
+      this.list.splice(columnIndex, 0, { name: gateName });
     },
     //-----------------------------------------------------------------------
     removeGateByIndex: function(gateIndex) {
@@ -200,10 +186,6 @@ export default {
     resetWire: function() {
       this.list = [];
       this.setState("0");
-    },
-    //-----------------------------------------------------------------------
-    getState: function() {
-      return this.state;
     },
     //-----------------------------------------------------------------------
     getGates: function(rowId) {
@@ -240,16 +222,6 @@ export default {
           this.setCountSwaps(1)
         }
       }
-    },
-    //-----------------------------------------------------------------------
-    setGatesIdentity: function() {
-      // when add a new wire
-      var maxWire = this.jsonObject.colsCount;
-      let list = [...this.list];
-      for (let colIdx = 0; colIdx < maxWire; colIdx++) {
-        list.push({ name: "i" });
-      }
-      this.list = list;
     },
     //-----------------------------------------------------------------------
     //should be put in vuex because we need it in toolbox (or could be terminated)

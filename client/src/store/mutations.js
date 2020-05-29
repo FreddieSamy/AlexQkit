@@ -2,13 +2,11 @@ import axios from "axios";
 import { appRoute, defaultBlochSphereRoute } from "../data/routes";
 
 export default {
-  // Setters
+  /*=== Setters ==*/
   setCols: (state, count) => {
-    // counter
     state.jsonObject.colsCount = count;
   },
   setExe: (state, count) => {
-    // counter
     state.jsonObject.exeCount = count;
   },
   setContorls: (state, val) => {
@@ -27,9 +25,8 @@ export default {
     state.jsonObject.init[idx] = qstate;
     state.jsonObject.rows[idx] = list;
   },
-
   /* ================================================================= */
-  // Appenders Functions
+  /*=== Appenders Functions ===*/
   appendInit: (state) => state.jsonObject.init.push("0"),
   appendWire: (state) => {
     state.jsonObject.wires++;
@@ -45,16 +42,15 @@ export default {
   },
 
   /* ================================================================= */
-
-  // Remove Functions
+  /*=== Remove Functions ===*/
   popInit: (state) => state.jsonObject.init.pop(),
   popWire: (state) => {
     state.jsonObject.wires--;
     //state.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
     state.jsonObject.rows.pop();
   },
-
-  // Reset System
+  /* ================================================================= */
+  /*=== Reset System===*/
   resetJsonObject: (state) => {
     state.jsonObject = {
       API_TOKEN: "",
@@ -86,21 +82,20 @@ export default {
   },
 
   /* ================================================================= */
- // Count the occurence of specific gate by it's name
-  countGate:(state,gateName)=>{
+  // Count the occurence of specific gate by it's name
+  countGate: (state, gateName) => {
     var count = 0;
     for (let i = 0; i < state.jsonObject.rows; i++) {
-       for (let j = 0; j <state.jsonObject.colsCount; j++) {
-         if (state.jsonObjectObject.rows[i][j]===gateName){
-           count+=1
-         }
-       }
+      for (let j = 0; j < state.jsonObject.colsCount; j++) {
+        if (state.jsonObjectObject.rows[i][j] === gateName) {
+          count += 1;
+        }
+      }
     }
-    return count
-
+    return count;
   },
   /* ================================================================= */
-  // Validation Functions
+  /*=== Validation Functions ===*/
 
   //Check for in every Column there is an even numbers of swaps
   swapConstrains: (state) => {
@@ -160,8 +155,7 @@ export default {
     // }
   },
   /* ================================================================= */
-
-  // Server Functions
+  /*=== Server Functions ==*/
   sendCircuit: (state) => {
     try {
       //window.console.log(state.jsonObject)
@@ -185,14 +179,15 @@ export default {
     }
   },
 
-/* ================================================================= */
-// browser localStorage functions 
-store:(state,objectName)=>{
-    localStorage.setItem(objectName,JSON.stringify(state[objectName]))
-},
+  /* ================================================================= */
+  /*=== browser localStorage functions ==*/
+  store: (state, objectName) => {
+    localStorage.setItem(objectName, JSON.stringify(state[objectName]));
+  },
 
-  getStorage:(state,objectName)=>{
-    state[objectName] = JSON.parse(localStorage.getItem(objectName))
-    return state[objectName]
-}
-}
+  getStorage: (state, objectName) => {
+    state[objectName] = JSON.parse(localStorage.getItem(objectName));
+    return state[objectName];
+  },
+  /* ================================================================= */
+};
