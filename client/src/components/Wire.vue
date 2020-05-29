@@ -234,6 +234,11 @@ export default {
       for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
         // can be optimized more
         this.list.push({ name: gatesList[colIdx] });
+        if(gatesList[colIdx]==="●" || gatesList[colIdx]==="○"){
+          this.setCountControls(1)
+        }else if(gatesList[colIdx]==="swap"){
+          this.setCountSwaps(1)
+        }
       }
     },
     //-----------------------------------------------------------------------
@@ -392,7 +397,7 @@ img {
 }
 
 #i {
-  opacity: 0;
+  opacity: 1;
 }
 #m .circuit-gate text {
   opacity: 0.01;

@@ -5,7 +5,6 @@
       :list="gates"
       :group="{ name: 'gates', pull: 'clone', put: false }"
       :clone="cloneGate"
-      @change="log"
     >
       <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
 
@@ -95,11 +94,6 @@ export default {
     ...mapGetters(['gates'])
   },
   methods: {
-    log: function() {},
-    // setAlgo: function(circiut) {
-    //   this.$parent.setAlgorithm(circiut);
-    // },
-    // ----------------------------------------------------
     cloneGate({ name }) {
       if (name == "rx") {
         name = name + "(" + document.getElementById("rxAngle").value + ")";

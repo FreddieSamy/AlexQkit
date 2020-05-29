@@ -32,7 +32,6 @@ export default {
   // Appenders Functions
   appendInit: (state) => state.jsonObject.init.push("0"),
   appendWire: (state) => {
-    window.console.log("append wire");
     state.jsonObject.wires++;
     state.jsonObject["rows"].push(
       new Array(state.jsonObject.colsCount).fill("i"),
@@ -87,20 +86,19 @@ export default {
   },
 
   /* ================================================================= */
-
+ // Count the occurence of specific gate by it's name
   countGate:(state,gateName)=>{
-    let count = 0;
+    var count = 0;
     for (let i = 0; i < state.jsonObject.rows; i++) {
        for (let j = 0; j <state.jsonObject.colsCount; j++) {
-         count = state.jsonObject.rows[i][j]===gateName ? count+=1:count
+         if (state.jsonObjectObject.rows[i][j]===gateName){
+           count+=1
+         }
        }
     }
-    window.console.log(count)
     return count
+
   },
-
-
-
   /* ================================================================= */
   // Validation Functions
 
@@ -114,6 +112,7 @@ export default {
           count++;
         }
       }
+      // i think i should have a file of messages
       if (count == 1) {
         state.messages.violation.push(
           "on column(" +
@@ -185,8 +184,6 @@ export default {
       window.console.log("i think there is an error " + error);
     }
   },
-
-
 
 /* ================================================================= */
 // browser localStorage functions 

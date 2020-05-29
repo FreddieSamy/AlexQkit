@@ -58,6 +58,7 @@ export default {
   },
   methods: {
     sendto() {
+      // all that shoould be v-model 
       if (document.getElementById("checkbox").checked) {
         this.jsonObject.API_TOKEN = document.getElementById(
           "ibmtextfield"

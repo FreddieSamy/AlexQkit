@@ -90,11 +90,11 @@ export default {
     ...mapActions(["setExeCount"]),
     ...mapActions(["runCircuit"]),
     ...mapActions(["checkSwapSystem"]),
-    ...mapActions(["checkWiresCustomGates"]),
     ...mapActions(["removeMessages"]),
     ...mapActions(["setCountControls"]),
     ...mapActions(["setCountSwaps"]),
     ...mapActions(["setCountCustoms"]),
+    ...mapActions(["countGate"]),
 
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
@@ -111,7 +111,6 @@ export default {
       }
       this.setColsCount(this.jsonObject.colsCount);
       this.setExeCount(this.jsonObject.colsCount);
-
       this.$refs.tracingLine.updateTracingLine(); //update the tracing line
 
       // validate circuit
@@ -128,7 +127,6 @@ export default {
           this.checkSwapSystem();
         } // O(n^2)  only call of there is swaps in circuit
 
-        //   this.checkWiresCustomGates();     // O(n^2)
       });
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
@@ -178,7 +176,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     isAllColumnIdentity: function(columnIndex) {
-     // window.console.log("is all column identity");
+      // window.console.log("is all column identity");
       for (let i = 0; i < this.jsonObject.wires; i++) {
         var wireList = this.$refs.wire[i].list;
         var gateName = wireList[columnIndex]["name"];
@@ -207,29 +205,15 @@ export default {
         ...this.jsonObject.init.slice(algorithmObject.init.length)
       ];
 
-      this.setCountControls(algorithmObject.controls);
-      this.setCountSwaps(algorithmObject.swaps);
-
-      var row = 0;
       this.$nextTick(() => {
-        for (; row < algorithmObject.wires; row++) {
+        for (let row = 0; row < algorithmObject.wires; row++) {
           let wireCaller = this.$refs.wire[row];
           wireCaller.setState(algorithmObject["init"][row]);
           wireCaller.setGates(algorithmObject["rows"][row], append);
-          this.$nextTick(() => {
-            this.updateMaxWire();
-          });
         }
+         this.updateMaxWire();
       });
-      this.$nextTick(() => {
-        this.$nextTick(() => {
-          for (; row < this.jsonObject.wires; row++) {
-            let wireCaller = this.$refs.wire[row];
-            wireCaller.addIdentity();
-          }
-          this.updateMaxWire();
-        });
-      });
+
     },
     //-----------------------------------------------------------------------
     controlSystem: function() {
@@ -346,7 +330,10 @@ export default {
             this.jsonObject.wires = res.data.rows.length;
             this.jsonObject.rows = res.data.rows;
           }
-
+          // controls:this.countGate("●")+this.countGate("○"),
+          //  swaps:this.countGate("swap")
+          this.specialGatesCounter.controls = 0;
+          this.specialGatesCounter.swaps = 0;
           this.setAlgorithm(this.jsonObject, false);
         });
       }
