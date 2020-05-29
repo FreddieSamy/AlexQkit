@@ -144,22 +144,12 @@ export default {
       this.runCircuit();
     },
     //-----------------------------------------------------------------------
-    addIdentityToColumn: function(wireId) {
-      //window.console.log("add Identity to Column");
-      for (let i = 0; i < this.jsonObject.wires; i++) {
-        if (i + 1 != wireId) {
-          var wireCaller = this.$refs.wire[i];
-          wireCaller.addIdentity();
-          // wireCaller.list.splice(,0,{name:i})
-        }
-      }
-    }, // 3andena 7owar hena
     addIdentityColumn: function(wireId, columnId) {
       //window.console.log("add Identity to Column "+columnId);
       for (let i = 0; i < this.jsonObject.wires; i++) {
         if (i + 1 != wireId) {
           var wireCaller = this.$refs.wire[i];
-          wireCaller.Identity(columnId);
+          wireCaller.addGateByIndex(columnId,"i")
         }
       }
     },
@@ -206,10 +196,16 @@ export default {
       ];
 
       this.$nextTick(() => {
-        for (let row = 0; row < algorithmObject.wires; row++) {
+        var row;
+        for (row = 0; row < algorithmObject.wires; row++) {
           let wireCaller = this.$refs.wire[row];
           wireCaller.setState(algorithmObject["init"][row]);
           wireCaller.setGates(algorithmObject["rows"][row], append);
+        }
+        // in case wires on circuit are more than wires of the algorithm
+        for (; row < this.jsonObject.wires; row++) {
+          let wireCaller = this.$refs.wire[row];
+          wireCaller.addIdentityRow(algorithmObject.rows[0].length)
         }
          this.updateMaxWire();
       });
