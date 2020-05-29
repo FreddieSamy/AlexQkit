@@ -2,7 +2,6 @@ import copy
 import numpy as np
 from scipy.linalg import fractional_matrix_power
 
-
 class Features():
         
     def sqrt(self, gate):
@@ -10,6 +9,7 @@ class Features():
         return fractional_matrix_power(a, 0.5).tolist()
 
 ###############################################################################################################################
+        
 
     def elementaryGates(self, rows, circuitObj):
         newGates={}

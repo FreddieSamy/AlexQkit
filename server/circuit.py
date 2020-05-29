@@ -1,10 +1,9 @@
 from stateVectorNormalization import Normalization
 from results import Results
 
-from qiskit import Aer
-from qiskit import execute
 from qiskit import QuantumCircuit
 from qiskit.quantum_info.operators import Operator
+import qiskit.circuit.library.standard_gates as gates
 
 import copy
 import numpy as np
@@ -21,8 +20,16 @@ class Circuit():
         self.init=["0","0"]
         self.cols = [[],[]]
         self.customGates={}
-        self.swapMatrix=[[1,0,0,0],[0,0,1,0],[0,1,0,0],[0,0,0,1]]
-        self.nonControlledGates=["s","t","sdg","tdg"]
+        self.gatesObjects={
+                "x":gates.XGate(),
+                "y":gates.YGate(),
+                "z":gates.ZGate(),
+                "h":gates.HGate(),
+                "s":gates.SGate(),
+                "t":gates.TGate(),
+                "sdg":gates.SdgGate(),
+                "tdg":gates.TdgGate()
+                }
 
 ###############################################################################################################################
 
@@ -54,6 +61,18 @@ class Circuit():
         self.cols = np.transpose(receivedDictionary["rows"]).tolist()
         self.exeCount = len(self.cols)
         
+###############################################################################################################################
+        
+    def matrixToGateObject(self,matrix,name):
+        """
+        returns gate object of a matrix
+        """
+        num_qubits=int(log2(len(matrix)))
+        tempCircuit=QuantumCircuit(num_qubits,name=name)
+        customGate = Operator(matrix)
+        tempCircuit.unitary(customGate, list(range(num_qubits)))
+        return tempCircuit.to_gate()
+
 ###############################################################################################################################
     
     # this function takes list of initial states and apply equivalent gates
@@ -100,22 +119,10 @@ class Circuit():
 
 ###############################################################################################################################       
         
-    # this function applies a matrix (custom gate) to a circuit in reverse order of positions
-    # positions must be list with numbers
-    # we must check unitary before storing it
-    # to check unitary use  "is_unitary_matrix(data)"
-
-    # important note .. "according to Qiskit’s convention, first qubit is on the right-hand side"
-    # ex: |01⟩  .. 1st qubit is 1 and 2nd qubit is 0
-    # keep in mind that the matrix entered in correct order (left to right qubits)
-    # so to correct the qiskit order we need to shift the custom matrix to the end (newPos=numOfQubits-pos-1 )
-    # you can check that here - https://qiskit-staging.mybluemix.net/documentation/terra/summary_of_quantum_operations.html
-
-    def addCustomGate(self, gateMatrix, positions,gateName):#,reversedWires=False):
-        """if reversedWires:
-            for i in range(len(positions)):
-                positions[i]=self.num_qubits-positions[i]-1"""
-        
+    def addCustomGate(self, gateMatrix, positions,gateName):
+        """
+        applies a unitary matrix (custom gate) to the circuit
+        """
         customGate = Operator(gateMatrix)
         self.circuit.unitary(customGate, positions,label=gateName)
     
@@ -138,53 +145,6 @@ class Circuit():
                 pos=int(''.join(reversed(str(("{0:0"+str(wires).replace('.0000','')+"b}").format(j)))),2)
                 reversedMatrix[i].append(tempList[pos])
         return reversedMatrix
-
-###############################################################################################################################
-
-    # constructs a matrix to represent controlled gates 
-    
-    def controlledGate(self,unitary, numOfControls=1):#,reversedWires=True):
-        old = len(unitary)
-        wires=int(log2(old)+numOfControls)
-        new = 2**wires
-        controlledGate = []
-    
-        for i in range(new):
-            controlledGate.append([])
-            for j in range(new):
-                if (i >= new-old) and (j >= new-old):
-                    controlledGate[i].append(unitary[i-new+old][j-new+old])
-                elif i == j:
-                    controlledGate[i].append(1)
-                else:
-                    controlledGate[i].append(0)
-    
-        #if reversedWires:
-        controlledGate=self.reversedMatrix(controlledGate,wires)
-        return controlledGate
-
-############################################################################################################################### 
-
-    # this function takes name of a gate (str)
-    # and returns the matrix of the gate
-
-    def gateToMatrix(self,gate):
-        if gate == "swap":
-            tempCircuit = QuantumCircuit(2)
-            tempCircuit.swap(0, 1)
-        elif "(" in gate:
-            tempCircuit = QuantumCircuit(1)
-            angle = gate[:-1]
-            if not self.radian:
-                angle = gate[0:3]+str((float(gate[3:-1])*3.14)/180)
-            pythonLine = "tempCircuit."+angle+",0)"
-            exec(pythonLine)
-        else:
-            tempCircuit = QuantumCircuit(1)
-            exec("tempCircuit."+gate+"(0)")
-        simulator = Aer.get_backend('unitary_simulator')
-        result = execute(tempCircuit, backend=simulator).result()
-        return result.get_unitary()
 
 ###############################################################################################################################       
         
@@ -285,7 +245,8 @@ class Circuit():
                 else:
                     column, pos = self.multiQubitCustomGate(column, i)
                     pos = c+pos
-                self.addCustomGate(self.controlledGate(self.customGates[gateName], numOfControls), pos,gateName)
+                gate=self.matrixToGateObject(self.customGates[gateName],gateName).control(numOfControls)
+                self.circuit.append(gate,pos)
                 continue
             if str(column[i]) == "swap":
                 p1 = i
@@ -294,28 +255,26 @@ class Circuit():
                         p2 = j
                         column[j] = "i"
                         break
-                if numOfControls==1:
-                    self.circuit.cswap(c[0],p1, p2)
-                    continue
                 pos = c+[p1]+[p2]
-                self.addCustomGate(self.controlledGate(self.swapMatrix,numOfControls),pos,"mc-swap")
-                continue
-            if numOfControls==1 and str(column[i]) not in self.nonControlledGates:
-                if "(" in str(column[i]):
-                    angle = column[i][:-1]
-                    if not self.radian:
-                        angle = column[i][0:3] + str((float(column[i][3:-1])*3.14)/180)
-                    pythonLine = "self.circuit.c"+angle+","+str(c[0])+","+str(i)+")"
-                    exec(pythonLine)
-                    continue
-                pythonLine = "self.circuit.c"+str(column[i])+"("+str(c[0])+","+str(i)+")"
-                exec(pythonLine)
-                continue
-            if numOfControls==2 and str(column[i])=="x":
-                self.circuit.ccx(c[0],c[1],i)
+                gate=gates.SwapGate().control(numOfControls)
+                self.circuit.append(gate,pos)
                 continue
             pos = c+[i]
-            self.addCustomGate(self.controlledGate(self.gateToMatrix(column[i]), numOfControls), pos,"mc-"+column[i])
+            if "(" in str(column[i]):
+                name=column[i][0:2]
+                angle = column[i][3:-1]
+                if not self.radian:
+                    angle = (float(angle)*3.14)/180
+                if name=="rx":
+                    gate=gates.RXGate(angle).control(numOfControls)
+                elif name=="ry":
+                    gate=gates.RYGate(angle).control(numOfControls)
+                else:
+                    gate=gates.RZGate(angle).control(numOfControls)
+                self.circuit.append(gate,pos)
+                continue
+            gate=self.gatesObjects[column[i]].control(numOfControls)
+            self.circuit.append(gate,pos)
 
         for i in oc:                                     # open control
             self.circuit.x(i)

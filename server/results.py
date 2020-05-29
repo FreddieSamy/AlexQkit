@@ -30,6 +30,7 @@ class Results():
         self.circutDrawing=self.draw()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
+        print(self.reversedStatevector)
         
 ###############################################################################################################################   
     
@@ -39,6 +40,7 @@ class Results():
         self.circutDrawing=self.draw()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
+        print(self.reversedStatevector)
         
 ###############################################################################################################################  
     
