@@ -304,24 +304,14 @@ export default {
       });
     },
     // ----------------------------------------------------
-    addGate(nameofgate, numwires) {  // terminated
-      // this.$parent.customGates.push({
-      //   name: "custom_" + nameofgate,
-      //   id: nameofgate
-      // });
+    addGate(nameofgate, numWires) {  // terminated
+ 
       this.addCustomGate({
         name: "custom_" + nameofgate,
         id: nameofgate,
-        wires: numwires
+        wires: numWires
       });
-      if (this.$parent.customGates.length < 9) {
-        this.$parent.w =
-          "width:" +
-          Math.ceil(this.$parent.customGates.length / 2) * 3.85 +
-          "em";
-      } else {
-        this.$parent.w = "width:15.9em";
-      }
+   
     },
     // ----------------------------------------------------
     nthRootCustomGates: function() {
