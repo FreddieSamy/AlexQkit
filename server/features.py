@@ -1,6 +1,10 @@
 import copy
 import numpy as np
+from math import log2
 from scipy.linalg import fractional_matrix_power
+
+from qiskit import QuantumCircuit
+from qiskit.quantum_info.operators import Operator
 
 class Features():
         
@@ -9,7 +13,18 @@ class Features():
         return fractional_matrix_power(a, 0.5).tolist()
 
 ###############################################################################################################################
-        
+                
+    def matrixToGateObject(self,matrix,name):
+        """
+        returns gate object of a matrix
+        """
+        num_qubits=int(log2(len(matrix)))
+        tempCircuit=QuantumCircuit(num_qubits,name=name)
+        customGate = Operator(matrix)
+        tempCircuit.unitary(customGate, list(range(num_qubits)))
+        return tempCircuit.to_gate()
+
+###############################################################################################################################  
 
     def elementaryGates(self, rows, circuitObj):
         newGates={}
@@ -40,12 +55,14 @@ class Features():
                         gate=self.sqrt(np.array(gateMatrix))
                         gateCopy=copy.deepcopy(gate)
                         customGates[name] = gate
+                        circuitObj.gatesObjects[name]=self.matrixToGateObject(gate,name)
                         newGates[name]=gateCopy
                     name2 = name+"†"
                     if name2 not in customGates:
                         gate=np.matrix(customGates[name]).getH().tolist()
                         gateCopy=copy.deepcopy(gate)
                         customGates[name2] = gate
+                        circuitObj.gatesObjects[name2]=self.matrixToGateObject(gate,name2)
                         newGates[name2]= gateCopy
                     allNames.append(name)
 
