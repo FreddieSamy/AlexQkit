@@ -3,6 +3,8 @@ import numpy as np
 from math import log2
 from scipy.linalg import fractional_matrix_power
 
+from qiskit import Aer
+from qiskit import execute
 from qiskit import QuantumCircuit
 from qiskit.quantum_info.operators import Operator
 
@@ -13,7 +15,29 @@ class Features():
         return fractional_matrix_power(a, 0.5).tolist()
 
 ###############################################################################################################################
+    """
+    freddy should put some comments and clarifications 3shan 5atrr rbna yakrmna
+    """
+    def gateToMatrix(self,gate):
+        if gate == "swap":
+            tempCircuit = QuantumCircuit(2)
+            tempCircuit.swap(0, 1)
+        elif "(" in gate:
+            tempCircuit = QuantumCircuit(1)
+            angle = gate[:-1]
+            if not self.radian:
+                angle = gate[0:3]+str((float(gate[3:-1])*3.14)/180)
+            pythonLine = "tempCircuit."+angle+",0)"
+            exec(pythonLine)
+        else:
+            tempCircuit = QuantumCircuit(1)
+            exec("tempCircuit."+gate+"(0)")
+        simulator = Aer.get_backend('unitary_simulator')
+        result = execute(tempCircuit, backend=simulator).result()
+        return result.get_unitary()
 
+###############################################################################################################################
+        
     def matrixToGateObject(self,matrix,name):
         """
         returns gate object of a matrix
@@ -52,7 +76,7 @@ class Features():
                         gateMatrix = customGates[columns[i][gatePos][7:end]]
                     else:
                         name = "√("+columns[i][gatePos]+")"
-                        gateMatrix = circuitObj.gateToMatrix(columns[i][gatePos])
+                        gateMatrix = self.gateToMatrix(columns[i][gatePos])
                     if name not in customGates:
                         gate=self.sqrt(np.array(gateMatrix))
                         gateCopy=copy.deepcopy(gate)

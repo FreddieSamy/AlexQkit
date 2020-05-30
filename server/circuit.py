@@ -4,8 +4,7 @@ from results import Results
 from qiskit import QuantumCircuit
 from qiskit.quantum_info.operators import Operator
 import qiskit.circuit.library.standard_gates as gates
-from qiskit import Aer
-from qiskit import *
+
 import copy
 import numpy as np
     
@@ -33,45 +32,31 @@ class Circuit():
 
 ###############################################################################################################################
 
-    def setter(self,receivedDictionary):        
+    def setter(self,receivedDictionary):
+        """
+        set the data for a new circuit 
+        """
         self.radian = receivedDictionary["radian"]
         self.exeCount = receivedDictionary["exeCount"]
         self.num_qubits = int(receivedDictionary["wires"])
         self.circuit = QuantumCircuit(self.num_qubits, self.num_qubits)
         self.init=receivedDictionary["init"]
-
-        if receivedDictionary["repeated"] != {}:
+        
+        if receivedDictionary["repeated"] != {}: #apply loops if exist
             oldSize=len(receivedDictionary["rows"][0])
             self.cols = self.repettion(receivedDictionary["rows"], receivedDictionary["repeated"]['listOfPos'], receivedDictionary["repeated"]['listOfRep'])
             self.cols = np.transpose(self.cols).tolist()
             newSize=len(self.cols)
             self.exeCount+=(newSize-oldSize)
-        else:
-            self.cols = np.transpose(receivedDictionary["rows"]).tolist()
-    #############################
-    """
-    freddy should put some comments and clarifications 3shan 5atrr rbna yakrmna
-    """
-    def gateToMatrix(self,gate):
-        if gate == "swap":
-            tempCircuit = QuantumCircuit(2)
-            tempCircuit.swap(0, 1)
-        elif "(" in gate:
-            tempCircuit = QuantumCircuit(1)
-            angle = gate[:-1]
-            if not self.radian:
-                angle = gate[0:3]+str((float(gate[3:-1])*3.14)/180)
-            pythonLine = "tempCircuit."+angle+",0)"
-            exec(pythonLine)
-        else:
-            tempCircuit = QuantumCircuit(1)
-            exec("tempCircuit."+gate+"(0)")
-        simulator = Aer.get_backend('unitary_simulator')
-        result = execute(tempCircuit, backend=simulator).result()
-        return result.get_unitary()
+        else: #frontend deals with wires and backend deals with columns, so we need to transpose it
+            self.cols = np.transpose(receivedDictionary["rows"]).tolist() #2D list contains circuit gates 
+
 ###############################################################################################################################
        
     def subCircuitSetter(self,receivedDictionary):
+        """
+        set the data for a sub-circuit 
+        """
         self.radian = receivedDictionary["radian"]
         self.num_qubits = int(receivedDictionary["wires"])
         self.circuit = QuantumCircuit(self.num_qubits, self.num_qubits)
@@ -314,14 +299,36 @@ class Circuit():
 ###############################################################################################################################
 
     def createDraggableCircuit(self):
-
-        self.initState()
-
-        for i in range(self.exeCount):
-            if "reset" in self.cols[i]:
-                self.resetExist = True
+        """
+        applies all gates of the draggable circuit to self.citcuit
+        and returns the circuit after construction
+        
+        dealing with cols as a representation of the circuit 
+        cols is a 2D list contains every gate of the circuit in its position
+        
+        ex.. cols=[["h","i"], ["c","x"]]  entanglement  
+        circuit with 2 wires 
+        
+        gates representation in cols..
+        x,y,z,h,s,t,sdg,tdg,rx(<angle>),ry(<angle>),rz(<angle>),reset
+        i : empty places (identity)
+        m : measure
+        ● : control
+        ○ : open control
+        swap : to swap two qubits it must be in the same column at the qubits positions
+               ex.. ["swap","i","swap"] to swap q0 with q2
+               swap must appear exactly two times if needed in the column  
+               
+        custom gates represented as ..  custom_<name>.<index>
+        ex.. ["i","custom_not.1","i","custom_not.0"] -> name=not, pos=[3,1] 
+        all custom gates stored in self.gatesObjects as Gate() objects
+        """
+        self.initState() #apply (init list) initial values to the citcuit
+        for i in range(self.exeCount):  #stop at tracing line position
+            if "reset" in self.cols[i]: #flag to prevent using matrix representation while the circuit contains reset
+                self.resetExist = True  #it will be checked in the frontend as enhancement 
               
-            if "cLoop(" in self.cols[i]:
+            if "cLoop(" in self.cols[i]:#conditinal loop doesn't work till now
                 r=Results(self.circuit)
                 newInitialization=Normalization.buildLoopCond(self.num_qubits,self.cols[i],r.stateVector)
                 if all(ele == 0 for ele in newInitialization):
@@ -329,9 +336,9 @@ class Circuit():
                 self.circuit=QuantumCircuit(self.num_qubits, self.num_qubits)
                 self.circuit.initialize(newInitialization,list(range(self.num_qubits)))
                 
-            elif "●" in self.cols[i] or "○" in self.cols[i]:
-                self.controlledColumns(self.cols[i])
-            else:
+            if "●" in self.cols[i] or "○" in self.cols[i]: # check if the column contains controls
+                self.controlledColumns(self.cols[i])         # it will be checked in the frontend and receive a list of flags
+            else:                                            # control flags [q0,q1,...]
                 self.nonControlledColumns(self.cols[i])
         
         return self.circuit
@@ -339,13 +346,16 @@ class Circuit():
 ###############################################################################################################################
     
     def createQasmCircuit(self,qasmText):
+        """
+        constructs a circuit from the qasm code and returns it
+        """
         tempCircuit = QuantumCircuit(1)
         self.circuit = tempCircuit.from_qasm_str(qasmText)
         
         return self.circuit
     
 ############################################################################################################################### 
-    # kotta
+    # barakat
     def repettion(self, circuitList, listOfPositions, listOfNumberOfRepetition):
         dic = self.dicOfBlockAndPosition(
             circuitList, listOfPositions, listOfNumberOfRepetition)
