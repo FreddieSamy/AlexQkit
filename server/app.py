@@ -116,6 +116,7 @@ def addCustomGates():
     if isUnitary:
         matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
         c.customGates[receivedDictionary["gateName"]]=matrix
+        c.gatesObjects[receivedDictionary["gateName"]]=f.matrixToGateObject(matrix,receivedDictionary["gateName"])
         #print(c.customGates)
     return jsonify({"isUnitary":isUnitary})
 
@@ -136,6 +137,7 @@ def subCircuitCustomGate():
         isUnitary=is_unitary_matrix(complexMatrix,1e-4,1e-4)
         if isUnitary:
             c.customGates[receivedDictionary["gateName"]]=complexMatrix
+            c.gatesObjects[receivedDictionary["gateName"]]=f.matrixToGateObject(complexMatrix,receivedDictionary["gateName"])
             matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
             return  jsonify({"isUnitary":isUnitary,"matrix":f.complexToStr(matrix)}) 
         else:
@@ -159,6 +161,7 @@ def nthRoot():
         isUnitary=is_unitary_matrix(matrix,1e-4,1e-4)
         if isUnitary:
             c.customGates[gate+"^(1/"+root+")"]=matrix
+            c.gatesObjects[gate+"^(1/"+root+")"]=f.matrixToGateObject(matrix,gate+"^(1/"+root+")")
             matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
             return  jsonify({"isUnitary":isUnitary,"matrix":f.complexToStr(matrix)}) 
         else:
