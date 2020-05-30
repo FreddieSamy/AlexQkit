@@ -4,7 +4,8 @@ from results import Results
 from qiskit import QuantumCircuit
 from qiskit.quantum_info.operators import Operator
 import qiskit.circuit.library.standard_gates as gates
-
+from qiskit import Aer
+from qiskit import *
 import copy
 import numpy as np
     
@@ -223,7 +224,7 @@ class Circuit():
             #swap
             if str(column[i]) == "swap":
                 column,pos=self.swapPos(column,i)
-                self.circuit.swap(pos)
+                self.circuit.swap(pos[0],pos[1])
                 continue
             #gates with angles rx,ry,rz
             if "(" in str(column[i]):  
