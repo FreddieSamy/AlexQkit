@@ -47,8 +47,27 @@ class Circuit():
             self.exeCount+=(newSize-oldSize)
         else:
             self.cols = np.transpose(receivedDictionary["rows"]).tolist()
-            
- 
+    #############################
+    """
+    freddy should put some comments and clarifications 3shan 5atrr rbna yakrmna
+    """
+    def gateToMatrix(self,gate):
+        if gate == "swap":
+            tempCircuit = QuantumCircuit(2)
+            tempCircuit.swap(0, 1)
+        elif "(" in gate:
+            tempCircuit = QuantumCircuit(1)
+            angle = gate[:-1]
+            if not self.radian:
+                angle = gate[0:3]+str((float(gate[3:-1])*3.14)/180)
+            pythonLine = "tempCircuit."+angle+",0)"
+            exec(pythonLine)
+        else:
+            tempCircuit = QuantumCircuit(1)
+            exec("tempCircuit."+gate+"(0)")
+        simulator = Aer.get_backend('unitary_simulator')
+        result = execute(tempCircuit, backend=simulator).result()
+        return result.get_unitary()
 ###############################################################################################################################
        
     def subCircuitSetter(self,receivedDictionary):
