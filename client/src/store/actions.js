@@ -20,7 +20,9 @@ export default {
   setCountCustoms({ commit }, val) {
     commit("setCustoms", val);
   },
-
+  setAlgorithms({commit},algorithms){
+    commit("setAlgorithms",algorithms)
+  },
   // Adders Functions
   addMessage: ({ commit }, message) => {
     commit("appendMessage", message);
@@ -69,11 +71,13 @@ export default {
 
   // Store at Local Store of the browser
   storeLocal:({ commit },objectName)=>{
-    commit('store',objectName); 
+    commit('storeLocal',objectName); 
   } ,
   getLocal:({commit},objectName)=>{
-    commit('getStorage',objectName); 
+    commit('getLocal',objectName); 
+  },
+  isStored:({commit},objectName)=>{
+    commit('isStored',objectName); 
   }
-
 
 };
