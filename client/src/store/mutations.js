@@ -25,6 +25,9 @@ export default {
     state.jsonObject.init[idx] = qstate;
     state.jsonObject.rows[idx] = list;
   },
+  setAlgorithms(state,algorithms){
+    state.algorithms = algorithms;
+  },
   /* ================================================================= */
   /*=== Appenders Functions ===*/
   appendInit: (state) => state.jsonObject.init.push("0"),
@@ -181,13 +184,17 @@ export default {
 
   /* ================================================================= */
   /*=== browser localStorage functions ==*/
-  store: (state, objectName) => {
+  storeLocal: (state, objectName) => {
     localStorage.setItem(objectName, JSON.stringify(state[objectName]));
   },
 
-  getStorage: (state, objectName) => {
+  getLocal: (state, objectName) => {
     state[objectName] = JSON.parse(localStorage.getItem(objectName));
     return state[objectName];
   },
+
+  isStored:(state,objectName)=>{
+    return localStorage.hasOwnProperty(objectName)
+  }
   /* ================================================================= */
 };

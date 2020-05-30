@@ -14,11 +14,7 @@
     <booleanFunction ref="createBoolean" class="boolean-function" />
 
     <div class="save-circuit">
-      <input
-        type="text"
-        placeholder="Save Circuit by Name"
-        v-model="savedCirciutName"
-      />
+      <input type="text" placeholder="Save Circuit by Name" v-model="savedCirciutName" />
       <button @click="saveCircuit(savedCirciutName)">Save Circuit</button>
     </div>
     <div class="select-algorithm">
@@ -59,18 +55,24 @@ export default {
       }
     }
   },
-  mounted(){
-    this.getLocal('algorithms');
+  mounted() {
+    if(localStorage.hasOwnProperty('algorithms')){
+        this.getLocal('algorithms')
+    }else{ // in case of first run time only 
+       this.storeLocal('algorithms');
+    }
   },
   computed: {
-    ...mapState(["algorithms"]),
-    ...mapState(["jsonObject"])
+    ...mapState(["jsonObject"]),
+    ...mapState(["algorithms"])
   },
   methods: {
     ...mapActions(["runCircuit"]),
+    ...mapActions(["setAlgorithms"]),
+    ...mapActions(["isStored"]),
     ...mapActions(["countGate"]),
-    ...mapActions(['storeLocal']),
-    ...mapActions(['getLocal']),
+    ...mapActions(["storeLocal"]),
+    ...mapActions(["getLocal"]),
     cloneResetSystem: function() {
       this.selectedAlgorithm = null;
       this.$parent.resetSystem();
@@ -84,13 +86,14 @@ export default {
               wires: this.jsonObject.wires,
               init: [...this.jsonObject.init],
               rows: [...this.jsonObject.rows],
-              controls:this.countGate("●")+this.countGate("○"),
-              swaps:this.countGate("swap")
+              controls: this.countGate("●") + this.countGate("○"),
+              swaps: this.countGate("swap")
             }
           });
-          //window.console.log(this.algorithms);
-          this.storeLocal('algorithms')
-          
+          window.console.log("store")
+          window.console.log(this.algorithms);
+          this.storeLocal("algorithms");
+
           this.savedCirciutName = "";
         } else {
           alert("empty circuit !!");
@@ -107,8 +110,8 @@ export default {
 .toolbox-2 {
   display: flex;
   flex-direction: row;
-  justify-content:flex-start;
-  align-items:center;
+  justify-content: flex-start;
+  align-items: center;
   flex-wrap: wrap;
   padding: 0px 50px 0px 5px;
   margin: 0px;
@@ -128,28 +131,26 @@ select {
   border-radius: 7px;
   background: white;
 }
-.run-reset-buttons{
+.run-reset-buttons {
   flex-basis: 5%;
 }
-.tracing-buttons{
-  flex-basis:  5%;
+.tracing-buttons {
+  flex-basis: 5%;
   margin: 0px 10px 0px 10px;
 }
 .boolean-function {
-   flex-basis: 5%;
-   margin: 0px 15px 0px 0px;
+  flex-basis: 5%;
+  margin: 0px 15px 0px 0px;
 }
-.elementary-gates{
- flex-basis: 5%;
+.elementary-gates {
+  flex-basis: 5%;
 }
 .save-circuit {
- flex-basis: 5%;
+  flex-basis: 5%;
   margin: 0px 10px 0px 10px;
-} 
-.select-algorithm {
- flex-basis: 5%;
- margin: 0px 10px 0px 10px;
 }
-
-
+.select-algorithm {
+  flex-basis: 5%;
+  margin: 0px 10px 0px 10px;
+}
 </style>
