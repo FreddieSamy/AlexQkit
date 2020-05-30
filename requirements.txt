@@ -1,1 +1,19 @@
+qiskit 
+pip install qisit
+
+Flask 
+pip install flask
+
+Flask cors
+pip install -U flask-cors
+
+
+Clone the project 
+
+node_modules 
+npm install
+
+run 
+npm run serve
+
 
