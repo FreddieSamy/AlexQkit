@@ -1,1 +1,33 @@
+Numpy
+--------------
+pip install numpy
+
+
+Matplotlib
+--------------
+python -m pip install -U matplotlib
+
+Qiskit
+--------------
+pip install qiskit
+
+Flask
+--------------
+pip install flask
+
+Flask cors
+--------------
+pip install -U flask-cors
+
+
+Clone the project 
+
+node_modules 
+--------------
+npm install
+
+Run  
+--------------
+npm run serve
+
 
