@@ -379,19 +379,21 @@ export default {
 .wires {
   margin: 0em 0.1em 0em 0.1em;
   flex-basis: 100%;
+  border:1px solid black;
+  overflow: auto;  
+  white-space: nowrap;
 }
 .results {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   /* border:1px solid black; */
 }
 .histogram {
-  flex-basis: 100%;
-  align-self: center;
-  justify-self: center;
+ 
+
 }
 .flip-list-move {
   transition: transform 10.9s;
