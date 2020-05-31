@@ -1,13 +1,52 @@
 import copy
 import numpy as np
+from math import log2
 from scipy.linalg import fractional_matrix_power
 
+from qiskit import Aer
+from qiskit import execute
+from qiskit import QuantumCircuit
+from qiskit.quantum_info.operators import Operator
 
 class Features():
-        
+
     def sqrt(self, gate):
         a = np.matrix(gate)
         return fractional_matrix_power(a, 0.5).tolist()
+
+###############################################################################################################################
+    """
+    freddy should put some comments and clarifications 3shan 5atrr rbna yakrmna
+    """
+    def gateToMatrix(self,gate):
+        if gate == "swap":
+            tempCircuit = QuantumCircuit(2)
+            tempCircuit.swap(0, 1)
+        elif "(" in gate:
+            tempCircuit = QuantumCircuit(1)
+            angle = gate[:-1]
+            if not self.radian:
+                angle = gate[0:3]+str((float(gate[3:-1])*3.14)/180)
+            pythonLine = "tempCircuit."+angle+",0)"
+            exec(pythonLine)
+        else:
+            tempCircuit = QuantumCircuit(1)
+            exec("tempCircuit."+gate+"(0)")
+        simulator = Aer.get_backend('unitary_simulator')
+        result = execute(tempCircuit, backend=simulator).result()
+        return result.get_unitary()
+
+###############################################################################################################################
+        
+    def matrixToGateObject(self,matrix,name):
+        """
+        returns gate object of a matrix
+        """
+        num_qubits=int(log2(len(matrix)))
+        tempCircuit=QuantumCircuit(num_qubits,name=name)
+        customGate = Operator(matrix)
+        tempCircuit.unitary(customGate, list(range(num_qubits)))
+        return tempCircuit.to_gate()
 
 ###############################################################################################################################
 
@@ -31,21 +70,25 @@ class Features():
                 for gatePos in gatePositions:
                     if columns[i][gatePos][:7] == "custom_":
                         end = columns[i][gatePos].find(".")
+                        if end == -1:
+                            end = len(columns[i][gatePos])
                         name = "√("+columns[i][gatePos][7:end]+")"
                         gateMatrix = customGates[columns[i][gatePos][7:end]]
                     else:
                         name = "√("+columns[i][gatePos]+")"
-                        gateMatrix = circuitObj.gateToMatrix(columns[i][gatePos])
+                        gateMatrix = self.gateToMatrix(columns[i][gatePos])
                     if name not in customGates:
                         gate=self.sqrt(np.array(gateMatrix))
                         gateCopy=copy.deepcopy(gate)
                         customGates[name] = gate
+                        circuitObj.gatesObjects[name]=self.matrixToGateObject(gate,name)
                         newGates[name]=gateCopy
                     name2 = name+"†"
                     if name2 not in customGates:
                         gate=np.matrix(customGates[name]).getH().tolist()
                         gateCopy=copy.deepcopy(gate)
                         customGates[name2] = gate
+                        circuitObj.gatesObjects[name2]=self.matrixToGateObject(gate,name2)
                         newGates[name2]= gateCopy
                     allNames.append(name)
 
@@ -56,7 +99,7 @@ class Features():
                 for k in range(len(c)-2):
                     col[c[k+2]] = columns[i][c[k+2]]
                 columns.insert(i+1, col)
-                
+
                 col = ["i"]*len(columns[i])
                 col[c[0]] = columns[i][c[0]]
                 col[c[1]] = "x"
@@ -71,7 +114,7 @@ class Features():
                 for k in range(len(c)-2):
                     col[c[k+2]] = columns[i][c[k+2]]
                 columns.insert(i+1, col)
-                
+
                 col = ["i"]*len(columns[i])
                 col[c[0]] = columns[i][c[0]]
                 col[c[1]] = "x"
@@ -94,7 +137,7 @@ class Features():
             elif len(c) > 2:
                 i = i-1
             i = i+1
-            
+
         return np.transpose(columns).tolist(),newGates
 
 ###############################################################################################################################

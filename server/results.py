@@ -30,6 +30,7 @@ class Results():
         self.circutDrawing=self.draw()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
+        print(self.reversedStatevector)
         
 ###############################################################################################################################   
     
@@ -39,6 +40,7 @@ class Results():
         self.circutDrawing=self.draw()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
+        print(self.reversedStatevector)
         
 ###############################################################################################################################  
     
@@ -150,23 +152,28 @@ class Results():
 
 ###############################################################################################################################
 
-    # returns the probability of every state to be presented on the chart
-    # if the circuit is measured the returned data will be the exact data according to the result of every shot
-    # else the returned data will be the expected probabilities
-
     def graph(self):
+        """
+        returns the probability of every state as 2D list [ [state, probability], ... ] to be presented on the chart
+        probability of a state = its count / total number of shots
+        """
         graphData = []
         temp = self.circuit.copy()
-        temp.measure(list(range(self.num_qubits)),list(range(self.num_qubits)))
+        #we apply measurments to all wires to prevent losing counts
+        #unmeasured circuits will return all counts as zeros
+        temp.measure(list(range(self.num_qubits)),list(range(self.num_qubits-1,-1,-1)))
         simulator = Aer.get_backend('qasm_simulator')
         result = execute(temp, backend=simulator,shots=self.shots).result()
         counts = result.get_counts(temp)
         for i in range(2**self.num_qubits):
-            state = str(("{0:0"+str(self.num_qubits).replace('.0000', '')+"b}").format(i))
-            reversedState=state[::-1]
-            if reversedState in counts:
-                graphData.append([state,counts[reversedState]/self.shots])
+            #the next line.. to get the states ex.. i=1 state= 001 for circuit with 3 wires
+            #converts i to binary with zero left padding  .. len(state) equals to the number of the wires
+            state = str(("{0:0"+str(self.num_qubits).replace('.0000', '')+"b}").format(i)) 
+            if state in counts:
+                #counts dictionary doesn't contain states with zero probability
+                graphData.append([state,counts[state]/self.shots])
             else:
+                #we need to append all states even the states with zero probability to display it in the chart
                 graphData.append([state,0.0])
         return graphData
 
@@ -178,12 +185,11 @@ class Results():
         return Response(output.getvalue(), mimetype='image/png')
  
 ############################################################################################################################### 
-    
-    # drawing of the circuit
-    
+        
     def draw(self):
-        simulator = Aer.get_backend('qasm_simulator')
-        execute(self.circuit, backend=simulator).result()
+        """
+        returns image of the circuit as response object
+        """
         fig=self.circuit.draw(output='mpl')
         return self.figToResponse(fig)
     

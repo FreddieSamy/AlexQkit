@@ -1,14 +1,12 @@
 from stateVectorNormalization import Normalization
 from results import Results
 
-from qiskit import Aer
-from qiskit import execute
 from qiskit import QuantumCircuit
 from qiskit.quantum_info.operators import Operator
+import qiskit.circuit.library.standard_gates as gates
 
 import copy
 import numpy as np
-from math import log2
     
 
 class Circuit():
@@ -21,32 +19,44 @@ class Circuit():
         self.init=["0","0"]
         self.cols = [[],[]]
         self.customGates={}
-        self.swapMatrix=[[1,0,0,0],[0,0,1,0],[0,1,0,0],[0,0,0,1]]
-        self.nonControlledGates=["s","t","sdg","tdg"]
+        self.gatesObjects={
+                "x":gates.XGate(),
+                "y":gates.YGate(),
+                "z":gates.ZGate(),
+                "h":gates.HGate(),
+                "s":gates.SGate(),
+                "t":gates.TGate(),
+                "sdg":gates.SdgGate(),
+                "tdg":gates.TdgGate()
+                }
 
 ###############################################################################################################################
 
-    def setter(self,receivedDictionary):        
+    def setter(self,receivedDictionary):
+        """
+        set the data for a new circuit 
+        """
         self.radian = receivedDictionary["radian"]
         self.exeCount = receivedDictionary["exeCount"]
         self.num_qubits = int(receivedDictionary["wires"])
         self.circuit = QuantumCircuit(self.num_qubits, self.num_qubits)
         self.init=receivedDictionary["init"]
-
-        if receivedDictionary["repeated"] != {}:
+        
+        if receivedDictionary["repeated"] != {}: #apply loops if exist
             oldSize=len(receivedDictionary["rows"][0])
             self.cols = self.repettion(receivedDictionary["rows"], receivedDictionary["repeated"]['listOfPos'], receivedDictionary["repeated"]['listOfRep'])
             self.cols = np.transpose(self.cols).tolist()
             newSize=len(self.cols)
             self.exeCount+=(newSize-oldSize)
-        else:
-            self.cols = np.transpose(receivedDictionary["rows"]).tolist()
-            
-        #print("cols: ",self.cols)
- 
+        else: #frontend deals with wires and backend deals with columns, so we need to transpose it
+            self.cols = np.transpose(receivedDictionary["rows"]).tolist() #2D list contains circuit gates 
+
 ###############################################################################################################################
        
     def subCircuitSetter(self,receivedDictionary):
+        """
+        set the data for a sub-circuit 
+        """
         self.radian = receivedDictionary["radian"]
         self.num_qubits = int(receivedDictionary["wires"])
         self.circuit = QuantumCircuit(self.num_qubits, self.num_qubits)
@@ -55,30 +65,20 @@ class Circuit():
         self.exeCount = len(self.cols)
         
 ###############################################################################################################################
-    
-    # this function takes list of initial states and apply equivalent gates
 
-    # important note .. "according to Qiskit’s convention, first qubit is on the right-hand side"
-    # ex: |01⟩  .. 1st qubit is 1 and 2nd qubit is 0
-    # so we corrected that by applying all gates in reverse order by bassing reversedWires=True if needed
-    # you can check that here - https://qiskit-staging.mybluemix.net/documentation/terra/summary_of_quantum_operations.html
-
-    # you can intialize your circuit with vector that represent your initialization
-    # to initialize two qubits with |1⟩ ( initialize a system of two wires by |11⟩  ) ... circuit.initialize([0,0,0,1],[0,1])
-
-    # qiskit always start with |0⟩ state
-    # |1⟩ state equivalent to X|0⟩
-    # |+⟩ state equivalent to H|0⟩
-    # |-⟩ state equivalent to H|1⟩ = HX|0⟩
-    # |i⟩ = |↻⟩ state equivalent to S|+⟩ = SH|0⟩
-    # |-i⟩ = |↺⟩ state equivalent to S|-⟩ = SH|1⟩ = SHX|0⟩
-
-    # dirac notation doc - https://docs.microsoft.com/en-us/quantum/concepts/dirac-notation
-
-    def initState(self):#,reversedWires=False):
+    def initState(self):
+        """
+        applies equivalent gates of the initialization list
+        
+        qiskit always start with |0⟩ state
+        |1⟩ state equivalent to X|0⟩
+        |+⟩ state equivalent to H|0⟩
+        |-⟩ state equivalent to H|1⟩ = HX|0⟩
+        |i⟩ = |↻⟩ state equivalent to S|+⟩ = SH|0⟩
+        |-i⟩ = |↺⟩ state equivalent to S|-⟩ = SH|1⟩ = SHX|0⟩
+        
+        """
         stateList=self.init
-        #if reversedWires:
-        #    stateList=self.init[::-1]
         for i in range(len(stateList)):
             if str(stateList[i]) == "0":
                 continue
@@ -100,38 +100,31 @@ class Circuit():
 
 ###############################################################################################################################       
         
-    # this function applies a matrix (custom gate) to a circuit in reverse order of positions
-    # positions must be list with numbers
-    # we must check unitary before storing it
-    # to check unitary use  "is_unitary_matrix(data)"
-
-    # important note .. "according to Qiskit’s convention, first qubit is on the right-hand side"
-    # ex: |01⟩  .. 1st qubit is 1 and 2nd qubit is 0
-    # keep in mind that the matrix entered in correct order (left to right qubits)
-    # so to correct the qiskit order we need to shift the custom matrix to the end (newPos=numOfQubits-pos-1 )
-    # you can check that here - https://qiskit-staging.mybluemix.net/documentation/terra/summary_of_quantum_operations.html
-
-    def addCustomGate(self, gateMatrix, positions,gateName):#,reversedWires=False):
-        """if reversedWires:
-            for i in range(len(positions)):
-                positions[i]=self.num_qubits-positions[i]-1"""
-        
+    def addCustomGate(self, gateMatrix, positions,gateName):
+        """
+        applies a unitary matrix (custom gate) to the circuit
+        """
         customGate = Operator(gateMatrix)
         self.circuit.unitary(customGate, positions,label=gateName)
     
 ###############################################################################################################################
 
-    # inverse the arrange of gates in tensor product
-
-    # important note .. "according to Qiskit’s convention, first qubit is on the right-hand side"
-    # ex: |01⟩  .. 1st qubit is 1 and 2nd qubit is 0
-    # we corrected that by passing using reversedMatrix() function
-
     def reversedMatrix(self,matrix,wires):
+        """
+        convert a matrix to another for the reversed order of wires
+        to inverse qiskit order of wires
+        
+        important note .. "according to Qiskit’s convention, first qubit is on the right-hand side"
+        ex: |01⟩  .. 1st qubit is 1 and 2nd qubit is 0
+        """
+        #this function swaps every pos by its inverse for all columns an rows
+        #ex.. circuit with 3 wires
+        #row 1 = "001" will swap with "100"= row 4  
         matrixCopy=copy.deepcopy(matrix)
         reversedMatrix=[]
         for i in range(len(matrixCopy)):
             reversedMatrix.append([])
+            #the next line finds the inverse position in decimal ex.. 3 -> 011 -> 110 -> 6
             pos=int(''.join(reversed(str(("{0:0"+str(wires).replace('.0000','')+"b}").format(i)))),2)
             tempList=matrixCopy[pos]
             for j in range(len(tempList)):
@@ -139,198 +132,203 @@ class Circuit():
                 reversedMatrix[i].append(tempList[pos])
         return reversedMatrix
 
-###############################################################################################################################
-
-    # constructs a matrix to represent controlled gates 
-    
-    def controlledGate(self,unitary, numOfControls=1):#,reversedWires=True):
-        old = len(unitary)
-        wires=int(log2(old)+numOfControls)
-        new = 2**wires
-        controlledGate = []
-    
-        for i in range(new):
-            controlledGate.append([])
-            for j in range(new):
-                if (i >= new-old) and (j >= new-old):
-                    controlledGate[i].append(unitary[i-new+old][j-new+old])
-                elif i == j:
-                    controlledGate[i].append(1)
-                else:
-                    controlledGate[i].append(0)
-    
-        #if reversedWires:
-        controlledGate=self.reversedMatrix(controlledGate,wires)
-        return controlledGate
-
-############################################################################################################################### 
-
-    # this function takes name of a gate (str)
-    # and returns the matrix of the gate
-
-    def gateToMatrix(self,gate):
-        if gate == "swap":
-            tempCircuit = QuantumCircuit(2)
-            tempCircuit.swap(0, 1)
-        elif "(" in gate:
-            tempCircuit = QuantumCircuit(1)
-            angle = gate[:-1]
-            if not self.radian:
-                angle = gate[0:3]+str((float(gate[3:-1])*3.14)/180)
-            pythonLine = "tempCircuit."+angle+",0)"
-            exec(pythonLine)
-        else:
-            tempCircuit = QuantumCircuit(1)
-            exec("tempCircuit."+gate+"(0)")
-        simulator = Aer.get_backend('unitary_simulator')
-        result = execute(tempCircuit, backend=simulator).result()
-        return result.get_unitary()
-
 ###############################################################################################################################       
-        
-    # this function returns the positions of the multi-Qubit custom gates
-    # remove the other gates to prevent applying the gate multiple times
     
-    def multiQubitCustomGate(self,column,firstAppear):
-        pointPos=column[firstAppear].find(".")
-        index=int(column[firstAppear][pointPos+1:])
-        gateName=column[firstAppear][7:pointPos]
-        pos=[]
-        pos.insert(index,firstAppear)
-        for i in range(firstAppear+1, len(column)):
-            if "custom_"+gateName == column[i][:pointPos]:
-                index=int(column[i][pointPos+1:])
-                pos.insert(index,i)
-                column[i] = "i"
-        return column, pos
+    def customGateInfo(self,column,firstAppear):
+        """
+        returns the position(s) of a custom gate and its name
+        and removes the other gates from the column to prevent applying the gate multiple times
+        
+        custom gates represented as ..  custom_<name>.<index>
+        
+        ex.. col=["i","custom_not.1","i","custom_not.0"] -> name=not, pos=[3,1] 
+        means that not is a 2 qubit gate should apply to the 2nd and the 4th wire
+        the first input for this gate is the 4th wire and the second input is th 2nd wire 
+        
+        indices give us the arrangement of the input wires to the gate
+        indices must start with 0 and end with n-1  ex.. 3 qubit gate indices are 0,1,2 in any order
+        
+        naming a custom gate..
+        don't accept "." in any position
+        """
+        pointPos = column[firstAppear].find(".")
+        if pointPos == -1:
+            pointPos = len(column[firstAppear])
+        gateName = str(column[firstAppear])[7:pointPos]
+        if len(self.customGates[gateName]) == 2: #one wire
+            pos=[firstAppear]
+        else:
+            index=int(column[firstAppear][pointPos+1:])
+            pos=[]
+            pos.insert(index,firstAppear)
+            for i in range(firstAppear+1, len(column)):
+                if "custom_"+gateName == column[i][:pointPos]:
+                    index=int(column[i][pointPos+1:])
+                    pos.insert(index,i)
+                    column[i] = "i"
+        return column,pos,gateName
+    
+###############################################################################################################################          
+    
+    def swapPos(self,column,firstAppear):
+        """
+        returns the two positions of a swap gate 
+        and remove the second one to prevent applying it multiple times
+        """
+        pos = [firstAppear]
+        for j in range(firstAppear+1, len(column)):
+            if str(column[j]) == "swap":
+                pos.append(j)
+                column[j] = "i"
+                break
+        return column,pos
     
 ###############################################################################################################################
-
-    # this function applies noncontrolled gates on the circuit
 
     def nonControlledColumns(self,column):
-        # naming a custom gate
-        # don't accept "." in any position
+        """
+        applies noncontrolled gates on the circuit
+        
+        ex.. column=["i","x","swap","i","swap"]
+        means x on the 2nd wire and swap between the 3rd and the 5th wires
+        """
     
         for i in range(len(column)):
-            if str(column[i]) == "i":
+            #empty
+            if str(column[i]) == "i": 
                 continue
-            if str(column[i]) == "m":
+            #measurement
+            if str(column[i]) == "m": 
                 self.circuit.measure(i, i)
                 continue
-            if str(column[i])[:7] == "custom_":
-                end = str(column[i]).find(".")
-                if end == -1:
-                    end = len(column[i])
-                gateName = str(column[i])[7:end]
-                if len(self.customGates[gateName]) == 2:
-                    self.addCustomGate(self.customGates[gateName], [i],gateName)
-                    continue
-                else:
-                    column, pos = self.multiQubitCustomGate(column, i)
-                    self.addCustomGate(self.customGates[gateName], pos,gateName)
-                    continue
-            if str(column[i]) == "swap":
-                p1 = i
-                for j in range(i+1, len(column)):
-                    if str(column[j]) == "swap":
-                        p2 = j
-                        column[j] = "i"
-                        break
-                self.circuit.swap(p1, p2)
+            #custom gates
+            if str(column[i])[:7] == "custom_": 
+                column, pos, gateName = self.customGateInfo(column, i)
+                self.addCustomGate(self.customGates[gateName], pos,gateName)
                 continue
-            if "(" in str(column[i]):
-                angle = column[i][:-1]
-                if not self.radian:
-                    angle = column[i][0:3] + str((float(column[i][3:-1])*3.14)/180)
-    
-                pythonLine = "self.circuit."+angle+","+str(i)+")"
+            #swap
+            if str(column[i]) == "swap":
+                column,pos=self.swapPos(column,i)
+                self.circuit.swap(pos[0],pos[1])
+                continue
+            #gates with angles rx,ry,rz
+            if "(" in str(column[i]):  
+                gate = column[i][:-1]
+                #degree to radian
+                if not self.radian:    
+                    gate = column[i][0:3] + str((float(column[i][3:-1])*3.14)/180)
+                pythonLine = "self.circuit."+gate+","+str(i)+")"
                 exec(pythonLine)
                 continue
-    
+            #any other gate
             pythonLine = "self.circuit."+column[i]+"("+str(i)+")"
             exec(pythonLine)
 
 ############################################################################################################################### 
-
-    # this function applies controlled gates on the circuit
             
-    def controlledColumns(self,column):
-        c = []
-        oc = []
+    def controlsPos(self,column):
+        """
+        returns the controls positions in a column
+        """
         
+        c = []   #all controls positions
+        oc = []  #open controls positions
         for i in range(len(column)):
             if str(column[i]) == "●":
                 c.append(i)
                 column[i] = "i"
 
             elif str(column[i]) == "○":
-                self.circuit.x(i)                             #open control
+                self.circuit.x(i)  #applying x gate before and after a closed control to convert it to an open control
                 oc.append(i)
                 c.append(i)
                 column[i] = "i"
+        return c,oc
 
+############################################################################################################################### 
+            
+    def controlledColumns(self,column):
+        """
+        applies controlled gates on the circuit
+        
+        ex.. column=["c","i","c","i","x"]
+        means ccx(0,2,4)
+        
+        column=["c","i","c","y","x"] -> ccy(0,2,3) , ccx(0,2,4)
+        """
+        c,oc=self.controlsPos(column)
         numOfControls = len(c)
         for i in range(len(column)):
+            #empty
             if str(column[i]) == "i":
                 continue
-                
-            if str(column[i])[:7] == "custom_":
-                end = str(column[i]).find(".")
-                if end == -1:
-                    end = len(column[i])
-                gateName = str(column[i])[7:end]
-                if len(self.customGates[gateName]) == 2:
-                    pos = c+[i]
-                else:
-                    column, pos = self.multiQubitCustomGate(column, i)
-                    pos = c+pos
-                self.addCustomGate(self.controlledGate(self.customGates[gateName], numOfControls), pos,gateName)
-                continue
+            #controlled swap
             if str(column[i]) == "swap":
-                p1 = i
-                for j in range(i+1, len(column)):
-                    if str(column[j]) == "swap":
-                        p2 = j
-                        column[j] = "i"
-                        break
-                if numOfControls==1:
-                    self.circuit.cswap(c[0],p1, p2)
-                    continue
-                pos = c+[p1]+[p2]
-                self.addCustomGate(self.controlledGate(self.swapMatrix,numOfControls),pos,"mc-swap")
-                continue
-            if numOfControls==1 and str(column[i]) not in self.nonControlledGates:
-                if "(" in str(column[i]):
-                    angle = column[i][:-1]
-                    if not self.radian:
-                        angle = column[i][0:3] + str((float(column[i][3:-1])*3.14)/180)
-                    pythonLine = "self.circuit.c"+angle+","+str(c[0])+","+str(i)+")"
-                    exec(pythonLine)
-                    continue
-                pythonLine = "self.circuit.c"+str(column[i])+"("+str(c[0])+","+str(i)+")"
-                exec(pythonLine)
-                continue
-            if numOfControls==2 and str(column[i])=="x":
-                self.circuit.ccx(c[0],c[1],i)
+                column,pos=self.swapPos(column,i)
+                pos = c+pos
+                gate=gates.SwapGate().control(numOfControls)
+                self.circuit.append(gate,pos)
                 continue
             pos = c+[i]
-            self.addCustomGate(self.controlledGate(self.gateToMatrix(column[i]), numOfControls), pos,"mc-"+column[i])
+            #gates with angles rx,ry,rz
+            if "(" in str(column[i]): 
+                name=column[i][0:2]
+                angle = column[i][3:-1]
+                if not self.radian:
+                    angle = (float(angle)*3.14)/180
+                if name=="rx":
+                    gate=gates.RXGate(angle).control(numOfControls)
+                elif name=="ry":
+                    gate=gates.RYGate(angle).control(numOfControls)
+                else:
+                    gate=gates.RZGate(angle).control(numOfControls)
+                self.circuit.append(gate,pos)
+                continue
+            #controlled custom gates
+            gateName=column[i]
+            if gateName[:7] == "custom_":
+                column, pos, gateName = self.customGateInfo(column, i)
+                pos = c+pos
+            #controlled custom gates and any other controlled gate
+            gate=self.gatesObjects[gateName].control(numOfControls)
+            self.circuit.append(gate,pos)
 
-        for i in oc:                                     # open control
+        for i in oc:   #applying x gate before and after a closed control to convert it to an open control
             self.circuit.x(i)
 
 ###############################################################################################################################
 
     def createDraggableCircuit(self):
-
-        self.initState()
-
-        for i in range(self.exeCount):
-            if "reset" in self.cols[i]:
-                self.resetExist = True
+        """
+        applies all gates of the draggable circuit to self.citcuit
+        and returns the circuit after construction
+        
+        dealing with cols as a representation of the circuit 
+        cols is a 2D list contains every gate of the circuit in its position
+        
+        ex.. cols=[["h","i"], ["c","x"]]  entanglement  
+        circuit with 2 wires 
+        
+        gates representation in cols..
+        x,y,z,h,s,t,sdg,tdg,rx(<angle>),ry(<angle>),rz(<angle>),reset
+        i : empty places (identity)
+        m : measure
+        ● : control
+        ○ : open control
+        swap : to swap two qubits it must be in the same column at the qubits positions
+               ex.. ["swap","i","swap"] to swap q0 with q2
+               swap must appear exactly two times if needed in the column  
+               
+        custom gates represented as ..  custom_<name>.<index>
+        ex.. ["i","custom_not.1","i","custom_not.0"] -> name=not, pos=[3,1] 
+        all custom gates stored in self.gatesObjects as Gate() objects
+        """
+        self.initState() #apply (init list) initial values to the citcuit
+        for i in range(self.exeCount):  #stop at tracing line position
+            if "reset" in self.cols[i]: #flag to prevent using matrix representation while the circuit contains reset
+                self.resetExist = True  #it will be checked in the frontend as enhancement 
               
-            if "cLoop(" in self.cols[i]:
+            if "cLoop(" in self.cols[i]:#conditinal loop doesn't work till now
                 r=Results(self.circuit)
                 newInitialization=Normalization.buildLoopCond(self.num_qubits,self.cols[i],r.stateVector)
                 if all(ele == 0 for ele in newInitialization):
@@ -338,9 +336,9 @@ class Circuit():
                 self.circuit=QuantumCircuit(self.num_qubits, self.num_qubits)
                 self.circuit.initialize(newInitialization,list(range(self.num_qubits)))
                 
-            elif "●" in self.cols[i] or "○" in self.cols[i]:
-                self.controlledColumns(self.cols[i])
-            else:
+            if "●" in self.cols[i] or "○" in self.cols[i]: # check if the column contains controls
+                self.controlledColumns(self.cols[i])         # it will be checked in the frontend and receive a list of flags
+            else:                                            # control flags [q0,q1,...]
                 self.nonControlledColumns(self.cols[i])
         
         return self.circuit
@@ -348,13 +346,16 @@ class Circuit():
 ###############################################################################################################################
     
     def createQasmCircuit(self,qasmText):
+        """
+        constructs a circuit from the qasm code and returns it
+        """
         tempCircuit = QuantumCircuit(1)
         self.circuit = tempCircuit.from_qasm_str(qasmText)
         
         return self.circuit
     
 ############################################################################################################################### 
-    # kotta
+    # barakat
     def repettion(self, circuitList, listOfPositions, listOfNumberOfRepetition):
         dic = self.dicOfBlockAndPosition(
             circuitList, listOfPositions, listOfNumberOfRepetition)
