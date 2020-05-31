@@ -1,6 +1,6 @@
 <template>
   <div>
-    <GChart type="ColumnChart" :data="chart" :options="chartOptions" />
+    <GChart class="chart" type="ColumnChart" :data="chart" :options="chartOptions" />
   </div>
 </template>
 <!-- ========================================================== -->
@@ -21,8 +21,11 @@ export default {
   },
   data() {
     return {
+    
       chartOptions: {
         title:"Circuit Histogram",
+        explorer: {axis: 'horizontal'},
+        chartArea: {width:this.width},
       vAxis: {
             maxValue: 1,
           }
@@ -33,5 +36,7 @@ export default {
 </script>
 <!-- ========================================================== -->
 <style scoped>
-
+chart{
+  overflow-x: scroll; 
+}
 </style>
