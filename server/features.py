@@ -1,58 +1,14 @@
 import copy
 import numpy as np
 from math import log2
-from scipy.linalg import fractional_matrix_power
 
-from qiskit import Aer
-from qiskit import execute
 from qiskit import QuantumCircuit
 from qiskit.quantum_info.operators import Operator
 
 class Features():
 
-    def sqrt(self, gate):
-        a = np.matrix(gate)
-        return fractional_matrix_power(a, 0.5).tolist()
-
-###############################################################################################################################
-    """
-    freddy should put some comments and clarifications 3shan 5atrr rbna yakrmna
-    """
-    def gateToMatrix(self,gate):
-        if gate == "swap":
-            tempCircuit = QuantumCircuit(2)
-            tempCircuit.swap(0, 1)
-        elif "(" in gate:
-            tempCircuit = QuantumCircuit(1)
-            angle = gate[:-1]
-            if not self.radian:
-                angle = gate[0:3]+str((float(gate[3:-1])*3.14)/180)
-            pythonLine = "tempCircuit."+angle+",0)"
-            exec(pythonLine)
-        else:
-            tempCircuit = QuantumCircuit(1)
-            exec("tempCircuit."+gate+"(0)")
-        simulator = Aer.get_backend('unitary_simulator')
-        result = execute(tempCircuit, backend=simulator).result()
-        return result.get_unitary()
-
-###############################################################################################################################
-        
-    def matrixToGateObject(self,matrix,name):
-        """
-        returns gate object of a matrix
-        """
-        num_qubits=int(log2(len(matrix)))
-        tempCircuit=QuantumCircuit(num_qubits,name=name)
-        customGate = Operator(matrix)
-        tempCircuit.unitary(customGate, list(range(num_qubits)))
-        return tempCircuit.to_gate()
-
-###############################################################################################################################
-
     def elementaryGates(self, rows, circuitObj):
-        newGates={}
-        customGates=circuitObj.customGates
+        newGates=[]
         columns = np.transpose(rows).tolist()
         i = 0
         while i < len(columns):
@@ -72,25 +28,20 @@ class Features():
                         end = columns[i][gatePos].find(".")
                         if end == -1:
                             end = len(columns[i][gatePos])
-                        name = "√("+columns[i][gatePos][7:end]+")"
-                        gateMatrix = customGates[columns[i][gatePos][7:end]]
+                        gateName=columns[i][gatePos][7:end]
                     else:
-                        name = "√("+columns[i][gatePos]+")"
-                        gateMatrix = self.gateToMatrix(columns[i][gatePos])
-                    if name not in customGates:
-                        gate=self.sqrt(np.array(gateMatrix))
-                        gateCopy=copy.deepcopy(gate)
-                        customGates[name] = gate
-                        circuitObj.gatesObjects[name]=self.matrixToGateObject(gate,name)
-                        newGates[name]=gateCopy
-                    name2 = name+"†"
-                    if name2 not in customGates:
-                        gate=np.matrix(customGates[name]).getH().tolist()
-                        gateCopy=copy.deepcopy(gate)
-                        customGates[name2] = gate
-                        circuitObj.gatesObjects[name2]=self.matrixToGateObject(gate,name2)
-                        newGates[name2]= gateCopy
-                    allNames.append(name)
+                        gateName=columns[i][gatePos]
+                    newGateName = "√"+gateName
+                    allNames.append(newGateName)
+
+                    unitaryGate=circuitObj.gatesObjects[gateName].power(0.5)
+                    circuitObj.gatesObjects[newGateName]=self.matrixToGateObject(unitaryGate.to_matrix(),newGateName)
+                    newGates.append(newGateName)
+                    
+                    newGateName+="†"
+                    unitaryGate=unitaryGate.adjoint()
+                    circuitObj.gatesObjects[newGateName]=self.matrixToGateObject(unitaryGate.to_matrix(),newGateName)
+                    newGates.append(newGateName)
 
                 col = ["i"]*len(columns[i])
                 col[c[1]] = columns[i][c[1]]
@@ -152,37 +103,15 @@ class Features():
         return matrixCopy
 
 ###############################################################################################################################
-
-    def complexToStr(self, matrix):
-        matrixCopy=copy.deepcopy(matrix)
-        for i in range(len(matrixCopy)):
-            for j in range(len(matrixCopy[i])):
-                if(type(matrixCopy[i][j]) == type(0j)):
-                    matrixCopy[i][j] = str(np.around(matrixCopy[i][j],4)).replace("j","i")
-        return matrixCopy
-
-###############################################################################################################################
-
-    def getGates(self, circuit):
-        cols = []
-        # print(circuit.data[0][1][0].register.size)
-        for i in range(len(circuit.data)):
-            name = circuit.data[i][0].name
-            # print(name)
-            if name == "measure":
-                name = "m"
-            column = ['i']*circuit.data[0][1][0].register.size
-            for j in range(len(circuit.data[i][1])):
-                pos = circuit.data[i][1][j].index
-                # print(pos)
-                if 'c' == name[0]:
-                    column[pos] = 'c'
-                    name = name[1:]
-                else:
-                    column[pos] = name
-                # print(column)
-            cols.append(column)
-        # print(cols)
-        return cols
+    
+    def matrixToGateObject(self,matrix,name):
+        """
+        returns gate object of a matrix
+        """
+        num_qubits=int(log2(len(matrix)))
+        tempCircuit=QuantumCircuit(num_qubits,name=name)
+        customGate = Operator(matrix)
+        tempCircuit.unitary(customGate, list(range(num_qubits)))
+        return tempCircuit.to_gate()
 
 ###############################################################################################################################
