@@ -8,7 +8,6 @@ from results import Results
 from features import Features
 from booleanExpression import BooleanFunction
 
-#from qiskit import *
 from qiskit.quantum_info.operators.predicates import is_unitary_matrix
 
 from math import log2

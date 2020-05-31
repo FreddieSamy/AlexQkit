@@ -4,9 +4,8 @@ from results import Results
 from qiskit import QuantumCircuit
 import qiskit.circuit.library.standard_gates as gates
 
-import copy
+import copy    
 import numpy as np
-    
 
 class Circuit():
     
@@ -236,6 +235,24 @@ class Circuit():
         return c,oc
 
 ############################################################################################################################### 
+
+    def gatesWithAngles(self,gatename):
+        """
+        return gate object of rx, ry and rz
+        """
+        name=gatename[0:2]
+        angle = gatename[3:-1]
+        if not self.radian:
+            angle = (float(angle)*3.14)/180
+        if name=="rx":
+            gate=gates.RXGate(angle)
+        elif name=="ry":
+            gate=gates.RYGate(angle)
+        else:
+            gate=gates.RZGate(angle)
+        return gate
+            
+############################################################################################################################### 
             
     def controlledColumns(self,column):
         """
@@ -252,6 +269,14 @@ class Circuit():
             #empty
             if str(column[i]) == "i":
                 continue
+            gateName=column[i]
+            #controlled custom gates
+            if gateName[:7] == "custom_":
+                column, pos, gateName = self.customGateInfo(column, i)
+                pos = c+pos
+                gate=self.gatesObjects[gateName].control(numOfControls)
+                self.circuit.append(gate,pos)
+                continue
             #controlled swap
             if str(column[i]) == "swap":
                 column,pos=self.swapPos(column,i)
@@ -262,24 +287,10 @@ class Circuit():
             pos = c+[i]
             #gates with angles rx,ry,rz
             if "(" in str(column[i]): 
-                name=column[i][0:2]
-                angle = column[i][3:-1]
-                if not self.radian:
-                    angle = (float(angle)*3.14)/180
-                if name=="rx":
-                    gate=gates.RXGate(angle).control(numOfControls)
-                elif name=="ry":
-                    gate=gates.RYGate(angle).control(numOfControls)
-                else:
-                    gate=gates.RZGate(angle).control(numOfControls)
+                gate=self.gatesWithAngles(column[i]).control(numOfControls)
                 self.circuit.append(gate,pos)
                 continue
-            #controlled custom gates
-            gateName=column[i]
-            if gateName[:7] == "custom_":
-                column, pos, gateName = self.customGateInfo(column, i)
-                pos = c+pos
-            #controlled custom gates and any other controlled gate
+            #any other controlled gate
             gate=self.gatesObjects[gateName].control(numOfControls)
             self.circuit.append(gate,pos)
 
