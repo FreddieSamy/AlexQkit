@@ -90,6 +90,7 @@ export default {
     ...mapActions(["setExeCount"]),
     ...mapActions(["runCircuit"]),
     ...mapActions(["checkSwapSystem"]),
+    ...mapActions(["checkWiresCustomGates"]),
     ...mapActions(["removeMessages"]),
     ...mapActions(["setCountControls"]),
     ...mapActions(["setCountSwaps"]),
@@ -126,6 +127,11 @@ export default {
         if (this.specialGatesCounter.swaps) {
           this.checkSwapSystem();
         } // O(n^2)  only call of there is swaps in circuit
+
+        // check number of wires for custom gate that user put in the circuit
+        // working to reduce the the complexity 
+          this.checkWiresCustomGates();
+        
 
       });
       //window.console.log("max wire = ", this.jsonObject.colsCount);

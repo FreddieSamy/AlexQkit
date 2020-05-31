@@ -2,11 +2,13 @@ import axios from "axios";
 import { appRoute, defaultBlochSphereRoute } from "../data/routes";
 
 export default {
-  /*=== Setters ==*/
+  // Setters
   setCols: (state, count) => {
+    // counter
     state.jsonObject.colsCount = count;
   },
   setExe: (state, count) => {
+    // counter
     state.jsonObject.exeCount = count;
   },
   setContorls: (state, val) => {
@@ -25,11 +27,9 @@ export default {
     state.jsonObject.init[idx] = qstate;
     state.jsonObject.rows[idx] = list;
   },
-  setAlgorithms(state,algorithms){
-    state.algorithms = algorithms;
-  },
+
   /* ================================================================= */
-  /*=== Appenders Functions ===*/
+  // Appenders Functions
   appendInit: (state) => state.jsonObject.init.push("0"),
   appendWire: (state) => {
     state.jsonObject.wires++;
@@ -45,15 +45,16 @@ export default {
   },
 
   /* ================================================================= */
-  /*=== Remove Functions ===*/
+
+  // Remove Functions
   popInit: (state) => state.jsonObject.init.pop(),
   popWire: (state) => {
     state.jsonObject.wires--;
     //state.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
     state.jsonObject.rows.pop();
   },
-  /* ================================================================= */
-  /*=== Reset System===*/
+
+  // Reset System
   resetJsonObject: (state) => {
     state.jsonObject = {
       API_TOKEN: "",
@@ -91,14 +92,15 @@ export default {
     for (let i = 0; i < state.jsonObject.rows; i++) {
       for (let j = 0; j < state.jsonObject.colsCount; j++) {
         if (state.jsonObjectObject.rows[i][j] === gateName) {
-          count += 1;
+          count += 1
         }
       }
     }
-    return count;
+    return count
+
   },
   /* ================================================================= */
-  /*=== Validation Functions ===*/
+  // Validation Functions
 
   //Check for in every Column there is an even numbers of swaps
   swapConstrains: (state) => {
@@ -114,51 +116,69 @@ export default {
       if (count == 1) {
         state.messages.violation.push(
           "on column(" +
-            (col + 1) +
-            ") : you need to put more swap gate at same column",
+          (col + 1) +
+          ") : you need to put more swap gate at same column",
         );
       } else if (count > 2) {
         state.messages.violation.push(
           "on column (" +
-            (col + 1) +
-            ") : you can put only two swaps in one column",
+          (col + 1) +
+          ") : you can put only two swaps in one column",
         );
       }
     }
   },
 
-  wirescustom: (/*state*/) => {
-    // for (let col = 0; col < state.jsonObject.colsCount; col++) {
-    //   let dicCount = {};
-    // //  window.console.log(dicCount);
-    //   for (let row = 0; row < state.jsonObject.wires-1; row++) {
-    //     if (state.jsonObject.rows[row][col].startsWith("custom_")) {
-    //       var nameofgate = state.jsonObject.rows[row][col];  //custom_q.0
-    //       nameofgate = nameofgate.substring(0, nameofgate.indexOf(".")); //custom_q
-    //       if (!(nameofgate in dicCount)) {
-    //         dicCount[nameofgate] = 1;
-    //       }
-    //       else {
-    //         dicCount[nameofgate] += 1;
-    //       }
-    //       for (let i in state.gates) {
-    //             if(nameofgate === state.gates[i]["name"]){
-    //                var wire =  state.gates[i]["wires"];
-    //              //  window.console.log(state.gates)
-    //                var realname= state.gates[i]["id"];}
-    //           }
-    //     }
-    //    // window.console.log(wire);
-    //     //window.console.log(dicCount[nameofgate]);
-    //     if (wire != dicCount[nameofgate] && dicCount[nameofgate] != undefined) {
-    //      window.console.log("gate "+realname+" can be put only for  "+wire+ "wires"+"not "+ dicCount[nameofgate] );
-    //       state.messages.violation.push("gate "+realname+" at column "+ (col+1)+ " can be put only for "+wire+ " wires"+" not "+ dicCount[nameofgate])
-    //     }
-    //   }
-    // }
-  },
   /* ================================================================= */
-  /*=== Server Functions ==*/
+  /* 
+    - wirecustom function: it's validate function on the circuit to check  how many times user put custom gate on wires
+    and compare it with real wires for this gate .
+    
+  */
+  wirescustom: (state) => {
+
+    let dicwire = {};
+    for (let indx in state.gates) {
+      if (state.gates[indx]["wires"]) {
+        var wire = state.gates[indx]["wires"];
+        var name = state.gates[indx]["name"];
+        dicwire[name] = wire;
+      }
+    }
+
+
+    for (let col = 0; col < state.jsonObject.colsCount; col++) {
+      let dicCount = {};
+      for (let row = 0; row < state.jsonObject.wires; row++) {
+        if (state.jsonObject.rows[row][col].startsWith("custom_")) {
+          var nameofgate = state.jsonObject.rows[row][col];  //custom_q.0
+          nameofgate = nameofgate.substring(0, nameofgate.indexOf(".")); //custom_q
+          if (!(nameofgate in dicCount)) {
+            dicCount[nameofgate] = 1;
+          }
+          else {
+            dicCount[nameofgate] += 1;
+          }
+        }
+      }
+
+
+      for (let indx in dicCount) {
+        var count = dicCount[indx];
+        if (indx in dicwire) {
+          var wires = dicwire[indx];
+          if (count != wires) {
+            var realname = indx.substring(7);
+            state.messages.violation.push("gate " + realname + " at column " + (col + 1) + " can be put only for " + wire + " wires" + " not " + dicCount[nameofgate]);
+          }
+        }
+      }
+    }
+  },
+
+  /* ================================================================= */
+
+  // Server Functions
   sendCircuit: (state) => {
     try {
       //window.console.log(state.jsonObject)
@@ -183,18 +203,13 @@ export default {
   },
 
   /* ================================================================= */
-  /*=== browser localStorage functions ==*/
-  storeLocal: (state, objectName) => {
-    localStorage.setItem(objectName, JSON.stringify(state[objectName]));
+  // browser localStorage functions 
+  store: (state, objectName) => {
+    localStorage.setItem(objectName, JSON.stringify(state[objectName]))
   },
 
-  getLocal: (state, objectName) => {
-    state[objectName] = JSON.parse(localStorage.getItem(objectName));
-    return state[objectName];
-  },
-
-  isStored:(state,objectName)=>{
-    return localStorage.hasOwnProperty(objectName)
+  getStorage: (state, objectName) => {
+    state[objectName] = JSON.parse(localStorage.getItem(objectName))
+    return state[objectName]
   }
-  /* ================================================================= */
-};
+}
