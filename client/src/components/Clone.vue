@@ -126,7 +126,6 @@ export default {
         if (this.specialGatesCounter.swaps) {
           this.checkSwapSystem();
         } // O(n^2)  only call of there is swaps in circuit
-
       });
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
@@ -149,7 +148,7 @@ export default {
       for (let i = 0; i < this.jsonObject.wires; i++) {
         if (i + 1 != wireId) {
           var wireCaller = this.$refs.wire[i];
-          wireCaller.addGateByIndex(columnId,"i")
+          wireCaller.addGateByIndex(columnId, "i");
         }
       }
     },
@@ -205,11 +204,10 @@ export default {
         // in case wires on circuit are more than wires of the algorithm
         for (; row < this.jsonObject.wires; row++) {
           let wireCaller = this.$refs.wire[row];
-          wireCaller.addIdentityRow(algorithmObject.rows[0].length)
+          wireCaller.addIdentityRow(algorithmObject.rows[0].length);
         }
-         this.updateMaxWire();
+        this.updateMaxWire();
       });
-
     },
     //-----------------------------------------------------------------------
     controlSystem: function() {
@@ -303,12 +301,15 @@ export default {
       if (this.jsonObject.exeCount) {
         axios.post(elementaryGates, this.jsonObject).then(res => {
           // this.jsonObject.custom = res.data.custom;
-          var dic = res.data.custom;
+          var newGates = res.data.custom;
           var custom = this.$refs.toolbox.customGates;
           var flag = true;
-          for (let i in dic) {
+          for (let i in newGates) {
             if (custom.length == 0) {
-              this.$refs.toolbox.$refs.addcustomgate.addGate(i, i);
+              this.$refs.toolbox.$refs.addcustomgate.addGate(
+                newGates[i],
+                newGates[i]
+              );
             } else {
               for (let j in custom) {
                 if (i == this.$refs.toolbox.customGates[j].id) {
@@ -317,7 +318,10 @@ export default {
                 }
               }
               if (flag) {
-                this.$refs.toolbox.$refs.addcustomgate.addGate(i, i);
+                this.$refs.toolbox.$refs.addcustomgate.addGate(
+                  newGates[i],
+                  newGates[i]
+                );
               }
               flag = true;
             }
@@ -379,8 +383,8 @@ export default {
 .wires {
   margin: 0em 0.1em 0em 0.1em;
   flex-basis: 100%;
-  border:1px solid black;
-  overflow: auto;  
+  border: 1px solid black;
+  overflow: auto;
   white-space: nowrap;
 }
 .results {
@@ -392,8 +396,6 @@ export default {
   /* border:1px solid black; */
 }
 .histogram {
- 
-
 }
 .flip-list-move {
   transition: transform 10.9s;

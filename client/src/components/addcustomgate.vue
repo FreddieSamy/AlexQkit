@@ -13,7 +13,6 @@
         <button @click="create_the_matrix()">create</button>
       </div>
 
-
       <div class="column">
         <h1>sub-circuit</h1>
         <h3>name</h3>
@@ -70,8 +69,8 @@
         <input id="root" type="number" value="2" />
         <br />
         <div>
-          <input type="checkbox" id="checkboxAdjcent" />
-          <label for="checkbox">check</label>
+          <input type="checkbox" id="adjointCheckbox" />
+          <label for="adjointCheckbox">Adjoint</label>
         </div>
         <button @click="nthRoot()">create</button>
       </div>
@@ -203,37 +202,36 @@ export default {
     // ----------------------------------------------------
     nthRoot: function() {
       var select = document.getElementById("rootGate");
-      // var backName = select.value;
-      var name = select.options[select.selectedIndex].text;
-      window.console.log(name);
+      var name = select.options[select.selectedIndex].value;
       var root = document.getElementById("root").value;
-      if (name + "^(1/" + root + ")" in this.$parent.customGates) {
-        alert("sorry, " + name + "^(1/" + root + ")" + " is already exist");
+      var adjointFlag = document.getElementById("adjointCheckbox").checked;
+      var newGateName = root + "√" + name;
+      if (adjointFlag) {
+        newGateName += "†";
+      }
+      if (newGateName in this.$parent.customGates) {
+        alert("sorry, " + newGateName + " is already exist");
       } else {
         var json_object = {
           root: root,
           gateName: name,
-          adjcent: document.getElementById("checkboxAdjcent").checked
-          // custom: this.$parent.$parent.jsonObject.custom
+          newGateName: newGateName,
+          adjoint: adjointFlag
         };
         if (root >= 2) {
           axios.post(nthRootRoute, json_object).then(res => {
-            /*window.console.log(res.data);*/
             if (res.data.isUnitary) {
-              this.addGate(name + "^(1/" + root + ")");
-              // this.$parent.$parent.jsonObject.custom[
-              //   name + "^(1/" + root + ")"
-              // ] = res.data.matrix;
+              this.addGate(newGateName);
               this.closeNav();
             } else {
-              alert("sorry, " + name + "^(1/" + root + ")" + " isn't unitary");
+              alert("sorry, " + newGateName + " isn't unitary");
             }
           });
         } else {
           alert("please, choose number more than one !!");
         }
       }
-      document.getElementById("checkboxAdjcent").checked = false;
+      document.getElementById("adjointCheckbox").checked = false;
     },
     // ----------------------------------------------------
     subCircuitCustoGate: function() {
@@ -304,7 +302,8 @@ export default {
       });
     },
     // ----------------------------------------------------
-    addGate(nameofgate, numwires) {  // terminated
+    addGate(nameofgate, numwires) {
+      // terminated
       // this.$parent.customGates.push({
       //   name: "custom_" + nameofgate,
       //   id: nameofgate
@@ -325,9 +324,10 @@ export default {
     },
     // ----------------------------------------------------
     nthRootCustomGates: function() {
+      // to remove nthRoot gates from the list
       var gates = [];
       for (let element of this.$parent.customGates) {
-        if (!element.id.includes("^(1/")) {
+        if (!element.id.includes("√")) {
           gates.push(element);
         }
       }

@@ -11,9 +11,7 @@ from booleanExpression import BooleanFunction
 #from qiskit import *
 from qiskit.quantum_info.operators.predicates import is_unitary_matrix
 
-from scipy.linalg import fractional_matrix_power
 from math import log2
-import numpy as np
 
 #startTime = datetime.now()
 
@@ -43,7 +41,6 @@ def main():
     
 @app.route('/draggableCircuit',methods=['GET','POST'])
 def draggableCircuit():
-    #print(c.customGates)
     if request.method=='POST':
         receivedDictionary=request.get_json()
         c.setter(receivedDictionary)
@@ -115,9 +112,7 @@ def addCustomGates():
     isUnitary=is_unitary_matrix(matrix)
     if isUnitary:
         matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
-        c.customGates[receivedDictionary["gateName"]]=matrix
         c.gatesObjects[receivedDictionary["gateName"]]=f.matrixToGateObject(matrix,receivedDictionary["gateName"])
-        #print(c.customGates)
     return jsonify({"isUnitary":isUnitary})
 
 ###############################################################################################################################
@@ -125,10 +120,9 @@ def addCustomGates():
 @app.route('/subCircuitCustomGate',methods=['GET','POST'])
 def subCircuitCustomGate():
     if request.method=='POST':
-        #print(c.customGates)
         receivedDictionary=request.get_json()
         c2=Circuit()
-        c2.customGates=c.customGates
+        c2.gatesObjects=c.gatesObjects
         c2.subCircuitSetter(receivedDictionary)
         circuit=c2.createDraggableCircuit()
         r=Results(circuit)
@@ -136,13 +130,8 @@ def subCircuitCustomGate():
         complexMatrix=f.strToComplex(matrix)
         isUnitary=is_unitary_matrix(complexMatrix,1e-4,1e-4)
         if isUnitary:
-            c.customGates[receivedDictionary["gateName"]]=complexMatrix
             c.gatesObjects[receivedDictionary["gateName"]]=f.matrixToGateObject(complexMatrix,receivedDictionary["gateName"])
-            matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
-            return  jsonify({"isUnitary":isUnitary,"matrix":f.complexToStr(matrix)}) 
-        else:
-            return  jsonify({"isUnitary":isUnitary})
-    return  jsonify({})
+        return  jsonify({"isUnitary":isUnitary})
 
 ###############################################################################################################################
     
@@ -151,22 +140,17 @@ def nthRoot():
     if request.method=='POST':
         receivedDictionary=request.get_json()
         root=receivedDictionary["root"]
-        gate=receivedDictionary["gateName"]
-        if gate in c.customGates:
-            a=np.matrix(c.customGates[gate])
-        else:
-            a=np.matrix(c.gateToMatrix(gate.lower()))
-            gate=gate.upper()
-        matrix=fractional_matrix_power(a,1/int(root)).tolist()
-        isUnitary=is_unitary_matrix(matrix,1e-4,1e-4)
-        if isUnitary:
-            c.customGates[gate+"^(1/"+root+")"]=matrix
-            c.gatesObjects[gate+"^(1/"+root+")"]=f.matrixToGateObject(matrix,gate+"^(1/"+root+")")
-            matrix=c.reversedMatrix(matrix,int(log2(len(matrix))))
-            return  jsonify({"isUnitary":isUnitary,"matrix":f.complexToStr(matrix)}) 
-        else:
-            return  jsonify({"isUnitary":isUnitary})
-    return  jsonify({})
+        gateName=receivedDictionary["gateName"]
+        gate=c.gatesObjects[gateName]
+        try:
+            unitaryGate=gate.power(1/int(root))
+        except Exception:
+            return jsonify({"isUnitary":False})
+        gateName=receivedDictionary["newGateName"]
+        if receivedDictionary["adjoint"]:
+            unitaryGate=unitaryGate.adjoint()
+        c.gatesObjects[gateName]=f.matrixToGateObject(unitaryGate.to_matrix(),gateName)
+        return  jsonify({"isUnitary":True}) 
 
 ###############################################################################################################################
     
@@ -175,15 +159,11 @@ def elementaryGates():
     if request.method=='POST':
         receivedDictionary=request.get_json()
         rows,newGates=f.elementaryGates(receivedDictionary["rows"],c)
-        gates={}
+        """gates={}
         for (name,matrix) in newGates.items():
             gates[name]=c.reversedMatrix(matrix,int(log2(len(matrix))))
-            gates[name]=f.complexToStr(matrix)
-        returnedDictionary={"rows":rows,"custom":gates}
-        
-    else:
-        returnedDictionary={}
-    return  jsonify(returnedDictionary) 
+            gates[name]=f.complexToStr(matrix)"""
+        return  jsonify({"rows":rows,"custom":newGates}) 
 
 ###############################################################################################################################
     

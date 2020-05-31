@@ -2,7 +2,6 @@ from stateVectorNormalization import Normalization
 from results import Results
 
 from qiskit import QuantumCircuit
-from qiskit.quantum_info.operators import Operator
 import qiskit.circuit.library.standard_gates as gates
 
 import copy
@@ -18,7 +17,6 @@ class Circuit():
         self.circuit = QuantumCircuit(self.num_qubits, self.num_qubits)
         self.init=["0","0"]
         self.cols = [[],[]]
-        self.customGates={}
         self.gatesObjects={
                 "x":gates.XGate(),
                 "y":gates.YGate(),
@@ -27,7 +25,8 @@ class Circuit():
                 "s":gates.SGate(),
                 "t":gates.TGate(),
                 "sdg":gates.SdgGate(),
-                "tdg":gates.TdgGate()
+                "tdg":gates.TdgGate(),
+                "swap":gates.SwapGate()
                 }
 
 ###############################################################################################################################
@@ -97,15 +96,6 @@ class Circuit():
                 self.circuit.h(i)
                 self.circuit.s(i)
         #circuit.barrier()
-
-###############################################################################################################################       
-        
-    def addCustomGate(self, gateMatrix, positions,gateName):
-        """
-        applies a unitary matrix (custom gate) to the circuit
-        """
-        customGate = Operator(gateMatrix)
-        self.circuit.unitary(customGate, positions,label=gateName)
     
 ###############################################################################################################################
 
@@ -155,7 +145,7 @@ class Circuit():
         if pointPos == -1:
             pointPos = len(column[firstAppear])
         gateName = str(column[firstAppear])[7:pointPos]
-        if len(self.customGates[gateName]) == 2: #one wire
+        if self.gatesObjects[gateName].num_qubits == 1: #one wire
             pos=[firstAppear]
         else:
             index=int(column[firstAppear][pointPos+1:])
@@ -204,7 +194,7 @@ class Circuit():
             #custom gates
             if str(column[i])[:7] == "custom_": 
                 column, pos, gateName = self.customGateInfo(column, i)
-                self.addCustomGate(self.customGates[gateName], pos,gateName)
+                self.circuit.append(self.gatesObjects[gateName], pos)
                 continue
             #swap
             if str(column[i]) == "swap":
