@@ -205,7 +205,10 @@ export default {
       var name = select.options[select.selectedIndex].value;
       var root = document.getElementById("root").value;
       var adjointFlag = document.getElementById("adjointCheckbox").checked;
-      var newGateName = root + "√" + name;
+      var newGateName = "√(" + name + ")";
+      if (root != 2) {
+        newGateName = root + newGateName;
+      }
       if (adjointFlag) {
         newGateName += "†";
       }
