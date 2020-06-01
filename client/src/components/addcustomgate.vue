@@ -127,6 +127,13 @@ export default {
       conmatrixcu2.clear();
     },
     // ----------------------------------------------------
+    
+    /* 
+      - create_the_matrix function: it's responsible to 
+        custom gate as matrix "first column " to call
+        custom_mx and pull the data and the check the
+        validation of the matrix 
+    */
     create_the_matrix() {
       var nameofgate = document.getElementById("nameofgate").value;
       //var valofgate = document.getElementById("valueofgate");
@@ -141,13 +148,9 @@ export default {
 
       if (matrix_validate) {
         axios.post(addCustomGates, json_object).then(res => {
-          //window.console.log("the data success to returned be from the server");
           isUnitary = res.data.isUnitary;
-          //isUnitary; //to hassan.. it's a boolean data which represent if the matrix is unitary or not
-          // window.console.log("new unitary:" + isUnitary);
           if (isUnitary) {
             this.addGate(nameofgate, numwires);
-            // this.$parent.$parent.jsonObject.custom[nameofgate] = matrix;
             this.closeNav();
           } else {
             alert(
@@ -160,14 +163,16 @@ export default {
       }
     },
     // ----------------------------------------------------
-    //
-    // ----------------------------------------------------
+      /* 
+      - validate_of_matrix: used to check the matrix that user enter it .
+    */
     validate_of_matrix(matrix, nameofgate) {
       var matrix_validate = true;
       var msg = "please check the dimenons of the matrix";
       var count1, count2, check;
       var regex = /^(-)?([0-9][.])?[0-9]+$|^(-)?(([0-9][.])?[0-9]+)?i$|^(-)?([0-9][.])?[0-9]+(-|\+)(([0-9][.])?[0-9]+)?i$/;
 
+      // check if the name is already exist 
       for (let i in this.gates) {
         if (this.gates[i]["id"] === nameofgate) {
           matrix_validate = false;
@@ -176,17 +181,21 @@ export default {
         }
       }
 
+      // check if the name is empty 
       if (nameofgate == "" || nameofgate.length == 0) {
         matrix_validate = false;
         msg = "you have to write name for the gate";
         return { matrix_validate, msg };
       }
+
+      // if it contains "." for backend reason
       if (nameofgate.includes(".")) {
         matrix_validate = false;
         msg = "name of gate can't include '.'";
         return { matrix_validate, msg };
       }
 
+      // check the value of every input is correct or not
       for (count1 in matrix) {
         for (count2 in matrix[count1]) {
           check = regex.test(matrix[count1][count2]);
@@ -304,24 +313,17 @@ export default {
       });
     },
     // ----------------------------------------------------
-    addGate(nameofgate, numwires) {  // terminated
-      // this.$parent.customGates.push({
-      //   name: "custom_" + nameofgate,
-      //   id: nameofgate
-      // });
+      /* 
+      - addGate function : add it to customgate dictionary
+    */
+    addGate(nameofgate, numWires) {  // terminated
+ 
       this.addCustomGate({
         name: "custom_" + nameofgate,
         id: nameofgate,
-        wires: numwires
+        wires: numWires
       });
-      if (this.$parent.customGates.length < 9) {
-        this.$parent.w =
-          "width:" +
-          Math.ceil(this.$parent.customGates.length / 2) * 3.85 +
-          "em";
-      } else {
-        this.$parent.w = "width:15.9em";
-      }
+   
     },
     // ----------------------------------------------------
     nthRootCustomGates: function() {

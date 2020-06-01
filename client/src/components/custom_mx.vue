@@ -1,20 +1,14 @@
+/*
+     - this component for custom gate as matrix to make design of matrix and pull
+     the data form the inputs
+*/
 <template>
+
   <div>
     <div>
       <input type="number" min="1"  max="4" id="wires" v-model="wires" value="1" />
     </div>
     <form id="inputField" role="form"></form>
-    <!--
-    <input
-      type="button"
-      @click="design()"
-      value="design"
-      name="design"
-      
-    />
-    -->
-    <!-- <input type="button" @click="pulldata()" value="pulldata" name="pulldata"  /> -->
-    <!-- <input type="button" @click="clear()" value="clear" name="clear"  /> -->
     <div id="resultField"></div>
   </div>
 </template>
@@ -41,9 +35,11 @@ export default {
     }
   },
   methods: {
+    /* 
+      - design function: take input wire and design the shape of matrix
+    */
     design() {
       this.clear();
-      //var wire = document.getElementById("wires").value;
       var wire = this.wires;
       if (wire == 0 || wire == "") {
         alert("number of wire can't be zero");
@@ -60,18 +56,20 @@ export default {
           var input = document.createElement("input");
           input.type = "text";
           input.setAttribute("size", "4");
-          // input.setAttribute("value", "0");
           input.setAttribute("placeholder", "1.0+3.5i");
           input.style.padding = '3px';
           input.style.margin = '3px';
           input.style.borderRadius = '8px';
           input.id = "" + i + k;
-
           this.removeel.push("" + i + k);
           document.getElementById("inputField").appendChild(input);
         }
       }
     },
+    // ----------------------------------------------------
+     /* 
+      - pulldata function: pull the data from the inputs as array
+    */
     pulldata() {
       
       var numwires = document.getElementById("wires").value;
@@ -83,39 +81,41 @@ export default {
           name_value_array.push(myArr[i].value);
         }
       }
-      var matrix = this.split(myArr, wire);
-
+      var matrix = this.split(myArr, wire); // the matrix
       return {matrix,numwires};
     },
-
+    // ----------------------------------------------------
+    /* 
+      - clear function: clear the inputs that user enter value for the gate
+    */
     clear() {
 
       for (let i = 0; i < this.removeel.length; i++) {
         var element = document.getElementById(this.removeel[i]);
-
         element.remove(element);
-
       }
       this.removeel = [];
-      // document.getElementById("wires").value=null;
     },
-
-    split(myArray, chunk_size) {
-      let results = [];
-      var count = chunk_size;
+    // ----------------------------------------------------
+    /* 
+      - split function: take array and convert it to matrix accroding the number of wires
+    */
+    split(myArray, size) {
+      let result = [];
+      var count = size;
       var sub = [];
 
-      for (let i = 0; i < myArray.length; i++) {
-        sub.push(myArray[i].value);
-        if (count - 1 == i) {
-          results.push(sub);
+      for (let indx = 0; indx < myArray.length; indx++) {
+        sub.push(myArray[indx].value);
+        if (count - 1 == indx) {
+          result.push(sub);
           sub = [];
-          count = count + chunk_size;
+          count = count + size;
         }
       }
-
-      return results;
+      return result;
     }
+    // ----------------------------------------------------
   }
 };
 </script>

@@ -6,9 +6,9 @@
       <div class="column">
         <h1>Boolean function</h1>
         <h3>variables</h3>
-        <input type="text" id="variables" placeholder="x,y,z" required />
+        <input type="text" id="variables" placeholder="x,y,z" required v-model="variables"/>
         <h3>expression</h3>
-        <input type="text" id="booleanfunction" placeholder="(x or y) and not z" required />
+        <input type="text" id="booleanfunction" placeholder="(x or y) and not z" required  v-model="expression"/>
         <h3>wires indices</h3>
         <input type="text" id="indices" placeholder="0,1,4" />
         <button @click="createBooleanCircuit()">create</button>
@@ -30,18 +30,27 @@ export default {
   data() {
     return {
       // capturedImage: ""
+      variables:"",
+      expression:""
     };
   },
   methods: {
+      /* 
+      - still working on it's validtion.
+    */
     createBooleanCircuit() {
-      var variables = document.getElementById("variables").value;
-      var booleanfunction = document.getElementById("booleanfunction").value;
+      var variablesToValidate=this.variables.split(",")
+      window.console.log(variablesToValidate);
+      //var reqexToVariables=/""/
+      
       var indices = document.getElementById("indices").value.split(",");
-
+     // window.console.log(variables);
+      //window.console.log(booleanfunction);
+      //window.console.log(indices);
       axios
         .post("http://127.0.0.1:5000/booleanExpression", {
-          vars: variables,
-          fn: booleanfunction,
+          vars: this.variables,
+          fn: this.expression,
           indices: indices
         })
         .then(res => {
