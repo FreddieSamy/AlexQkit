@@ -30,7 +30,6 @@ class Results():
         self.circutDrawing=self.draw()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
-        print(self.reversedStatevector)
         
 ###############################################################################################################################   
     
@@ -40,18 +39,13 @@ class Results():
         self.circutDrawing=self.draw()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
-        print(self.reversedStatevector)
         
 ###############################################################################################################################  
-    
-    # this function returns the state vector of a circuit
-
-    # important note .. "according to Qiskit’s convention, first qubit is on the right-hand side"
-    # ex: |01⟩  .. 1st qubit is 1 and 2nd qubit is 0
-    # so we can correct that by by using reversedStateVector() function
-    # you can check that here - https://qiskit-staging.mybluemix.net/documentation/terra/summary_of_quantum_operations.html
 
     def stateVector(self):    
+        """
+        returns the state vector of the circuit
+        """
         simulator=Aer.get_backend('statevector_simulator')
         result=execute(self.circuit,backend=simulator).result()
         statevector=result.get_statevector(decimals=4)
@@ -59,23 +53,28 @@ class Results():
     
 ###############################################################################################################################
            
-    # this function returns the state vector for the reversed wires   ex..  factor of |001⟩ will be the factor of |100⟩ 
-    # to correct qiskit convention
-    # according to Qiskit’s convention, first qubit is on the right-hand side
-    # ex: |01⟩  .. 1st qubit is 1 and 2nd qubit is 0
-
     def reversedStateVector(self):
+        """
+        returns the state vector for the reversed wires 
+        ex.. factor of |001⟩ will be the factor of |100⟩ 
+        
+        to correct qiskit convention
+        according to Qiskit’s convention, first qubit is on the right-hand side
+        ex: |01⟩  .. 1st qubit is 1 and 2nd qubit is 0
+        """
         reversedStatevector=[]
         for i in range(len(self.statevector)):
+            #the next line finds the inverse position in decimal ex.. 3 -> 011 -> 110 -> 6
             pos=int(''.join(reversed(str(("{0:0"+str(self.num_qubits).replace('.0000','')+"b}").format(i)))),2)
             reversedStatevector.append(self.statevector[pos])
         return reversedStatevector
         
 ###############################################################################################################################
 
-    # function to enhance dirac notation and matrix representation numbers
-
     def numberFormat(self,num,isImag=False):
+        """
+        to enhance dirac notation and matrix representation numbers
+        """
         string=str(num)
         if num!=0:
             if num>0:
@@ -87,36 +86,33 @@ class Results():
 
 ###############################################################################################################################
         
-    # this function returns dirac notation of the circuit
-    # neglects terms with zero probability
-    # four digits after floating point
-
-    # important note .. "according to Qiskit’s convention, first qubit is on the right-hand side"
-    # ex: |01⟩  .. 1st qubit is 1 and 2nd qubit is 0
-    # we corrected that by passing reversedWires=True
-
-
     def diracNotation(self):
+        """
+        returns dirac notation of the circuit
+        neglects terms with zero probability
+        four digits after floating point
+        """
         diracNotation=""
         for i in range(len(self.reversedStatevector)):
             if self.reversedStatevector[i]==0:
                 continue
             diracNotation+=self.numberFormat(self.reversedStatevector[i].real)
             diracNotation+=self.numberFormat(self.reversedStatevector[i].imag,True)
-            diracNotation+="|"+str(("{0:0"+str(self.num_qubits).replace('.0000','')+"b}").format(i))+"⟩ "
+            #the next line generates the state .. ex circuit with 3 wires -> i=2 => state:010
+            diracNotation+="|"+str(("{0:0"+str(self.num_qubits).replace('.0000','')+"b}").format(i))+"⟩ " 
         return diracNotation.lstrip("+")
 
 ###############################################################################################################################
         
-    # this function returns readable matrix representation of the whole system
-    # four digits after floating point
-
-    # circuit mustn't be measured
-    # we use "remove_final_measurements()" function to remove measurments
-    # measurements between gates leed to an error (we cann't get matrix representation for these circuits) (need to check)
-    # including the initialization gates (need to check)
-
     def matrixRepresentation(self,decimals=8):
+        """
+        returns <str> readable matrix representation of the whole system
+        including the initialization gates
+        
+        four digits after floating point
+        
+        circuit mustn't be measured
+        """
         temp = self.circuit.copy()
         temp.remove_final_measurements()
     
@@ -136,17 +132,29 @@ class Results():
         
 ###############################################################################################################################
 
-    # returns probability of |1⟩ for every wire in a list
-
     def separatedProbabilities(self):
+        """
+        returns probability of |1⟩ for every wire in a list
+        
+        rule.. probability(qubit(i)==1)= sum( probability(state with qubit(i)==1))
+        
+        ex.. system= 1/√2 |10⟩ + 1/√2 |11⟩
+             prob( |1*⟩ ) = prob(1st qubit == 1)
+                          = sum( prob( states[qubit(0)]==1 ) )
+                          = prob(|10⟩) + prob(|11⟩)
+                          = (1/√2)**2  +  (1/√2)**2
+                          = 1
+                          means the 1st qubit will always be true 
+        """
         res = []
         for j in range(self.num_qubits):
             val = 0
             for i in range(len(self.statevector)):
-                pos = str(("{0:0"+str(self.num_qubits).replace('.0000', '')+"b}").format(i))
+                #generating the state .. ex circuit with 3 wires -> i=2 => state:010
+                pos = str(("{0:0"+str(self.num_qubits).replace('.0000', '')+"b}").format(i)) 
                 if pos[j] == '1':
                     val += abs(self.statevector[i])**2
-            val = round(val*100, 2)
+            val = round(val*100, 1)
             res.insert(0, val)
         return res
 
@@ -180,6 +188,9 @@ class Results():
 ###############################################################################################################################       
    
     def figToResponse(self,fig):
+        """
+        converts figure type to response object
+        """
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
         return Response(output.getvalue(), mimetype='image/png')
@@ -195,26 +206,31 @@ class Results():
     
 ###############################################################################################################################
         
-    # returns polar coordinates for every wire to be represented on bloch spheres
-
     def separatedBlochSpheres(self):
-    
+        """
+        returns list of response object for the bloch sphere of every wire
+        """
         pos=list(range(self.num_qubits))
         res={}
         for i in range(self.num_qubits):
-            [[a, b], [c, d]] = partial_trace(self.statevector, pos[:i]+pos[i+1:]).data
+            #density matrix of the wire
+            [[a, b], [c, d]] = partial_trace(self.statevector, pos[:i]+pos[i+1:]).data 
+            #polar coordinate
             x = 2*b.real
             y = 2*c.imag
             z = a.real-d.real
+            #blochSphere figure
             fig=plot_bloch_vector([x,y,z])#,title="qubit "+str(i)
+            #appending response object of the figure
             res[i]=self.figToResponse(fig)
         return res
 
 ###############################################################################################################################
 
-    # runs a circuit on a real quantum computer (IBM Q devices) and returns a link of the results
-
     def runOnIBMQ(self):
+        """
+        runs a circuit on a real quantum computer (IBM Q devices) and returns the link of the results
+        """
         IBMQ.save_account(self.API_TOKEN)
         IBMQ.load_account()
         provider = IBMQ.get_provider('ibm-q')
@@ -225,6 +241,9 @@ class Results():
 ############################################################################################################################### 
         
     def draggableCircuitResults(self):
+        """
+        returns all draggable circuit results in a dictionary
+        """
         returnedDictionary={}
         self.blochSpheres=self.separatedBlochSpheres()
         returnedDictionary["probabilities"] = self.separatedProbabilities()
@@ -236,7 +255,7 @@ class Results():
             returnedDictionary["qasm"] = self.circuit.qasm()
         except Exception:
             #str(Exception)
-            returnedDictionary["qasm"] = "//You are using custom gate\n//with size more than 2 qubits\n//sorry, this version doesn't support that\n//qiskit version 0.14.1"
+            returnedDictionary["qasm"] = "//You are using custom gate\n//with size more than 2 qubits\n//sorry, this version doesn't support that\n//qiskit version 0.19.1"
             
         if self.API_TOKEN != "":
             returnedDictionary["link"] = self.runOnIBMQ()
@@ -246,6 +265,9 @@ class Results():
 ###############################################################################################################################
     
     def qasmCircuitResults(self):
+        """
+        returns all qasm circuit results in a dictionary
+        """
         returnedDictionary={}
         self.circutDrawing = self.draw()
         self.blochSpheres=self.separatedBlochSpheres()

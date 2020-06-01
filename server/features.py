@@ -131,7 +131,11 @@ class Features():
         according to elementary gates paper 
         https://arxiv.org/pdf/quant-ph/9503016.pdf
         
-        [["c","c","u"]] ==> [["c","i","√u"], ["c","x","i"], ["i","c","√u†"], ["c","x","i"], ["i","c","√u"]]
+        ["c","c","u"] ==> [["c","i","custom_√u"], 
+                           ["c","x","i"], 
+                           ["i","c","custom_√u†"], 
+                           ["c","x","i"], 
+                           ["i","c","custom_√u"]]
         
         newGates.. to add them in the frontEnd gates
         """
