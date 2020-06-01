@@ -53,7 +53,7 @@ export default {
     state.jsonObject.rows.pop();
   },
   /* ================================================================= */
-  /*=== Reset System===*/
+  /*=== Reset System== =*/
   resetJsonObject: (state) => {
     state.jsonObject = {
       API_TOKEN: "",
