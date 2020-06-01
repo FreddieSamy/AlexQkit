@@ -2,13 +2,11 @@ import axios from "axios";
 import { appRoute, defaultBlochSphereRoute } from "../data/routes";
 
 export default {
-  // Setters
+  /*=== Setters ==*/
   setCols: (state, count) => {
-    // counter
     state.jsonObject.colsCount = count;
   },
   setExe: (state, count) => {
-    // counter
     state.jsonObject.exeCount = count;
   },
   setContorls: (state, val) => {
@@ -27,9 +25,11 @@ export default {
     state.jsonObject.init[idx] = qstate;
     state.jsonObject.rows[idx] = list;
   },
-
+  setAlgorithms(state,algorithms){
+    state.algorithms = algorithms;
+  },
   /* ================================================================= */
-  // Appenders Functions
+  /*=== Appenders Functions ===*/
   appendInit: (state) => state.jsonObject.init.push("0"),
   appendWire: (state) => {
     state.jsonObject.wires++;
@@ -45,16 +45,15 @@ export default {
   },
 
   /* ================================================================= */
-
-  // Remove Functions
+  /*=== Remove Functions ===*/
   popInit: (state) => state.jsonObject.init.pop(),
   popWire: (state) => {
     state.jsonObject.wires--;
     //state.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
     state.jsonObject.rows.pop();
   },
-
-  // Reset System
+  /* ================================================================= */
+  /*=== Reset System===*/
   resetJsonObject: (state) => {
     state.jsonObject = {
       API_TOKEN: "",
@@ -96,11 +95,10 @@ export default {
         }
       }
     }
-    return count
-
+    return count;
   },
   /* ================================================================= */
-  // Validation Functions
+  /*=== Validation Functions ===*/
 
   //Check for in every Column there is an even numbers of swaps
   swapConstrains: (state) => {
@@ -177,8 +175,7 @@ export default {
   },
 
   /* ================================================================= */
-
-  // Server Functions
+  /*=== Server Functions ==*/
   sendCircuit: (state) => {
     try {
       //window.console.log(state.jsonObject)
