@@ -12,6 +12,10 @@
     <!-- <div class="qubit"> -->
     <button class="qubit-state" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
     <!-- </div> -->
+   <!-- <svg height="210" width="500" style="z-index=10;position:absolute">
+    <line x1="1000" y1="0" x2="100" y2="300" style="stroke:rgb(255,0,0);stroke-width:10" />
+    </svg> -->
+
 
     <draggable
       class="wire-drop-area"
@@ -239,14 +243,20 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .wire {
+
   display: flex;
+  flex-basis: auto;
   justify-content: flex-start;
   align-items: center;
   background-size: 20px 40px;
   background-position: center;
+  background-repeat: repeat;
+  background-attachment: scroll;
+
   background-image: url("../assets/wire.png");
-  z-index: -1;
+  z-index: -2;
   margin: 10px 0px 10px 0px;
+
 }
 .wire-drop-area {
   height: 37px;
@@ -363,10 +373,6 @@ div[id^="rz"] {
   background-size: 7px 6px;
 }
 
-img {
-  width: 40px;
-  height: 40px;
-}
 
 #i {
   opacity: 0;

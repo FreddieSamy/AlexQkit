@@ -25,11 +25,13 @@ body {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   color: #2c3e50;
   margin-top: 0px;
-  /*overflow: auto;*/
+  box-sizing: border-box;
+
 }
 .cline{
   position:absolute;
   background-color: black;
+  
   z-index :-1;
 }
 #x , #y ,#z{

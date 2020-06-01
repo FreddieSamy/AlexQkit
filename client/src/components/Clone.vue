@@ -7,18 +7,23 @@
       <IBM class="ibm" ref="ibm" />
     </div>
 
+    <!-- <hr width='2' size='190' style="z-index:2"  > -->
+    
+
     <div class="circuit">
       <Qasm ref="qasm" />
       <tracingLine ref="tracingLine"></tracingLine>
       <CircuitDrawing v-if="this.circuitDrawingFlag" />
       <div v-if="!this.circuitDrawingFlag" class="circuit-wires">
-        <div class="wires">
+        <div class="wires" v-on:scroll="scroll">
           <wire v-for="row in jsonObject.wires" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
       </div>
     </div>
     <div>
       <Trash></Trash>
+
+
 
       <div class="wires-buttons">
         <Toolbox2 v-if="!this.circuitDrawingFlag" :setAlgorithm="setAlgorithm" />
@@ -96,7 +101,10 @@ export default {
     ...mapActions(["setCountSwaps"]),
     ...mapActions(["setCountCustoms"]),
     ...mapActions(["countGate"]),
-
+    scroll:function(){
+      this.removeControlSystem();
+      //this.controlSystem();
+    },
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
       //window.console.log("updateMaxWire");
@@ -220,7 +228,7 @@ export default {
     //-----------------------------------------------------------------------
     controlSystem: function() {
       // O(n^3)
-      //window.console.log("controlSystem O(n^3)");
+      window.console.log("controlSystem O(n^3)");
       this.removeControlSystem();
       this.$nextTick(() => {
         // wait to render the wire
@@ -398,8 +406,7 @@ export default {
   /* border:1px solid black; */
 }
 .histogram {
- 
-
+  border:1px solid black;
 }
 .flip-list-move {
   transition: transform 10.9s;
