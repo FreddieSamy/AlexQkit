@@ -6,9 +6,15 @@
       <div class="column">
         <h1>Boolean function</h1>
         <h3>variables</h3>
-        <input type="text" id="variables" placeholder="x,y,z" required v-model="variables"/>
+        <input type="text" id="variables" placeholder="x,y,z" required v-model="variables" />
         <h3>expression</h3>
-        <input type="text" id="booleanfunction" placeholder="(x or y) and not z" required  v-model="expression"/>
+        <input
+          type="text"
+          id="booleanfunction"
+          placeholder="(x or y) and not z"
+          required
+          v-model="expression"
+        />
         <h3>wires indices</h3>
         <input type="text" id="indices" placeholder="0,1,4" />
         <button @click="createBooleanCircuit()">create</button>
@@ -30,21 +36,21 @@ export default {
   data() {
     return {
       // capturedImage: ""
-      variables:"",
-      expression:""
+      variables: "",
+      expression: ""
     };
   },
   methods: {
-      /* 
+    /* 
       - still working on it's validtion.
     */
     createBooleanCircuit() {
-      var variablesToValidate=this.variables.split(",")
+      var variablesToValidate = this.variables.split(",");
       window.console.log(variablesToValidate);
       //var reqexToVariables=/""/
-      
+
       var indices = document.getElementById("indices").value.split(",");
-     // window.console.log(variables);
+      // window.console.log(variables);
       //window.console.log(booleanfunction);
       //window.console.log(indices);
       axios
@@ -54,11 +60,18 @@ export default {
           indices: indices
         })
         .then(res => {
-          //window.console.log(res.data);
-          // window.console.log(this.$parent.$parent.jsonObject);
-          this.$parent.$parent.setAlgorithm(res.data
-            //  ,true, {names: variables.split(","),positions: indices}
-          );
+          window.console.log(indices);
+          if (indices[0] == "") {
+            indices = [...Array(variablesToValidate.length + 1).keys()];
+            window.console.log(indices);
+          }
+          //convert variables names to wires names
+          var name = this.expression;
+          for (let i = 0; i < variablesToValidate.length; i++) {
+            name = name.replace(variablesToValidate[i], "q" + indices[i]);
+          }
+          name = "q" + indices[indices.length - 1] + "=" + name;
+          this.$parent.$parent.setAlgorithm(res.data, true, name);
         });
       this.closeNav();
     },
