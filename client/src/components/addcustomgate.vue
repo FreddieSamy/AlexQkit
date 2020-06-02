@@ -398,8 +398,8 @@ div {
 }
 button {
   background: white;
-  border-radius: 10px;
-  border: 3px solid grey;
+  border-radius: 0.5em;
+  border: 2px solid grey;
   margin: 30px 0px 0px 100px;
 }
 .addGate {

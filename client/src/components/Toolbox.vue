@@ -30,15 +30,15 @@
     <div class="user-tools">
       <div class="qasm-box">
         <button id="qasmToolboxBtn" class="qasm" @click="$parent.$refs.qasm.qasm()">| qasm ⟩</button>
+
         <button
           class="matrix-btn"
           @click="$parent.$refs.matrixRepresentation.openNav()"
         >Matrix Representation</button>
       </div>
 
-      <div class="number-of-shots">
-        <label class="lbl1">Shots</label>
-        <input class="ibmToken" type="number" placeholder="1024" v-model="jsonObject.shots" />
+      <div>
+        <addcustomgate class="add-custom-gate-box" ref="addcustomgate"></addcustomgate>
       </div>
 
       <div class="degree-or-radian">
@@ -54,8 +54,10 @@
         <input type="radio" id="radian" name="angleType" :value="true" v-model="jsonObject.radian" />
         <label for="radian" style="font-size: 15px;">radian</label>
       </div>
-      <div>
-        <addcustomgate class="add-custom-gate-box" ref="addcustomgate"></addcustomgate>
+
+      <div class="number-of-shots">
+        <label class="lbl1">Shots</label>
+        <input class="ibmToken" type="number" placeholder="1024" v-model="jsonObject.shots" />
       </div>
     </div>
   </div>
@@ -110,6 +112,7 @@ export default {
   flex-wrap: wrap;
   padding: 0px;
   margin: 0px;
+  min-width: 49em;
 }
 .toolbox-labels {
   flex-basis: 100%;
@@ -216,8 +219,8 @@ export default {
 }
 
 .degree-or-radian {
-  margin: 0em 0em 0em 1em;
-  flex-basis: 18%;
+  margin: 0em 1.5em 0em 5.6em;
+  flex-basis: 15%;
 }
 .add-custom-gate-box {
   flex-basis: 20%;

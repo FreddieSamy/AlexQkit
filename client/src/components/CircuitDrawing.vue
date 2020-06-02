@@ -17,6 +17,6 @@ export default {
 <!-- ========================================================== -->
 <style scoped>
 #circuitDrawing {
-  margin: -15px 0px 0px 0px;
+  margin: -7px 0px 0px 0px;
 }
 </style>
