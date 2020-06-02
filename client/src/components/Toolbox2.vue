@@ -24,11 +24,7 @@
     <div class="select-algorithm">
       <label>Select an Algorithm</label>
       <select v-model="selectedAlgorithm">
-        <option
-          v-for="(item, index) in algorithms"
-          :key="index"
-          :value="item.circuit"
-        >{{ item.name }}</option>
+        <option v-for="(item, index) in algorithms" :key="index" :value="item">{{ item.name }}</option>
       </select>
     </div>
   </div>

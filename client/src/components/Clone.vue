@@ -193,35 +193,35 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    setAlgorithm: function(algorithmObject, append = true, name) {
+    setAlgorithm: function(algorithmObject, append = true) {
       var fromColumn = this.jsonObject.colsCount; // for circuitBlock
 
       this.jsonObject.wires = Math.max(
-        algorithmObject.wires,
+        algorithmObject.circuit.wires,
         this.jsonObject.wires
       );
       this.jsonObject.init = [
-        ...algorithmObject.init,
-        ...this.jsonObject.init.slice(algorithmObject.init.length)
+        ...algorithmObject.circuit.init,
+        ...this.jsonObject.init.slice(algorithmObject.circuit.init.length)
       ];
 
       this.$nextTick(() => {
         var row;
-        for (row = 0; row < algorithmObject.wires; row++) {
+        for (row = 0; row < algorithmObject.circuit.wires; row++) {
           let wireCaller = this.$refs.wire[row];
-          wireCaller.setState(algorithmObject["init"][row]);
-          wireCaller.setGates(algorithmObject["rows"][row], append);
+          wireCaller.setState(algorithmObject["circuit"]["init"][row]);
+          wireCaller.setGates(algorithmObject["circuit"]["rows"][row], append);
         }
         // in case wires on circuit are more than wires of the algorithm
         for (; row < this.jsonObject.wires; row++) {
           let wireCaller = this.$refs.wire[row];
-          wireCaller.addIdentityRow(algorithmObject.rows[0].length);
+          wireCaller.addIdentityRow(algorithmObject.circuit.rows[0].length);
         }
         this.updateMaxWire();
         // for circuitBlock
         var toColumn = this.jsonObject.colsCount;
         this.liveResults.circuitBlocks.push({
-          label: name,
+          label: algorithmObject.name,
           fromColumn: fromColumn,
           toColumn: toColumn
         });
@@ -352,7 +352,7 @@ export default {
           //  swaps:this.countGate("swap")
           this.specialGatesCounter.controls = 0;
           this.specialGatesCounter.swaps = 0;
-          this.setAlgorithm(this.jsonObject, false);
+          this.setAlgorithm(this.jsonObject, false, "Elementary Gates");
         });
       }
     }

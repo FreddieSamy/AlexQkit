@@ -65,13 +65,16 @@ export default {
             indices = [...Array(variablesToValidate.length + 1).keys()];
             window.console.log(indices);
           }
+
           //convert variables names to wires names
           var name = this.expression;
           for (let i = 0; i < variablesToValidate.length; i++) {
             name = name.replace(variablesToValidate[i], "q" + indices[i]);
           }
           name = "q" + indices[indices.length - 1] + "=" + name;
-          this.$parent.$parent.setAlgorithm(res.data, true, name);
+          window.console.log(res.data);
+          var algorithmObject = { name: name, circuit: res.data };
+          this.$parent.$parent.setAlgorithm(algorithmObject, true);
         });
       this.closeNav();
     },
