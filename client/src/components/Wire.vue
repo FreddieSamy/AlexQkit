@@ -12,10 +12,9 @@
     <!-- <div class="qubit"> -->
     <button class="qubit-state" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
     <!-- </div> -->
-   <!-- <svg height="210" width="500" style="z-index=10;position:absolute">
+    <!-- <svg height="210" width="500" style="z-index=10;position:absolute">
     <line x1="1000" y1="0" x2="100" y2="300" style="stroke:rgb(255,0,0);stroke-width:10" />
-    </svg> -->
-
+    </svg>-->
 
     <draggable
       class="wire-drop-area"
@@ -112,17 +111,16 @@ export default {
         this.$parent.addIdentityColumn(this.id, evt.newIndex);
       }
 
-
       // in case gate draged from wire droped to another wire : evt.from.id = list(n)
       if (evt.from.id[0] == "l") {
         var wire = evt.from.id.replace("list", "");
-        this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex,"i");
+        this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex, "i");
       } else if (evt.clone.id === "●" || evt.clone.id === "○") {
         this.setCountControls(1);
       } else if (evt.clone.id == "swap") {
         this.setCountSwaps(1);
       }
-      
+
       this.$parent.updateMaxWire();
     },
     //-----------------------------------------------------------------------
@@ -169,15 +167,15 @@ export default {
       this.jsonObject.rows.splice(this.id - 1, 1); // vuex it
       this.jsonObject.init.splice(this.id - 1, 1); // vuex it
       this.jsonObject.wires--; // vuex it
-      this.$parent.setAlgorithm(this.jsonObject, false);
+      this.$parent.setAlgorithm({ circuit: this.jsonObject }, false, false);
       this.$parent.removeIdentitySystem();
     },
     //-----------------------------------------------------------------------
     addIdentityRow: function(length) {
-      this.list.push(...new Array(length).fill({name:"i"}))
+      this.list.push(...new Array(length).fill({ name: "i" }));
     },
     //-----------------------------------------------------------------------
-    addGateByIndex: function(columnIndex,gateName) {
+    addGateByIndex: function(columnIndex, gateName) {
       this.list.splice(columnIndex, 0, { name: gateName });
     },
     //-----------------------------------------------------------------------
@@ -220,10 +218,10 @@ export default {
       for (let colIdx = 0; colIdx < gatesList.length; colIdx++) {
         // can be optimized more
         this.list.push({ name: gatesList[colIdx] });
-        if(gatesList[colIdx]==="●" || gatesList[colIdx]==="○"){
-          this.setCountControls(1)
-        }else if(gatesList[colIdx]==="swap"){
-          this.setCountSwaps(1)
+        if (gatesList[colIdx] === "●" || gatesList[colIdx] === "○") {
+          this.setCountControls(1);
+        } else if (gatesList[colIdx] === "swap") {
+          this.setCountSwaps(1);
         }
       }
     },
@@ -243,7 +241,6 @@ export default {
 <!-- =============================================================  -->
 <style scoped>
 .wire {
-
   display: flex;
   flex-basis: auto;
   justify-content: flex-start;
@@ -256,7 +253,6 @@ export default {
   background-image: url("../assets/wire.png");
   z-index: -2;
   margin: 10px 0px 10px 0px;
-
 }
 .wire-drop-area {
   height: 37px;
@@ -372,7 +368,6 @@ div[id^="rz"] {
   background-position: center;
   background-size: 7px 6px;
 }
-
 
 #i {
   opacity: 0;

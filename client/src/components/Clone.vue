@@ -193,8 +193,17 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    setAlgorithm: function(algorithmObject, append = true) {
-      var fromColumn = this.jsonObject.colsCount; // for circuitBlock
+    setAlgorithm: function(
+      algorithmObject,
+      append = true,
+      circuitBlock = true
+    ) {
+      if (circuitBlock) {
+        var fromColumn = this.jsonObject.colsCount; // for circuitBlock
+        if (!append) {
+          fromColumn = 0;
+        }
+      }
 
       this.jsonObject.wires = Math.max(
         algorithmObject.circuit.wires,
@@ -219,12 +228,14 @@ export default {
         }
         this.updateMaxWire();
         // for circuitBlock
-        var toColumn = this.jsonObject.colsCount;
-        this.liveResults.circuitBlocks.push({
-          label: algorithmObject.name,
-          fromColumn: fromColumn,
-          toColumn: toColumn
-        });
+        if (circuitBlock) {
+          var toColumn = this.jsonObject.colsCount;
+          this.liveResults.circuitBlocks.push({
+            label: algorithmObject.name,
+            fromColumn: fromColumn,
+            toColumn: toColumn
+          });
+        }
       });
     },
     //-----------------------------------------------------------------------
@@ -352,7 +363,10 @@ export default {
           //  swaps:this.countGate("swap")
           this.specialGatesCounter.controls = 0;
           this.specialGatesCounter.swaps = 0;
-          this.setAlgorithm(this.jsonObject, false, "Elementary Gates");
+          this.setAlgorithm(
+            { name: "Elementary Gates", circuit: this.jsonObject },
+            false
+          );
         });
       }
     }
@@ -413,8 +427,8 @@ export default {
   align-items: center;
   /* border:1px solid black; */
 }
-.histogram {
-}
+/* .histogram {
+} */
 .flip-list-move {
   transition: transform 10.9s;
 }
