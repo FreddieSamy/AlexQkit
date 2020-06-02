@@ -15,7 +15,7 @@
     <!-- <svg height="210" width="500" style="z-index=10;position:absolute">
     <line x1="1000" y1="0" x2="100" y2="300" style="stroke:rgb(255,0,0);stroke-width:10" />
     </svg>-->
-
+    <hr class="wire-hr" />
     <draggable
       class="wire-drop-area"
       :id="'list' + id"
@@ -120,7 +120,6 @@ export default {
       } else if (evt.clone.id == "swap") {
         this.setCountSwaps(1);
       }
-
       this.$parent.updateMaxWire();
     },
     //-----------------------------------------------------------------------
@@ -242,23 +241,30 @@ export default {
 <style scoped>
 .wire {
   display: flex;
-  flex-basis: auto;
   justify-content: flex-start;
   align-items: center;
-  background-size: 20px 40px;
-  background-position: center;
+  
+  /* background-position: cover;
   background-repeat: repeat;
-  background-attachment: scroll;
-
-  background-image: url("../assets/wire.png");
-  z-index: -2;
-  margin: 10px 0px 10px 0px;
+  background-image: url("../assets/wire.png"); */
+  width: 100%;
+  z-index: 0;
+  margin: 5px 0px 5px 0px;
 }
+
 .wire-drop-area {
   height: 37px;
   display: flex;
-  flex-basis: 80%;
-  /* border: 1px solid black; */
+  flex-basis: 75%;
+}
+.wire-hr{
+  position: fixed;
+  stroke-width: 10;
+  width: 100%;
+  margin:0px;
+  z-index: -4;
+  stroke: black;
+  color:black;
 }
 
 .delete-wire {

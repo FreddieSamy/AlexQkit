@@ -25,6 +25,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
+  overflow-x:auto;
 }
 .dirac-label {
   flex-basis: 7%;
@@ -40,3 +41,4 @@ p {
   margin: 5px;
 }
 </style>
+ 

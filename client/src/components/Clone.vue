@@ -1,34 +1,34 @@
 <template>
   <div class="clone">
-    <label class="app-title">Alexandria Quantum Computer Kit</label>
-    <hr />
+    <!-- <label class="app-title">Alexandria Quantum Computer Kit</label>
+    <hr />-->
     <div class="circuit-tools">
       <Toolbox ref="toolbox" />
       <IBM class="ibm" ref="ibm" />
     </div>
 
     <div class="circuit">
-      <CircuitBlock
-        v-for="block in liveResults.circuitBlocks"
-        :key="block.fromColumn"
-        :label="block.label"
-        :fromColumn="block.fromColumn"
-        :toColumn="block.toColumn"
-      ></CircuitBlock>
       <Qasm ref="qasm" />
       <tracingLine ref="tracingLine"></tracingLine>
       <CircuitDrawing v-if="this.circuitDrawingFlag" />
       <div v-if="!this.circuitDrawingFlag" class="circuit-wires">
         <div class="wires">
+          <CircuitBlock
+            v-for="block in liveResults.circuitBlocks"
+            :key="block.fromColumn"
+            :label="block.label"
+            :fromColumn="block.fromColumn"
+            :toColumn="block.toColumn"
+          ></CircuitBlock>
           <wire v-for="row in jsonObject.wires" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
       </div>
     </div>
-    <div>
+    <div class="circuit-tools-2">
       <Trash></Trash>
 
       <div class="wires-buttons">
-        <Toolbox2 v-if="!this.circuitDrawingFlag" :setAlgorithm="setAlgorithm" />
+        <Toolbox2 class="Toolbox-2" v-if="!this.circuitDrawingFlag" :setAlgorithm="setAlgorithm" />
       </div>
     </div>
 
@@ -104,7 +104,6 @@ export default {
     ...mapActions(["setCountSwaps"]),
     ...mapActions(["setCountCustoms"]),
     ...mapActions(["countGate"]),
-
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
       //window.console.log("updateMaxWire");
@@ -304,6 +303,7 @@ export default {
     //-----------------------------------------------------------------------
     applyControl: function(el1, el2) {
       // sould be in vuex
+      const wires = document.querySelector(".wires");
       if (el1 != null && el2 != null) {
         let x = el1.offsetLeft + el1.offsetWidth / 2;
         let y1 = el1.offsetTop + el1.offsetHeight / 2;
@@ -316,8 +316,7 @@ export default {
         hr.style.left = 0;
         hr.style.top = 0;
         hr.style.margin = "" + y1 + "px 0px 0px " + (x - 2) + "px";
-        var parent = this.$el;
-        parent.appendChild(hr);
+        wires.appendChild(hr);
       }
     },
     //-----------------------------------------------------------------------
@@ -379,6 +378,7 @@ export default {
 .clone {
   white-space: nowrap;
 }
+
 .app-title {
   display: flex;
   justify-content: center;
@@ -413,10 +413,12 @@ export default {
   width: 100%;
 }
 .wires {
-  margin: 0em 0.1em 0em 0.1em;
+  position: relative;
+  padding: 5px 0px;
   flex-basis: 100%;
-  /* border: 1px solid black; */
-  overflow: auto;
+  flex-grow: 100%;
+  overflow-y: hidden;
+  overflow-x: auto;
   white-space: nowrap;
 }
 .results {
@@ -427,8 +429,12 @@ export default {
   align-items: center;
   /* border:1px solid black; */
 }
-/* .histogram {
-} */
+.histogram {
+  flex-basis: 100%;
+  align-self: center;
+  justify-self: center;
+  justify-content: center;
+}
 .flip-list-move {
   transition: transform 10.9s;
 }

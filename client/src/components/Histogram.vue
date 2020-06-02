@@ -36,7 +36,10 @@ export default {
 </script>
 <!-- ========================================================== -->
 <style scoped>
+div{
+  left:10px
+}
 chart{
-  overflow-x: scroll; 
+  overflow-x: auto; 
 }
 </style>

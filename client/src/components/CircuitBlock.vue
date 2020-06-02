@@ -5,17 +5,8 @@
 </template>
 <!-- ========================================================== -->
 <script>
-// import { getElementWidth } from "./tracingLine.vue";
-
 export default {
   name: "circuitBlock",
-  // data() {
-  //   return {
-  //     label: "algorithm",
-  //     fromColumn: 5,
-  //     toColumn: 10
-  //   };
-  // },
   props: ["label", "fromColumn", "toColumn"],
   methods: {
     // ...["getElementWidth"],
@@ -39,12 +30,12 @@ export default {
       var deleteBtnMaargin = this.getElementWidth("delete-wire");
 
       document.getElementById(this.fromColumn).style.height =
-        document.getElementsByClassName("circuit-wires")[0].offsetHeight +
-        2 +
+        document.getElementsByClassName("circuit-wires")[0].offsetHeight -
+        20 +
         "px";
 
       document.getElementById(this.fromColumn).style.width =
-        (this.toColumn - this.fromColumn) * gateMargin - 5 + "px";
+        (this.toColumn - this.fromColumn) * gateMargin - 8 + "px";
 
       document.getElementById(this.fromColumn).style.marginLeft =
         this.fromColumn * gateMargin +
@@ -52,15 +43,13 @@ export default {
         stateBtnMargin +
         wireNameMargin +
         deleteBtnMaargin +
-        5 +
+        2 +
         "px";
     }
   },
-  beforeCreate() {
+  mounted() {
     this.$nextTick(() => {
-      this.$nextTick(() => {
-        this.draw();
-      });
+      this.draw();
     });
   }
 };
@@ -73,7 +62,8 @@ export default {
   z-index: -2;
   position: absolute;
   text-align: center;
-  margin-top: -3px;
+  padding: 0;
+  margin: 0;
 }
 .label {
   position: relative;

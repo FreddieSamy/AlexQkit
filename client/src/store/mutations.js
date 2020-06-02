@@ -201,11 +201,11 @@ export default {
 
   /* ================================================================= */
   // browser localStorage functions 
-  store: (state, objectName) => {
+  storeLocal: (state, objectName) => {
     localStorage.setItem(objectName, JSON.stringify(state[objectName]))
   },
 
-  getStorage: (state, objectName) => {
+  getLocal: (state, objectName) => {
     state[objectName] = JSON.parse(localStorage.getItem(objectName))
     return state[objectName]
   }

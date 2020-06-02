@@ -29,9 +29,14 @@ export default {
 <style scoped>
 .bloch-sphere {
   width: 2.5em;
-  transition: transform 0.2s;
+  transition: transform 0.1s;
+  border:0.3px solid black;
+  border-radius:10px;
+
 }
 .bloch-sphere:hover {
+  position: fixed;
+  z-index:2;
   transform: scale(5.5);
   
 }
