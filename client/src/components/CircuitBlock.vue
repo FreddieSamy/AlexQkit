@@ -1,5 +1,5 @@
 <template>
-  <div id="circuit-block">
+  <div :id="fromColumn" class="circuit-block">
     <label class="label">{{label}}</label>
   </div>
 </template>
@@ -38,20 +38,21 @@ export default {
       var wireNameMargin = this.getElementWidth("qubit-name");
       var deleteBtnMaargin = this.getElementWidth("delete-wire");
 
-      document.getElementById("circuit-block").style.height =
+      document.getElementById(this.fromColumn).style.height =
         document.getElementsByClassName("circuit-wires")[0].offsetHeight +
         2 +
         "px";
 
-      document.getElementById("circuit-block").style.width =
-        (this.toColumn - this.fromColumn + 1) * gateMargin + "px";
+      document.getElementById(this.fromColumn).style.width =
+        (this.toColumn - this.fromColumn) * gateMargin - 5 + "px";
 
-      document.getElementById("circuit-block").style.marginLeft =
+      document.getElementById(this.fromColumn).style.marginLeft =
         this.fromColumn * gateMargin +
         qasmMargin +
         stateBtnMargin +
         wireNameMargin +
         deleteBtnMaargin +
+        5 +
         "px";
     }
   },
@@ -62,40 +63,13 @@ export default {
       });
     });
   }
-  // updated: function() {
-  //   this.$nextTick(function() {
-  //     var qasmMargin = this.getElementWidth("editor");
-  //     var stateBtnMargin = this.getElementWidth("qubit-state");
-  //     var gateMargin = this.getElementWidth("circuit-gate");
-  //     var wireNameMargin = this.getElementWidth("qubit-name");
-  //     var deleteBtnMaargin = this.getElementWidth("delete-wire");
-
-  //     document.getElementById("circuit-block").style.height =
-  //       document.getElementsByClassName("circuit-wires")[0].offsetHeight +
-  //       2 +
-  //       "px";
-
-  //     document.getElementById("circuit-block").style.width =
-  //       (this.toColumn - this.fromColumn + 1) * gateMargin + "px";
-
-  //     document.getElementById("circuit-block").style.marginLeft =
-  //       this.fromColumn * gateMargin +
-  //       qasmMargin +
-  //       stateBtnMargin +
-  //       wireNameMargin +
-  //       deleteBtnMaargin +
-  //       "px";
-  //   });
-  // }
 };
 </script>
 <!-- ========================================================== -->
 <style scoped>
-#circuit-block {
+.circuit-block {
   border: 2px solid #2980b9;
   border-radius: 0.5em;
-  /* width: 100px; */
-  /* height: 100px; */
   z-index: -2;
   position: absolute;
   text-align: center;
@@ -103,7 +77,7 @@ export default {
 }
 .label {
   position: relative;
-  top: -20px;
+  top: -10px;
   background: white;
 }
 </style>

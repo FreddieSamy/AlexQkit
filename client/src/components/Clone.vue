@@ -8,6 +8,13 @@
     </div>
 
     <div class="circuit">
+      <CircuitBlock
+        v-for="block in liveResults.circuitBlocks"
+        :key="block.fromColumn"
+        :label="block.label"
+        :fromColumn="block.fromColumn"
+        :toColumn="block.toColumn"
+      ></CircuitBlock>
       <Qasm ref="qasm" />
       <tracingLine ref="tracingLine"></tracingLine>
       <CircuitDrawing v-if="this.circuitDrawingFlag" />
@@ -53,6 +60,7 @@ import MessageBox from "./MessageBox.vue";
 import Histogram from "./Histogram.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
 import { elementaryGates } from "./../data/routes.js";
+import CircuitBlock from "./CircuitBlock.vue";
 
 export default {
   name: "clone",
@@ -69,7 +77,8 @@ export default {
     Histogram,
     MatrixRepresentation,
     Qasm,
-    tracingLine
+    tracingLine,
+    CircuitBlock
   },
   mounted() {
     //this.runCircuit();
@@ -184,7 +193,9 @@ export default {
       }
     },
     //-----------------------------------------------------------------------
-    setAlgorithm: function(algorithmObject, append = true) {
+    setAlgorithm: function(algorithmObject, append = true, name) {
+      var fromColumn = this.jsonObject.colsCount; // for circuitBlock
+
       this.jsonObject.wires = Math.max(
         algorithmObject.wires,
         this.jsonObject.wires
@@ -207,6 +218,13 @@ export default {
           wireCaller.addIdentityRow(algorithmObject.rows[0].length);
         }
         this.updateMaxWire();
+        // for circuitBlock
+        var toColumn = this.jsonObject.colsCount;
+        this.liveResults.circuitBlocks.push({
+          label: name,
+          fromColumn: fromColumn,
+          toColumn: toColumn
+        });
       });
     },
     //-----------------------------------------------------------------------
@@ -383,7 +401,7 @@ export default {
 .wires {
   margin: 0em 0.1em 0em 0.1em;
   flex-basis: 100%;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   overflow: auto;
   white-space: nowrap;
 }
