@@ -13,6 +13,10 @@
 
     <booleanFunction ref="createBoolean" class="boolean-function" />
 
+    <div class="circiut-loop">
+      <Circiutloops :colsCount="this.jsonObject.colsCount" />
+    </div>
+
     <div class="save-circuit">
       <input type="text" placeholder="Save Circuit by Name" v-model="savedCirciutName" />
       <button @click="saveCircuit(savedCirciutName)">Save Circuit</button>
@@ -34,11 +38,16 @@
 import { mapState, mapActions } from "vuex";
 import tracingButtons from "./tracingButtons.vue";
 import booleanFunction from "./booleanFunction.vue";
+import Circiutloops from "./CircuitLoops.vue";
 
 export default {
   name: "Toolbox2",
   display: "Toolbox2",
-  components: { tracingButtons, booleanFunction },
+  components: {
+    tracingButtons,
+    booleanFunction,
+    Circiutloops
+  },
   props: ["setAlgorithm"],
   data() {
     return {
@@ -56,10 +65,11 @@ export default {
     }
   },
   mounted() {
-    if(localStorage.hasOwnProperty('algorithms')){
-        this.getLocal('algorithms')
-    }else{ // in case of first run time only 
-       this.storeLocal('algorithms');
+    if (localStorage.hasOwnProperty("algorithms")) {
+      this.getLocal("algorithms");
+    } else {
+      // in case of first run time only
+      this.storeLocal("algorithms");
     }
   },
   computed: {
@@ -90,7 +100,7 @@ export default {
               swaps: this.countGate("swap")
             }
           });
-          window.console.log("store")
+          window.console.log("store");
           window.console.log(this.algorithms);
           this.storeLocal("algorithms");
 
@@ -140,10 +150,14 @@ select {
 }
 .boolean-function {
   flex-basis: 5%;
-  margin: 0px 15px 0px 0px;
+  /* margin: 0px 15px 0px 0px; */
 }
 .elementary-gates {
   flex-basis: 5%;
+}
+.circiut-loop {
+  flex-basis: 5%;
+  margin: 0px 15px 0px 0px;
 }
 .save-circuit {
   flex-basis: 5%;

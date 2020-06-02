@@ -1,14 +1,12 @@
 <template>
   <div class="toolbox">
- 
     <draggable
       :list="gates"
       :group="{ name: 'gates', pull: 'clone', put: false }"
       :clone="cloneGate"
     >
       <transition-group type="transition" name="flip-list" class="toolbox-gates-area">
-
-      <!--------------------- Gates ----------------should be a component------------->
+        <!--------------------- Gates ----------------should be a component------------->
         <div class="toolbox-gates" v-for="gate in this.gates" :key="gate.id" :id="gate.name">
           <div class="gate-name" id="hover-div" v-if="gate.name[0]!='c'">
             {{ gate.name.toUpperCase() }}
@@ -22,12 +20,12 @@
               value="90"
             />
           </div>
-          <div v-else>{{ gate.id }}</div>  <!-- in case of custom gates -->
+          <div v-else>{{ gate.id }}</div>
+          <!-- in case of custom gates -->
         </div>
         <!---------------------end of Gates --------------------------------------->
       </transition-group>
     </draggable>
-
 
     <div class="user-tools">
       <div class="qasm-box">
@@ -36,10 +34,6 @@
           class="matrix-btn"
           @click="$parent.$refs.matrixRepresentation.openNav()"
         >Matrix Representation</button>
-      </div>
-
-      <div class="circiut-loop">
-        <Circiutloops :colsCount="this.jsonObject.colsCount" />
       </div>
 
       <div class="number-of-shots">
@@ -70,16 +64,14 @@
 <script>
 import draggable from "vuedraggable";
 import addcustomgate from "./addcustomgate";
-import Circiutloops from "./CircuitLoops.vue";
-import { mapState , mapGetters } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "Toolbox",
   display: "Toolbox",
   components: {
     draggable,
-    addcustomgate,
-    Circiutloops
+    addcustomgate
   },
   data() {
     return {
@@ -89,7 +81,7 @@ export default {
   },
   computed: {
     ...mapState(["jsonObject"]),
-    ...mapGetters(['gates'])
+    ...mapGetters(["gates"])
   },
   methods: {
     cloneGate({ name }) {
@@ -214,9 +206,6 @@ export default {
 .qasm-box {
   flex-basis: 10%;
 }
-.circiut-loop {
-  flex-basis: 12%;
-}
 .number-of-shots {
   flex-basis: 10%;
 }
@@ -278,11 +267,12 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
-textarea:focus, input:focus{
-    outline: none;
+textarea:focus,
+input:focus {
+  outline: none;
 }
 </style>
