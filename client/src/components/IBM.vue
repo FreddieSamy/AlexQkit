@@ -2,7 +2,7 @@
   <div class="ibmBody">
     <div id="hover-div">
       <label class="ibm-label">IBM Token</label>
-      <input class="ibmtoken" type="text" id="ibmtextfield" />
+      <input class="ibmtoken" type="text" id="ibmtextfield" v-model="ibmtoken"/>
       <span id="hover-element">
         <div>Get your API_TOKEN from:</div>
         <div>
@@ -28,7 +28,7 @@
     </div>
 
     <div class="checkbox">
-      <input type="checkbox" id="checkbox" />
+      <input type="checkbox" id="checkbox" v-model="checkboxibm"/>
       <label for="checkbox">Run on IBMQ</label>
       <button @click="sendto()">RUN</button>
     </div>
@@ -49,7 +49,9 @@ export default {
     return {
       anchor: ibmLink,
       device: "ibmq_16_melbourne",
-      devices: devices
+      devices: devices,
+      ibmtoken:"",
+      checkboxibm:false
     };
   },
   computed: {
@@ -58,24 +60,47 @@ export default {
   },
   methods: {
     sendto() {
-      // all that shoould be v-model 
-      if (document.getElementById("checkbox").checked) {
-        this.jsonObject.API_TOKEN = document.getElementById(
-          "ibmtextfield"
-        ).value;
-        var sim = document.getElementById("simulater");
-        this.device = sim.options[sim.selectedIndex].value;
+      // validation for ibm 
+      this.ibmtoken=this.ibmtoken.replace(/\s/g, "");
+      if(this.ibmtoken.length != 64){
+        alert("ibmtoken was entered isn't correct");
+        }
+      var{isempty,msg}=this.inputisempty(this.ibmtoken)
+
+      //
+      if (this.checkboxibm && !isempty) {
+        this.jsonObject.API_TOKEN = this.ibmtoken;
+        
         this.jsonObject.device = this.device;
         if (this.jsonObject.API_TOKEN) {
           this.$parent.runCircuit();
         } else {
           this.$parent.$refs.qasm.sendQasm();
         }
-        document.getElementById("checkbox").checked = false;
-      } else {
+        this.checkboxibm= false;
+      }
+      else if(isempty){
+        alert(msg);
+
+      } 
+      else {
         alert("make sure to select the checkbox to run on IBMQ devices");
       }
-    }
+    },
+    // ----------------------------------------------------
+    /*
+      -inputisempty function : used to check field of input is empty or not 
+    */
+    inputisempty(valueOfInput) {
+      var isempty = false;
+      var msg = "";
+      if (valueOfInput == "" || valueOfInput.length == 0) {
+        isempty = true;
+        msg = "you have to fill variables and expression  ";
+        return { isempty, msg };
+      }
+      return { isempty, msg };
+    },
   }
 };
 </script>
