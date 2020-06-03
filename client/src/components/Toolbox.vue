@@ -9,18 +9,19 @@
         <!--------------------- Gates ----------------should be a component------------->
         <div class="toolbox-gates" v-for="gate in this.gates" :key="gate.id" :id="gate.name">
           <div class="gate-name" id="hover-div" v-if="gate.name[0]!='c'">
-            {{ gate.name.toUpperCase() }}
+            {{ gate.name }}
             <!-- <span id="hover-element">{{ gate.info }}</span> -->
-            <input
+    
+             <input
               v-if="gate.name == 'Rx' || gate.name == 'Ry' || gate.name == 'Rz' "
               class="angle-input"
               :id="gate.name+ 'Angle'"
               type="number"
               :name="gate.name"
               value="90"
-            />
+            /> 
           </div>
-          <div v-else>{{ gate.id }}</div>
+          <div v-else>{{ gate.id.substring(3,6) }}</div>
           <!-- in case of custom gates -->
         </div>
         <!---------------------end of Gates --------------------------------------->
@@ -88,11 +89,11 @@ export default {
   methods: {
     cloneGate({ name }) {
       if (name == "Rx") {
-        name = name + "(" + document.getElementById("rxAngle").value + ")";
+        name = name + "(" + document.getElementById("RxAngle").value + ")";
       } else if (name == "Ry") {
-        name = name + "(" + document.getElementById("ryAngle").value + ")";
+        name = name + "(" + document.getElementById("RyAngle").value + ")";
       } else if (name == "Rz") {
-        name = name + "(" + document.getElementById("rzAngle").value + ")";
+        name = name + "(" + document.getElementById("RzAngle").value + ")";
       }
       return {
         name: name

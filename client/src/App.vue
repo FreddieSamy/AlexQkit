@@ -35,6 +35,10 @@ body {
   background-color: black;
   z-index :-1;
 }
+.toolbox-gates , .circuit-gate {
+  font-weight: bolder;
+}
+
 #X , #Y ,#Z{
 
   background:#306BA2;

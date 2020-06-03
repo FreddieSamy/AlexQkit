@@ -285,7 +285,7 @@ export default {
         if (flag1 || flag2) {
           if (flag1) {
             if (colElements[i].id != "i") {
-              // found first element (upper)
+      
               el1 = colElements[i];
               flag1 = false; // no need to search from top again
             }

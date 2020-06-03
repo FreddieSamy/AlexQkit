@@ -16,6 +16,7 @@
     <line x1="1000" y1="0" x2="100" y2="300" style="stroke:rgb(255,0,0);stroke-width:10" />
     </svg>-->
     <hr class="wire-hr" />
+    <!-- Wire Drop Area (Gates Place)-->
     <draggable
       class="wire-drop-area"
       :id="'list' + id"
@@ -25,15 +26,17 @@
       @remove="remove"
       @update="update"
     >
-      <div class="circuit-gate" v-for="element in list" :key="element.id" :id="element.name">
-        {{displayName(element.name)}}
-        <select v-if="element.name[0]=='c'" class="custom-gate-order">
-          <!-- we will put a v-for here -->
-          <option value="0">0</option>
-          <option value="1">1</option>
+      <div class="circuit-gate" v-for="element in list"  :key="element.id" :id="element.name">
+        <!-- static hard coding block -->
+       {{element.name[0]=='c'? element.name.substring(3,6) : element.name }}
+        <select v-if="element.name[0]=='c' && element.name[1]!='1'" class="custom-gate-order">
+          <option v-for="(item,order) in parseInt(element.name[1])" :key="order" :value="order">{{ order }}</option>
         </select>
+        <!-- end of hard coded block  need a vue filter or special directive -->
       </div>
+
     </draggable>
+    <!-- end Wire Drop Area (Gates Place)-->
 
     <Percent :probability="this.liveResults.probabilities[id-1]||0" />
 
@@ -226,12 +229,7 @@ export default {
     },
     //-----------------------------------------------------------------------
     //should be put in vuex because we need it in toolbox (or could be terminated)
-    displayName: function(name) {
-      if (name.startsWith("custom_")) {
-        return name.slice(7).toUpperCase();
-      }
-      return name
-    }
+ 
     //-----------------------------------------------------------------------
   }
 };
@@ -344,15 +342,15 @@ export default {
   align-self: center;
 }
 
-div[id^="r"],
+div[id^="R"],
 #Swap , #Reset {
   font-size: 10px;
   margin: 0em 5px 0em 5px;
 }
 
-div[id^="rx"],
-div[id^="ry"],
-div[id^="rz"] {
+div[id^="Rx"],
+div[id^="Ry"],
+div[id^="Rz"] {
   font-weight: bold;
   background: #ff8c61;
 }
