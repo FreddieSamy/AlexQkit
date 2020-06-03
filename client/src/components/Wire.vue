@@ -28,7 +28,7 @@
     >
       <div class="circuit-gate" v-for="element in list" :key="element.id" :id="element.name">
         <!-- static hard coding block -->
-        {{element.name[0]=='c'? element.name.substring(3,6) : element.name }}
+        {{element.name[0]=='c'? element.name.slice(3) : element.name }}
         <select
           v-if="element.name[0]=='c' && element.name[1]!='1'"
           class="custom-gate-order"
@@ -261,7 +261,9 @@ export default {
   flex-basis: 75%;
 }
 .wire-hr {
-  position: fixed;
+   position: fixed;
+  position: -webkit-sticky;
+ 
   stroke-width: 10;
   width: 100%;
   margin: 0px;

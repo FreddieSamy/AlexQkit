@@ -13,6 +13,7 @@
       <CircuitDrawing v-if="this.circuitDrawingFlag" />
       <div v-if="!this.circuitDrawingFlag" class="circuit-wires">
         <div class="wires">
+     
           <CircuitBlock
             v-for="block in liveResults.circuitBlocks"
             :key="block.fromColumn"
@@ -20,6 +21,7 @@
             :fromColumn="block.fromColumn"
             :toColumn="block.toColumn"
           ></CircuitBlock>
+      
           <wire v-for="row in jsonObject.wires" :key="row" :id="row" :ref="'wire'"></wire>
         </div>
       </div>
@@ -60,7 +62,7 @@ import MessageBox from "./MessageBox.vue";
 import Histogram from "./Histogram.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
 import { elementaryGates } from "./../data/routes.js";
-import CircuitBlock from "./CircuitBlock.vue";
+//import CircuitBlock from "./CircuitBlock.vue";
 
 export default {
   name: "clone",
@@ -78,7 +80,7 @@ export default {
     MatrixRepresentation,
     Qasm,
     tracingLine,
-    CircuitBlock
+    //CircuitBlock
   },
   mounted() {
     //this.runCircuit();
@@ -420,7 +422,8 @@ export default {
   padding: 5px 0px;
   flex-basis: 100%;
   flex-grow: 100%;
-  overflow-y: hidden;
+  max-height: 1000px;
+  overflow-y: auto;
   overflow-x: auto;
   white-space: nowrap;
 }

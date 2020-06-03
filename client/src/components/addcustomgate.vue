@@ -6,7 +6,7 @@
       <div class="column">
         <h1>Add Matrix</h1>
         <h3>Name</h3>
-        <input type="text" id="nameofgate" required />
+        <input type="text" id="nameofgate" maxlength="4" required />
         <h3>number of wires</h3>
         <CustomMx ref="matrixcu"></CustomMx>
         <br />

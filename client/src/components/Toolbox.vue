@@ -21,7 +21,7 @@
               value="90"
             /> 
           </div>
-          <div v-else>{{ gate.id.substring(3,6) }}</div>
+          <div v-else>{{ gate.id }}</div>
           <!-- in case of custom gates -->
         </div>
         <!---------------------end of Gates --------------------------------------->
