@@ -130,9 +130,9 @@ class Circuit():
         returns the position(s) of a custom gate and its name
         and removes the other gates from the column to prevent applying the gate multiple times
         
-        custom gates represented as ..  custom_<name>.<index>
+        custom gates represented as ..  c<num_qubits>_<name>.<index>
         
-        ex.. col=["i","custom_not.1","i","custom_not.0"] -> name=not, pos=[3,1] 
+        ex.. col=["i","c2_not.1","i","c2_not.0"] -> name=not, num_qubits=2 pos=[3,1] 
         means that not is a 2 qubit gate should apply to the 2nd and the 4th wire
         the first input for this gate is the 4th wire and the second input is th 2nd wire 
         
@@ -143,19 +143,20 @@ class Circuit():
         don't accept "." in any position
         """
         pointPos = column[firstAppear].find(".")
+        underscorePos = column[firstAppear].find("_")
         if pointPos == -1:
             pointPos = len(column[firstAppear])
-        gateName = str(column[firstAppear])[7:pointPos]
-        if self.gatesObjects[gateName].num_qubits == 1: #one wire
+        gateName = str(column[firstAppear])[underscorePos+1:pointPos]
+        if int(column[firstAppear][1:underscorePos]) == 1: #one wire
             pos=[firstAppear]
         else:
             index=int(column[firstAppear][pointPos+1:])
-            pos=[]
-            pos.insert(index,firstAppear)
+            pos=[firstAppear]
+            #pos.insert(index,firstAppear)
             for i in range(firstAppear+1, len(column)):
-                if "custom_"+gateName == column[i][:pointPos]:
+                if column[firstAppear][:pointPos] == column[i][:pointPos]:
                     index=int(column[i][pointPos+1:])
-                    pos.insert(index,i)
+                    pos.insert(index,i)  #arrange the input wires according to the indices
                     column[i] = "i"
         return column,pos,gateName
     
@@ -191,7 +192,7 @@ class Circuit():
                 if column[i] == "M": 
                     self.circuit.measure(i, i)
                 #custom gates
-                elif column[i][:7] == "custom_": 
+                elif column[i][0] == "c": 
                     column, pos, gateName = self.customGateInfo(column, i)
                     self.circuit.append(self.gatesObjects[gateName], pos)
                 #swap
@@ -260,7 +261,7 @@ class Circuit():
                 continue
             gateName=column[i]
             #controlled custom gates
-            if gateName[:7] == "custom_":
+            if gateName[0] == "c":
                 column, pos, gateName = self.customGateInfo(column, i)
                 pos = c+pos
                 gate=self.gatesObjects[gateName].control(numOfControls)
@@ -309,8 +310,8 @@ class Circuit():
                ex.. ["swap","i","swap"] to swap q0 with q2
                swap must appear exactly two times if needed in the column  
                
-        custom gates represented as ..  custom_<name>.<index>
-        ex.. ["i","custom_not.1","i","custom_not.0"] -> name=not, pos=[3,1] 
+        custom gates represented as ..  c<num_qubits>_<name>.<index>
+        ex.. ["i","c2_not.1","i","c2_not.0"] -> name=not, num_qubits=2, pos=[3,1] 
         all custom gates stored in self.gatesObjects as Gate() objects
         """
         self.initState() #apply (init list) initial values to the citcuit
