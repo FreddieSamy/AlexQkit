@@ -24,7 +24,7 @@ new Vue({
     axios
       .get(serverRoute, { useCredentials: true })
       .then(res => {
-        window.console.log("Server Request responds  : "+res.data);
+        window.console.log("Server Request responds  : " + res.data);
       });
     /*
     axios.post("http://localhost:5000/data",{msg:"marioooo"}).then((res)=>{

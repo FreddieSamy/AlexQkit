@@ -1,5 +1,3 @@
-#from datetime import datetime
-
 from flask import Flask, request,jsonify
 from flask_cors import CORS
 
@@ -11,8 +9,6 @@ from booleanExpression import BooleanFunction
 from qiskit.quantum_info.operators.predicates import is_unitary_matrix
 
 from math import log2
-
-#startTime = datetime.now()
 
 # configuration
 DEBUG = True
@@ -70,7 +66,9 @@ def qasm():
         returnedDictionary={}
     returnedDictionary["qasmError"]=""
     return  jsonify(returnedDictionary) 
+
 ###############################################################################################################################
+    
 @app.route('/circuit.png',methods=['GET','POST'])
 def circuitDraw():
     return  r.circutDrawing
@@ -82,12 +80,7 @@ def defaultBlochSphere():
 @app.route('/blochsphere.png/<i>',methods=['GET','POST'])
 def blochSphere(i):
     return r.blochSpheres[int(i)-1]
-"""
-@app.route('/chart.png',methods=['GET','POST'])
-def chart():
-    return graphDrawing(c.histoGramGraph)
 
-"""
 ###############################################################################################################################
 
 @app.route('/matrixRepresentation',methods=['GET','POST'])
@@ -127,7 +120,7 @@ def subCircuitCustomGate():
         r=Results(circuit)
         matrix=r.matrixRepresentation()
         complexMatrix=f.strToComplex(matrix)
-        isUnitary=is_unitary_matrix(complexMatrix,1e-4,1e-4)
+        isUnitary=is_unitary_matrix(complexMatrix)
         if isUnitary:
             c.gatesObjects[receivedDictionary["gateName"]]=f.matrixToGateObject(complexMatrix,receivedDictionary["gateName"])
         return  jsonify({"isUnitary":isUnitary})
@@ -181,5 +174,3 @@ def booleanExpress():
     
 if __name__ == "__main__":
     app.run(debug=True)
-
-#print(datetime.now() - startTime)
