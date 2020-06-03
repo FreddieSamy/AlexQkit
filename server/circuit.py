@@ -3,6 +3,7 @@ from results import Results
 
 from qiskit import QuantumCircuit
 import qiskit.circuit.library.standard_gates as gates
+from qiskit.circuit.library import Reset
 
 import copy    
 import numpy as np
@@ -17,15 +18,16 @@ class Circuit():
         self.init=["0","0"]
         self.cols = [[],[]]
         self.gatesObjects={
-                "x":gates.XGate(),
-                "y":gates.YGate(),
-                "z":gates.ZGate(),
-                "h":gates.HGate(),
-                "s":gates.SGate(),
-                "t":gates.TGate(),
-                "sdg":gates.SdgGate(),
-                "tdg":gates.TdgGate(),
-                "swap":gates.SwapGate()
+                "X":gates.XGate(),
+                "Y":gates.YGate(),
+                "Z":gates.ZGate(),
+                "H":gates.HGate(),
+                "S":gates.SGate(),
+                "T":gates.TGate(),
+                "Sdg":gates.SdgGate(),
+                "Tdg":gates.TdgGate(),
+                "Swap":gates.SwapGate(),
+                "Reset":Reset()
                 }
 
 ###############################################################################################################################
@@ -78,9 +80,9 @@ class Circuit():
         """
         stateList=self.init
         for i in range(len(stateList)):
-            if str(stateList[i]) == "0":
+            if stateList[i] == "0":
                 continue
-            elif str(stateList[i]) == "1":
+            elif stateList[i] == "1":
                 self.circuit.x(i)
             elif stateList[i] == "+":
                 self.circuit.h(i)
@@ -166,7 +168,7 @@ class Circuit():
         """
         pos = [firstAppear]
         for j in range(firstAppear+1, len(column)):
-            if str(column[j]) == "swap":
+            if str(column[j]) == "Swap":
                 pos.append(j)
                 column[j] = "i"
                 break
@@ -186,18 +188,18 @@ class Circuit():
             #empty -> do nothing
             if str(column[i]) != "i":
                 #measurement
-                if str(column[i]) == "m": 
+                if column[i] == "M": 
                     self.circuit.measure(i, i)
                 #custom gates
-                elif str(column[i])[:7] == "custom_": 
+                elif column[i][:7] == "custom_": 
                     column, pos, gateName = self.customGateInfo(column, i)
                     self.circuit.append(self.gatesObjects[gateName], pos)
                 #swap
-                elif str(column[i]) == "swap":
+                elif column[i] == "Swap":
                     column,pos=self.swapPos(column,i)
                     self.circuit.swap(pos[0],pos[1])
                 #gates with angles rx,ry,rz
-                elif "(" in str(column[i]):  
+                elif "(" in column[i]:  
                     gate=self.gatesWithAngles(column[i])
                     self.circuit.append(gate,[i])
                 #any other gate
@@ -235,11 +237,11 @@ class Circuit():
         angle = gatename[3:-1]
         if not self.radian:
             angle = (float(angle)*3.14)/180
-        if name=="rx":
+        if name=="Rx":
             gate=gates.RXGate(angle)
-        elif name=="ry":
+        elif name=="Ry":
             gate=gates.RYGate(angle)
-        else:
+        elif name=="Rz":
             gate=gates.RZGate(angle)
         return gate
             
@@ -269,7 +271,7 @@ class Circuit():
                 self.circuit.append(gate,pos)
                 continue
             #controlled swap
-            if str(column[i]) == "swap":
+            if str(column[i]) == "Swap":
                 column,pos=self.swapPos(column,i)
                 pos = c+pos
                 gate=gates.SwapGate().control(numOfControls)

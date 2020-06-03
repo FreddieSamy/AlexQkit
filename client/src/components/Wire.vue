@@ -26,15 +26,21 @@
       @remove="remove"
       @update="update"
     >
-      <div class="circuit-gate" v-for="element in list"  :key="element.id" :id="element.name">
+      <div class="circuit-gate" v-for="element in list" :key="element.id" :id="element.name">
         <!-- static hard coding block -->
-       {{element.name[0]=='c'? element.name.substring(3,6) : element.name }}
-        <select v-if="element.name[0]=='c' && element.name[1]!='1'" class="custom-gate-order">
-          <option v-for="(item,order) in parseInt(element.name[1])" :key="order" :value="order">{{ order }}</option>
+        {{element.name[0]=='c'? element.name.substring(3,6) : element.name }}
+        <select
+          v-if="element.name[0]=='c' && element.name[1]!='1'"
+          class="custom-gate-order"
+        >
+          <option
+            v-for="(item,order) in parseInt(element.name[1])"
+            :key="order"
+            :value="order"
+          >{{ order }}</option>
         </select>
         <!-- end of hard coded block  need a vue filter or special directive -->
       </div>
-
     </draggable>
     <!-- end Wire Drop Area (Gates Place)-->
 
@@ -226,10 +232,10 @@ export default {
           this.setCountSwaps(1);
         }
       }
-    },
+    }
     //-----------------------------------------------------------------------
     //should be put in vuex because we need it in toolbox (or could be terminated)
- 
+
     //-----------------------------------------------------------------------
   }
 };
@@ -240,7 +246,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  
+
   /* background-position: cover;
   background-repeat: repeat;
   background-image: url("../assets/wire.png"); */
@@ -254,14 +260,14 @@ export default {
   display: flex;
   flex-basis: 75%;
 }
-.wire-hr{
+.wire-hr {
   position: fixed;
   stroke-width: 10;
   width: 100%;
-  margin:0px;
+  margin: 0px;
   z-index: -4;
   stroke: black;
-  color:black;
+  color: black;
 }
 
 .delete-wire {
@@ -343,7 +349,8 @@ export default {
 }
 
 div[id^="R"],
-#Swap , #Reset {
+#Swap,
+#Reset {
   font-size: 10px;
   margin: 0em 5px 0em 5px;
 }

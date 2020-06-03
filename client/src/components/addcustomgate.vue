@@ -48,14 +48,14 @@
         <h3>select the gate</h3>
         <select id="rootGate">
           <optgroup label="Gates">
-            <option value="x">X</option>
-            <option value="y">Y</option>
-            <option value="z">Z</option>
-            <option value="h">H</option>
-            <option value="s">S</option>
-            <option value="t">T</option>
-            <option value="sdg">S†</option>
-            <option value="tdg">T†</option>
+            <option value="X">X</option>
+            <option value="Y">Y</option>
+            <option value="Z">Z</option>
+            <option value="H">H</option>
+            <option value="S">S</option>
+            <option value="T">T</option>
+            <option value="S†">S†</option>
+            <option value="T†">T†</option>
           </optgroup>
           <optgroup v-if="nthRootCustomGates().length" label="Custom Gates">
             <option

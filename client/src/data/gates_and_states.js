@@ -17,7 +17,7 @@ export const gates = [
     { name: "Swap", id: "Swap", index: "", info: "" },
     { name: "Reset", id: "Reset", index: "", info: "reset gate" },
     { name: "Sdg", id: "Sdg", index: "", info: "" },
-    { name: "Sdg", id: "Tdg", index: "", info: "" },
+    { name: "Tdg", id: "Tdg", index: "", info: "" },
 ]
 
 
