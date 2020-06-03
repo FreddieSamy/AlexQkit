@@ -36,20 +36,20 @@ class Features():
         """
         for gatePos in gatesPos:
             gate=coulmn[gatePos]
-            if gate[:7] == "custom_":
-                end = gate.find(".")
-                if end == -1:
-                    end = len(gate)
-                gateName=gate[7:end]
+            if gate[0] == "c":
+                pointPos = gate.find(".")
+                underscorePos = gate.find("_")
+                if pointPos == -1:
+                    pointPos = len(gate)
+                gateName=gate[underscorePos+1:pointPos]
                 unitaryGate=circuitObj.gatesObjects[gateName].power(0.5)
             else:
-                gateName=gate
                 if "(" in gate:
                     unitaryGate=circuitObj.gatesWithAngles(gate).power(0.5)
                 else:
-                    unitaryGate=circuitObj.gatesObjects[gateName].power(0.5)
+                    unitaryGate=circuitObj.gatesObjects[gate].power(0.5)
         
-            newGateName = "√("+gateName+")"
+            newGateName = "√("+gate+")"
             allNames.append(newGateName)
             
             circuitObj.gatesObjects[newGateName]=self.matrixToGateObject(unitaryGate.to_matrix(),newGateName)
@@ -62,23 +62,24 @@ class Features():
  
 ###############################################################################################################################    
     
-    def updateColumns(self,columns,columnPos,controlsPos,gatesPos,allNames):
+    def updateColumns(self,columns,columnPos,controlsPos,gatesPos,allNames,circuitObj):
         """
         decompose multi-controlled gates to its elementary gates for one column
         https://arxiv.org/pdf/quant-ph/9503016.pdf
-        ["c","c","u"] ==> [["c","i","custom_√u"], 
-                           ["c","x","i"], 
-                           ["i","c","custom_√u†"], 
-                           ["c","x","i"], 
-                           ["i","c","custom_√u"]]
+        ["●","●","u"] ==> [["●","i","c<n>_√u"], 
+                           ["●","x","i"], 
+                           ["i","●","c<n>_√u†"], 
+                           ["●","x","i"], 
+                           ["i","●","c<n>_√u"]]
+        where <n>= num_qubits of the gate
         
         if there exist more than 2 controls it will operate on the first two controls
         ex.. 
-        ["c","c","c","u"] ==> [["c","i","c","custom_√u"],
-                               ["c","x","c","i"], 
-                               ["i","c","c","custom_√u†"], 
-                               ["c","x","c","i"], 
-                               ["i","c","c","custom_√u"]]
+        ["●","●","●","u"] ==> [["●","i","●","c<n>_√u"],
+                               ["●","x","●","i"], 
+                               ["i","●","●","c<n>_√u†"], 
+                               ["●","x","●","i"], 
+                               ["i","●","●","c<n>√u"]]
         
         used in elementaryGates() function
         """
@@ -86,7 +87,7 @@ class Features():
         col = ["i"]*columnLen
         col[controlsPos[1]] = columns[columnPos][controlsPos[1]]
         for l in range(len(gatesPos)):
-            col[gatesPos[l]] = "custom_"+allNames[l]
+            col[gatesPos[l]] = "c"+str(circuitObj.gatesObjects[allNames[l]].num_qubits)+"_"+allNames[l]
         for k in range(len(controlsPos)-2):
             col[controlsPos[k+2]] = columns[columnPos][controlsPos[k+2]]
         columns.insert(columnPos+1, col)
@@ -101,7 +102,7 @@ class Features():
         col = ["i"]*columnLen
         col[controlsPos[1]] = columns[columnPos][controlsPos[1]]
         for l in range(len(gatesPos)):
-            col[gatesPos[l]] = "custom_"+allNames[l]+"†"
+            col[gatesPos[l]] = "c"+str(circuitObj.gatesObjects[allNames[l]].num_qubits)+"_"+allNames[l]+"†"
         for k in range(len(controlsPos)-2):
             col[controlsPos[k+2]] = columns[columnPos][controlsPos[k+2]]
         columns.insert(columnPos+1, col)
@@ -116,7 +117,7 @@ class Features():
         col = ["i"]*columnLen
         col[controlsPos[0]] = columns[columnPos][controlsPos[0]]
         for l in range(len(gatesPos)):
-            col[gatesPos[l]] = "custom_"+allNames[l]
+            col[gatesPos[l]] = "c"+str(circuitObj.gatesObjects[allNames[l]].num_qubits)+"_"+allNames[l]
         for k in range(len(controlsPos)-2):
             col[controlsPos[k+2]] = columns[columnPos][controlsPos[k+2]]
         columns.insert(columnPos+1, col)
@@ -131,13 +132,14 @@ class Features():
         according to elementary gates paper 
         https://arxiv.org/pdf/quant-ph/9503016.pdf
         
-        ["c","c","u"] ==> [["c","i","custom_√u"], 
-                           ["c","x","i"], 
-                           ["i","c","custom_√u†"], 
-                           ["c","x","i"], 
-                           ["i","c","custom_√u"]]
+        ["●","●","u"] ==> [["●","i","c<n>_√u"], 
+                           ["●","x","i"], 
+                           ["i","●","c<n>_√u†"], 
+                           ["●","x","i"], 
+                           ["i","●","c<n>_√u"]]
+        where <n>= num_qubits of the gate
         
-        newGates.. to add them in the frontEnd gates
+        newGates.. to add them to the frontEnd gates
         """
         
         newGates=[]
@@ -151,12 +153,12 @@ class Features():
             if len(controlsPos) > 1:
                 allNames=[]
                 self.createNewGates(columns[i],gatesPos,circuitObj,allNames,newGates)
-                self.updateColumns(columns,i,controlsPos,gatesPos,allNames)
+                self.updateColumns(columns,i,controlsPos,gatesPos,allNames,circuitObj)
             
             if len(controlsPos) == 2: 
                 i = i+5 #go to the next old colunmn ... "column i replaced by 5 columns"
             #else decompose the same position
-            #["c","c","c","u"] ==> [["c","i","c","√u"], ["c","x","c","i"], ["i","c","c","√u†"], ["c","x","c","i"], ["i","c","c","√u"]]
+            #["●","●","●","u"] ==> [["●","i","●","√u"], ["●","x","●","i"], ["i","●","●","√u†"], ["●","x","●","i"], ["i","●","●","√u"]]
 
         return np.transpose(columns).tolist(),newGates
 
