@@ -183,35 +183,26 @@ class Circuit():
         """
     
         for i in range(len(column)):
-            #empty
-            if str(column[i]) == "i": 
-                continue
-            #measurement
-            if str(column[i]) == "m": 
-                self.circuit.measure(i, i)
-                continue
-            #custom gates
-            if str(column[i])[:7] == "custom_": 
-                column, pos, gateName = self.customGateInfo(column, i)
-                self.circuit.append(self.gatesObjects[gateName], pos)
-                continue
-            #swap
-            if str(column[i]) == "swap":
-                column,pos=self.swapPos(column,i)
-                self.circuit.swap(pos[0],pos[1])
-                continue
-            #gates with angles rx,ry,rz
-            if "(" in str(column[i]):  
-                gate = column[i][:-1]
-                #degree to radian
-                if not self.radian:    
-                    gate = column[i][0:3] + str((float(column[i][3:-1])*3.14)/180)
-                pythonLine = "self.circuit."+gate+","+str(i)+")"
-                exec(pythonLine)
-                continue
-            #any other gate
-            pythonLine = "self.circuit."+column[i]+"("+str(i)+")"
-            exec(pythonLine)
+            #empty -> do nothing
+            if str(column[i]) != "i":
+                #measurement
+                if str(column[i]) == "m": 
+                    self.circuit.measure(i, i)
+                #custom gates
+                elif str(column[i])[:7] == "custom_": 
+                    column, pos, gateName = self.customGateInfo(column, i)
+                    self.circuit.append(self.gatesObjects[gateName], pos)
+                #swap
+                elif str(column[i]) == "swap":
+                    column,pos=self.swapPos(column,i)
+                    self.circuit.swap(pos[0],pos[1])
+                #gates with angles rx,ry,rz
+                elif "(" in str(column[i]):  
+                    gate=self.gatesWithAngles(column[i])
+                    self.circuit.append(gate,[i])
+                #any other gate
+                else:
+                    self.circuit.append(self.gatesObjects[column[i]], [i])
 
 ############################################################################################################################### 
             
