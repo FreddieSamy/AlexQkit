@@ -57,7 +57,7 @@ export default {
         if (evt.clone.id === "●" || evt.clone.id === "○") {
           this.setCountControls(-1);
           this.$parent.controlSystem();
-        } else if (evt.clone.id == "swap") {
+        } else if (evt.clone.id == "Swap") {
           this.setCountSwaps(-1);
         }
       }

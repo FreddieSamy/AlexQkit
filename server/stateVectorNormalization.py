@@ -16,7 +16,7 @@ class Normalization:
                         flag = 1
                         break
             if flag == 0 and stateVector[ind] != 0j:
-                dicsaveStateVec[ind] = stateVector[ind]
+                dzicsaveStateVec[ind] = stateVector[ind]
     
         return dicsaveStateVec
 # this method calculate the summation of condtion based on state vector 

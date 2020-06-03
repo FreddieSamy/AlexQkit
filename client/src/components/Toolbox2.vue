@@ -93,7 +93,7 @@ export default {
               init: [...this.jsonObject.init],
               rows: [...this.jsonObject.rows],
               controls: this.countGate("●") + this.countGate("○"),
-              swaps: this.countGate("swap")
+              swaps: this.countGate("Swap")
             }
           });
           window.console.log("store");

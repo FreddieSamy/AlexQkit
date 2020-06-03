@@ -106,7 +106,7 @@ export default {
     for (let col = 0; col < state.jsonObject.exeCount; col++) {
       let count = 0;
       for (let row = 0; row < state.jsonObject.wires; row++) {
-        if (state.jsonObject.rows[row][col] === "swap") {
+        if (state.jsonObject.rows[row][col] === "Swap") {
           count++;
         }
       }

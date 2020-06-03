@@ -35,37 +35,36 @@ body {
   background-color: black;
   z-index :-1;
 }
-#x , #y ,#z{
-  font-weight: bold;
+#X , #Y ,#Z{
+
   background:#306BA2;
 }
-#c, #oc{
-  font-weight: bold;
+#○,
+#●{
+
   background:#4390FC;
 }
-#m{
-  font-weight: bold;
+#M{
+
   background:#C8D82D;
 }
-#h{
-  font-weight: bold;
+#H{
+
   background:#5E5E8C;
 }
-#s , #t{
-  font-weight: bold;
+#S , #T{
+
   background:#198C9B;
 }
-#sdg , #tdg{
+#Sdg , #Tdg{
   font-weight: bold;
   background: #3FB979;
 }
 
-#rx,#ry,#rz{
-  font-weight: bold;
+#Rx,#Ry,#Rz{
   background:#FF8C61;
 }
-#swap , #reset{
-  font-weight: bold;
+#Swap , #Reset{
   background:#F15374;
 }
 

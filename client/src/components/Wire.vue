@@ -117,7 +117,7 @@ export default {
         this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex, "i");
       } else if (evt.clone.id === "●" || evt.clone.id === "○") {
         this.setCountControls(1);
-      } else if (evt.clone.id == "swap") {
+      } else if (evt.clone.id == "Swap") {
         this.setCountSwaps(1);
       }
       this.$parent.updateMaxWire();
@@ -219,7 +219,7 @@ export default {
         this.list.push({ name: gatesList[colIdx] });
         if (gatesList[colIdx] === "●" || gatesList[colIdx] === "○") {
           this.setCountControls(1);
-        } else if (gatesList[colIdx] === "swap") {
+        } else if (gatesList[colIdx] === "Swap") {
           this.setCountSwaps(1);
         }
       }
@@ -229,9 +229,8 @@ export default {
     displayName: function(name) {
       if (name.startsWith("custom_")) {
         return name.slice(7).toUpperCase();
-      } else {
-        return name.toUpperCase();
       }
+      return name
     }
     //-----------------------------------------------------------------------
   }
@@ -339,14 +338,14 @@ export default {
   border-radius: 8px;
 }
 
-#rx,
-#ry,
-#rz {
+#Rx,
+#Ry,
+#Rz {
   align-self: center;
 }
 
 div[id^="r"],
-#swap {
+#Swap , #Reset {
   font-size: 10px;
   margin: 0em 5px 0em 5px;
 }
@@ -362,8 +361,6 @@ div[id^="rz"] {
   color: black;
   line-height: 10px;
   margin: -2px 5px 0px 5px;
-  /* margin: 0px 7.5px 0px 7.5px; */
-  /* font-size: 20px; */
   transform: scale(1.7);
   background: none;
   border: none;

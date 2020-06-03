@@ -359,7 +359,6 @@ export default {
             this.jsonObject.rows = res.data.rows;
           }
           // controls:this.countGate("●")+this.countGate("○"),
-          //  swaps:this.countGate("swap")
           this.specialGatesCounter.controls = 0;
           this.specialGatesCounter.swaps = 0;
           this.setAlgorithm(

@@ -305,11 +305,11 @@ export default {
       });
     },
     // ----------------------------------------------------
-    addGate(nameofgate, numwires) {
+    addGate(gateName, gateWires) {
       this.addCustomGate({
-        name: "custom_" + nameofgate,
-        id: nameofgate,
-        wires: numwires
+        name: "c"+gateWires+"_" + gateName,
+        id: gateName,
+        wires: gateWires
       });
     },
     // ----------------------------------------------------

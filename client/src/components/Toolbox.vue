@@ -12,7 +12,7 @@
             {{ gate.name.toUpperCase() }}
             <!-- <span id="hover-element">{{ gate.info }}</span> -->
             <input
-              v-if="gate.name == 'rx' || gate.name == 'ry' || gate.name == 'rz' "
+              v-if="gate.name == 'Rx' || gate.name == 'Ry' || gate.name == 'Rz' "
               class="angle-input"
               :id="gate.name+ 'Angle'"
               type="number"
@@ -87,11 +87,11 @@ export default {
   },
   methods: {
     cloneGate({ name }) {
-      if (name == "rx") {
+      if (name == "Rx") {
         name = name + "(" + document.getElementById("rxAngle").value + ")";
-      } else if (name == "ry") {
+      } else if (name == "Ry") {
         name = name + "(" + document.getElementById("ryAngle").value + ")";
-      } else if (name == "rz") {
+      } else if (name == "Rz") {
         name = name + "(" + document.getElementById("rzAngle").value + ")";
       }
       return {
@@ -161,26 +161,26 @@ export default {
   display: flex;
 }
 
-#rx,
-#ry,
-#rz {
+#Rx,
+#Ry,
+#Rz {
   align-self: center;
 }
 
-#rx,
-#ry,
-#rz,
-#reset,
-#swap {
+#Rx,
+#Ry,
+#Rz,
+#Reset,
+#Swap {
   font-size: 10px;
   color: white;
 }
 
-#rx .gate-name,
-#ry .gate-name,
-#rz .gate-name,
-#reset .gate-name,
-#swap .gate-name {
+#Rx .gate-name,
+#Ry .gate-name,
+#Rz .gate-name,
+#Reset .gate-name,
+#Swap .gate-name {
   font-size: 10px;
   padding: 0px;
   margin: 0px;
