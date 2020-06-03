@@ -233,16 +233,12 @@ class Circuit():
         """
         return gate object of rx, ry and rz
         """
-        name=gatename[0:2]
+        name=gatename[0:2].upper()
         angle = gatename[3:-1]
         if not self.radian:
-            angle = (float(angle)*3.14)/180
-        if name=="Rx":
-            gate=gates.RXGate(angle)
-        elif name=="Ry":
-            gate=gates.RYGate(angle)
-        elif name=="Rz":
-            gate=gates.RZGate(angle)
+            angle = str((float(angle)*3.14)/180)
+        pythonLine="global gate; gate=gates."+name+"Gate("+angle+")"
+        exec(pythonLine)
         return gate
             
 ############################################################################################################################### 
