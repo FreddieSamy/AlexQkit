@@ -54,8 +54,8 @@
             <option value="H">H</option>
             <option value="S">S</option>
             <option value="T">T</option>
-            <option value="S†">S†</option>
-            <option value="T†">T†</option>
+            <option value="Sdg">S†</option>
+            <option value="Tdg">T†</option>
           </optgroup>
           <optgroup v-if="nthRootCustomGates().length" label="Custom Gates">
             <option
