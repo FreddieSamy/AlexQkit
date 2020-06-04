@@ -36,7 +36,7 @@
           <option v-for="i in this.jsonObject.colsCount" :key="i" :value="i">{{i}}</option>
         </select>
         <br />
-        <button @click="subCircuitCustoGate()">create</button>
+        <button @click="subCircuitCustomGate()">create</button>
       </div>
 
       <div class="column">
@@ -113,8 +113,19 @@ export default {
   },
   methods: {
     ...mapActions(["addCustomGate"]),
-    
-     /* 
+    // ----------------------------------------------------
+    /* 
+      - addGate function : add it to customgate dictionary in "gates_and_states.js"
+    */
+    addGate(gateName, gateWires) {
+      this.addCustomGate({
+        name: "c" + gateWires + "_" + gateName,
+        id: gateName,
+        wires: gateWires
+      });
+    },
+    // ----------------------------------------------------
+    /* 
       - openNav function: to open overlay of add custom gate button
         when you press on it  
     */
@@ -135,7 +146,7 @@ export default {
       conmatrixcu2.clear();
     },
     // ----------------------------------------------------
-      /* 
+    /* 
       - create_the_matrix function: it's responsible to 
         custom gate as matrix "first column " to call
         custom_mx and pull the data and the check the
@@ -158,7 +169,7 @@ export default {
           isUnitary = res.data.isUnitary;
           if (isUnitary) {
             this.addGate(nameofgate, numwires);
-            
+
             this.closeNav();
           } else {
             alert(
@@ -170,10 +181,18 @@ export default {
         alert(msg);
       }
     },
-    
-
     // ----------------------------------------------------
-     /* 
+    // check if the name is already exist
+    isExist(nameofgate) {
+      for (let i in this.gates) {
+        if (this.gates[i]["id"] === nameofgate) {
+          return true;
+        }
+      }
+      return false;
+    },
+    // ----------------------------------------------------
+    /* 
       - validate_of_matrix: used to check the matrix that user enter it .
     */
     validate_of_matrix(matrix, nameofgate) {
@@ -182,26 +201,27 @@ export default {
       var count1, count2, check;
       var regex = /^(-)?([0-9][.])?[0-9]+$|^(-)?(([0-9][.])?[0-9]+)?i$|^(-)?([0-9][.])?[0-9]+(-|\+)(([0-9][.])?[0-9]+)?i$/;
 
-      // check if the name is already exist 
-      for (let i in this.gates) {
-        if (this.gates[i]["id"] === nameofgate) {
-          matrix_validate = false;
-          msg = "this name is already exist,please choose different name";
-          return { matrix_validate, msg };
-        }
+      // check if the name is already exist
+      if (this.isExist(nameofgate)) {
+        matrix_validate = false;
+        msg = "this name is already exist,please choose different name";
+        return { matrix_validate, msg };
       }
-      // check if the name is empty 
+
+      // check if the name is empty
       if (nameofgate == "" || nameofgate.length == 0) {
         matrix_validate = false;
         msg = "you have to write name for the gate";
         return { matrix_validate, msg };
       }
+
       // if it contains "." for backend reason
       if (nameofgate.includes(".")) {
         matrix_validate = false;
         msg = "name of gate can't include '.'";
         return { matrix_validate, msg };
       }
+
       // check the value of every input is correct or not
       for (count1 in matrix) {
         for (count2 in matrix[count1]) {
@@ -215,6 +235,63 @@ export default {
       }
       msg = "";
       return { matrix_validate, msg };
+    },
+    // ----------------------------------------------------
+    subCircuitCustomGate: function() {
+      //validate the inputs and call createSubCircuit() function for valid inputs
+      var name = document.getElementById("subCircuitName").value;
+      var fromRow = document.getElementById("fromRow").value;
+      var toRow = document.getElementById("toRow").value;
+      var fromColumn = document.getElementById("fromColumn").value;
+      var toColumn = document.getElementById("toColumn").value;
+      if (fromRow && toRow && fromColumn && toColumn) {
+        if (fromRow <= toRow && fromColumn <= toColumn) {
+          if (name == "" || name.length == 0) {
+            alert("you have to write name for the gate");
+          } else {
+            if (this.isExist(name)) {
+              alert("this name is already exist,please choose different name");
+            } else {
+              this.createSubCircuit(fromRow, toRow, fromColumn, toColumn, name);
+            }
+          }
+        } else {
+          alert("please, check the selected numbers");
+        }
+      }
+    },
+    //-----------------------------------------------------------------------
+    createSubCircuit: function(fromRow, toRow, fromColumn, toColumn, name) {
+      /*
+      constructs jsonObject for the subCircuit and sends it to the backend
+      custom gates created and stored at the backend 
+      stores the gate in "gates_and_states.js" using addGate() function 
+      */
+      var gatesSystem = []; //get the selected rows and columns from the jsonObject "jsonObject.js"
+      for (let i = fromRow - 1; i < toRow; i++) {
+        gatesSystem.push(
+          this.jsonObject.rows[i].slice(fromColumn - 1, toColumn)
+        );
+      }
+      var wires = toRow - fromRow + 1; //num_qubits of the gate
+      var json_object = {
+        gateName: name,
+        wires: wires,
+        rows: gatesSystem,
+        radian: this.jsonObject.radian
+      };
+
+      axios.post(subCirciutRoute, json_object).then(res => {
+        //check if the gate is unitary in the backend
+        if (res.data.isUnitary) {
+          var name = document.getElementById("subCircuitName").value;
+          this.addGate(name, wires); //store the gate in "gates_and_states.js"
+          document.getElementById("subCircuitName").value = null;
+          this.closeNav();
+        } else {
+          alert("sorry, this subcircuit isn't unitary");
+        }
+      });
     },
     // ----------------------------------------------------
     nthRoot: function() {
@@ -254,85 +331,7 @@ export default {
       document.getElementById("adjointCheckbox").checked = false;
     },
     // ----------------------------------------------------
-    subCircuitCustoGate: function() {
-      var name = document.getElementById("subCircuitName").value;
-      var flag = true;
-      var fromRow = document.getElementById("fromRow").value;
-      var toRow = document.getElementById("toRow").value;
-      var fromColumn = document.getElementById("fromColumn").value;
-      var toColumn = document.getElementById("toColumn").value;
-      if (fromRow && toRow && fromColumn && toColumn) {
-        if (fromRow <= toRow && fromColumn <= toColumn) {
-          if (name == "" || name.length == 0) {
-            alert("please, enter a name for the gate");
-          } else {
-            for (let i in this.$parent.customGates) {
-              for (let k in this.$parent.customGates[i]) {
-                if (this.$parent.customGates[i][k] === name) {
-                  flag = false;
-                  alert("this name is already exist");
-                }
-              }
-            }
-            if (flag) {
-              this.cloneSubCircuitCustoGate(
-                fromRow,
-                toRow,
-                fromColumn,
-                toColumn,
-                name
-              );
-            }
-          }
-        } else {
-          alert("please, check the selected numbers");
-        }
-      }
-    },
-    //-----------------------------------------------------------------------
-    cloneSubCircuitCustoGate: function(
-      fromRow,
-      toRow,
-      fromColumn,
-      toColumn,
-      name
-    ) {
-      var gatesSystem = [];
-      for (let i = fromRow - 1; i < toRow; i++) {
-        gatesSystem.push(
-          this.jsonObject.rows[i].slice(fromColumn - 1, toColumn)
-        );
-      }
-      var json_object = {
-        gateName: name,
-        wires: toRow - fromRow + 1,
-        rows: gatesSystem,
-        radian: this.jsonObject.radian
-      };
-      axios.post(subCirciutRoute, json_object).then(res => {
-        if (res.data.isUnitary) {
-          var name = document.getElementById("subCircuitName").value;
-          this.addGate(name);
-          // this.$parent.$parent.jsonObject.custom[name] = res.data.matrix;
-          document.getElementById("subCircuitName").value = null;
-          this.closeNav();
-        } else {
-          alert("sorry, this subcircuit isn't unitary");
-        }
-      });
-    },
-    // ----------------------------------------------------
-    /* 
-      - addGate function : add it to customgate dictionary
-    */
-    addGate(gateName, gateWires) {
-      this.addCustomGate({
-        name: "c"+gateWires+"_" + gateName,
-        id: gateName,
-        wires: gateWires
-      });
-    },
-    // ----------------------------------------------------
+
     nthRootCustomGates: function() {
       // to remove nthRoot gates from the list
       var gates = [];
