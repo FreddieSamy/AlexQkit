@@ -57,7 +57,7 @@ export default {
         let loopCaller = this.$refs.loops[i];
         let arr = [(parseInt(loopCaller.from)-1), (parseInt(loopCaller.to)-1)];
         this.ListOfPositions.push(arr);
-        this.Repeats.push((parseInt(loopCaller.repeat)+1));
+        this.Repeats.push((parseInt(loopCaller.repeat)));
         this.closeNav();
       }
       let listOfPos = this.ListOfPositions;
