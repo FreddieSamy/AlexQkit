@@ -22,7 +22,9 @@ export default {
       return {
         title: "Circuit Histogram",
         explorer: { axis: "horizontal" },
-        chartArea: { width: Math.log2(this.liveResults.chart.length) * 200 },
+        chartArea: {
+          width: Math.max(this.liveResults.chart.length * 50, 250)
+        },
         vAxis: {
           maxValue: 1
         }
