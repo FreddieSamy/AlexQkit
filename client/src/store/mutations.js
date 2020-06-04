@@ -148,7 +148,7 @@ export default {
     for (let col = 0; col < state.jsonObject.colsCount; col++) {
       let dicCount = {};
       for (let row = 0; row < state.jsonObject.wires; row++) {
-        if (state.jsonObject.rows[row][col].startsWith("custom_")) {
+        if (state.jsonObject.rows[row][col][0]=="c") {
           var nameofgate = state.jsonObject.rows[row][col];  //custom_q.0
           nameofgate = nameofgate.substring(0, nameofgate.indexOf(".")); //custom_q
           if (!(nameofgate in dicCount)) {

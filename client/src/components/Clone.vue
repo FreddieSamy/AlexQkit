@@ -62,7 +62,7 @@ import MessageBox from "./MessageBox.vue";
 import Histogram from "./Histogram.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
 import { elementaryGates } from "./../data/routes.js";
-//import CircuitBlock from "./CircuitBlock.vue";
+import CircuitBlock from "./CircuitBlock.vue";
 
 export default {
   name: "clone",
@@ -80,7 +80,7 @@ export default {
     MatrixRepresentation,
     Qasm,
     tracingLine,
-    //CircuitBlock
+    CircuitBlock
   },
   mounted() {
     //this.runCircuit();

@@ -17,7 +17,7 @@
         </div>
 
 
-        <ConditionalLoop />
+        <!-- <ConditionalLoop /> -->
 
       </div>
     </div>
@@ -26,7 +26,7 @@
 <!-- ================================================  -->
 <script>
 import Loop from "./Loop.vue";
-import ConditionalLoop from "./ConditionalLoop.vue";
+//import ConditionalLoop from "./ConditionalLoop.vue";
 import { mapState, mapActions } from "vuex";
 
 // eslint-disable-next-line no-undef
@@ -34,7 +34,7 @@ export default {
   name: "CircuitLoops",
   display: "CircuitLoops",
   props: ["colsCount"],
-  components: { Loop , ConditionalLoop },
+  components: { Loop ,  },
   data() {
     return {
       loopCounts: 1,

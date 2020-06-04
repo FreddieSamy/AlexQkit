@@ -5,16 +5,9 @@
     </div>
 
     <label class="qubit-name">
-      q
-      <sub>{{id-1}}</sub>
+      q<sub>{{id-1}}</sub>
     </label>
-
-    <!-- <div class="qubit"> -->
     <button class="qubit-state" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
-    <!-- </div> -->
-    <!-- <svg height="210" width="500" style="z-index=10;position:absolute">
-    <line x1="1000" y1="0" x2="100" y2="300" style="stroke:rgb(255,0,0);stroke-width:10" />
-    </svg>-->
     <hr class="wire-hr" />
     <!-- Wire Drop Area (Gates Place)-->
     <draggable
@@ -30,6 +23,7 @@
         <!-- static hard coding block -->
         {{element.name[0]=='c'? element.name.slice(3) : element.name }}
         <select
+          @abort="window.console.log('elllo input')"
           v-if="element.name[0]=='c' && element.name[1]!='1'"
           class="custom-gate-order"
         >
@@ -107,7 +101,12 @@ export default {
     ...mapActions(["setCountControls"]),
     ...mapActions(["setCountSwaps"]),
     ...mapActions(["setCountCustoms"]),
-
+    setOrderId: function(evt) {
+      window.console.log("hello");
+      window.console.log(this);
+       window.console.log(evt);
+      return this.id;
+    },
     //== Events Handling Functions ===============================================
     add: function(evt) {
       // in case droped between 2 gates
@@ -128,6 +127,9 @@ export default {
         this.setCountControls(1);
       } else if (evt.clone.id == "Swap") {
         this.setCountSwaps(1);
+      } else if (evt.clone.id[0] == "c") {
+        // window.console.log("i put a custom gate at col" + evt.newIndex);
+        // window.console.log(evt.clone);
       }
       this.$parent.updateMaxWire();
     },
@@ -142,9 +144,11 @@ export default {
       this.$parent.removeIdentitySystem();
     },
     //=============================================================================
-    updateGateAtrributes: function(gate, row, col) {
-      gate.setAttribute("row", "_" + row);
-      gate.setAttribute("col", "_" + col);
+    updateGateAtrributes: function(gateElement, row, col) {
+      gateElement.setAttribute("row", "_" + row);
+      gateElement.setAttribute("col", "_" + col);
+      if(gateElement.id[0]=='c'&&gateElement.id[1]>1)
+      window.console.log(gateElement.childNodes[1])
     },
     //-----------------------------------------------------------------------
     updateWireAttributes: function() {
@@ -201,7 +205,8 @@ export default {
     getGates: function(rowId) {
       var gates = [];
       for (let colIdx = 0; colIdx < this.list.length; colIdx++) {
-        if (this.list[colIdx]["name"].startsWith("custom_")) {
+        if (this.list[colIdx]["name"][0] == "c") {
+          // window.console.log("custom here at " + this.id + " at col " + colIdx);
           gates.push(this.list[colIdx]["name"] + "." + rowId);
         } else {
           gates.push(this.list[colIdx]["name"]);
@@ -261,9 +266,9 @@ export default {
   flex-basis: 75%;
 }
 .wire-hr {
-   position: fixed;
+  position: fixed;
   position: -webkit-sticky;
- 
+
   stroke-width: 10;
   width: 100%;
   margin: 0px;
