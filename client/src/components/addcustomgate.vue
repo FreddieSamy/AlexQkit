@@ -61,7 +61,7 @@
             <option
               v-for="element in nthRootCustomGates()"
               :key="element.id"
-              :value="element.id"
+              :value="element.name"
             >{{ element.id }}</option>
           </optgroup>
         </select>
@@ -99,7 +99,6 @@ export default {
   name: "addcustomgate",
   display: "addcustomgate",
   components: {
-    //draggable,
     CustomMx
   },
   data() {
@@ -238,7 +237,7 @@ export default {
     },
     // ----------------------------------------------------
     subCircuitCustomGate: function() {
-      //validate the inputs and call createSubCircuit() function for valid inputs
+      //validates the inputs and call createSubCircuit() function for valid inputs
       var name = document.getElementById("subCircuitName").value;
       var fromRow = document.getElementById("fromRow").value;
       var toRow = document.getElementById("toRow").value;
@@ -295,8 +294,21 @@ export default {
     },
     // ----------------------------------------------------
     nthRoot: function() {
+      /*
+      validates the inputs of the nthRoot custom gates
+      constructs the json_object to send it to the backend
+      stores the gate name in "gates_and_states.js" using addGate() function
+      */
       var select = document.getElementById("rootGate");
       var name = select.options[select.selectedIndex].value;
+      window.console.log(name);
+      var num_qubits = 1;
+      if (name[0] == "c") {
+        // for custom gates   "c<num_qubits>_<name>"
+        var underscorePos = name.indexOf("_");
+        num_qubits = name.slice(1, underscorePos);
+        name = name.slice(underscorePos + 1);
+      }
       var root = document.getElementById("root").value;
       var adjointFlag = document.getElementById("adjointCheckbox").checked;
       var newGateName = "√(" + name + ")";
@@ -306,7 +318,7 @@ export default {
       if (adjointFlag) {
         newGateName += "†";
       }
-      if (newGateName in this.$parent.customGates) {
+      if (this.isExist(newGateName)) {
         alert("sorry, " + newGateName + " is already exist");
       } else {
         var json_object = {
@@ -318,7 +330,7 @@ export default {
         if (root >= 2) {
           axios.post(nthRootRoute, json_object).then(res => {
             if (res.data.isUnitary) {
-              this.addGate(newGateName);
+              this.addGate(newGateName, num_qubits);
               this.closeNav();
             } else {
               alert("sorry, " + newGateName + " isn't unitary");
@@ -333,11 +345,12 @@ export default {
     // ----------------------------------------------------
 
     nthRootCustomGates: function() {
-      // to remove nthRoot gates from the list
+      // to select custom gates from the stored gates and display them in the nth root list
       var gates = [];
-      for (let element of this.$parent.customGates) {
-        if (!element.id.includes("√")) {
-          gates.push(element);
+      for (let i = 17; i < this.gates.length; i++) {
+        //start at i=17 to avoid the normal gates "x,y,... "
+        if (!this.gates[i].id.includes("√")) {
+          gates.push(this.gates[i]);
         }
       }
       return gates;
