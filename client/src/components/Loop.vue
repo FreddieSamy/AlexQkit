@@ -1,30 +1,46 @@
 <template>
   <div>
     <div>
-      <input class="from" type="number" min="1" v-model="from" placeholder="from " /> :
-      <input class="to" type="number" min="1" v-model="to" placeholder="to " />
+
+    <select v-model="from">
+    <option disabled selected>{{from}}</option>
+    <option class="from" type="number" min="1" v-for="column in this.jsonObject.colsCount" :key="column">{{column}}</option>
+    </select>
+
+     <select v-model="to">
+    <option disabled selected >{{to}}</option>
+    <option class="to" type="number" min="1" v-for="column in this.jsonObject.colsCount" :key="column">{{column}}</option>
+    </select>
       <input class="repeat" type="number" min="1" v-model="repeat" placeholder="Repeat" />
     </div>
   </div>
 </template>
 <!-- ================================================  -->
 <script>
+import { mapState, mapActions } from "vuex";
 // eslint-disable-next-line no-undef
 export default {
   name: "Loop",
   display: "Loop",
   data() {
     return {
-      from: "from",
-      to: "to",
-      repeat: "repeat"
+      from: "FROM",
+      to: "TO",
+      repeat: "repeat",
     };
+  },
+    computed: {
+    ...mapState(["jsonObject"])
+  },
+  methods :{
+    ...mapActions(["addMessage"]),
+    ...mapActions(["removeMessages"]),
   }
 };
 </script>
 <!-- ================================================  -->
 <style scoped>
-input {
+option {
   padding: 0em 0em 0em 0.5em;
   width: 40px;
   border-radius: 5px;
