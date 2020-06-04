@@ -6,40 +6,37 @@
 <!-- ========================================================== -->
 <script>
 import { GChart } from "vue-google-charts";
-import { mapGetters } from "vuex"
+import { mapGetters } from "vuex";
 export default {
-  name:'Histogram',
-  display:'Histogram',
-  components:{ GChart },
+  name: "Histogram",
+  display: "Histogram",
+  components: { GChart },
   computed: {
-    ...mapGetters(['liveResults']),
-    chart(){
-        let temp = this.liveResults.chart;
-        temp.unshift( ["Qbit", "state"])
-        return temp;
+    ...mapGetters(["liveResults"]),
+    chart() {
+      let temp = this.liveResults.chart;
+      temp.unshift(["state", "probability"]);
+      return temp;
+    },
+    chartOptions() {
+      return {
+        title: "Circuit Histogram",
+        explorer: { axis: "horizontal" },
+        chartArea: { width: Math.log2(this.liveResults.chart.length) * 200 },
+        vAxis: {
+          maxValue: 1
+        }
+      };
     }
-  },
-  data() {
-    return {
-    
-      chartOptions: {
-        title:"Circuit Histogram",
-        explorer: {axis: 'horizontal'},
-        chartArea: {width:this.width},
-      vAxis: {
-            maxValue: 1,
-          }
-      },
-    }
-  },
   }
+};
 </script>
 <!-- ========================================================== -->
 <style scoped>
-div{
-  left:10px
+div {
+  left: 10px;
 }
-chart{
-  overflow-x: auto; 
+chart {
+  overflow-x: auto;
 }
 </style>

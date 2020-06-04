@@ -179,10 +179,10 @@ class Results():
             state = str(("{0:0"+str(self.num_qubits).replace('.0000', '')+"b}").format(i)) 
             if state in counts:
                 #counts dictionary doesn't contain states with zero probability
-                graphData.append([state,counts[state]/self.shots])
+                graphData.append(["|"+state+"⟩",counts[state]/self.shots])
             else:
                 #we need to append all states even the states with zero probability to display it in the chart
-                graphData.append([state,0.0])
+                graphData.append(["|"+state+"⟩",0.0])
         return graphData
 
 ###############################################################################################################################       
