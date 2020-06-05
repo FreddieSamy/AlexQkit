@@ -5,7 +5,8 @@
     </div>
 
     <label class="qubit-name">
-      q<sub>{{id-1}}</sub>
+      q
+      <sub>{{id-1}}</sub>
     </label>
     <button class="qubit-state" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
     <hr class="wire-hr" />
@@ -34,19 +35,15 @@
           >{{ order }}</option>
         </select>
         <!-- end of hard coded block  need a vue filter or special directive -->
-          <select
+        <select
           @abort="window.console.log('elllo input')"
           v-if="element.name[0]=='l' "
           class="custom-gate-order"
         >
-      
           <option value="*">*</option>
           <option value="0">0</option>
           <option value="1">1</option>
         </select>
-
-
-
       </div>
     </draggable>
     <!-- end Wire Drop Area (Gates Place)-->
@@ -117,7 +114,7 @@ export default {
     setOrderId: function(evt) {
       window.console.log("hello");
       window.console.log(this);
-       window.console.log(evt);
+      window.console.log(evt);
       return this.id;
     },
     //== Events Handling Functions ===============================================
@@ -129,7 +126,7 @@ export default {
       ) {
         this.list.splice(evt.newIndex + 1, 1);
       } else {
-        this.$parent.addGateColumn(this.id, evt.newIndex,"i");
+        this.$parent.addGateColumn(this.id, evt.newIndex, "i");
       }
 
       // in case gate draged from wire droped to another wire : evt.from.id = list(n)
@@ -145,7 +142,7 @@ export default {
         // window.console.log("i put a custom gate at col" + evt.newIndex);
         // window.console.log(evt.clone);
       } else if (evt.clone.id[0] == "l") {
-        window.console.log("add conditional loop")
+        window.console.log("add conditional loop");
         // this.setCountCustoms(1);
         // window.console.log("i put a custom gate at col" + evt.newIndex);
         // window.console.log(evt.clone);
@@ -166,8 +163,8 @@ export default {
     updateGateAtrributes: function(gateElement, row, col) {
       gateElement.setAttribute("row", "_" + row);
       gateElement.setAttribute("col", "_" + col);
-      if(gateElement.id[0]=='c'&&gateElement.id[1]>1)
-      window.console.log(gateElement.childNodes[1])
+      if (gateElement.id[0] == "c" && gateElement.id[1] > 1)
+        window.console.log(gateElement.childNodes[1]);
     },
     //-----------------------------------------------------------------------
     updateWireAttributes: function() {
@@ -198,8 +195,12 @@ export default {
       this.jsonObject.rows.splice(this.id - 1, 1); // vuex it
       this.jsonObject.init.splice(this.id - 1, 1); // vuex it
       this.jsonObject.wires--; // vuex it
-      this.$parent.setAlgorithm({ circuit: this.jsonObject }, false, false);
-      this.$parent.removeIdentitySystem();
+      this.$nextTick(() => {
+        this.$parent.setAlgorithm({ circuit: this.jsonObject }, false, false);
+        this.$nextTick(() => {
+          this.$parent.removeIdentitySystem();
+        });
+      });
     },
     //-----------------------------------------------------------------------
     addIdentityRow: function(length) {
@@ -374,12 +375,12 @@ export default {
   align-self: center;
 }
 
- div[id^="R"],
+div[id^="R"],
 #Swap,
 #Reset {
   font-size: 10px;
   margin: 0px 5px 0px 5px;
-} 
+}
 
 div[id^="Rx"],
 div[id^="Ry"],
@@ -390,7 +391,7 @@ div[id^="Rz"] {
 #○,
 #● {
   color: black;
-  margin:-2px 4.9px 0px 4.9px;
+  margin: -2px 4.9px 0px 4.9px;
 
   transform: scale(1.7);
   background: none;
