@@ -374,12 +374,12 @@ export default {
   align-self: center;
 }
 
-div[id^="R"],
+ div[id^="R"],
 #Swap,
 #Reset {
   font-size: 10px;
-  margin: 0em 5px 0em 5px;
-}
+  margin: 0px 5px 0px 5px;
+} 
 
 div[id^="Rx"],
 div[id^="Ry"],
@@ -390,8 +390,8 @@ div[id^="Rz"] {
 #○,
 #● {
   color: black;
-  line-height: 10px;
-  margin: -2px 5px 0px 5px;
+  margin:-2px 4.9px 0px 4.9px;
+
   transform: scale(1.7);
   background: none;
   border: none;

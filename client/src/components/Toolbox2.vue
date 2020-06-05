@@ -5,7 +5,22 @@
       <button @click="cloneResetSystem">Reset</button>
     </div>
 
-    <tracingButtons class="tracing-buttons"></tracingButtons>
+    <!-- Tracing Buttons -->
+    <div class="tracing-buttons">
+      <button class="exeBtn" @click="exeStart">
+        <img src="../assets/icons8-skip-to-start-48.png" alt />
+      </button>
+      <button class="exeBtn" @click="preExe">
+        <img src="../assets/icons8-previous-26.png" alt />
+      </button>
+      <button class="exeBtn" @click="nextExe">
+        <img src="../assets/icons8-next-26.png" alt />
+      </button>
+      <button class="exeBtn" @click="exeEnd">
+        <img src="../assets/icons8-end-48.png" alt />
+      </button>
+    </div>
+    <!-- end Tracing buttons -->
 
     <div class="elementary-gates">
       <button class="exeBtn" @click="this.$parent.elementaryGates">Elementary Gates</button>
@@ -32,7 +47,6 @@
 <!-- =============================================================  -->
 <script>
 import { mapState, mapActions } from "vuex";
-import tracingButtons from "./tracingButtons.vue";
 import booleanFunction from "./booleanFunction.vue";
 import Circiutloops from "./CircuitLoops.vue";
 
@@ -40,7 +54,6 @@ export default {
   name: "Toolbox2",
   display: "Toolbox2",
   components: {
-    tracingButtons,
     booleanFunction,
     Circiutloops
   },
@@ -82,6 +95,37 @@ export default {
     cloneResetSystem: function() {
       this.selectedAlgorithm = null;
       this.$parent.resetSystem();
+    },
+    nextExe: function() {
+      if (this.jsonObject.exeCount < this.jsonObject.colsCount) {
+        this.jsonObject.exeCount++;
+        this.$parent.$refs.tracingLine.updateTracingLine();
+        this.runCircuit();
+      }
+    },
+    //-----------------------------------------------------------------------
+    preExe: function() {
+      if (this.jsonObject.exeCount > 0) {
+        this.jsonObject.exeCount--;
+        this.$parent.$refs.tracingLine.updateTracingLine();
+        this.runCircuit();
+      }
+    },
+    //-----------------------------------------------------------------------
+    exeStart: function() {
+      if (this.jsonObject.exeCount != 0) {
+        this.jsonObject.exeCount = 0;
+        this.$parent.$refs.tracingLine.updateTracingLine();
+        this.runCircuit();
+      }
+    },
+    //-----------------------------------------------------------------------
+    exeEnd: function() {
+      if (this.jsonObject.exeCount != this.jsonObject.colsCount) {
+        this.jsonObject.exeCount = this.jsonObject.colsCount;
+        this.$parent.$refs.tracingLine.updateTracingLine();
+        this.runCircuit();
+      }
     },
     saveCircuit(name) {
       if (name != "") {
@@ -137,12 +181,15 @@ select {
   border-radius: 7px;
   background: white;
 }
+img{
+  width: 12px;
+  height: 10px;
+}
 .run-reset-buttons {
   flex-basis: 5%;
 }
 .tracing-buttons {
   flex-basis: 5%;
-  margin: 0px 10px 0px 10px;
 }
 .boolean-function {
   flex-basis: 5%;
