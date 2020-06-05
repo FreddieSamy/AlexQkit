@@ -162,27 +162,25 @@ class Results():
 
     def graph(self):
         """
-        returns the probability of every state as 2D list [ [state, probability], ... ] to be presented on the chart
+        returns the probability of state as 2D list [ [state, probability], ... ] to be presented on the chart
         probability of a state = its count / total number of shots
+        neglects zero probabilities
+        
+        we apply measurments to all wires to prevent losing counts
+        unmeasured circuits will return all counts as zeros
+        
+        measurments in reverse to correct qiskit convention
+        according to Qiskit’s convention, first qubit is on the right-hand side
+        ex: |01⟩  .. 1st qubit is 1 and 2nd qubit is 0
         """
-        graphData = []
         temp = self.circuit.copy()
-        #we apply measurments to all wires to prevent losing counts
-        #unmeasured circuits will return all counts as zeros
         temp.measure(list(range(self.num_qubits)),list(range(self.num_qubits-1,-1,-1)))
         simulator = Aer.get_backend('qasm_simulator')
         result = execute(temp, backend=simulator,shots=self.shots).result()
         counts = result.get_counts(temp)
-        for i in range(2**self.num_qubits):
-            #the next line.. to get the states ex.. i=1 state= 001 for circuit with 3 wires
-            #converts i to binary with zero left padding  .. len(state) equals to the number of the wires
-            state = str(("{0:0"+str(self.num_qubits).replace('.0000', '')+"b}").format(i)) 
-            if state in counts:
-                #counts dictionary doesn't contain states with zero probability
-                graphData.append(["|"+state+"⟩",counts[state]/self.shots])
-            else:
-                #we need to append all states even the states with zero probability to display it in the chart
-                graphData.append(["|"+state+"⟩",0.0])
+        #the next line to convert dictionary {state:counts} to list [ [state, counts/shots ] ]
+        #we need that representation of data to display it on google charts vue component
+        graphData=[["|"+state+"⟩",count/self.shots] for state,count in counts.items()]
         return graphData
 
 ###############################################################################################################################       

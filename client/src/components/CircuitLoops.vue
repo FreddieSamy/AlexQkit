@@ -15,9 +15,13 @@
           <button class="remove" v-if="loopCounts" @click="loopCounts--">Remove</button>
           <button class="apply" v-if="loopCounts" @click="applyLoop">Apply the loops</button>
         </div>
+<<<<<<< HEAD
 
 
         <!-- <ConditionalLoop /> -->
+=======
+        <ConditionalLoop />
+>>>>>>> b830eb521b6e2e78636d71d59f2c8d0b94758e07
 
       </div>
     </div>
@@ -58,15 +62,28 @@ export default {
         let arr = [(parseInt(loopCaller.from)-1), (parseInt(loopCaller.to)-1)];
         this.ListOfPositions.push(arr);
         this.Repeats.push((parseInt(loopCaller.repeat)));
-        this.closeNav();
+        
       }
       let listOfPos = this.ListOfPositions;
       let listOfRep = this.Repeats;
       let repeated = { listOfPos, listOfRep };
+      // start
+      //window.console.log(this.startLessEnd(listOfPos));
+      if (this.startLessEnd(listOfPos) === false){
+        alert("Start cannot More than end or unselected");
+        return false
+      } 
+      //window.console.log(this.startLessEnd(listOfRep));
+      if (this.checkRepeat(listOfRep)===false){
+        alert("Repeat cannot be less than one or Empty");
+        return false
+      }
+      //end 
       this.jsonObject["repeated"] = repeated; // should be setter
       // let message = {messageType:'advanced',messageBody:repeated}
       this.addMessage({ messageType: "advanced", messageBody: repeated });
       //window.console.log(this.$parent.$parent.jsonObject)
+      this.closeNav();
     },
     openNav() {
       document.getElementById("myNav1").style.width = "25%";
@@ -74,6 +91,26 @@ export default {
     // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav1").style.width = "0%";
+    },
+    startLessEnd(listOfPosition){
+      for (var ele of listOfPosition){
+
+        if (ele[0] > ele[1] || isNaN(ele[0] || isNaN(ele[1]))){
+          return false;
+        }
+
+      }
+      return true;
+    },
+
+    checkRepeat(listOfRep){
+      for(var ele of listOfRep){
+        if (isNaN(ele) || ele < 1){
+          return false 
+          }
+      } 
+
+    return true
     },
   }
 };

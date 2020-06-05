@@ -15,7 +15,7 @@
 //\left(\begin{matrix}1 &0 \\0 & 1\\0&1\end{matrix}\right)
 //\left(\begin{matrix}1&0&0&0\\0&1&0&0\\0&0&1&0\\0&0&0&1\\end{matrix}\right)
 import Vue from "vue";
-import "katex/dist/katex.min.css"; 
+import "katex/dist/katex.min.css";
 import VueKatex from "vue-katex";
 import axios from "axios";
 import { mapState, mapGetters } from "vuex";
@@ -94,14 +94,12 @@ export default {
   margin: 10px;
   border-radius: 0.5em;
   background: black;
-
 }
 .matrix-label {
   margin: 0px 0px 20px 0px;
 }
 div {
   color: white;
-
 }
 .overlay {
   height: 100%;
@@ -110,12 +108,14 @@ div {
   position: fixed;
   z-index: 1;
   background-color: rgba(103, 106, 97, 0.55);
-  overflow-x: hidden;
+  overflow-x: auto;
+  overflow-y: auto;
   transition: 0.5s;
   display: flex;
   justify-content: center;
   align-items: stretch;
   flex-wrap: wrap;
+  white-space: nowrap;
 }
 .overlay a {
   padding: 8px;

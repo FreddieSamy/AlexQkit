@@ -1,10 +1,9 @@
 from stateVectorNormalization import Normalization
+from repeat import Repeat
 from results import Results
-
 from qiskit import QuantumCircuit
 import qiskit.circuit.library.standard_gates as gates
 from qiskit.circuit.library import Reset
-
 import copy    
 import numpy as np
 
@@ -44,7 +43,7 @@ class Circuit():
         
         if receivedDictionary["repeated"] != {}: #apply loops if exist
             oldSize=len(receivedDictionary["rows"][0])
-            self.cols = self.repettion(receivedDictionary["rows"], receivedDictionary["repeated"]['listOfPos'], receivedDictionary["repeated"]['listOfRep'])
+            self.cols = Repeat.repettion(receivedDictionary["rows"], receivedDictionary["repeated"]['listOfPos'], receivedDictionary["repeated"]['listOfRep'])
             self.cols = np.transpose(self.cols).tolist()
             newSize=len(self.cols)
             self.exeCount+=(newSize-oldSize)
@@ -346,50 +345,4 @@ class Circuit():
         return self.circuit
     
 ############################################################################################################################### 
-    # barakat
-    def repettion(self, circuitList, listOfPositions, listOfNumberOfRepetition):
-        dic = self.dicOfBlockAndPosition(
-            circuitList, listOfPositions, listOfNumberOfRepetition)
-        circuitList = np.array(circuitList)
-        for key in dic:
-            repetedBlock, insertPostition, numberOfRepetition = dic[key][
-                'repetedBlock'], dic[key]['insertPostion'], dic[key]['NumberOfRepetition']
-            for repet in range(numberOfRepetition-1):
-                circuitList = np.insert(
-                    circuitList, insertPostition, repetedBlock, axis=1)
-        return circuitList.tolist()
-    
-###############################################################################################################################
-
-    def blockToRepet(self, circutList, position):
-        circutList = np.array(circutList)
-        repetBlock = circutList[:, position[0]: position[1] + 1].transpose()
-        return repetBlock, position[0], position[1]
-    
-###############################################################################################################################
-
-    def dicOfBlockAndPosition(self, circutList, listOfPositions, listOfNumberOfRepetition):
-        dicOfPos = {}
-        for i in range(len(listOfPositions)):
-            repetedBlock, insertPosition, endPosition = self.blockToRepet(circutList, listOfPositions[i])
-            if i:
-                previousInsertPosition = dicOfPos[i]['insertPostion']
-                insertPosition = self.positionEquation(previousInsertPosition, listOfNumberOfRepetition[i-1], len(dicOfPos[i]['repetedBlock']), self.factor(insertPosition, endPreviousPos))
-            endPreviousPos = endPosition
-            dicOfPos[i+1] = {'repetedBlock': repetedBlock, 'insertPostion': insertPosition,'NumberOfRepetition': listOfNumberOfRepetition[i]}
-        return dicOfPos
-    
-###############################################################################################################################
-
-    def positionEquation(self, previousInsertPosition, numberOfRepetition, lengthOfBlock, factor):
-        return previousInsertPosition + factor + (numberOfRepetition * lengthOfBlock)
-    
-###############################################################################################################################
-
-    def factor(self, startNextPosition, endPreviousPosition):
-        fac = startNextPosition - endPreviousPosition
-        if fac <= 0:
-            return 0
-        return fac - 1
-    
-###############################################################################################################################
+   
