@@ -28,9 +28,9 @@
     </div>
 
     <div class="checkbox">
-      <input type="checkbox" id="checkbox" v-model="checkboxibm"/>
-      <label for="checkbox">Run on IBMQ</label>
-      <button @click="sendto()">RUN</button>
+      <!-- <input type="checkbox" id="checkbox" v-model="checkboxibm"/>
+      <label for="checkbox">Run on IBMQ</label> -->
+      <button @click="sendto()">RUN on IBMQ Device</button>
     </div>
     <a id="link" target="_blank" :href="this.liveResults.link">{{ this.liveResults.link }}</a>
   </div>
@@ -51,7 +51,7 @@ export default {
       device: "ibmq_16_melbourne",
       devices: devices,
       ibmtoken:"",
-      checkboxibm:false
+      //checkboxibm:false
     };
   },
   computed: {
@@ -68,7 +68,7 @@ export default {
       var{isempty,msg}=this.inputisempty(this.ibmtoken)
 
       //
-      if (this.checkboxibm && !isempty) {
+      if (/*this.checkboxibm && */!isempty) {
         this.jsonObject.API_TOKEN = this.ibmtoken;
         
         this.jsonObject.device = this.device;
@@ -134,8 +134,8 @@ select {
 }
 button {
   border-radius: 7px;
-
-  margin: 0px 0px 0px 15px;
+  padding: 2px;
+  margin: 2px;
 }
 #hover-element {
   display: none;

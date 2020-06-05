@@ -6,6 +6,9 @@
     <div id="myNav1" class="overlay">
       <div class="overlay-body">
         <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
+
+        <!-- loops  -->
+
         <h1>Loops</h1>
         <div class="loops">
           <Loop v-for="count in loopCounts" :key="count" :ref="'loops'" />
@@ -15,14 +18,21 @@
           <button class="remove" v-if="loopCounts" @click="loopCounts--">Remove</button>
           <button class="apply" v-if="loopCounts" @click="applyLoop">Apply the loops</button>
         </div>
-<<<<<<< HEAD
+        <!-- end loops -->
 
+        <!-- conditional Loop -->
 
-        <!-- <ConditionalLoop /> -->
-=======
-        <ConditionalLoop />
->>>>>>> b830eb521b6e2e78636d71d59f2c8d0b94758e07
-
+        <div class="conditional-loop">
+          <h1>Conditional Loop</h1>
+          <label for>Choose Column</label>
+          <select v-model="conditionColumn">
+            <option v-for="(item, index) in jsonObject.colsCount" :key="index">{{index+1}}</option>
+          </select>
+          <div>
+            <button @click="applyConditionalLoop">Apply Conditional Loop</button>
+          </div>
+        </div>
+        <!-- end conditional Loop -->
       </div>
     </div>
   </div>
@@ -30,7 +40,6 @@
 <!-- ================================================  -->
 <script>
 import Loop from "./Loop.vue";
-//import ConditionalLoop from "./ConditionalLoop.vue";
 import { mapState, mapActions } from "vuex";
 
 // eslint-disable-next-line no-undef
@@ -38,12 +47,13 @@ export default {
   name: "CircuitLoops",
   display: "CircuitLoops",
   props: ["colsCount"],
-  components: { Loop ,  },
+  components: { Loop },
   data() {
     return {
       loopCounts: 1,
       ListOfPositions: [],
-      Repeats: []
+      Repeats: [],
+      conditionColumn: null
     };
   },
 
@@ -59,31 +69,40 @@ export default {
       this.Repeats = [];
       for (let i = 0; i < this.loopCounts; i++) {
         let loopCaller = this.$refs.loops[i];
-        let arr = [(parseInt(loopCaller.from)-1), (parseInt(loopCaller.to)-1)];
+        let arr = [parseInt(loopCaller.from) - 1, parseInt(loopCaller.to) - 1];
         this.ListOfPositions.push(arr);
-        this.Repeats.push((parseInt(loopCaller.repeat)));
-        
+        this.Repeats.push(parseInt(loopCaller.repeat));
       }
       let listOfPos = this.ListOfPositions;
       let listOfRep = this.Repeats;
       let repeated = { listOfPos, listOfRep };
       // start
       //window.console.log(this.startLessEnd(listOfPos));
-      if (this.startLessEnd(listOfPos) === false){
+      if (this.startLessEnd(listOfPos) === false) {
         alert("Start cannot More than end or unselected");
-        return false
-      } 
-      //window.console.log(this.startLessEnd(listOfRep));
-      if (this.checkRepeat(listOfRep)===false){
-        alert("Repeat cannot be less than one or Empty");
-        return false
+        return false;
       }
-      //end 
+      //window.console.log(this.startLessEnd(listOfRep));
+      if (this.checkRepeat(listOfRep) === false) {
+        alert("Repeat cannot be less than one or Empty");
+        return false;
+      }
+      //end
       this.jsonObject["repeated"] = repeated; // should be setter
       // let message = {messageType:'advanced',messageBody:repeated}
       this.addMessage({ messageType: "advanced", messageBody: repeated });
       //window.console.log(this.$parent.$parent.jsonObject)
       this.closeNav();
+    },
+    applyConditionalLoop() {
+      if (this.conditionColumn) {
+        for (let i = 0; i < this.jsonObject.wires; i++) {
+          let wireCaller = this.$parent.$parent.$refs.wire[i];
+          wireCaller.addGateByIndex(this.conditionColumn, "loop");
+        }
+        this.$parent.$parent.updateMaxWire();
+
+      }
     },
     openNav() {
       document.getElementById("myNav1").style.width = "25%";
@@ -92,26 +111,24 @@ export default {
     closeNav() {
       document.getElementById("myNav1").style.width = "0%";
     },
-    startLessEnd(listOfPosition){
-      for (var ele of listOfPosition){
-
-        if (ele[0] > ele[1] || isNaN(ele[0] || isNaN(ele[1]))){
+    startLessEnd(listOfPosition) {
+      for (var ele of listOfPosition) {
+        if (ele[0] > ele[1] || isNaN(ele[0] || isNaN(ele[1]))) {
           return false;
         }
-
       }
       return true;
     },
 
-    checkRepeat(listOfRep){
-      for(var ele of listOfRep){
-        if (isNaN(ele) || ele < 1){
-          return false 
-          }
-      } 
+    checkRepeat(listOfRep) {
+      for (var ele of listOfRep) {
+        if (isNaN(ele) || ele < 1) {
+          return false;
+        }
+      }
 
-    return true
-    },
+      return true;
+    }
   }
 };
 </script>
@@ -127,8 +144,8 @@ button {
   border-radius: 0.5em;
 }
 
-.remove{
-  margin:0px 50px 0px 10px;
+.remove {
+  margin: 0px 50px 0px 10px;
 }
 .overlay-body {
   margin-left: 15px;

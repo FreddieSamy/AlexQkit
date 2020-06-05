@@ -136,10 +136,10 @@ export default {
         this.removeMessages(); // O(1)
         if (this.specialGatesCounter.swaps) {
           this.checkSwapSystem();
-        } // O(n^2)  only call of there is swaps in circuit
-
-        // check number of wires for custom gate that user put in the circuit
-          this.checkWiresCustomGates(); // working to reduce the the complexity 
+        } 
+        if (this.specialGatesCounter.customs){
+          this.checkWiresCustomGates();
+        }
       });
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
@@ -157,12 +157,12 @@ export default {
       this.runCircuit();
     },
     //-----------------------------------------------------------------------
-    addIdentityColumn: function(wireId, columnId) {
+    addGateColumn: function(wireId, columnId,gateName) {
       //window.console.log("add Identity to Column "+columnId);
       for (let i = 0; i < this.jsonObject.wires; i++) {
         if (i + 1 != wireId) {
           var wireCaller = this.$refs.wire[i];
-          wireCaller.addGateByIndex(columnId, "i");
+          wireCaller.addGateByIndex(columnId, gateName);
         }
       }
     },

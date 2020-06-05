@@ -20,7 +20,7 @@
       @update="update"
     >
       <div class="circuit-gate" v-for="element in list" :key="element.id" :id="element.name">
-        <!-- static hard coding block -->
+        <!-- static hard coding block in case of custom gate-->
         {{element.name[0]=='c'? element.name.slice(3) : element.name }}
         <select
           @abort="window.console.log('elllo input')"
@@ -34,6 +34,19 @@
           >{{ order }}</option>
         </select>
         <!-- end of hard coded block  need a vue filter or special directive -->
+          <select
+          @abort="window.console.log('elllo input')"
+          v-if="element.name[0]=='l' "
+          class="custom-gate-order"
+        >
+      
+          <option value="*">*</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+        </select>
+
+
+
       </div>
     </draggable>
     <!-- end Wire Drop Area (Gates Place)-->
@@ -116,7 +129,7 @@ export default {
       ) {
         this.list.splice(evt.newIndex + 1, 1);
       } else {
-        this.$parent.addIdentityColumn(this.id, evt.newIndex);
+        this.$parent.addGateColumn(this.id, evt.newIndex,"i");
       }
 
       // in case gate draged from wire droped to another wire : evt.from.id = list(n)
@@ -128,6 +141,12 @@ export default {
       } else if (evt.clone.id == "Swap") {
         this.setCountSwaps(1);
       } else if (evt.clone.id[0] == "c") {
+        this.setCountCustoms(1);
+        // window.console.log("i put a custom gate at col" + evt.newIndex);
+        // window.console.log(evt.clone);
+      } else if (evt.clone.id[0] == "l") {
+        window.console.log("add conditional loop")
+        // this.setCountCustoms(1);
         // window.console.log("i put a custom gate at col" + evt.newIndex);
         // window.console.log(evt.clone);
       }
@@ -385,7 +404,7 @@ div[id^="Rz"] {
 }
 
 #i {
-  opacity: 0;
+  opacity: 0.8;
 }
 #m .circuit-gate text {
   opacity: 0.01;
