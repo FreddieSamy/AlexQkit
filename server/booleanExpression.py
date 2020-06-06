@@ -16,7 +16,7 @@ class BooleanFunction:
         target = "x"
         closedControll = "●"
         openControll = "○"
-        dicOfVariabels = cls().assignOrderOfVaribles(variables) # Dictionary for assign ordered variables
+        dicOfVariabels = cls().assignOrderOfVaribles(variables) # Dictionary for assign variables ordere
         lenRow = len(variables.split(",")) # Split varibales for count how many rows 
         lenColumn = len(optmiziedEqn) # Count how many terms are exist in optimized normal form equation 
         booleanCircuit = cls().intalize2Darray(lenRow,lenColumn) # Intialize 2d arrays with is
@@ -42,8 +42,12 @@ class BooleanFunction:
         return circuit
         
 # This method build a truth table of the function that given by user using class product from itertools packge
-    def buildTruthTable(self,vars,fn) :
-        nVars = vars.count(',')+1
+    def buildTruthTable(self,variables,fn) :
+        try :
+            nVars = variables.count(',')+1
+            
+        except :
+            return "variable error"
         table = list(product([False, True], repeat=nVars))
         u = ''
         for i in range(len(table)):
@@ -51,7 +55,7 @@ class BooleanFunction:
                 table[i] = list(table[i])
                 u += str(table[i][j])+','
             u = u.rstrip(',')
-            conc = vars+"="+u
+            conc = variables+"="+u
             toExec = """
 exec(conc)
 fnToExec = 'flag = '+ fn
@@ -62,8 +66,8 @@ table[i].append(flag)
             u = ''
         return table
 # calculate the normal form for truth table
-    def normalForm(self,table,vars):
-        vars = vars.split(',')
+    def normalForm(self,table,variables):
+        variables = variables.split(',')
         normalformEqns = []
         normalformEqn = []
         for row in table : # Iterate on every row in the table to compute the normal form of it .
@@ -72,9 +76,9 @@ table[i].append(flag)
             else:
                 for i in range(len(row)-1):
                     if row[i] == False :
-                        normalformEqn.append([vars[i],'1']) # if the variable is false Put XOR one 
+                        normalformEqn.append([variables[i],'1']) # if the variable is false Put XOR one 
                     else :
-                        normalformEqn.append([vars[i]])
+                        normalformEqn.append([variables[i]])
                 normalformEqns.append(normalformEqn)
                 normalformEqn = []
         return normalformEqns
@@ -136,10 +140,10 @@ table[i].append(flag)
     def intalize2Darray(self,rows,columns): #intialize 2d list with i 
        return [["i" for col in range(columns)] for row in range(rows)]
 
-    def assignOrderOfVaribles(self,vars): # Maping for order variables value like if user wrote x,y,z so x is 0 y is 1 etc.
+    def assignOrderOfVaribles(self,variables): # Maping for order variables value like if user wrote x,y,z so x is 0 y is 1 etc.
         count = 0
         dicOfVariabels = {}
-        for var in vars.split(",") :
+        for var in variables.split(",") :
             dicOfVariabels[var] = count
             count+=1
         return dicOfVariabels
