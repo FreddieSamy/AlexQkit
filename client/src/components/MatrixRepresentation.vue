@@ -3,6 +3,7 @@
     <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
     <div id="matrixRepresentation" class="matrix-box">
       <label class="matrix-label">Matrix Representation</label>
+      <pre class="matrix-label">{{error}}</pre>
       <katex-element class="matrix" :expression="expression" />
     </div>
   </div>
@@ -30,7 +31,8 @@ export default {
   display: "MatrixRepresentation",
   data() {
     return {
-      expression: ""
+      expression: "",
+      error: ""
     };
   },
   computed: {
@@ -51,14 +53,21 @@ export default {
       };
       // window.console.log(this.jsonObject.rows.reverse());
       axios.post(matrixRepresentationRoute, json_object).then(res => {
-        this.liveResults.matrixRepresentation = res.data.matrixRepresentation;
-        this.expression = this.matrixLatex();
+        if (!res.data.error) {
+          this.liveResults.matrixRepresentation = res.data.matrixRepresentation;
+          this.expression = this.matrixLatex();
+        } else {
+          this.error =
+            "You are using invalid instruction\nIt might be reset or measurements between gates";
+        }
       });
       document.getElementById("myNav2").style.width = "100%";
     },
     // ----------------------------------------------------
     closeNav() {
       document.getElementById("myNav2").style.width = "0%";
+      this.expression = "";
+      this.error = "";
     },
     // ----------------------------------------------------
     matrixLatex() {

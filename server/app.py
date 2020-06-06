@@ -87,12 +87,12 @@ def blochSphere(i):
 def matrixRepresentation():
     if request.method=='POST':
         r=Results(c.circuit)
-        matrix=r.matrixRepresentation(decimals=4)
-        matrix=c.reversedMatrix(matrix,c.num_qubits)
-        returnedDictionary={"matrixRepresentation":matrix}
-    else:
-        returnedDictionary={}
-    return  jsonify(returnedDictionary) 
+        try:
+            matrix=r.matrixRepresentation(decimals=4)
+            matrix=c.reversedMatrix(matrix,c.num_qubits)
+            return  jsonify({"error":False,"matrixRepresentation":matrix})
+        except Exception:
+            return  jsonify({"error":True})
 
 ###############################################################################################################################
     
