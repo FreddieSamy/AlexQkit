@@ -20,7 +20,11 @@
       @remove="remove"
       @update="update"
     >
-      <div class="circuit-gate" v-for="element in list" :key="element.id" :id="element.name">
+      <div class="circuit-gate" v-for="(element,index) in list" 
+        :key="element.id" 
+        :id="element.name" 
+        :row="'_'+(id)"
+        :col="'_'+(index+1)">
         <!-- static hard coding block in case of custom gate-->
         {{element.name[0]=='c'? element.name.slice(3) : element.name }}
         <select
@@ -100,7 +104,7 @@ export default {
     list: {
       immediate: true,
       handler() {
-        this.updateWireAttributes();
+        //this.updateWireAttributes();
       }
     }
   },
@@ -158,27 +162,6 @@ export default {
     remove: function() {
       this.$parent.updateMaxWire();
       this.$parent.removeIdentitySystem();
-    },
-    //=============================================================================
-    updateGateAtrributes: function(gateElement, row, col) {
-      gateElement.setAttribute("row", "_" + row);
-      gateElement.setAttribute("col", "_" + col);
-      if (gateElement.id[0] == "c" && gateElement.id[1] > 1)
-        window.console.log(gateElement.childNodes[1]);
-    },
-    //-----------------------------------------------------------------------
-    updateWireAttributes: function() {
-      // should be optimzed more
-      //window.console.log("update Wire " + this.id + " Attributes");
-      let wire = document.querySelector("#list" + this.id + "");
-      if (this.list.length) {
-        let gates = wire.childNodes;
-        for (let i = 0; i < this.list.length; i++) {
-          this.$nextTick(() => {
-            this.updateGateAtrributes(gates[i], this.id, i + 1);
-          });
-        }
-      }
     },
     //-----------------------------------------------------------------------
     qubitState: function(evt) {
