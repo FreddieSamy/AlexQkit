@@ -15,7 +15,7 @@ export default {
     ...mapGetters(["liveResults"]),
     chart() {
       let temp = this.liveResults.chart;
-      temp.unshift(["state", "probability"]);
+      temp.unshift(["state", "Non zero probabilities "]);
       return temp;
     },
     chartOptions() {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bloch-sphere-body">
     <img
       class="bloch-sphere"
       :src="defaultBlochSphereRoute"
@@ -27,16 +27,21 @@ export default {
 <!-- =============================================================  -->
 
 <style scoped>
+div{
+  margin:0px 100px 0px 0px;
+}
 .bloch-sphere {
   width: 2.5em;
-  transition: transform 0.1s;
+  transition: transform 0.3s;
   border:0.3px solid black;
   border-radius:10px;
+  margin:0px 0px -5px 0px;
 
 }
 .bloch-sphere:hover {
+
   position: fixed;
-  z-index:2;
+  z-index:20;
   transform: scale(5.5);
   
 }

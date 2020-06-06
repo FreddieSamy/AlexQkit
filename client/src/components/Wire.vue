@@ -78,7 +78,7 @@ export default {
     this.addIdentityRow(this.jsonObject.colsCount);
   },
   updated() {
-    // why this
+    // act like wathcer on all data
     let wire = {
       qstate: this.state,
       list: this.getGates(this.id - 1),
@@ -115,12 +115,7 @@ export default {
     ...mapActions(["setCountControls"]),
     ...mapActions(["setCountSwaps"]),
     ...mapActions(["setCountCustoms"]),
-    setOrderId: function(evt) {
-      window.console.log("hello");
-      window.console.log(this);
-      window.console.log(evt);
-      return this.id;
-    },
+    ...mapActions(['removeWire']),
     //== Events Handling Functions ===============================================
     add: function(evt) {
       // in case droped between 2 gates
@@ -133,7 +128,7 @@ export default {
         this.$parent.addGateColumn(this.id, evt.newIndex, "i");
       }
 
-      // in case gate draged from wire droped to another wire : evt.from.id = list(n)
+  
       if (evt.from.id[0] == "l") {
         var wire = evt.from.id.replace("list", "");
         this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex, "i");
@@ -143,13 +138,8 @@ export default {
         this.setCountSwaps(1);
       } else if (evt.clone.id[0] == "c") {
         this.setCountCustoms(1);
-        // window.console.log("i put a custom gate at col" + evt.newIndex);
-        // window.console.log(evt.clone);
       } else if (evt.clone.id[0] == "l") {
         window.console.log("add conditional loop");
-        // this.setCountCustoms(1);
-        // window.console.log("i put a custom gate at col" + evt.newIndex);
-        // window.console.log(evt.clone);
       }
       this.$parent.updateMaxWire();
     },
@@ -163,7 +153,8 @@ export default {
       this.$parent.updateMaxWire();
       this.$parent.removeIdentitySystem();
     },
-    //-----------------------------------------------------------------------
+    //== End Events Handling Functions ===============================================
+  
     qubitState: function(evt) {
       var i = (parseInt(evt.target.id.slice(-1)) + 1) % 6;
       var id = evt.target.id.substring(0, evt.target.id.search("-") + 1);
@@ -175,15 +166,12 @@ export default {
     },
     //-----------------------------------------------------------------------
     deleteWire: function() {
-      this.jsonObject.rows.splice(this.id - 1, 1); // vuex it
-      this.jsonObject.init.splice(this.id - 1, 1); // vuex it
-      this.jsonObject.wires--; // vuex it
-      this.$nextTick(() => {
-        this.$parent.setAlgorithm({ circuit: this.jsonObject }, false, false);
-        this.$nextTick(() => {
-          this.$parent.removeIdentitySystem();
-        });
-      });
+      this.removeWire(this.id-1)
+      //this.$nextTick(() => {
+      this.$parent.setAlgorithm({ circuit: this.jsonObject }, false, false);
+      this.$parent.removeIdentitySystem();
+   
+   
     },
     //-----------------------------------------------------------------------
     addIdentityRow: function(length) {
@@ -241,10 +229,6 @@ export default {
         }
       }
     }
-    //-----------------------------------------------------------------------
-    //should be put in vuex because we need it in toolbox (or could be terminated)
-
-    //-----------------------------------------------------------------------
   }
 };
 </script>
@@ -254,15 +238,10 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-
-  /* background-position: cover;
-  background-repeat: repeat;
-  background-image: url("../assets/wire.png"); */
   width: 100%;
   z-index: 0;
-  margin: 5px 0px 5px 0px;
+  margin: 5px 0px;
 }
-
 .wire-drop-area {
   height: 37px;
   display: flex;

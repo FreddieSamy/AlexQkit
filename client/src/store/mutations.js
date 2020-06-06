@@ -30,8 +30,8 @@ export default {
   },
   /* ================================================================= */
   /*=== Appenders Functions ===*/
-  appendInit: (state) => state.jsonObject.init.push("0"),
-  appendWire: (state) => {
+  addWire: (state) => {
+    state.jsonObject.init.push("0")
     state.jsonObject.wires++;
     state.jsonObject["rows"].push(
       new Array(state.jsonObject.colsCount).fill("i"),
@@ -46,11 +46,12 @@ export default {
 
   /* ================================================================= */
   /*=== Remove Functions ===*/
-  popInit: (state) => state.jsonObject.init.pop(),
-  popWire: (state) => {
+  removeWire: (state,wireIdx) => {
+   if(state.jsonObject.wires > 1){
+    state.jsonObject.init.splice(wireIdx,1);
+    state.jsonObject.rows.splice(wireIdx,1);
     state.jsonObject.wires--;
-    //state.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
-    state.jsonObject.rows.pop();
+  }
   },
   /* ================================================================= */
   /*=== Reset System== =*/
@@ -97,6 +98,7 @@ export default {
     }
     return count;
   },
+
   /* ================================================================= */
   /*=== Validation Functions ===*/
 

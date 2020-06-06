@@ -1,8 +1,8 @@
 <template>
   <div class="trash">
     <div v-if="!this.$parent.circuitDrawingFlag" class="add-remove-wire">
-      <button class="add-wire" @click="wireAdd">+</button>
-      <button class="remove-wire" @click="wireRemove">-</button>
+      <button class="add-wire" @click="this.$parent.createWire">+</button>
+      <button class="remove-wire" @click="this.$parent.deleteWire">-</button>
     </div>
 
     <div class="trashArea">
@@ -51,7 +51,7 @@ export default {
       if (evt.from.classList != "toolbox-gates-area") {
         // Put i (identity) gate in the same position
         var wire = evt.from.id.replace("list", "");
-        this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex,"i");
+        this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex, "i");
 
         // check for gates need for validations as (control , swaps , custom)
         if (evt.clone.id === "●" || evt.clone.id === "○") {
@@ -64,20 +64,11 @@ export default {
       this.list = [];
     },
     wireAdd: function() {
-      // must be an action
       this.addWire();
-      //this.jsonObject.wires++;
-      //this.jsonObject.init.push("0");
       this.$parent.$refs.tracingLine.updateTracingLine();
     },
     wireRemove: function() {
-      // must be an action
-      //this.jsonObject.wires = Math.max(0, this.jsonObject.wires - 1);
-      //this.jsonObject.init.pop();
-      //this.jsonObject.rows.pop();
-      //this.liveResults.probabilities.pop();
-      this.removeWire();
-      this.$parent.$refs.tracingLine.updateTracingLine();
+      this.removeWire(this.jsonObject.wires - 1);
       this.$parent.removeIdentitySystem();
     }
   }

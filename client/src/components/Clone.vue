@@ -12,8 +12,8 @@
       <tracingLine ref="tracingLine"></tracingLine>
       <CircuitDrawing v-if="this.circuitDrawingFlag" />
       <div v-if="!this.circuitDrawingFlag" class="circuit-wires">
+        <!--  Wires box -->
         <div class="wires">
-     
           <CircuitBlock
             v-for="block in liveResults.circuitBlocks"
             :key="block.fromColumn"
@@ -21,9 +21,11 @@
             :fromColumn="block.fromColumn"
             :toColumn="block.toColumn"
           ></CircuitBlock>
-      
+          <!-- Wires -->
           <wire v-for="row in jsonObject.wires" :key="row" :id="row" :ref="'wire'"></wire>
+          <!-- end Wires-->
         </div>
+        <!-- End Wires Box -->
       </div>
     </div>
     <div class="circuit-tools-2">
@@ -34,15 +36,22 @@
       </div>
     </div>
 
-    <div class="visual-row">
-      <DiracNotation ref="diracNotation" />
-    </div>
+ 
+      <!-- Dirac Notation -->
+      <div class="DiracNotation">
+        <p class="dirac-label">Dirac Notation :</p>
+        <p class="dirac-value">{{this.liveResults.diracNotation}}</p>
+      </div>
+      <!-- End Dirac Notation -->
+
 
     <div class="results">
       <MatrixRepresentation class="matrix" ref="matrixRepresentation" />
       <MessageBox class="message-box" />
       <Histogram class="histogram" />
     </div>
+
+
   </div>
 </template>
 <!-- =============================================================  -->
@@ -56,7 +65,6 @@ import tracingLine from "./tracingLine.vue";
 import Wire from "./Wire.vue";
 import Trash from "./Trash.vue";
 import Toolbox2 from "./Toolbox2.vue";
-import DiracNotation from "./DiracNotation.vue";
 import MatrixRepresentation from "./MatrixRepresentation.vue";
 import MessageBox from "./MessageBox.vue";
 import Histogram from "./Histogram.vue";
@@ -74,7 +82,6 @@ export default {
     Wire,
     Trash,
     Toolbox2,
-    DiracNotation,
     MessageBox,
     Histogram,
     MatrixRepresentation,
@@ -107,6 +114,8 @@ export default {
     ...mapActions(["setCountSwaps"]),
     ...mapActions(["setCountCustoms"]),
     ...mapActions(["countGate"]),
+    ...mapActions(["addWire"]),
+    ...mapActions(["removeWire"]),
     //-----------------------------------------------------------------------
     updateMaxWire: function() {
       //window.console.log("updateMaxWire");
@@ -136,8 +145,8 @@ export default {
         this.removeMessages(); // O(1)
         if (this.specialGatesCounter.swaps) {
           this.checkSwapSystem();
-        } 
-        if (this.specialGatesCounter.customs){
+        }
+        if (this.specialGatesCounter.customs) {
           this.checkWiresCustomGates();
         }
       });
@@ -156,8 +165,17 @@ export default {
       this.removeControlSystem();
       this.runCircuit();
     },
+    createWire() {
+      this.addWire();
+      this.$refs.tracingLine.updateTracingLine();
+    },
+    deleteWire(index = this.jsonObject.wires - 1) {
+      this.removeWire(index);
+      this.$refs.tracingLine.updateTracingLine();
+      this.removeIdentitySystem();
+    },
     //-----------------------------------------------------------------------
-    addGateColumn: function(wireId, columnId,gateName) {
+    addGateColumn: function(wireId, columnId, gateName) {
       //window.console.log("add Identity to Column "+columnId);
       for (let i = 0; i < this.jsonObject.wires; i++) {
         if (i + 1 != wireId) {
@@ -287,7 +305,6 @@ export default {
         if (flag1 || flag2) {
           if (flag1) {
             if (colElements[i].id != "i") {
-      
               el1 = colElements[i];
               flag1 = false; // no need to search from top again
             }
@@ -419,11 +436,11 @@ export default {
 }
 .wires {
   position: relative;
-  padding: 5px 0px;
+  padding: 20px 0px;
   flex-basis: 100%;
   flex-grow: 100%;
-  max-height: 1000px;
-  overflow-y: auto;
+
+  overflow-y: hidden;
   overflow-x: auto;
   white-space: nowrap;
 }
@@ -444,11 +461,7 @@ export default {
 .flip-list-move {
   transition: transform 10.9s;
 }
-.wires-buttons {
-  display: inline-block;
-  margin: 0.9em 0.2em 0.2em 0.2em;
-  padding: 0em 0em 0em 0em;
-}
+
 .exeBtn {
   display: inline-block;
   margin: 0.2em 0.2em 0em 0.2em;
@@ -462,5 +475,29 @@ export default {
 }
 button {
   border: 2px solid grey;
+}
+
+
+.DiracNotation {
+  border: 2px solid #aaaaaa;
+  border-radius: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  overflow-x:auto;
+}
+.dirac-label {
+  flex-basis: 7%;
+  font-weight: bolder;
+}
+.dirac-value {
+  flex-basis: 30%;
+  background: lightgray;
+  padding: 2px 10px 2px 10px;
+}
+.DiracNotation p {
+  border-radius: 5px;
+  margin: 5px;
 }
 </style>

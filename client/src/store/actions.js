@@ -28,17 +28,15 @@ export default {
     commit("appendMessage", message);
   },
   addWire: ({ commit }) => {
-    commit("appendInit");
-    commit("appendWire");
+    commit("addWire");
   },
   addCustomGate({ commit }, customGate) {
     commit("appendCustomGate", customGate);
   },
 
   // Removers Functions
-  removeWire: ({ commit }) => {
-    commit("popInit");
-    commit("popWire");
+  removeWire: ({ commit },wireIdx) => {
+    commit("removeWire",wireIdx);
   },
   removeMessages: ({ commit }) => {
     commit("resetMessages");
@@ -62,6 +60,10 @@ export default {
   countGate: ({ commit }, gateName) => {
     commit("countGate", gateName);
   },
+
+  // setCountSpecialGates({commit})=>{
+  //     commit("countGate",'Swaps')
+  // }
 
   // Run Functions
   runCircuit: ({ commit }) => {
