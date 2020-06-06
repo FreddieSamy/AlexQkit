@@ -87,6 +87,11 @@ export default {
         alert("Repeat cannot be less than one or Empty");
         return false;
       }
+      //window.console.log(this.overreprsent(listOfPos));
+      if(this.overreprsent(listOfPos)===false){
+        alert("Cannot accept overlab or unordered loop");
+        return false
+      }
       //end
       this.jsonObject["repeated"] = repeated; // should be setter
       // let message = {messageType:'advanced',messageBody:repeated}
@@ -128,7 +133,17 @@ export default {
       }
 
       return true;
-    }
+    },
+        overreprsent(listOfPosition){
+      for (var i = 0 ; i < listOfPosition.length; i++){
+        for(var j = i+1 ; j < listOfPosition.length ; j++){
+          if(listOfPosition[i][1] >= listOfPosition[j][0]){
+            return false
+          }
+        }
+      }
+      return true
+    },
   }
 };
 </script>

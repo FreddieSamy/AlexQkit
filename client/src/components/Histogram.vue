@@ -36,7 +36,8 @@ export default {
 <!-- ========================================================== -->
 <style scoped>
 div {
-  left: 10px;
+  /* left: 10px; */
+  max-width: 95%;
 }
 chart {
   overflow-x: auto;
