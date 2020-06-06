@@ -129,7 +129,8 @@ export default {
 
   /* ================================================================= */
   /* 
-    - wirecustom function: it's validate function on the circuit to check  how many times user put custom gate on wires
+    wirecustom function: it's validate function on the circuit 
+    to check  how many times user put custom gate on wires
     and compare it with real wires for this gate .
     
   */
@@ -182,8 +183,6 @@ export default {
       axios.post(appRoute, state.jsonObject).then(
         (res) => {
           state.results = res.data;
-
-          // 3ak fe 3ak lazem yet8ayer
           for (let i = 1; i <= state.jsonObject.wires; i++) {
             var imgofblochSphere = document.getElementById("bloch-sphere-" + i);
             imgofblochSphere.src =

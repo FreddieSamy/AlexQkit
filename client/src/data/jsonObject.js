@@ -1,5 +1,4 @@
 export default {
-
   API_TOKEN: "",    // IBM TOKEN
   colsCount: 0,     // Columns Counter
   // custom: {},    stored in backend

@@ -168,8 +168,8 @@ export default {
 }
 button {
   display: inline-block;
-  margin: 0em 0em 0em 0em;
-  padding: 0.1em 0.5em 0.1em 0.5em;
+  margin: 0px 10px;
+ 
   background-color: white;
   border-radius: 0.5em;
   border: 2px solid grey;
@@ -190,6 +190,9 @@ img{
 }
 .tracing-buttons {
   flex-basis: 5%;
+}
+.tracing-buttons button {
+  margin:0px
 }
 .boolean-function {
   flex-basis: 5%;
