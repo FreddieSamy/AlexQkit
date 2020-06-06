@@ -93,9 +93,10 @@ export default {
     ...mapActions(["runCircuit"]),
     ...mapActions(["setAlgorithms"]),
     ...mapActions(["isStored"]),
-    ...mapActions(["countGate"]),
+    ...mapActions(["setCountSpecialGates"]),
     ...mapActions(["storeLocal"]),
     ...mapActions(["getLocal"]),
+
     cloneResetSystem: function() {
       // just reset the system by the function in clone Component
       this.$parent.resetSystem();
@@ -146,10 +147,9 @@ export default {
               wires: this.jsonObject.wires,
               init: [...this.jsonObject.init],
               rows: [...this.jsonObject.rows],
-              controls: this.countGate("●") + this.countGate("○"),
-              swaps: this.countGate("Swap")
-            }
+            } 
           });
+          //this.setCountSpecialGates();
           this.storeLocal("algorithms");
           this.savedCirciutName = "";
         } else {
@@ -170,6 +170,7 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   padding: 0px 50px;
+  margin: 20px 0px 10px 0px;
 }
 button {
   background-color: white;

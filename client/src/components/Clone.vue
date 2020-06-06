@@ -113,7 +113,7 @@ export default {
     ...mapActions(["setCountControls"]),
     ...mapActions(["setCountSwaps"]),
     ...mapActions(["setCountCustoms"]),
-    ...mapActions(["countGate"]),
+    ...mapActions(["setCountSpecialGates"]),
     ...mapActions(["addWire"]),
     ...mapActions(["removeWire"]),
     //-----------------------------------------------------------------------
@@ -169,10 +169,12 @@ export default {
       this.addWire();
       this.$refs.tracingLine.updateTracingLine();
     },
-    deleteWire(index = this.jsonObject.wires - 1) {
-      this.removeWire(index);
-      this.$refs.tracingLine.updateTracingLine();
-      this.removeIdentitySystem();
+    deleteWire(index) {
+     this.removeWire(index)
+      this.$nextTick(()=>{
+        this.setAlgorithm({ circuit: this.jsonObject }, false, false);
+        this.removeIdentitySystem();
+      });
     },
     //-----------------------------------------------------------------------
     addGateColumn: function(wireId, columnId, gateName) {
@@ -227,11 +229,9 @@ export default {
           fromColumn = 0;
         }
       }
-
-      this.jsonObject.wires = Math.max(
-        algorithmObject.circuit.wires,
-        this.jsonObject.wires
-      );
+      
+      //this.jsonObject.colsCount +=  algorithmObject.circuit.rows[0];
+      this.jsonObject.wires = Math.max(algorithmObject.circuit.wires,this.jsonObject.wires);
       this.jsonObject.init = [
         ...algorithmObject.circuit.init,
         ...this.jsonObject.init.slice(algorithmObject.circuit.init.length)
@@ -249,7 +249,9 @@ export default {
           let wireCaller = this.$refs.wire[row];
           wireCaller.addIdentityRow(algorithmObject.circuit.rows[0].length);
         }
+
         this.updateMaxWire();
+
         // for circuitBlock
         if (circuitBlock) {
           var toColumn = this.jsonObject.colsCount;
@@ -381,16 +383,13 @@ export default {
             this.jsonObject.wires = res.data.rows.length;
             this.jsonObject.rows = res.data.rows;
           }
-          // controls:this.countGate("●")+this.countGate("○"),
-          this.specialGatesCounter.controls = 0;
-          this.specialGatesCounter.swaps = 0;
           this.setAlgorithm(
             { name: "Elementary Gates", circuit: this.jsonObject },
             false
           );
         });
       }
-    }
+    },
     //-----------------------------------------------------------------------
   }
 };
@@ -400,7 +399,6 @@ export default {
 .clone {
   white-space: nowrap;
 }
-
 .app-title {
   display: flex;
   justify-content: center;
@@ -461,7 +459,6 @@ export default {
 .flip-list-move {
   transition: transform 10.9s;
 }
-
 .exeBtn {
   display: inline-block;
   margin: 0.2em 0.2em 0em 0.2em;
@@ -469,15 +466,12 @@ export default {
   background-color: white;
   border-radius: 0.5em;
 }
-
 .matrix {
   flex-basis: 40%;
 }
 button {
   border: 2px solid grey;
 }
-
-
 .DiracNotation {
   border: 2px solid #aaaaaa;
   border-radius: 10px;

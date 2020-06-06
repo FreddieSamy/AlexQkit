@@ -2,7 +2,7 @@
   <div class="trash">
     <div v-if="!this.$parent.circuitDrawingFlag" class="add-remove-wire">
       <button class="add-wire" @click="this.$parent.createWire">+</button>
-      <button class="remove-wire" @click="this.$parent.deleteWire">-</button>
+      <button class="remove-wire" @click="deleteWire">-</button>
     </div>
 
     <div class="trashArea">
@@ -63,13 +63,8 @@ export default {
       }
       this.list = [];
     },
-    wireAdd: function() {
-      this.addWire();
-      this.$parent.$refs.tracingLine.updateTracingLine();
-    },
-    wireRemove: function() {
-      this.removeWire(this.jsonObject.wires - 1);
-      this.$parent.removeIdentitySystem();
+    deleteWire(){
+      this.$parent.deleteWire(this.jsonObject.wires-1)
     }
   }
 };

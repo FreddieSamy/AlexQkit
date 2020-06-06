@@ -119,6 +119,7 @@ export default {
     //== Events Handling Functions ===============================================
     add: function(evt) {
       // in case droped between 2 gates
+      window.console.log("added")
       if (
         evt.newIndex < this.jsonObject.colsCount &&
         this.list[evt.newIndex + 1]["name"] == "i"
@@ -167,11 +168,10 @@ export default {
     //-----------------------------------------------------------------------
     deleteWire: function() {
       this.removeWire(this.id-1)
-      //this.$nextTick(() => {
-      this.$parent.setAlgorithm({ circuit: this.jsonObject }, false, false);
-      this.$parent.removeIdentitySystem();
-   
-   
+      this.$nextTick(()=>{
+        this.$parent.setAlgorithm({ circuit: this.jsonObject }, false, false);
+        this.$parent.removeIdentitySystem();
+      });
     },
     //-----------------------------------------------------------------------
     addIdentityRow: function(length) {
@@ -226,6 +226,8 @@ export default {
           this.setCountControls(1);
         } else if (gatesList[colIdx] === "Swap") {
           this.setCountSwaps(1);
+        } else if (gatesList[colIdx][0] === 'c'){
+          this.setCountCustoms(1);
         }
       }
     }

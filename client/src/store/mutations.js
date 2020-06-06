@@ -99,6 +99,26 @@ export default {
     return count;
   },
 
+  setCountSpecialGates:(state)=>{
+    window.console.log("counting the special gates")
+    state.specialGatesCounter = {controls: 0,swaps: 0,customs:0};
+    for (let i = 0; i < state.jsonObject.rows; i++) {
+      for (let j = 0; j < state.jsonObject.colsCount; j++) {
+        window.console.log(state.jsonObjectObject.rows[i][j])
+        if (state.jsonObjectObject.rows[i][j] == '●' || state.jsonObjectObject.rows[i][j] =='○' ) {
+          state.specialGatesCounter.controls++;
+        }else if (state.jsonObjectObject.rows[i][j] == 'Swap'){
+          state.specialGatesCounter.swaps++;
+        }
+        else if (state.jsonObjectObject.rows[i][j][0] == 'c'){
+          state.specialGatesCounter.customs++;
+        }
+      }
+    }
+    //window.console.log(state.specialGatesCounter)
+
+  },
+ 
   /* ================================================================= */
   /*=== Validation Functions ===*/
 

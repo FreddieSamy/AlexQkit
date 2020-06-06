@@ -37,6 +37,7 @@ export default {
   // Removers Functions
   removeWire: ({ commit },wireIdx) => {
     commit("removeWire",wireIdx);
+    commit("setCountSpecialGates");
   },
   removeMessages: ({ commit }) => {
     commit("resetMessages");
@@ -61,9 +62,9 @@ export default {
     commit("countGate", gateName);
   },
 
-  // setCountSpecialGates({commit})=>{
-  //     commit("countGate",'Swaps')
-  // }
+  setCountSpecialGates:({commit}) => {
+      commit("setCountSpecialGates")
+  },
 
   // Run Functions
   runCircuit: ({ commit }) => {
