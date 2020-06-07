@@ -3,7 +3,7 @@
     <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
     <div id="matrixRepresentation" class="matrix-box">
       <label class="matrix-label">Matrix Representation</label>
-      <pre class="matrix-label">{{error}}</pre>
+      <!-- <pre class="matrix-label">{{error}}</pre> -->
       <katex-element class="matrix" :expression="expression" />
     </div>
   </div>
@@ -103,6 +103,7 @@ export default {
   margin: 10px;
   border-radius: 0.5em;
   background: black;
+  overflow:auto;
 }
 .matrix-label {
   margin: 0px 0px 20px 0px;

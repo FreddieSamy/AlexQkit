@@ -147,9 +147,10 @@ export default {
           this.checkSwapSystem();
         }
         if (this.specialGatesCounter.customs) {
-          this.checkWiresCustomGates();
+          //this.checkWiresCustomGates();
         }
       });
+
       //window.console.log("max wire = ", this.jsonObject.colsCount);
       //window.console.log("------------------- ");
     },

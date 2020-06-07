@@ -1,13 +1,16 @@
 <template>
   <div class="wire" :id="'wire-' + id">
+    <!-- Delete Wire Button  -->
     <div class="delete-wire" :id="'d-' + id">
       <button class="delete-btn" @click="deleteWire">x</button>
     </div>
-
+    <!--end Delete wire Button  -->
+    <!--wire-qubit-name-->
     <label class="qubit-name">
       q
       <sub>{{id-1}}</sub>
     </label>
+    <!---end-wire-qubit-name-->
     <button class="qubit-state" :id="'q' + id + '-0'" @click="qubitState">|{{ state }}⟩</button>
     <hr class="wire-hr" />
     <!-- Wire Drop Area (Gates Place)-->
@@ -20,15 +23,18 @@
       @remove="remove"
       @update="update"
     >
-      <div class="circuit-gate" v-for="(element,index) in list" 
-        :key="element.id" 
-        :id="element.name" 
+      <div
+        class="circuit-gate"
+        v-for="(element,index) in list"
+        :key="element.id"
+        :id="element.name"
         :row="'_'+(id)"
-        :col="'_'+(index+1)">
+        :col="'_'+(index+1)"
+      >
         <!-- static hard coding block in case of custom gate-->
         {{element.name[0]=='c'? element.name.slice(3) : element.name }}
         <select
-          @abort="window.console.log('elllo input')"
+          @change="setOrderId"
           v-if="element.name[0]=='c' && element.name[1]!='1'"
           class="custom-gate-order"
         >
@@ -39,15 +45,13 @@
           >{{ order }}</option>
         </select>
         <!-- end of hard coded block  need a vue filter or special directive -->
-        <select
-          @abort="window.console.log('elllo input')"
-          v-if="element.name[0]=='l' "
-          class="custom-gate-order"
-        >
+        <!-- in case of Condtional loop -->
+        <select v-if="element.name[0]=='l' " class="custom-gate-order">
           <option value="*">*</option>
           <option value="0">0</option>
           <option value="1">1</option>
         </select>
+        <!-- end in case of Conditional loop -->
       </div>
     </draggable>
     <!-- end Wire Drop Area (Gates Place)-->
@@ -115,11 +119,45 @@ export default {
     ...mapActions(["setCountControls"]),
     ...mapActions(["setCountSwaps"]),
     ...mapActions(["setCountCustoms"]),
-    ...mapActions(['removeWire']),
+    ...mapActions(["removeWire"]),
+    setOrderId(evt) {
+      let gateId = evt.srcElement.parentElement.id.substring(
+        0,
+        evt.srcElement.parentElement.id.indexOf(".") + 1
+      );
+      evt.srcElement.parentElement.id = gateId + evt.srcElement.value;
+      let col = evt.srcElement.parentElement
+        .getAttribute("col")
+        .replace("_", "");
+      col = parseInt(col) - 1;
+      this.list[col] = { name: evt.srcElement.parentElement.id };
+     
+      //  let gateName = evt.srcElement.parentElement.id;
+      //   window.console.log(evt.srcElement.parentElement.id)
+      //   window.console.log(evt.srcElement.parentElement.getAttribute('row'))
+      //   window.console.log(evt.srcElement.parentElement.getAttribute('col'))
+      //   let row = evt.srcElement.parentElement.getAttribute('row').replace("_","")
+      //   row = parseInt(row)-1;
+      //   let col = evt.srcElement.parentElement.getAttribute('col').replace("_","")
+      //   col = parseInt(col)-1;
+      //   window.console.log(row)
+      //   window.console.log(col)
+      //   window.console.log(this.jsonObject.rows[row][col])
+      //   window.console.log(gateName)
+      //   this.jsonObject.rows[row][col] = gateName ;
+      //this.getGates(this.id-1);
+      let wire = {
+        qstate: this.state,
+        list: this.getGates(this.id - 1),
+        idx: this.id - 1
+      };
+      this.setWire(wire);
+      window.console.log(this.jsonObject.rows)
+    
+    },
     //== Events Handling Functions ===============================================
     add: function(evt) {
       // in case droped between 2 gates
-      window.console.log("added")
       if (
         evt.newIndex < this.jsonObject.colsCount &&
         this.list[evt.newIndex + 1]["name"] == "i"
@@ -129,7 +167,6 @@ export default {
         this.$parent.addGateColumn(this.id, evt.newIndex, "i");
       }
 
-  
       if (evt.from.id[0] == "l") {
         var wire = evt.from.id.replace("list", "");
         this.$parent.$refs.wire[wire - 1].addGateByIndex(evt.oldIndex, "i");
@@ -155,7 +192,7 @@ export default {
       this.$parent.removeIdentitySystem();
     },
     //== End Events Handling Functions ===============================================
-  
+
     qubitState: function(evt) {
       var i = (parseInt(evt.target.id.slice(-1)) + 1) % 6;
       var id = evt.target.id.substring(0, evt.target.id.search("-") + 1);
@@ -167,8 +204,8 @@ export default {
     },
     //-----------------------------------------------------------------------
     deleteWire: function() {
-      this.removeWire(this.id-1)
-      this.$nextTick(()=>{
+      this.removeWire(this.id - 1);
+      this.$nextTick(() => {
         this.$parent.setAlgorithm({ circuit: this.jsonObject }, false, false);
         this.$parent.removeIdentitySystem();
       });
@@ -197,8 +234,8 @@ export default {
       var gates = [];
       for (let colIdx = 0; colIdx < this.list.length; colIdx++) {
         if (this.list[colIdx]["name"][0] == "c") {
-          // window.console.log("custom here at " + this.id + " at col " + colIdx);
-          gates.push(this.list[colIdx]["name"] + "." + rowId);
+          window.console.log("custom here at " + this.id + " at col " + rowId);
+          gates.push(this.list[colIdx]["name"]);
         } else {
           gates.push(this.list[colIdx]["name"]);
         }
@@ -226,7 +263,7 @@ export default {
           this.setCountControls(1);
         } else if (gatesList[colIdx] === "Swap") {
           this.setCountSwaps(1);
-        } else if (gatesList[colIdx][0] === 'c'){
+        } else if (gatesList[colIdx][0] === "c") {
           this.setCountCustoms(1);
         }
       }

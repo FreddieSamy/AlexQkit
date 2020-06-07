@@ -22,6 +22,7 @@ export default {
     state.specialGatesCounter.customs += val;
   },
   setRow: (state, { qstate, list, idx }) => {
+    //window.console.log("setRow "+idx);
     state.jsonObject.init[idx] = qstate;
     state.jsonObject.rows[idx] = list;
   },
