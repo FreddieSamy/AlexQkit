@@ -58,7 +58,7 @@
 
       <div class="number-of-shots">
         <label class="lbl1">Shots</label>
-        <input class="ibmToken" type="number" placeholder="1024" v-model="jsonObject.shots" />
+        <input class="ibmToken" type="number" placeholder="1024" v-model="shots"  />
       </div>
     </div>
   </div>
@@ -79,8 +79,19 @@ export default {
   data() {
     return {
       //  gates: this.gates(),
-      customGates: [] // terminated
+      customGates: [], // terminated
+      shots:"1024"
     };
+  },
+  watch: {
+    shots: {
+      immediate: true,
+      handler() {
+        this.$nextTick(() => {
+          this.inputisempty();
+        });
+      }
+    }
   },
   computed: {
     ...mapState(["jsonObject"]),
@@ -98,8 +109,18 @@ export default {
       return {
         name: name
       };
-    }
+    },
+    inputisempty() {
+      if (this.shots == "" || this.shots.length == 0) {
+        alert("number of shots will be add 1024 if you entered nothing");
+        this.jsonObject.shots=1024;
+      }
+      else{
+        this.jsonObject.shots=this.shots;
+      }
+     
     // ----------------------------------------------------
+  }
   }
 };
 </script>
