@@ -45,6 +45,7 @@ export default {
       - still working on it's validtion.
     */
     createBooleanCircuit() {
+      
       var indices = document.getElementById("indices").value.split(",");
       var variablesToValidate = this.variables.split(",");
        
@@ -58,6 +59,7 @@ export default {
         this.expression,
         dictionaryOfVariables,
         indices
+        
       );
         if (variablesValidate && ValidateExpression) {
            axios.post("http://127.0.0.1:5000/booleanExpression", {
@@ -214,6 +216,15 @@ export default {
       //----
      //check the indeces is integer or not
      else{
+
+       // if the indices are empty it's okay 
+       isempty,msg=this.inputisempty("indices");
+       if (isempty== false){
+          
+         return { ValidateExpression, msgEx };
+         
+       }
+      // window.console.log(this.inputisempty("indices"));
        regex=/^\d$/;
        for(let indx in indices){
          if(indices[indx]==""){
