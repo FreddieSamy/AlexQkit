@@ -103,7 +103,7 @@ export default {
       if (this.conditionColumn) {
         for (let i = 0; i < this.jsonObject.wires; i++) {
           let wireCaller = this.$parent.$parent.$refs.wire[i];
-          wireCaller.addGateByIndex(this.conditionColumn, "loop");
+          wireCaller.addGateByIndex(this.conditionColumn, "loop.*");
         }
         this.$parent.$parent.updateMaxWire();
 

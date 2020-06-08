@@ -46,7 +46,7 @@
         </select>
         <!-- end of hard coded block  need a vue filter or special directive -->
         <!-- in case of Condtional loop -->
-        <select v-if="element.name[0]=='l' " class="custom-gate-order">
+        <select @change="setOrderId" v-if="element.name[0]=='l' " class="custom-gate-order">
           <option value="*">*</option>
           <option value="0">0</option>
           <option value="1">1</option>
@@ -120,27 +120,7 @@ export default {
     ...mapActions(["setCountSwaps"]),
     ...mapActions(["setCountCustoms"]),
     ...mapActions(["removeWire"]),
-    setOrderId(evt) {
-      let gateId = evt.srcElement.parentElement.id.substring(
-        0,
-        evt.srcElement.parentElement.id.indexOf(".") + 1
-      );
-      evt.srcElement.parentElement.id = gateId + evt.srcElement.value;
-      let col = evt.srcElement.parentElement
-        .getAttribute("col")
-        .replace("_", "");
-      col = parseInt(col) - 1;
-      this.list[col] = { name: evt.srcElement.parentElement.id };
-    
-      let wire = {
-        qstate: this.state,
-        list: this.getGates(this.id - 1),
-        idx: this.id - 1
-      };
-      this.setWire(wire);
-      window.console.log(this.jsonObject.rows)
-    
-    },
+
     //== Events Handling Functions ===============================================
     add: function(evt) {
       // in case droped between 2 gates
@@ -253,6 +233,28 @@ export default {
           this.setCountCustoms(1);
         }
       }
+    },
+    setOrderId(evt) {
+      //  work for both  custom gates  and loops 
+        var gateId = evt.srcElement.parentElement.id.substring(
+          0,
+          evt.srcElement.parentElement.id.indexOf(".") + 1
+        );
+   
+      evt.srcElement.parentElement.id = gateId + evt.srcElement.value;
+      let col = evt.srcElement.parentElement
+        .getAttribute("col")
+        .replace("_", "");
+      col = parseInt(col) - 1;
+      this.list[col] = { name: evt.srcElement.parentElement.id };
+
+      let wire = {
+        qstate: this.state,
+        list: this.getGates(this.id - 1),
+        idx: this.id - 1
+      };
+      this.setWire(wire);
+      window.console.log(this.jsonObject.rows);
     }
   }
 };
