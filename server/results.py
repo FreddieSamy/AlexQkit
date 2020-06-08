@@ -15,7 +15,7 @@ class Results():
         self.defaultBlochSphere=self.figToResponse(plot_bloch_vector([0,0,1]))
         self.circuit=circuit
         self.num_qubits=self.circuit.num_qubits
-        self.circutDrawing=self.draw()
+        #self.circutDrawing=self.draw()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
         
@@ -27,7 +27,7 @@ class Results():
         self.device=device
         self.circuit=circuit
         self.num_qubits=self.circuit.num_qubits
-        self.circutDrawing=self.draw()
+        #self.circutDrawing=self.draw()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
         
@@ -36,7 +36,7 @@ class Results():
     def setCircuit(self,circuit):
         self.circuit=circuit
         self.num_qubits=self.circuit.num_qubits
-        self.circutDrawing=self.draw()
+        #self.circutDrawing=self.draw()
         self.statevector=self.stateVector()
         self.reversedStatevector=self.reversedStateVector()
         

@@ -26,7 +26,7 @@ export default {
     state.jsonObject.init[idx] = qstate;
     state.jsonObject.rows[idx] = list;
   },
-  setAlgorithms(state,algorithms){
+  setAlgorithms(state, algorithms) {
     state.algorithms = algorithms;
   },
   /* ================================================================= */
@@ -47,12 +47,12 @@ export default {
 
   /* ================================================================= */
   /*=== Remove Functions ===*/
-  removeWire: (state,wireIdx) => {
-   if(state.jsonObject.wires > 1){
-    state.jsonObject.init.splice(wireIdx,1);
-    state.jsonObject.rows.splice(wireIdx,1);
-    state.jsonObject.wires--;
-  }
+  removeWire: (state, wireIdx) => {
+    if (state.jsonObject.wires > 1) {
+      state.jsonObject.init.splice(wireIdx, 1);
+      state.jsonObject.rows.splice(wireIdx, 1);
+      state.jsonObject.wires--;
+    }
   },
   /* ================================================================= */
   /*=== Reset System== =*/
@@ -100,18 +100,18 @@ export default {
     return count;
   },
 
-  setCountSpecialGates:(state)=>{
+  setCountSpecialGates: (state) => {
     window.console.log("counting the special gates")
-    state.specialGatesCounter = {controls: 0,swaps: 0,customs:0};
+    state.specialGatesCounter = { controls: 0, swaps: 0, customs: 0 };
     for (let i = 0; i < state.jsonObject.rows; i++) {
       for (let j = 0; j < state.jsonObject.colsCount; j++) {
         window.console.log(state.jsonObjectObject.rows[i][j])
-        if (state.jsonObjectObject.rows[i][j] == '●' || state.jsonObjectObject.rows[i][j] =='○' ) {
+        if (state.jsonObjectObject.rows[i][j] == '●' || state.jsonObjectObject.rows[i][j] == '○') {
           state.specialGatesCounter.controls++;
-        }else if (state.jsonObjectObject.rows[i][j] == 'Swap'){
+        } else if (state.jsonObjectObject.rows[i][j] == 'Swap') {
           state.specialGatesCounter.swaps++;
         }
-        else if (state.jsonObjectObject.rows[i][j][0] == 'c'){
+        else if (state.jsonObjectObject.rows[i][j][0] == 'c') {
           state.specialGatesCounter.customs++;
         }
       }
@@ -119,7 +119,7 @@ export default {
     //window.console.log(state.specialGatesCounter)
 
   },
- 
+
   /* ================================================================= */
   /*=== Validation Functions ===*/
 
@@ -172,7 +172,7 @@ export default {
     for (let col = 0; col < state.jsonObject.colsCount; col++) {
       let dicCount = {};
       for (let row = 0; row < state.jsonObject.wires; row++) {
-        if (state.jsonObject.rows[row][col][0]=="c") {
+        if (state.jsonObject.rows[row][col][0] == "c") {
           var nameofgate = state.jsonObject.rows[row][col];  //custom_q.0
           nameofgate = nameofgate.substring(0, nameofgate.indexOf(".")); //custom_q
           if (!(nameofgate in dicCount)) {
@@ -202,15 +202,20 @@ export default {
   /*=== Server Functions ==*/
   sendCircuit: (state) => {
     try {
-      //window.console.log(state.jsonObject)
+      window.console.log(state.jsonObject)
       axios.post(appRoute, state.jsonObject).then(
         (res) => {
-          state.results = res.data;
-          for (let i = 1; i <= state.jsonObject.wires; i++) {
-            var imgofblochSphere = document.getElementById("bloch-sphere-" + i);
-            imgofblochSphere.src =
-              defaultBlochSphereRoute + "/" + i + "?time=" + new Date();
+          if (res.data.conditionalLoopError == undefined) {
+            state.results = res.data;
+            for (let i = 1; i <= state.jsonObject.wires; i++) {
+              var imgofblochSphere = document.getElementById("bloch-sphere-" + i);
+              imgofblochSphere.src =
+                defaultBlochSphereRoute + "/" + i + "?time=" + new Date();
+            }
+          } else {
+            alert(res.data.conditionalLoopError)
           }
+
         },
         (error) => {
           window.console.log(error);

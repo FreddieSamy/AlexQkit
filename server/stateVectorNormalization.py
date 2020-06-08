@@ -18,8 +18,8 @@ class Normalization :
         for ind in range(len(generatePosWires)) :
             flag = 0
             for index in range(len(wiresSep)) :
-                if wiresSep[index] != "*" :
-                    if generatePosWires[ind][index] != wiresSep[index] :
+                if wiresSep[index][-1] != "*" :
+                    if generatePosWires[ind][index] != wiresSep[index][-1] :
                         flag = 1
                         break
             if flag == 0 and stateVector[ind] != 0j: # If state satisfies condation will insert in dictionary

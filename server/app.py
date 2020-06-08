@@ -39,15 +39,13 @@ def draggableCircuit():
     if request.method=='POST':
         receivedDictionary=request.get_json()
         c.setter(receivedDictionary)
-        circuit=c.createDraggableCircuit()
-        if type(circuit)==type(""):
-            return jsonify({"cloopError":circuit})
-        r.setter(receivedDictionary["shots"],receivedDictionary["API_TOKEN"],receivedDictionary["device"],circuit)
-        returnedDictionary=r.draggableCircuitResults()
-    else:
-        returnedDictionary={}
-    return  jsonify(returnedDictionary) 
-
+        try:
+            circuit=c.createDraggableCircuit()
+            r.setter(receivedDictionary["shots"],receivedDictionary["API_TOKEN"],receivedDictionary["device"],circuit)
+            return  jsonify(r.draggableCircuitResults()) 
+        except Exception as e:
+            return jsonify({"conditionalLoopError":str(e)})
+        
 ###############################################################################################################################
     
 @app.route('/qasm',methods=['GET','POST'])
@@ -116,7 +114,10 @@ def subCircuitCustomGate():
         c2=Circuit()
         c2.gatesObjects=c.gatesObjects
         c2.subCircuitSetter(receivedDictionary)
-        circuit=c2.createDraggableCircuit()
+        try:
+            circuit=c2.createDraggableCircuit()
+        except Exception as e:
+            return jsonify({"conditionalLoopError":str(e)})
         r=Results(circuit)
         matrix=r.matrixRepresentation()
         complexMatrix=f.strToComplex(matrix)
@@ -163,7 +164,6 @@ def elementaryGates():
 def booleanExpress():
     if request.method=='POST':
         recievedData = request.get_json()
-        print(recievedData)
         if recievedData['indices'] != [''] :
             booleanCircut = BooleanFunction.buildBooleanCircuit_indecies(recievedData["vars"],recievedData['fn'],recievedData['indices'])
         else  :

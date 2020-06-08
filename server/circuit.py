@@ -287,6 +287,16 @@ class Circuit():
             self.circuit.x(i)
 
 ###############################################################################################################################
+            
+    def conditionalLoop(self,column,index):
+        r=Results(self.circuit)
+        newInitialization=Normalization.buildLoopCond(self.num_qubits,column,r.reversedStatevector)
+        if all(ele == 0 for ele in newInitialization):
+            raise Exception("conditional loop at column "+str(index)+" will never be satisfied (infinite loop)")
+        self.circuit=QuantumCircuit(self.num_qubits, self.num_qubits)
+        self.circuit.initialize(newInitialization,list(range(self.num_qubits-1,-1,-1)))
+            
+###############################################################################################################################
 
     def createDraggableCircuit(self):
         """
@@ -315,18 +325,10 @@ class Circuit():
         """
         self.initState() #apply (init list) initial values to the citcuit
         for i in range(self.exeCount):  #stop at tracing line position
-            if "reset" in self.cols[i]: #flag to prevent using matrix representation while the circuit contains reset
-                self.resetExist = True  #it will be checked in the frontend as enhancement 
               
-            if "cLoop(" in self.cols[i]:#conditinal loop doesn't work till now
-                r=Results(self.circuit)
-                newInitialization=Normalization.buildLoopCond(self.num_qubits,self.cols[i],r.stateVector)
-                if all(ele == 0 for ele in newInitialization):
-                    return "condition at column i will never be satisfied"
-                self.circuit=QuantumCircuit(self.num_qubits, self.num_qubits)
-                self.circuit.initialize(newInitialization,list(range(self.num_qubits)))
-                
-            if "●" in self.cols[i] or "○" in self.cols[i]: # check if the column contains controls
+            if self.cols[i][0][0]=="l": #check if the column is a conditional loop column given as ["loop.0","loop.1","loop.*",...]
+                self.conditionalLoop(self.cols[i],i)
+            elif "●" in self.cols[i] or "○" in self.cols[i]: # check if the column contains controls
                 self.controlledColumns(self.cols[i])         # it will be checked in the frontend and receive a list of flags
             else:                                            # control flags [q0,q1,...]
                 self.nonControlledColumns(self.cols[i])
@@ -345,4 +347,3 @@ class Circuit():
         return self.circuit
     
 ############################################################################################################################### 
-   

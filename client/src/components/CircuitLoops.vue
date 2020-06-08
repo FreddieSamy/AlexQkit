@@ -108,6 +108,7 @@ export default {
         this.$parent.$parent.updateMaxWire();
 
       }
+      this.closeNav();
     },
     openNav() {
       document.getElementById("myNav1").style.width = "25%";
