@@ -158,12 +158,12 @@ export default {
     
   */
   wirescustom: (state) => {
-
     let dicwire = {};
+
     for (let indx in state.gates) {
       if (state.gates[indx]["wires"]) {
         var wire = state.gates[indx]["wires"];
-        var name = state.gates[indx]["name"];
+        var name = state.gates[indx]["name"].substring(0, state.gates[indx]["name"].indexOf("."));
         dicwire[name] = wire;
       }
     }
@@ -173,8 +173,11 @@ export default {
       let dicCount = {};
       for (let row = 0; row < state.jsonObject.wires; row++) {
         if (state.jsonObject.rows[row][col][0] == "c") {
-          var nameofgate = state.jsonObject.rows[row][col];  //custom_q.0
-          nameofgate = nameofgate.substring(0, nameofgate.indexOf(".")); //custom_q
+
+          var nameofgate = state.jsonObject.rows[row][col];  //c1_x.0
+          // window.console.log(nameofgate)
+          nameofgate = nameofgate.substring(0, nameofgate.indexOf(".")); //c1_x
+          //window.console.log(nameofgate);
           if (!(nameofgate in dicCount)) {
             dicCount[nameofgate] = 1;
           }
@@ -190,7 +193,9 @@ export default {
         if (indx in dicwire) {
           var wires = dicwire[indx];
           if (count != wires) {
-            var realname = indx.substring(7);
+            var indxForRealname = indx.indexOf("_");
+            window.console.log(indxForRealname);
+            var realname = indx.substring(indxForRealname + 1);
             state.messages.violation.push("gate " + realname + " at column " + (col + 1) + " can be put only for " + wire + " wires" + " not " + dicCount[nameofgate]);
           }
         }
