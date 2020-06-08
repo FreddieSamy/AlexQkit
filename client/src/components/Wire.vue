@@ -131,21 +131,7 @@ export default {
         .replace("_", "");
       col = parseInt(col) - 1;
       this.list[col] = { name: evt.srcElement.parentElement.id };
-     
-      //  let gateName = evt.srcElement.parentElement.id;
-      //   window.console.log(evt.srcElement.parentElement.id)
-      //   window.console.log(evt.srcElement.parentElement.getAttribute('row'))
-      //   window.console.log(evt.srcElement.parentElement.getAttribute('col'))
-      //   let row = evt.srcElement.parentElement.getAttribute('row').replace("_","")
-      //   row = parseInt(row)-1;
-      //   let col = evt.srcElement.parentElement.getAttribute('col').replace("_","")
-      //   col = parseInt(col)-1;
-      //   window.console.log(row)
-      //   window.console.log(col)
-      //   window.console.log(this.jsonObject.rows[row][col])
-      //   window.console.log(gateName)
-      //   this.jsonObject.rows[row][col] = gateName ;
-      //this.getGates(this.id-1);
+    
       let wire = {
         qstate: this.state,
         list: this.getGates(this.id - 1),
