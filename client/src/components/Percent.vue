@@ -2,7 +2,7 @@
   <div>
     <svg>
       <rect width="100%" height="100%" stroke="black" stroke-width="1" fill="white" />
-      <rect :y="this.yAxis+'%'" width="100%" :height="this.probability+'%'" fill="#318BD2" rx="0" />
+      <rect :y="(100-this.probability)+'%'" width="100%" :height="this.probability+'%'" fill="#318BD2" rx="0" />
       <text
         x="50%"
         y="50%"
@@ -16,7 +16,6 @@
 <!-- =============================================================  -->
 <script>
 import { mapGetters } from "vuex";
-
 export default {
   name: "Percent",
   display: "Percent",
@@ -26,15 +25,7 @@ export default {
   },
   computed: {
     ...mapGetters(["liveResults"]),
-    yAxis() {
-      // if (this.propabilty !== undefined){
-      //   return 100 - this.probability;
-      // }
-      return 100 - this.probability;
-   }
   },
-
-  methods: {}
 };
 </script>
 <!-- =============================================================  -->

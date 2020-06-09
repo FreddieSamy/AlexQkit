@@ -23,6 +23,8 @@
       @remove="remove"
       @update="update"
     >
+      <!-- =================================== Start Gate ====================================== -->
+      <!-- Start Gate that need to be a component urgently  -->
       <div
         class="circuit-gate"
         v-for="(element,index) in list"
@@ -45,6 +47,7 @@
           >{{ order }}</option>
         </select>
         <!-- end of hard coded block  need a vue filter or special directive -->
+
         <!-- in case of Condtional loop -->
         <select @change="setOrderId" v-if="element.name[0]=='l' " class="custom-gate-order">
           <option value="*">*</option>
@@ -53,19 +56,32 @@
         </select>
         <!-- end in case of Conditional loop -->
       </div>
+      <!-- End Gate  -->
+      <!-- =================================== End Gate ====================================== -->
     </draggable>
     <!-- end Wire Drop Area (Gates Place)-->
 
+    <!-- Percent -->
     <Percent :probability="this.liveResults.probabilities[id-1]||0" />
+    <!-- End of Percent  -->
 
-    <BlochSphere />
+    <!-- BlochSphere -->
+    <div class="bloch-sphere-body">
+      <img
+        class="bloch-sphere"
+        :src="defaultBlochSphereRoute"
+        :id="'bloch-sphere-'+id"
+      />
+    </div>
+    <!-- end BlockSphere -->
+
   </div>
 </template>
 <!-- =============================================================  -->
 <script>
 import draggable from "vuedraggable";
 import Percent from "./Percent";
-import BlochSphere from "./BlochSphere";
+import { defaultBlochSphereRoute } from "./../data/routes";
 import { states } from "./../data/gates_and_states";
 import { mapActions, mapGetters, mapState } from "vuex";
 
@@ -75,9 +91,27 @@ export default {
   components: {
     draggable,
     Percent,
-    BlochSphere
   },
   props: ["id"],
+
+  data() {
+    return {
+      list: [],
+      state: states[0],
+      defaultBlochSphereRoute: defaultBlochSphereRoute
+    };
+  },
+  watch: {
+    list: {
+      immediate: true,
+      handler() {
+        //this.updateWireAttributes();
+        // watcher may be terminated 
+      }
+    }
+  },
+
+  /*  Life Cycle Hook of wire component  */
   created: function() {
     this.addIdentityRow(this.jsonObject.colsCount);
   },
@@ -98,21 +132,6 @@ export default {
     ...mapGetters(["liveResults"]),
     ...mapState(["jsonObject"])
   },
-  data() {
-    return {
-      list: [],
-      state: states[0]
-    };
-  },
-  watch: {
-    list: {
-      immediate: true,
-      handler() {
-        //this.updateWireAttributes();
-      }
-    }
-  },
-
   methods: {
     ...mapActions(["setWire"]),
     ...mapActions(["runCircuit"]),
@@ -121,7 +140,7 @@ export default {
     ...mapActions(["setCountCustoms"]),
     ...mapActions(["removeWire"]),
 
-    //== Events Handling Functions ===============================================
+    //== Start Events Handling Functions ===============================================
     add: function(evt) {
       // in case droped between 2 gates
       if (
@@ -235,12 +254,12 @@ export default {
       }
     },
     setOrderId(evt) {
-      //  work for both  custom gates  and loops 
-        var gateId = evt.srcElement.parentElement.id.substring(
-          0,
-          evt.srcElement.parentElement.id.indexOf(".") + 1
-        );
-   
+      //  work for both  custom gates  and loops
+      var gateId = evt.srcElement.parentElement.id.substring(
+        0,
+        evt.srcElement.parentElement.id.indexOf(".") + 1
+      );
+
       evt.srcElement.parentElement.id = gateId + evt.srcElement.value;
       let col = evt.srcElement.parentElement
         .getAttribute("col")
@@ -268,6 +287,7 @@ export default {
   width: 100%;
   z-index: 0;
   margin: 5px 0px;
+
 }
 .wire-drop-area {
   height: 37px;
@@ -336,7 +356,6 @@ export default {
   background-color: #5d6d7e;
   z-index: 0;
 }
-
 .custom-gate-order {
   display: flex;
   flex-basis: 100%;
@@ -347,6 +366,22 @@ export default {
   font-size: 10px;
   border-radius: 10px;
 }
+/* Bloch sphere */
+.bloch-sphere-body{
+  margin:0px 100px 0px 0px;
+}
+.bloch-sphere {
+  width: 2.5em;
+  transition: transform 0.3s;
+  border:0.3px solid black;
+  border-radius:10px;
+  margin:0px 0px -5px 0px;
+}
+.bloch-sphere:hover {
+  position: fixed;
+  z-index:20;
+  transform: scale(5.5);
+}
 .angle-input {
   display: flex;
   flex-basis: 100%;
@@ -354,23 +389,19 @@ export default {
   text-align: center;
   padding: 2px 0px 2px 0px;
   width: 75%;
-
   border-radius: 8px;
 }
-
 #Rx,
 #Ry,
 #Rz {
   align-self: center;
 }
-
 div[id^="R"],
 #Swap,
 #Reset {
   font-size: 10px;
   margin: 0px 5px 0px 5px;
 }
-
 div[id^="Rx"],
 div[id^="Ry"],
 div[id^="Rz"] {
@@ -392,25 +423,22 @@ div[id^="Rz"] {
   background-position: center;
   background-size: 7px 6px;
 }
-
 #i {
   opacity: 0.8;
 }
 #m .circuit-gate text {
   opacity: 0.01;
 }
-
+/* all Inputs focus */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
 }
-
 option:focus,
 select:focus,
 textarea:focus,
