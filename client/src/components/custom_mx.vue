@@ -1,9 +1,8 @@
-/*
+<template>
+<!--
      - this component for custom gate as matrix to make design of matrix and pull
      the data form the inputs
-*/
-<template>
-
+-->
   <div>
     <div>
       <input type="number" min="1"  max="4" id="wires" v-model="wires" value="1" />
@@ -56,7 +55,7 @@ export default {
           var input = document.createElement("input");
           input.type = "text";
           input.setAttribute("size", "4");
-          input.setAttribute("placeholder", "1.0+3.5i");
+          input.setAttribute("value", 0);
           input.style.padding = '3px';
           input.style.margin = '3px';
           input.style.borderRadius = '8px';
