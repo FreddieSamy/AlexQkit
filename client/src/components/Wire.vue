@@ -273,6 +273,7 @@ export default {
         idx: this.id - 1
       };
       this.setWire(wire);
+      this.$parent.updateMaxWire();
       window.console.log(this.jsonObject.rows);
     }
   }

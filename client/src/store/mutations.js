@@ -175,7 +175,7 @@ export default {
       if (state.jsonObject.rows[row][col][0]=="c") {
        
         var nameofgate = state.jsonObject.rows[row][col];  //c1_x.0
-       // window.console.log(nameofgate)
+        window.console.log(nameofgate)
         nameofgate = nameofgate.substring(0, nameofgate.indexOf(".")); //c1_x
         //window.console.log(nameofgate);
         if (!(nameofgate in dicCount)) {

@@ -147,7 +147,7 @@ export default {
           this.checkSwapSystem();
         }
         if (this.specialGatesCounter.customs) {
-          //this.checkWiresCustomGates();
+          this.checkWiresCustomGates();
         }
       });
 
