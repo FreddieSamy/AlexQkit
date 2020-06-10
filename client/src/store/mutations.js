@@ -159,6 +159,7 @@ export default {
   */
  wirescustom: (state) => {
   let dicwire = {};
+  let dicindices={};
   
   for (let indx in state.gates) {
     if (state.gates[indx]["wires"]) {
@@ -167,25 +168,40 @@ export default {
       dicwire[name] = wire;
     }
   }
+  for (let indx in dicwire){
+    for(let value = 0; value<dicwire[indx]; value++){
+      dicindices[indx+"."+value]=value;
+    }
+  }
+  window.console.log(dicindices);
 
 
   for (let col = 0; col < state.jsonObject.colsCount; col++) {
     let dicCount = {};
+    let dicorder ={};
     for (let row = 0; row < state.jsonObject.wires; row++) {
       if (state.jsonObject.rows[row][col][0]=="c") {
-       
-        var nameofgate = state.jsonObject.rows[row][col];  //c1_x.0
-       // window.console.log(nameofgate)
-        nameofgate = nameofgate.substring(0, nameofgate.indexOf(".")); //c1_x
-        //window.console.log(nameofgate);
+        var nameOfGateInJson = state.jsonObject.rows[row][col];  //c1_x.0
+        var order =nameOfGateInJson .substring(nameOfGateInJson .indexOf(".")+1); 
+       var nameofgate = nameOfGateInJson .substring(0, nameOfGateInJson .indexOf(".")); //c1_x
         if (!(nameofgate in dicCount)) {
           dicCount[nameofgate] = 1;
         }
         else {
           dicCount[nameofgate] += 1;
         }
+        
+        if (!(nameOfGateInJson  in dicorder)) {
+          dicorder[nameOfGateInJson] = parseInt(order);
+        }
+        else{
+          dicorder[nameOfGateInJson] += 1 ;
+          dicorder[nameOfGateInJson] +="d";
+        }
+      
       }
     }
+    window.console.log(dicorder);
     
 
     for (let indx in dicCount) {
