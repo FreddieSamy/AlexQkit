@@ -1,18 +1,29 @@
 <template>
   <div>
-    <div>
-
+    <!-- select column to start (FROM)-->
     <select v-model="from">
-    <option disabled selected>{{from}}</option>
-    <option class="from" type="number" min="1" v-for="column in this.jsonObject.colsCount" :key="column">{{column}}</option>
+      <option disabled selected>{{from}}</option>
+      <option
+        class="from"
+        type="number"
+        min="1"
+        v-for="column in this.jsonObject.colsCount"
+        :key="column"
+      >{{column}}</option>
     </select>
-
-     <select v-model="to">
-    <option disabled selected >{{to}}</option>
-    <option class="to" type="number" min="1" v-for="column in this.jsonObject.colsCount" :key="column">{{column}}</option>
+    <!-- select column to end (TO)-->
+    <select v-model="to">
+      <option disabled selected>{{to}}</option>
+      <option
+        class="to"
+        type="number"
+        min="1"
+        v-for="column in this.jsonObject.colsCount"
+        :key="column"
+      >{{column}}</option>
     </select>
-      <input class="repeat" type="number" min="1" v-model="repeat" placeholder="Repeat" />
-    </div>
+    <!-- select Number of repetitions -->
+    <input class="repeat" type="number" min="1" v-model="repeat" placeholder="Repeat" />
   </div>
 </template>
 <!-- ================================================  -->
@@ -24,17 +35,17 @@ export default {
   display: "Loop",
   data() {
     return {
-      from: "FROM",
-      to: "TO",
-      repeat: "repeat",
+      from: "from",
+      to: "to",
+      repeat: null
     };
   },
-    computed: {
+  computed: {
     ...mapState(["jsonObject"])
   },
-  methods :{
+  methods: {
     ...mapActions(["addMessage"]),
-    ...mapActions(["removeMessages"]),
+    ...mapActions(["removeMessages"])
   }
 };
 </script>
@@ -46,9 +57,14 @@ option {
   border-radius: 5px;
   background: #f3f3f3;
 }
-.repeat{
-  margin:0px 0px 0px 50px;
-  width:60px;
+select{
+  margin: 5px;
+  border-radius:5px;
+}
+.repeat {
+  margin: 0px 0px 0px 50px;
+  width: 60px;
+  border-radius: 5px;
 }
 </style>
 

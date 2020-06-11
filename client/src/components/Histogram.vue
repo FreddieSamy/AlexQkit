@@ -13,11 +13,14 @@ export default {
   components: { GChart },
   computed: {
     ...mapGetters(["liveResults"]),
+    // function that add the attributes of the graph 
+    // return the [attributes of chart],[array of probabilities] 
     chart() {
       let temp = this.liveResults.chart;
       temp.unshift(["state", "Non zero probabilities "]);
       return temp;
     },
+    // Options of chart (google chart api options) 
     chartOptions() {
       return {
         title: "Circuit Histogram",
@@ -36,7 +39,6 @@ export default {
 <!-- ========================================================== -->
 <style scoped>
 div {
-  /* left: 10px; */
   max-width: 95%;
 }
 chart {

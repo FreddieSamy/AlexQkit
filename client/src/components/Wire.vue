@@ -425,7 +425,7 @@ div[id^="Rz"] {
   background-size: 7px 6px;
 }
 #i {
-  opacity: 0.8;
+  opacity: 0.01;
 }
 #m .circuit-gate text {
   opacity: 0.01;

@@ -8,7 +8,6 @@
         <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
 
         <!-- loops  -->
-
         <h1>Loops</h1>
         <div class="loops">
           <Loop v-for="count in loopCounts" :key="count" :ref="'loops'" />
@@ -111,7 +110,7 @@ export default {
       this.closeNav();
     },
     openNav() {
-      document.getElementById("myNav1").style.width = "25%";
+      document.getElementById("myNav1").style.width = "35%";
     },
     // ----------------------------------------------------
     closeNav() {
@@ -132,7 +131,6 @@ export default {
           return false;
         }
       }
-
       return true;
     },
         overreprsent(listOfPosition){
@@ -159,7 +157,6 @@ button {
   background: white;
   border-radius: 0.5em;
 }
-
 .remove {
   margin: 0px 50px 0px 10px;
 }

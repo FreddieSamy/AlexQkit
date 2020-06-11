@@ -1,10 +1,13 @@
 <template>
   <div class="trash">
+    <!-- Add and Remove Wire buttons -->
     <div v-if="!this.$parent.circuitDrawingFlag" class="add-remove-wire">
       <button class="add-wire" @click="this.$parent.createWire">+</button>
       <button class="remove-wire" @click="deleteWire">-</button>
     </div>
-
+    <!-- end Add and Remove Wire buttons -->
+    
+    <!-- Trash-Area -->
     <div class="trashArea">
       <draggable :list="list" class="trash-drop-area" group="gates" @add="add">
         Trash Drop Area
@@ -16,6 +19,8 @@
         >{{ element.name }}</div>
       </draggable>
     </div>
+    <!-- end Trash-Area -->
+
   </div>
 </template>
 <!-- =============================================================  -->
@@ -47,6 +52,9 @@ export default {
     ...mapActions(["setCountCustoms"]),
 
     // Event handling on gates dropped in the wire
+    
+    // When dropping the gates in trash if the gate are dropped from the circuit then
+    // replace it by Identity Gate , but if it dropped from toolbox do nothing
     add: function(evt) {
       if (evt.from.classList != "toolbox-gates-area") {
         // Put i (identity) gate in the same position
@@ -63,6 +71,7 @@ export default {
       }
       this.list = [];
     },
+    // Call the deleteWire fnuction from parent Clone 
     deleteWire(){
       this.$parent.deleteWire(this.jsonObject.wires-1)
     }
