@@ -4,11 +4,16 @@
      the data form the inputs
 -->
   <div>
+    <!--  begin  number of wires  -->
     <div>
       <input type="number" min="1"  max="4" id="wires" v-model="wires" value="1" />
     </div>
+    <!--  end number of wires  -->
+
+    <!--  begin  inputs for matrix   -->
     <form id="inputField" role="form"></form>
     <div id="resultField"></div>
+    <!--  end   inputs for matrix   -->
   </div>
 </template>
 <!-- =============================================================  -->

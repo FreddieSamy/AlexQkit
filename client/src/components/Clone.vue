@@ -146,6 +146,7 @@ export default {
         if (this.specialGatesCounter.swaps) {
           this.checkSwapSystem();
         }
+        
         if (this.specialGatesCounter.customs) {
           this.checkWiresCustomGates();
         }

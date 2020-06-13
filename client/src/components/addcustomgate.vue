@@ -1,8 +1,9 @@
 <template>
   <div class="add-custom-gate">
+    <!--  begin  overlay for add custom gates   -->
     <div id="myNav" class="overlay" style="width:0%">
       <a href="javascript:void(0)" class="closebtn" @click="closeNav()">&#10006;</a>
-
+      <!--  begin  enter custom gate as matrix (first column)   -->
       <div class="column">
         <h1>Add Matrix</h1>
         <h3>Name</h3>
@@ -12,7 +13,8 @@
         <br />
         <button @click="create_the_matrix()">create</button>
       </div>
-
+      <!--  end  enter custom gate as matrix (first column)   -->
+      
       <div class="column">
         <h1>sub-circuit</h1>
         <h3>name</h3>
@@ -74,16 +76,12 @@
         </div>
         <button @click="nthRoot()">create</button>
       </div>
-
-      <!-- <img class="capturedImage" :src="capturedImage" /> -->
-
-      <!-- <div class="addGateError">
-        <label id="errormsg"></label>
-      </div>-->
     </div>
+    <!--  end  overlay for add custom gates   -->
 
     <button class="addGate" @click="openNav()">Add Custom Gate</button>
   </div>
+
 </template>
 <!-- =============================================================  -->
 <script>
